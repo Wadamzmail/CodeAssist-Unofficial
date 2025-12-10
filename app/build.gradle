@@ -94,6 +94,7 @@ signingConfigs.debug
 
 configurations.implementation {
     exclude group: "org.jetbrains", module: "annotations"
+    exclude group: "org.apache.commons", module: "commons-lang3"
 }
 
 dependencies {
@@ -181,7 +182,9 @@ dependencies {
      implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.2.0'
      
          // Virtual File System
-    implementation 'org.apache.commons:commons-vfs2:2.9.0' 
+    implementation("org.apache.commons:commons-vfs2:2.9.0") {
+    exclude group: "org.apache.commons", module: "commons-lang3"
+   }
 	
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
