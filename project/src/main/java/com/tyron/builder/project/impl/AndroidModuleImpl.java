@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,10 +23,20 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 
-public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
+import com.tyron.builder.model.CodeAssistAndroidLibrary;
+import com.tyron.builder.model.CodeAssistLibrary;
+import java.io.UncheckedIOException;
 
+
+public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
+  
+  private final List<CodeAssistLibrary> libraries = new ArrayList<>();
+  
   private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
+  
+  private final Set<String> moduleDependencies = new HashSet<>();
+  private final Set<ContentRoot> contentRoots = new HashSet<>(3);
 
   public AndroidModuleImpl(File root) {
     super(root);
@@ -42,6 +53,29 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
       throw new IOException("Unable to open build.gradle file");
     }
   }
+  
+  public List<CodeAssistLibrary> getCodeAssistLibraries() {
+        return libraries;
+  }
+    
+    @Override
+    public void addLibrary(@NonNull @NotNull CodeAssistLibrary library) {
+        libraries.add(library);
+
+        if (library instanceof CodeAssistAndroidLibrary) {
+            CodeAssistAndroidLibrary androidLibrary = (CodeAssistAndroidLibrary) library;
+            List<File> compileJarFiles = androidLibrary.getCompileJarFiles();
+            for (File compileJarFile : compileJarFiles) {
+                try {
+                    putJar(compileJarFile);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        } else {
+            super.addLibrary(library);
+        }
+    }
 
   @Override
   public void index() {

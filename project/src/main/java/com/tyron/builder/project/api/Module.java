@@ -1,75 +1,82 @@
 package com.tyron.builder.project.api;
 
 import com.tyron.builder.model.ModuleSettings;
+import com.tyron.builder.project.Project;
 import com.tyron.builder.project.cache.CacheHolder;
+
+import org.jetbrains.kotlin.com.intellij.openapi.util.UserDataHolderEx;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import org.jetbrains.kotlin.com.intellij.openapi.util.UserDataHolderEx;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.Set;
 
 public interface Module extends UserDataHolderEx, CacheHolder {
 
-  ModuleSettings getSettings();
+    @Deprecated
+    ModuleSettings getSettings();
 
-  FileManager getFileManager();
+    FileManager getFileManager();
 
-  File getRootFile();
+    File getRootFile();
 
-  File getGradleFile();
+    default String getName() {
+        return getRootFile().getName();
+    }
 
-  File getSettingsGradleFile();
+    /**
+     * Start parsing the project contents such as manifest data, project settings, etc.
+     *
+     * Implementations may throw an IOException if something went wrong during parsing
+     */
+    void open() throws IOException;
 
-  File getProjectDir();
+    /**
+     * Remove all the indexed files
+     */
+    void clear();
 
-  int getMinSdk();
+    void index();
 
-  String getMainClass();
+    /**
+     * @return The directory that this project can use to compile files
+     */
+    @Deprecated
+    File getBuildDirectory();
 
-  List<String> getExcludedClassPaths();
 
-  List<String> getPlugins();
 
-  List<String> getPlugins(File file);
 
-  List<String> getAllProjects();
 
-  List<String> getAllProjects(File file);
+    // NEW API
 
-  List<String> getIncludedProjects();
+    default void addChildModule(Module module) {
 
-  List<AbstractMap.SimpleEntry<String, ArrayList<String>>> extractDirAndIncludes(String scope);
+    }
 
-  List<AbstractMap.SimpleEntry<String, ArrayList<String>>> extractDirAndIncludes(
-      File file, String scope);
 
-  AbstractMap.SimpleEntry<ArrayList<String>, ArrayList<String>> extractListDirAndIncludes(
-      String scope);
+    default Set<String> getModuleDependencies() {
+        return Collections.emptySet();
+    }
 
-  AbstractMap.SimpleEntry<ArrayList<String>, ArrayList<String>> extractListDirAndIncludes(
-      File file, String scope);
+    default void addContentRoot(ContentRoot contentRoot) {
 
-  default String getName() {
-    return getRootFile().getName();
-  }
+    }
 
-  /**
-   * Start parsing the project contents such as manifest data, project settings, etc.
-   *
-   * <p>Implementations may throw an IOException if something went wrong during parsing
-   */
-  void open() throws IOException;
+    default Set<ContentRoot> getContentRoots() {
+        return Collections.emptySet();
+    }
 
-  /** Remove all the indexed files */
-  void clear();
+    /**
+     *
+     * @return The project that this module is part of
+     */
+    default Project getProject() {
+        throw new UnsupportedOperationException();
+    }
 
-  void index();
-
-  /**
-   * @return The directory that this project can use to compile files
-   */
-  File getBuildDirectory();
-
-  File getBuildClassesDirectory();
+    default void setProject(Project project) {
+        throw new UnsupportedOperationException();
+    }
 }

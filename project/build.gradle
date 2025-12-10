@@ -12,6 +12,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.8.2'
     implementation project(path: ':common')
 	implementation project(path: ':apksigner')
+	implementation project(path: ':event-manager') 
 	
     // for manifest  parsing
     implementation project(path: ':manifmerger')
@@ -19,6 +20,10 @@ dependencies {
     // user data holder
     implementation project(path: ':kotlinc')
     compileOnly project(path: ':android-stubs')
+    
+    compileOnly("com.android.tools:sdk-common:30.4.0-alpha09") {
+        transitive = false
+    }
 
     testImplementation 'junit:junit:4.13.2'
 }
