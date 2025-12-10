@@ -169,26 +169,22 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   }
 
   @Override
-  public void addLibrary(@NonNull File jar) {
-    try {
-      if (!hasClassFiles(jar)) {
-        return;
-      }
-    } catch (IOException e) {
-      // ignored, don't put the jar
-    }
-
-    if (!jar.getName().endsWith(".jar")) {
-      return;
-    }
-    try {
-      // noinspection unused, used to check if jar is valid.
-      JarFile jarFile = new JarFile(jar);
-      putJar(jar);
-      mLibraries.add(jar);
-    } catch (IOException e) {
-      // ignored, don't put the jar
-    }
+  public void addLibrary(@NonNull CodeAssistLibrary library) {
+    File jar = library.getSourceFile();
+        if (jar == null) {
+            return;
+        }
+        if (!jar.getName().endsWith(".jar")) {
+            return;
+        }
+        try {
+            // noinspection unused, used to check if jar is valid.
+            JarFile jarFile = new JarFile(jar);
+            putJar(jar);
+            mLibraries.add(jar);
+        } catch (IOException e) {
+            // ignored, don't put the jar
+        }
   }
 
   private boolean hasClassFiles(File file) throws IOException {
@@ -208,7 +204,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     }
   }
 
-  private void putJar(File file) throws IOException {
+  protected void putJar(File file) throws IOException {
     if (file == null) {
       return;
     }

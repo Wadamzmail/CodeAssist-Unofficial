@@ -71,11 +71,6 @@ public class MockJavaModule extends ModuleImpl implements JavaModule {
   public List<File> getLibraries() {
     return Collections.emptyList();
   }
-  
-      @Override
-    public void addLibrary(@NonNull CodeAssistLibrary jar) {
-        throw new UnsupportedOperationException();
-    }
 
   @Override
   public List<File> getNativeLibraries() {
@@ -98,7 +93,7 @@ public class MockJavaModule extends ModuleImpl implements JavaModule {
   }
 
   @Override
-  public void addLibrary(@NonNull File jar) {
+  public void addLibrary(@NonNull CodeAssistLibrary jar) {
     throw new UnsupportedOperationException();
   }
 
