@@ -53,6 +53,8 @@ dependencies {
     implementation project(path: ':completion-api')
     implementation project(path: ':java-completion')
     implementation project(path: ':common')
+    
+    implementation("org.checkerframework:checker-qual:3.50.0")
 
  //   api 'io.github.Rosemoe.sora-editor:editor:0.15.1'
   //  api 'io.github.Rosemoe.sora-editor:language-textmate:0.15.1'
