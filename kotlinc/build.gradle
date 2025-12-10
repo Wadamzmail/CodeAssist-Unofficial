@@ -47,7 +47,7 @@ spotless {
 			}
 }
 
-tasks.withType(JavaCompile).configureEach {
+/*tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += [
         "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
         "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
@@ -61,4 +61,4 @@ tasks.withType(JavaCompile).configureEach {
         "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
         "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
     ]
-}
+}*/
