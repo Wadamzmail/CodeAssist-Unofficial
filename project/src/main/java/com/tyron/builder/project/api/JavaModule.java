@@ -29,7 +29,8 @@ public interface JavaModule extends Module {
 
   List<File> getLibraries(File dir);
 
-  void addLibrary(@NonNull File jar);
+  //void addLibrary(@NonNull File jar);
+  void addLibrary(@NonNull CodeAssistLibrary jar);
 
   /** Sets the map of md5 hash to its library source */
   void putLibraryHashes(Map<String, CodeAssistLibrary> hashes);
