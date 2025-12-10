@@ -1148,22 +1148,17 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
             mCollector,
             new ICReporterBase() {
               @Override
-              public void report(@NonNull Function0<String> function0) {
-                // getLogger().info()
-                function0.invoke();
-              }
+                        public void reportCompileIteration(boolean b,
+                                                           @NotNull Collection<? extends File> collection,
+                                                           @NotNull ExitCode exitCode) {
 
-              @Override
-              public void reportVerbose(@NonNull Function0<String> function0) {
-                // getLogger().verbose()
-                function0.invoke();
-              }
+                        }
 
-              @Override
-              public void reportCompileIteration(
-                  boolean incremental,
-                  @NonNull Collection<? extends File> sources,
-                  @NonNull ExitCode exitCode) {}
+                        @Override
+                        public void report(@NotNull Function0<String> function0,
+                                           @NotNull ReportSeverity reportSeverity) {
+
+                        }
             });
 
         if (mCollector.hasErrors()) {
