@@ -342,7 +342,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       for (File directory : implementation_files) {
         File check = new File(directory, "classes.jar");
         if (check.exists()) {
-          addLibrary(check);
+          addLibrary(CodeAssistLibrary.forJar(check));
         }
       }
     }
@@ -353,7 +353,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       for (File directory : implementation_libs) {
         File check = new File(directory, "classes.jar");
         if (check.exists()) {
-          addLibrary(check);
+          addLibrary(CodeAssistLibrary.forJar(check));
         }
       }
     }
@@ -364,7 +364,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       for (File directory : natives_libs) {
         File check = new File(directory, "classes.jar");
         if (check.exists()) {
-          mNativeLibraries.add(check);
+          mNativeLibraries.add(CodeAssistLibrary.forJar(check));
         }
       }
     }
@@ -376,7 +376,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         for (File directory : implementation_files) {
           File check = new File(directory, "classes.jar");
           if (check.exists()) {
-            addLibrary(check);
+            addLibrary(CodeAssistLibrary.forJar(check));
           }
         }
       }
@@ -387,7 +387,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         for (File directory : implementation_libs) {
           File check = new File(directory, "classes.jar");
           if (check.exists()) {
-            addLibrary(check);
+            addLibrary(CodeAssistLibrary.forJar(check));
           }
         }
       }
