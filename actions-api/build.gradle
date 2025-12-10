@@ -1,0 +1,45 @@
+plugins {
+    id 'java-library'
+}
+apply plugin: 'com.diffplug.spotless'
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.8.2'
+    implementation project(path: ':build-logic')
+    implementation project(path: ':project')
+    implementation project(path: ':logging')
+    // needed for UserDataHolder class
+    implementation project(path: ':kotlinc')
+    implementation project(path: ':fileeditor-api')
+    implementation project(path: ':editor-api')
+    compileOnly project(path: ':android-stubs')
+
+    testImplementation 'junit:junit:4.13.2'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17 
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
+    ]
+}

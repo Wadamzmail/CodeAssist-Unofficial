@@ -1,0 +1,61 @@
+plugins {
+    id 'java-library'
+}
+apply plugin: 'kotlin'
+apply plugin: 'com.diffplug.spotless'
+
+configurations.implementation {
+    exclude group: "org.jetbrains", module: "annotations"
+}
+
+dependencies {
+    // test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.google.truth:truth:1.4.4'
+    testImplementation 'com.google.testing.compile:compile-testing:0.21.0'
+
+    implementation project(path: ':common')
+    implementation 'org.antlr:antlr4-runtime:4.13.2'
+    api 'com.github.albfernandez:juniversalchardet:2.5.0'
+    implementation 'com.android.tools:annotations:31.6.0'
+    api project(path: ':javapoet')
+    implementation project(path: ":javac")
+	//api files('libs/viewbinding-lib.jar')
+    // jaxb
+    api 'javax.xml.bind:jaxb-api:2.3.1'
+}
+repositories {
+    mavenCentral()
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_17 
+    targetCompatibility = JavaVersion.VERSION_17 
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}
+compileKotlin {
+    kotlinOptions.jvmTarget = '17'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
+    ]
+}

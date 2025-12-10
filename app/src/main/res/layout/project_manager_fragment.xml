@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+	app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    android:layout_height="match_parent">
+	<com.google.android.material.bottomsheet.BottomSheetDragHandleView
+		android:id="@+id/drag_handle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+	
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrolling_view"
+        android:layout_width="match_parent"
+		android:layout_marginTop="16dp"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+		
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+			android:id="@+id/bottom_sheet"
+            android:layout_height="match_parent">
+	
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/project_manager_projects"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:nestedScrollingEnabled="false"
+                    android:id="@+id/projects_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:paddingBottom="55dp"
+                    android:scrollbars="none"
+                    tools:itemCount="21"
+                    tools:listitem="@layout/project_item" />
+
+                <include
+                    android:id="@+id/empty_container"
+                    layout="@layout/loading_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <include
+                    android:id="@+id/empty_projects"
+                    android:layout_gravity="center"
+                    layout="@layout/empty_projects_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

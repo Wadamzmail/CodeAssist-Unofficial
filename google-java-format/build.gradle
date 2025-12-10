@@ -1,0 +1,47 @@
+plugins {
+    id 'java-library'
+}
+apply plugin: 'com.diffplug.spotless'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+	api files('libs/google-java-format.jar')
+	//api files('libs/google-java-format-1.28.0.jar')
+	implementation project(path: ':common')
+    api 'com.google.auto.value:auto-value-annotations:1.11.0'
+	annotationProcessor 'com.google.auto.value:auto-value:1.11.0'
+	//implementation "com.google.guava:guava:33.3.0-jre"
+	implementation project(path: ':javac')
+	implementation("org.checkerframework:checker-qual:3.50.0")
+	implementation 'androidx.annotation:annotation:1.8.2'
+ // api 'com.google.googlejavaformat:google-java-format:1.28.0'
+	// https://mvnrepository.com/artifact/org.checkerframework/checker-qual
+   implementation("org.checkerframework:checker-qual:3.50.0")
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}
+ 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
+    ]
+}

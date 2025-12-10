@@ -1,0 +1,232 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = rootProject.ext.applicationId 
+	
+	spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+		}
+	
+    defaultConfig {
+        targetSdkVersion rootProject.ext.targetSdkVersion
+		minSdkVersion rootProject.ext.minSdkVersion		
+		applicationId rootProject.ext.applicationId
+		versionCode rootProject.ext.versionCode
+		versionName rootProject.ext.versionName        	
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+
+        unitTests.all {
+            systemProperty 'robolectric.enabledSdks', '26'
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('codeassist.keystore')
+            keyAlias 'codeassist'
+            storePassword 'codeassist'
+            keyPassword 'codeassist'
+        }
+    }
+    
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+            minifyEnabled false
+            shrinkResources = false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig =
+signingConfigs.debug
+        }
+    }
+	
+    buildFeatures {
+        viewBinding = true        
+        buildConfig = true	        
+    }
+	
+    packagingOptions {
+		jniLibs {
+            useLegacyPackaging = true
+        }
+        resources.excludes += "license/*"
+        exclude "plugin.properties"
+        exclude "plugin.xml"
+        exclude "about.html"
+        exclude ".api_description"
+		exclude 'api_database/*'
+        exclude "about_files/*"
+        exclude "META-INF/eclipse.inf"
+        pickFirst "META-INF/native-image/reflect-config.json"
+        pickFirst "META-INF/sisu/*"
+        pickFirst "*/*.kotlin_builtins"
+        pickFirst "*/*/*.kotlin_builtins"
+        pickFirst "*/*/*/*.kotlin_builtins"
+		
+        //exclude 'com/sun/tools/javac/resources/legacy.properties'
+		
+    }
+}
+
+configurations.implementation {
+    exclude group: "org.jetbrains", module: "annotations"
+}
+
+dependencies {
+    // TODO: Removed these modules, the features that are using these modules
+    // should be moved into its own module.
+
+    // TODO: language processing should be on its own module
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.code.gson:gson:2.11.0'
+	implementation 'org.antlr:antlr4-runtime:4.13.2'
+    // TODO: completion providers should not be included on the main module
+    implementation project(path: ':code-editor')
+    implementation project(path: ':xml-completion')
+    implementation project(path: ':viewbinding-inject')
+    implementation project(path: ':xml-repository')
+    implementation project(path: ':java-completion')
+    implementation project(path: ':event-manager') 
+	
+    // not used for compilation, but for analysis
+    implementation project(path: ':javac')
+
+    implementation project(path: ':language-api')
+
+    implementation project(path: ':build-logic')
+    implementation project(path: ':manifmerger')
+    implementation project(path: ':project')
+    implementation project(path: ':logging')
+    implementation project(path: ':jaxp')
+    implementation project(path: ':common')
+	implementation project(path: ':apksigner')    
+    implementation project(path: ':layout-preview')
+    implementation project(path: ':kotlin-completion')
+    
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
+    implementation project(path: ':dependency-resolver')
+
+    implementation project(path: ':treeview')
+
+    // apis
+    implementation project(path: ':completion-api')
+    implementation project(path: ':actions-api')
+    implementation project(path: ':editor-api')
+    implementation project(path: ':fileeditor-api')
+
+    // formatters    
+    implementation project(path: ':google-java-format')
+    implementation project(path: ':ktfmt')
+	implementation project(path: ':eclipse-formatter') 
+
+    // about
+    implementation 'com.github.daniel-stoneuk:material-about-library:3.1.2'
+
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+	implementation 'androidx.core:core:1.17.0'
+    implementation 'com.google.android.material:material:1.13.0'  
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
+    implementation 'androidx.viewpager:viewpager:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
+	implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-core:2.10.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.10.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.10.0-rc01'
+    implementation 'androidx.fragment:fragment:1.8.9'
+    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.3.0'
+    implementation 'androidx.activity:activity:1.11.0'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    implementation 'com.github.angads25:filepicker:1.1.1'
+
+    // image loading
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'com.caverock:androidsvg-aar:1.4'
+
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'com.github.TutorialsAndroid:crashx:6.0.19'
+
+	implementation 'androidx.documentfile:documentfile:1.1.0'
+    
+	//git
+	    implementation 'org.slf4j:slf4j-api:2.0.16'
+	    implementation 'com.blankj:utilcodex:1.31.1'
+     
+     //for CodeAssist
+     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.2.0'
+     
+         // Virtual File System
+    implementation 'org.apache.commons:commons-vfs2:2.9.0' 
+	
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
+    // testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "com.google.truth:truth:1.4.4"
+    testImplementation 'org.mockito:mockito-core:5.13.0'
+    testImplementation "org.robolectric:robolectric:4.13"
+    debugImplementation 'androidx.test:core:1.4.0'
+    debugImplementation 'androidx.fragment:fragment-testing:1.8.2'
+
+    androidTestImplementation 'com.google.truth:truth:1.4.4'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+}
+
+/*compileJava {
+    options.compilerArgs += ["--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+                             "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"]
+}*/
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
+    ]
+}
+

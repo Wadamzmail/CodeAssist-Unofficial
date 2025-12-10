@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#FFCC7832</color>
+    <color name="colorPrimary">#FFCC7832</color>
+    <color name="colorSecondary">#FFCC7832</color>
+    <color name="colorOnSecondary">@android:color/white</color>
+    <color name="colorBackground">#FF212121</color>
+    <color name="colorSurface">#FF2b2b2b</color>
+    <color name="colorControlNormal">#FFEAEAEA</color>
+    <color name="textActionNameColor">@android:color/tertiary_text_light</color>
+    <color name="white">#FFEAEAEA</color>
+	<color name="black">#00000000</color>
+	
+    <color name="md_theme_primary">#B22D00</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#FFDACF</color>
+    <color name="md_theme_onPrimaryContainer">#3C0800</color>
+    <color name="md_theme_secondary">#8C5000</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+    <color name="md_theme_secondaryContainer">#FFDCBB</color>
+    <color name="md_theme_onSecondaryContainer">#2D1600</color>
+    <color name="md_theme_tertiary">#006874</color>
+    <color name="md_theme_onTertiary">#FFFFFF</color>
+    <color name="md_theme_tertiaryContainer">#90F1FF</color>
+    <color name="md_theme_onTertiaryContainer">#001F24</color>
+    <color name="md_theme_error">#BA1B1B</color>
+    <color name="md_theme_errorContainer">#FFDAD4</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_onErrorContainer">#410001</color>
+    <color name="md_theme_background">#FCFCFC</color>
+    <color name="md_theme_onBackground">#1F1A1B</color>
+    <color name="md_theme_surface">#FCFCFC</color>
+    <color name="md_theme_onSurface">#1F1A1B</color>
+    <color name="md_theme_surfaceVariant">#E6E0EC</color>
+    <color name="md_theme_onSurfaceVariant">#48454F</color>
+    <color name="md_theme_outline">#79767F</color>
+    <color name="md_theme_inverseOnSurface">#FAEEEF</color>
+    <color name="md_theme_inverseSurface">#352F30</color>
+    <color name="md_theme_inversePrimary">#FFB49D</color>
+    <color name="md_theme_shadow">#000000</color>
+    <color name="md_theme_primaryInverse">#FFB49D</color>
+</resources>
