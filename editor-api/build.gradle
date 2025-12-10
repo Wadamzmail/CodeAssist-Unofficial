@@ -10,8 +10,11 @@ dependencies {
     implementation project(path: ':project')
     implementation project(path: ':language-api')
     implementation project(path: ':common')
+    
+    implementation 'it.unimi.dsi:fastutil:8.5.8'
 
     testImplementation 'junit:junit:4.13.2'
+    
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_17
