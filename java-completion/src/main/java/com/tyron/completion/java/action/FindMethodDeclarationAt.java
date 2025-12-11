@@ -6,6 +6,7 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
 import com.sun.source.util.Trees;
+import dev.mutwakil.javac.*;
 
 public class FindMethodDeclarationAt extends TreeScanner<MethodTree, Long> {
 
@@ -13,7 +14,7 @@ public class FindMethodDeclarationAt extends TreeScanner<MethodTree, Long> {
     private CompilationUnitTree mCompilationUnit;
 
     public FindMethodDeclarationAt(JavacTask task) {
-        mPos = Trees.instance(task).getSourcePositions();
+        mPos = MTrees.instance(task).getSourcePositions();
     }
 
     @Override

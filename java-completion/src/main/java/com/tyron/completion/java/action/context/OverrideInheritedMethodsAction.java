@@ -220,7 +220,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
                                             TreePath currentPath) {
         CompilerContainer container = compiler.compile(Collections.singletonList(file));
         return container.get(task -> {
-            Trees trees = Trees.instance(task.task);
+            Trees trees = MTrees.instance(task.task);
             Element classElement = trees.getElement(currentPath);
             Elements elements = task.task.getElements();
             List<MethodPtr> methodPtrs = new ArrayList<>();

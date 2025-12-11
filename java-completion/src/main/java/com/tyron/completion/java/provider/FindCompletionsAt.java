@@ -15,6 +15,7 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
+import dev.mutwakil.javac.*;
 
 public class FindCompletionsAt extends TreePathScanner<TreePath, Long> {
     
@@ -24,7 +25,7 @@ public class FindCompletionsAt extends TreePathScanner<TreePath, Long> {
     private final SourcePositions pos;
     
 	public FindCompletionsAt(JavacTask task) {
-        pos = Trees.instance(task).getSourcePositions();
+        pos = MTrees.instance(task).getSourcePositions();
 	}
 
     @Override

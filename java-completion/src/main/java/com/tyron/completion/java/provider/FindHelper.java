@@ -24,6 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
+import dev.mutwakil.javac.*;
 
 
 /**
@@ -153,7 +154,7 @@ public class FindHelper {
 //
 //    public static Location location(CompileTask task, TreePath path, CharSequence name) {
 //        var lines = path.getCompilationUnit().getLineMap();
-//        var pos = Trees.instance(task.task).getSourcePositions();
+//        var pos = MTrees.instance(task.task).getSourcePositions();
 //        var start = (int) pos.getStartPosition(path.getCompilationUnit(), path.getLeaf());
 //        var end = (int) pos.getEndPosition(path.getCompilationUnit(), path.getLeaf());
 //        if (name.length() > 0) {

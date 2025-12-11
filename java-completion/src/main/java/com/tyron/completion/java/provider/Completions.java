@@ -41,6 +41,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.Collections;
+import dev.mutwakil.javac.*;
 
 /**
  * Main entry point for getting completions
@@ -209,7 +210,7 @@ public class Completions {
 
     private ProcessingContext createProcessingContext(JavacTask task, CompilationUnitTree root) {
         ProcessingContext context = new ProcessingContext();
-        context.put("trees", Trees.instance(task));
+        context.put("trees", MTrees.instance(task));
         context.put("root", root);
         return context;
     }

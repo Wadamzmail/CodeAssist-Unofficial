@@ -8,6 +8,7 @@ import com.tyron.builder.project.Project;
 
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import dev.mutwakil.javac.*;
 
 public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider{
 
@@ -28,7 +29,7 @@ public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider{
 
     @Override
     public Trees getTrees() {
-        return Trees.instance(task);
+        return MTrees.instance(task);
     }
 
     @Override

@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import dev.mutwakil.javac.*;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
@@ -87,7 +88,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
         }
 
         if (path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
-            Trees trees = Trees.instance(task.task);
+            Trees trees = MTrees.instance(task.task);
             MethodInvocationTree method =
                     (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf();
             Element element = trees.getElement(path.getParentPath().getParentPath());

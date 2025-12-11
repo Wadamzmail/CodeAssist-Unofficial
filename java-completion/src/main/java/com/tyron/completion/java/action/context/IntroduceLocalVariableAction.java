@@ -36,6 +36,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
+import dev.mutwakil.javac.*;
 
 public class IntroduceLocalVariableAction extends AnAction {
 
@@ -112,7 +113,7 @@ public class IntroduceLocalVariableAction extends AnAction {
                 path = new TreePath(path.getParentPath(), errorTrees.get(0));
             }
         }
-        Trees trees = Trees.instance(task);
+        Trees trees = MTrees.instance(task);
         Element element = trees.getElement(path);
 
         if (element == null) {

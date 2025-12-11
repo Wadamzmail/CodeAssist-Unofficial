@@ -3,6 +3,7 @@ package com.tyron.completion.java.hover;
 import com.sun.source.tree.*;
 import com.sun.source.util.*;
 import javax.lang.model.element.Element;
+import dev.mutwakil.javac.*;
 
 /**
  * Class that searches where the current cursor is and returns the element
@@ -25,33 +26,33 @@ public class FindHoverElement extends TreePathScanner<Element, Long> {
 
     @Override
     public Element visitIdentifier(IdentifierTree t, Long find) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         long start = pos.getStartPosition(root, t);
         long end = pos.getEndPosition(root, t);
         if (start <= find && find < end) {
-            return Trees.instance(task).getElement(getCurrentPath());
+            return MTrees.instance(task).getElement(getCurrentPath());
         }
         return super.visitIdentifier(t, find);
     }
 
     @Override
     public Element visitMemberSelect(MemberSelectTree t, Long find) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         long start = pos.getEndPosition(root, t.getExpression()) + 1;
         long end = pos.getEndPosition(root, t);
         if (start <= find && find < end) {
-            return Trees.instance(task).getElement(getCurrentPath());
+            return MTrees.instance(task).getElement(getCurrentPath());
         }
         return super.visitMemberSelect(t, find);
     }
 
     @Override
     public Element visitMemberReference(MemberReferenceTree t, Long find) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         long start = pos.getStartPosition(root, t.getQualifierExpression()) + 2;
         long end = pos.getEndPosition(root, t);
         if (start <= find && find < end) {
-            return Trees.instance(task).getElement(getCurrentPath());
+            return MTrees.instance(task).getElement(getCurrentPath());
         }
         return super.visitMemberReference(t, find);
     }

@@ -30,6 +30,7 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.tree.JCTree;
 
 import java.util.List;
+import dev.mutwakil.javac.*;
 
 /**
  * Scanner to retrieve the current {@link TreePath} given the cursor position each visit methods
@@ -41,7 +42,7 @@ public class FindCurrentPath extends TreePathScanner<TreePath, Pair<Long, Long>>
     private CompilationUnitTree mCompilationUnit;
 
     public FindCurrentPath(JavacTask task) {
-        mPos = Trees.instance(task).getSourcePositions();
+        mPos = MTrees.instance(task).getSourcePositions();
     }
 
     public FindCurrentPath(Trees trees) {

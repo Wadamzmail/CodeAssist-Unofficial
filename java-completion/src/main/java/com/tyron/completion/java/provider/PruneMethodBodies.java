@@ -8,6 +8,7 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
 import com.sun.source.util.Trees;
+import dev.mutwakil.javac.*;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ public class PruneMethodBodies extends TreeScanner<StringBuilder, Long> {
 
     @Override
     public StringBuilder visitBlock(BlockTree blockTree, Long find) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         long start = pos.getStartPosition(root, blockTree);
         long end = pos.getEndPosition(root, blockTree);
         if (!(start <= find && find < end)) {

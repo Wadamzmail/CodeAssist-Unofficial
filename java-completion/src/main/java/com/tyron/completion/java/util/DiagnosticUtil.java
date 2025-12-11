@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import dev.mutwakil.javac.*;
 
 public class DiagnosticUtil {
 
@@ -202,7 +203,7 @@ public class DiagnosticUtil {
 
     @NonNull
     public static MethodPtr findMethod(CompileTask task, long position) {
-        Trees trees = Trees.instance(task.task);
+        Trees trees = MTrees.instance(task.task);
         Tree tree = new FindMethodDeclarationAt(task.task).scan(task.root(), position);
         TreePath path = trees.getPath(task.root(), tree);
         ExecutableElement method = (ExecutableElement) trees.getElement(path);

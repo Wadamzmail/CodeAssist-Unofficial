@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import dev.mutwakil.javac.*;
 
 public class Parser {
 
@@ -71,7 +72,7 @@ public class Parser {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        this.trees = Trees.instance(task);
+        this.trees = MTrees.instance(task);
     }
 
     public static Parser parseFile(Project project, Path file) {
@@ -241,7 +242,7 @@ public class Parser {
     }
 
     public String prune(long cursor) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         StringBuilder buffer = new StringBuilder(contents);
         long[] cursors = {cursor};
         return prune(root, pos, buffer, cursors, true);

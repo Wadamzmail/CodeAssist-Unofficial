@@ -16,6 +16,7 @@ import com.sun.source.util.Trees;
 
 import java.io.File;
 import java.time.Instant;
+import dev.mutwakil.javac.*;
 
 public class JavaExpandSelectionProvider extends ExpandSelectionProvider {
 
@@ -35,7 +36,7 @@ public class JavaExpandSelectionProvider extends ExpandSelectionProvider {
         int cursorStart = editor.getCaret().getStart();
         int cursorEnd = editor.getCaret().getEnd();
 
-        SourcePositions positions = Trees.instance(parser.task).getSourcePositions();
+        SourcePositions positions = MTrees.instance(parser.task).getSourcePositions();
         TreePath path = findCurrentPath.scan(parser.root, cursorStart, cursorEnd);
         if (path == null) {
             return null;

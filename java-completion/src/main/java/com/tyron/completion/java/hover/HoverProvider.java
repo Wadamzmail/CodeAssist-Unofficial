@@ -25,6 +25,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.*;
 
 public class HoverProvider {
 
@@ -90,8 +91,8 @@ public class HoverProvider {
     }
 
     private String docs(ParseTask task, Tree tree) {
-        TreePath path = Trees.instance(task.task).getPath(task.root, tree);
-        DocCommentTree docTree = DocTrees.instance(task.task).getDocCommentTree(path);
+        TreePath path = MTrees.instance(task.task).getPath(task.root, tree);
+        DocCommentTree docTree = MDocTrees.instance(task.task).getDocCommentTree(path);
         if (docTree == null) return "";
         //TODO: format this
         return docTree.toString();
