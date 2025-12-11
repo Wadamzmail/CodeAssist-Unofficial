@@ -20,6 +20,7 @@ import com.tyron.builder.project.impl.AndroidModuleImpl;
 import com.tyron.common.util.DebouncerStore;
 import com.tyron.completion.java.compiler.services.NBEnter;
 import com.tyron.completion.java.compiler.services.NBLog;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 
@@ -234,7 +235,7 @@ public class CompilationInfo {
         if (trees == null) {
             //use a working init order:
             com.sun.tools.javac.main.JavaCompiler.instance(impl.getJavacTask().getContext());
-            trees = JavacTrees.instance(impl.getJavacTask().getContext());
+            trees = JavacTreesUtil.instance(impl.getJavacTask().getContext());
         }
         return trees;
     }
