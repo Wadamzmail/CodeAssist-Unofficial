@@ -28,7 +28,7 @@ import com.tyron.actions.DataContext;
 import com.tyron.actions.menu.ActionPopupMenu;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
-import com.tyron.code.R;
+import org.codeassist.unofficial.R;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;

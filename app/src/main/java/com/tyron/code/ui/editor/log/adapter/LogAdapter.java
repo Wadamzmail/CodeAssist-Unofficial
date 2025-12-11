@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tyron.builder.model.DiagnosticWrapper;
-import com.tyron.code.R;
+import org.codeassist.unofficial.R;
 
 import javax.tools.Diagnostic;
 

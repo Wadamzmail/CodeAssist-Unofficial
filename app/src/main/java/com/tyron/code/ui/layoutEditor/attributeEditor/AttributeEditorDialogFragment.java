@@ -18,7 +18,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.Module;
-import com.tyron.code.R;
+import org.codeassist.unofficial.R;
 import com.tyron.code.ui.layoutEditor.dom.FakeDomElement;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.completion.index.CompilerService;

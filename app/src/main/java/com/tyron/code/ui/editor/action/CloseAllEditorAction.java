@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
-import com.tyron.code.R;
+import org.codeassist.unofficial.R;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;
 

@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.tyron.code.R;
+import org.codeassist.unofficial.R;
 
 public class ViewPaletteFragment extends Fragment {
 

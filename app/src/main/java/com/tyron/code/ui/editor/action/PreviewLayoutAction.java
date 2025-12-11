@@ -11,7 +11,7 @@ import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
-import com.tyron.code.R;
+import org.codeassist.unofficial.R;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.code.ui.editor.impl.xml.LayoutEditor;
 import com.tyron.code.ui.editor.impl.xml.LayoutTextEditorFragment;
