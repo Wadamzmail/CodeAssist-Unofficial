@@ -87,8 +87,7 @@ tasks.withType(JavaCompile).configureEach {
         "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
         "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
         "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/javax.annotation.processing=ALL-UNNAMED"
+        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
     ]
 }
 
