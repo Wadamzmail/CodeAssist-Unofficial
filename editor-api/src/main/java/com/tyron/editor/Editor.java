@@ -134,14 +134,6 @@ public interface Editor {
 
     void setSelectionRegion(int startIndex, int endIndex);
 
-    void moveSelectionUp();
-
-    void moveSelectionDown();
-
-    void moveSelectionLeft();
-
-    void moveSelectionRight();
-
     /**
      * Notify the editor to show a progress that it is analyzing in background
      * @param analyzing whether to show the progress bar.

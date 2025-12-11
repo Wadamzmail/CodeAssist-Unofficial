@@ -59,6 +59,9 @@ import java.util.function.Function;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.builder.project.Project;
 import com.tyron.completion.java.parse.CompilationInfo;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class JavaLanguage extends EmptyTextMateLanguage implements Language, EditorFormatter, CodeAssistLanguage {
 
@@ -197,7 +200,7 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   
   @Override
     public void onContentChange(File file, CharSequence content) {
-        Project project = editor.getProject();
+        Project project = mEditor.getProject();
         if (project == null) {
             return;
         }
@@ -205,7 +208,7 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
         if (compilationInfo == null) {
             return;
         }
-        JavaFileObject fileObject = new SimpleJavaFileObject(editor.getCurrentFile().toURI(),
+        JavaFileObject fileObject = new SimpleJavaFileObject(mEditor.getCurrentFile().toURI(),
                 JavaFileObject.Kind.SOURCE) {
             @Override
             public CharSequence getCharContent(boolean ignoreEncodingErrors) {

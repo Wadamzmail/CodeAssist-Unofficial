@@ -47,6 +47,7 @@ import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
 import com.tyron.completion.util.CompletionUtils;
 import com.tyron.builder.BuildModule;
+import java.util.Objects;
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
