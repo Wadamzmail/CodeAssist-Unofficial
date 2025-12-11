@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.kotlin.com.intellij.openapi.util.UserDataHolderEx;
 import com.tyron.builder.project.Project;
+import java.util.Collections;
 
 public interface Module extends UserDataHolderEx, CacheHolder {
 
@@ -73,6 +74,25 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   File getBuildDirectory();
 
   File getBuildClassesDirectory();
+  
+      // NEW API
+
+    default void addChildModule(Module module) {
+
+    }
+
+
+    default Set<String> getModuleDependencies() {
+        return Collections.emptySet();
+    }
+
+    default void addContentRoot(ContentRoot contentRoot) {
+
+    }
+
+    default Set<ContentRoot> getContentRoots() {
+        return Collections.emptySet();
+    }
   
       /**
      *

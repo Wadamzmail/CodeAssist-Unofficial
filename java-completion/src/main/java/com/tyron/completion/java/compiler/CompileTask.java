@@ -16,6 +16,7 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTrees;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class CompileTask implements AutoCloseable {
 
@@ -29,7 +30,7 @@ public class CompileTask implements AutoCloseable {
     public CompileTask(CompileBatch batch) {
         mCompileBatch = batch;
         this.task = batch.task;
-        this.trees = JavacTrees.instance(task);
+        this.trees = JavacTreesUtil.instance(task);
 
         this.roots = batch.roots;
         this.diagnostics = batch.parent.getDiagnostics();
