@@ -161,11 +161,7 @@ public class Project {
 
   private void addEdges(MutableGraph<Module> graph, Module module) throws IOException {}
 
-    public File getRootFile() {
-        return mRoot;
-    }
-
-    public Module getModule(File file) {
+   /* public Module getModule(File file) {
         for (Module value : mModules.values()) {
             for (ContentRoot contentRoot : value.getContentRoots()) {
                 for (File sourceDirectory : contentRoot.getSourceDirectories()) {
@@ -176,7 +172,7 @@ public class Project {
             }
         }
         return getMainModule();
-    }
+    }*/
 
     public Module getModuleByName(String name) {
         return mModules.get(name);
