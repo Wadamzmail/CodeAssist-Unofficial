@@ -1,6 +1,7 @@
 package dev.mutwakil.javac;
 
 import com.sun.source.util.DocTrees;
+import com.sun.source.util.Trees;
 import javax.tools.JavaCompiler.CompilationTask;
 
 public final class MDocTrees {
