@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import dev.mutwakil.javac.*;
 
 public class ImplementAbstractMethods implements JavaRewrite {
 
@@ -96,7 +97,7 @@ public class ImplementAbstractMethods implements JavaRewrite {
     private Map<Path, TextEdit[]> rewriteInternal(CompilerProvider compiler, CompileTask task, Path file) {
         Elements elements = task.task.getElements();
         Types types = task.task.getTypes();
-        Trees trees = Trees.instance(task.task);
+        Trees trees = MTrees.instance(task.task);
         List<TextEdit> edits = new ArrayList<>();
         List<TextEdit> importEdits = new ArrayList<>();
         Set<String> typesToImport = new HashSet<>();

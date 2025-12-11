@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import dev.mutwakil.javac.*;
 
 public class EditHelper {
     final JavacTask task;
@@ -67,7 +68,7 @@ public class EditHelper {
     }
 
     public TextEdit removeTree(CompilationUnitTree root, Tree remove) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         LineMap lines = root.getLineMap();
         long start = pos.getStartPosition(root, remove);
         long end = pos.getEndPosition(root, remove);
