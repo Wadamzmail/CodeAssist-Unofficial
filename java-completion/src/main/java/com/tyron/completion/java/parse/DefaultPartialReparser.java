@@ -44,6 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.tools.JavaFileObject;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 public class DefaultPartialReparser implements PartialReparser {
 
@@ -65,7 +66,7 @@ public class DefaultPartialReparser implements PartialReparser {
         }
 
         JavacTaskImpl task = ci.getJavacTask();
-        Trees trees = Trees.instance(task);
+        Trees trees = JavacTreesUtil.instance(task);
 
         TreePath methodPath = trees.getPath(cu, orig);
         if (methodPath.getLeaf().getKind() != Tree.Kind.METHOD) {
