@@ -364,7 +364,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       for (File directory : natives_libs) {
         File check = new File(directory, "classes.jar");
         if (check.exists()) {
-          mNativeLibraries.add(CodeAssistLibrary.forJar(check));
+          mNativeLibraries.add(check);
         }
       }
     }
