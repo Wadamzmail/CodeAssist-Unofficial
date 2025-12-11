@@ -24,8 +24,8 @@ public class ClsEditor implements FileEditor {
   }
 
   @Override
-  public Fragment getFragment() {
-    return mFragment;
+  public View getView() {
+    return null;
   }
 
   @Override

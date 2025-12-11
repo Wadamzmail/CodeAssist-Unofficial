@@ -4,17 +4,19 @@ import java.util.List;
 
 public class ShortcutItem {
 
-  public ShortcutItem() {}
+    public ShortcutItem() {
 
-  public ShortcutItem(List<ShortcutAction> actions, String label, String kind) {
-    this.actions = actions;
-    this.label = label;
-    this.kind = kind;
-  }
+    }
 
-  public List<ShortcutAction> actions;
+    public ShortcutItem(List<ShortcutAction> actions, String label, String kind) {
+        this.actions = actions;
+        this.label = label;
+        this.kind = kind;
+    }
 
-  public String kind;
+    public List<ShortcutAction> actions;
 
-  public String label;
+    public String kind;
+
+    public String label;
 }
