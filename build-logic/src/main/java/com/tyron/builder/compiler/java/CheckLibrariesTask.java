@@ -230,7 +230,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       Map<String,CodeAssistLibrary> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
     try {
       ZipFile zipFile = new ZipFile(new File(dir, include));
-     CodeAssistLibrary library = newCodeAssistLibrary();
+     CodeAssistLibrary library = new CodeAssistLibrary();
       library.setSourceFile(new File(dir, include));
       fileLibsHashes.put(calculateMD5(new File(dir, include)), library);
     } catch (IOException e) {
@@ -252,7 +252,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
         for (File fileLibrary : fileLibraries) {
           try {
             ZipFile zipFile = new ZipFile(fileLibrary);
-           CodeAssistLibrary library = newCodeAssistLibrary();
+           CodeAssistLibrary library = new CodeAssistLibrary();
             library.setSourceFile(fileLibrary);
             fileLibsHashes.put(calculateMD5(fileLibrary), library);
           } catch (IOException e) {
