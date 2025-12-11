@@ -8,6 +8,7 @@ import com.sun.tools.javac.tree.JCTree.JCImport;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
+import dev.mutwakil.javac.*;
 
 /**
  *
@@ -26,7 +27,7 @@ public class NBMemberEnter extends MemberEnter {
     public NBMemberEnter(Context context, boolean backgroundScan) {
         super(context);
         cancelService = CancelService.instance(context);
-        trees = NBJavacTrees.instance(context);
+        trees = (NBJavacTrees)MJavacTrees.instance(context);
         this.backgroundScan = backgroundScan;
     }
 
