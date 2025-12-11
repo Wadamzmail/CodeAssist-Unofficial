@@ -331,7 +331,7 @@ public class EditHelper {
             .withParent(method());
 
     public static int indent(JavacTask task, CompilationUnitTree root, Tree leaf) {
-        Trees trees = Trees.instance(task);
+        Trees trees = MTrees.instance(task);
         ProcessingContext context = new ProcessingContext();
         context.put("trees", trees);
         context.put("root", root);
@@ -347,7 +347,7 @@ public class EditHelper {
     }
 
     private static int indentInternal(JavacTask task, CompilationUnitTree root, Tree leaf) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         LineMap lines = root.getLineMap();
         long startClass = pos.getStartPosition(root, leaf);
         long line = lines.getLineNumber(startClass);
@@ -385,7 +385,7 @@ public class EditHelper {
 
 
     public static Position insertBefore(JavacTask task, CompilationUnitTree root, Tree member) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         LineMap lines = root.getLineMap();
         long start = pos.getStartPosition(root, member);
         int line = (int) lines.getLineNumber(start);
@@ -393,7 +393,7 @@ public class EditHelper {
     }
 
     public static Position insertAfter(JavacTask task, CompilationUnitTree root, Tree member) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         LineMap lines = root.getLineMap();
         long end = pos.getEndPosition(root, member);
         int line = (int) lines.getLineNumber(end);
@@ -402,7 +402,7 @@ public class EditHelper {
 
     public static Position insertAtEndOfClass(JavacTask task, CompilationUnitTree root,
                                               ClassTree leaf) {
-        SourcePositions pos = Trees.instance(task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task).getSourcePositions();
         LineMap lines = root.getLineMap();
         long end = pos.getEndPosition(root, leaf);
         int line = (int) lines.getLineNumber(end);
