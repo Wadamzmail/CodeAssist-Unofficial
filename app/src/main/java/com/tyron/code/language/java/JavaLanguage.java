@@ -58,6 +58,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.builder.project.Project;
+import com.tyron.completion.java.parse.CompilationInfo;
 
 public class JavaLanguage extends EmptyTextMateLanguage implements Language, EditorFormatter, CodeAssistLanguage {
 
@@ -179,10 +180,10 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
                 .setColumn(position.getColumn())
                 .setLine(position.getLine())
                 .setIndex(position.getIndex())
-                .setEditor(editor)
-                .setFile(editor.getCurrentFile())
-                .setProject(editor.getProject())
-                .setModule(editor.getProject().getMainModule())
+                .setEditor(mEditor)
+                .setFile(mEditor.getCurrentFile())
+                .setProject(mEditor.getProject())
+                .setModule(mEditor.getProject().getMainModule())
                 .setContents(content.getReference().toString())
                 .setPrefix(prefix)
                 .build();
@@ -200,7 +201,7 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
         if (project == null) {
             return;
         }
-        CompilationInfo compilationInfo = CompilationInfo.get(project, editor.getCurrentFile());
+        CompilationInfo compilationInfo = CompilationInfo.get(project, mEditor.getCurrentFile());
         if (compilationInfo == null) {
             return;
         }

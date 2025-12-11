@@ -388,5 +388,9 @@
 	<string name="errors_found">%1s errors found</string>
     <string name="please_wait">Please wait</string>
     <string name="formatting">Formatting Codes</string>
+    
+       <string name="action_menu_build_release">Build release APK</string>
+    <string name="action_menu_build_debug">Build debug APK</string>
+    <string name="action_menu_build_aab">Build AAB</string>
 
 </resources>

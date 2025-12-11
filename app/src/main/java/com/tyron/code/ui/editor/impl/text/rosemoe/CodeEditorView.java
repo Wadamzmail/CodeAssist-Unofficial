@@ -235,31 +235,31 @@ public class CodeEditorView extends CodeEditor implements Editor {
         }
     }
 
-    @Override
-    public void deleteText() {
-        Cursor cursor = getCursor();
-        if (!cursor.isSelected()) {
-            io.github.rosemoe.sora.text.Content text = getText();
-            int startIndex = cursor.getLeft();
-            if (startIndex - 1 >= 0) {
-                char deleteChar = text.charAt(startIndex - 1);
-                char afterChar = text.charAt(startIndex);
-                SymbolPairMatch.Replacement replacement = null;
+ @Override
+  public void deleteText() {
+    Cursor cursor = getCursor();
+    if (!cursor.isSelected()) {
+      io.github.rosemoe.sora.text.Content text = getText();
+      int startIndex = cursor.getLeft();
+      if (startIndex - 1 >= 0) {
+        char deleteChar = text.charAt(startIndex - 1);
+        char afterChar = text.charAt(startIndex);
+        SymbolPairMatch.SymbolPair replacement = null;
 
-                SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
-                if (pairs != null) {
-                    replacement = pairs.getCompletion(deleteChar);
-                }
-                if (replacement != null) {
-                    if (("" + deleteChar + afterChar + "").equals(replacement.text)) {
-                        text.delete(startIndex - 1, startIndex + 1);
-                        return;
-                    }
-                }
-            }
+        SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
+        if (pairs != null) {
+          replacement = pairs.matchBestPairBySingleChar(deleteChar);
         }
-        super.deleteText();
+        if (replacement != null) {
+          if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
+            text.delete(startIndex - 1, startIndex + 1);
+            return;
+          }
+        }
+      }
     }
+    super.deleteText();
+  }
 
     @Override
     public void insertMultilineString(int line, int column, String string) {

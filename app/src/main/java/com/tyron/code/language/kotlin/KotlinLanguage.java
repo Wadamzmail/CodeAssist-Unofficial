@@ -46,6 +46,7 @@ import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
 import com.tyron.completion.util.CompletionUtils;
+import com.tyron.builder.BuildModule;
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
@@ -57,6 +58,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
     private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
   private static final String SCOPENAME ="source.kotlin";
+  private KotlinEnvironment kotlinEnvironment;
+  
   private final Formatter formatter = new AsyncFormatter() {
         @Nullable
         @Override
