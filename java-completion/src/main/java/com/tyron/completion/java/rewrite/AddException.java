@@ -16,6 +16,7 @@ import com.sun.source.util.Trees;
 
 import java.nio.file.Path;
 import java.util.Map;
+import dev.mutwakil.javac.*;
 
 public class AddException implements JavaRewrite {
 
@@ -45,7 +46,7 @@ public class AddException implements JavaRewrite {
                 return CANCELLED;
             }
 
-            Trees trees = Trees.instance(task.task);
+            Trees trees = MTrees.instance(task.task);
             ExecutableElement methodElement = FindHelper.findMethod(task, className, methodName,
                     erasedParameterTypes);
             MethodTree methodTree = trees.getTree(methodElement);
