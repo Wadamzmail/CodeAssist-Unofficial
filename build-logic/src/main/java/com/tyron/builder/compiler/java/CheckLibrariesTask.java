@@ -8,7 +8,7 @@ import com.tyron.builder.compiler.ScopeType;
 import com.tyron.builder.compiler.Task;
 import com.tyron.builder.exception.CompilationFailedException;
 import com.tyron.builder.log.ILogger;
-import com.tyron.builder.model.Library;
+import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.ModuleSettings;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
@@ -161,9 +161,9 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       JavaModule project, File root, File idea, ILogger logger, File gradleFile, String scope)
       throws IOException {
 
-    Set<Library> libraries = new HashSet<>();
-    Map<String, Library> fileLibsHashes = new HashMap<>();
-    Map<String, Library> md5Map = new HashMap<>();
+    Set<CodeAssistLibrary> libraries = new HashSet<>();
+    Map<String,CodeAssistLibrary> fileLibsHashes = new HashMap<>();
+    Map<String,CodeAssistLibrary> md5Map = new HashMap<>();
 
     AbstractMap.SimpleEntry<ArrayList<String>, ArrayList<String>> result =
         project.extractListDirAndIncludes(gradleFile, scope);
@@ -226,11 +226,11 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     libraries.clear();
   }
 
-  public Map<String, Library> checkDirLibraries(
-      Map<String, Library> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
+  public Map<String,CodeAssistLibrary> checkDirLibraries(
+      Map<String,CodeAssistLibrary> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
     try {
       ZipFile zipFile = new ZipFile(new File(dir, include));
-      Library library = new Library();
+     CodeAssistLibrary library = newCodeAssistLibrary();
       library.setSourceFile(new File(dir, include));
       fileLibsHashes.put(calculateMD5(new File(dir, include)), library);
     } catch (IOException e) {
@@ -240,8 +240,8 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     return fileLibsHashes;
   }
 
-  public Map<String, Library> checkDirIncludeLibraries(
-      Map<String, Library> fileLibsHashes,
+  public Map<String,CodeAssistLibrary> checkDirIncludeLibraries(
+      Map<String,CodeAssistLibrary> fileLibsHashes,
       ILogger logger,
       File dir,
       ArrayList<String> includes,
@@ -252,7 +252,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
         for (File fileLibrary : fileLibraries) {
           try {
             ZipFile zipFile = new ZipFile(fileLibrary);
-            Library library = new Library();
+           CodeAssistLibrary library = newCodeAssistLibrary();
             library.setSourceFile(fileLibrary);
             fileLibsHashes.put(calculateMD5(fileLibrary), library);
           } catch (IOException e) {
@@ -265,14 +265,14 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     return fileLibsHashes;
   }
 
-  public Set<Library> parseLibraries(Set<Library> libraries, File file, String scope) {
+  public Set<CodeAssistLibrary> parseLibraries(Set<CodeAssistLibrary> libraries, File file, String scope) {
     ModuleSettings myModuleSettings = new ModuleSettings(file);
     String librariesString = myModuleSettings.getString(scope + "_libraries", "[]");
     try {
-      List<Library> parsedLibraries =
-          new Gson().fromJson(librariesString, new TypeToken<List<Library>>() {}.getType());
+      List<CodeAssistLibrary> parsedLibraries =
+          new Gson().fromJson(librariesString, new TypeToken<List<CodeAssistLibrary>>() {}.getType());
       if (parsedLibraries != null) {
-        /*for (Library parsedLibrary : parsedLibraries) {
+        /*for (CodeAssistLibrary parsedLibrary : parsedLibraries) {
         if (!libraries.contains(parsedLibrary)) {
         Log.d("LibraryCheck", "Removed library" + parsedLibrary);
         } else {
@@ -286,10 +286,10 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     return libraries;
   }
 
-  public Map<String, Library> checkLibraries(
-      Map<String, Library> md5Map,
-      Set<Library> libraries,
-      Map<String, Library> fileLibsHashes,
+  public Map<String,CodeAssistLibrary> checkLibraries(
+      Map<String,CodeAssistLibrary> md5Map,
+      Set<CodeAssistLibrary> libraries,
+      Map<String,CodeAssistLibrary> fileLibsHashes,
       File libs)
       throws IOException {
     libraries.forEach(it -> md5Map.put(calculateMD5(it.getSourceFile()), it));
@@ -315,18 +315,18 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       File libs,
       File file,
       String scope,
-      Map<String, Library> libraries,
-      Map<String, Library> fileLibraries)
+      Map<String,CodeAssistLibrary> libraries,
+      Map<String,CodeAssistLibrary> fileLibraries)
       throws IOException {
-    Map<String, Library> combined = new HashMap<>();
+    Map<String,CodeAssistLibrary> combined = new HashMap<>();
     combined.putAll(libraries);
     combined.putAll(fileLibraries);
 
     getModule().putLibraryHashes(combined);
 
-    for (Map.Entry<String, Library> entry : combined.entrySet()) {
+    for (Map.Entry<String,CodeAssistLibrary> entry : combined.entrySet()) {
       String hash = entry.getKey();
-      Library library = entry.getValue();
+     CodeAssistLibrary library = entry.getValue();
 
       File libraryDir = new File(libs, hash);
       if (!libraryDir.exists()) {
