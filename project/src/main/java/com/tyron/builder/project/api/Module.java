@@ -8,6 +8,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.kotlin.com.intellij.openapi.util.UserDataHolderEx;
+import com.tyron.builder.project.Project;
 
 public interface Module extends UserDataHolderEx, CacheHolder {
 
@@ -72,4 +73,16 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   File getBuildDirectory();
 
   File getBuildClassesDirectory();
+  
+      /**
+     *
+     * @return The project that this module is part of
+     */
+    default Project getProject() {
+        throw new UnsupportedOperationException();
+    }
+
+    default void setProject(Project project) {
+        throw new UnsupportedOperationException();
+    }
 }

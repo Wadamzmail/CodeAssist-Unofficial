@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import dev.mutwakil.javac.JavacTreesUtil;
 
 
 @SuppressWarnings("NewApi")
@@ -55,7 +56,7 @@ public class CompileBatch implements AutoCloseable {
         this.parent = parent;
         this.borrow = batchTask(parent, files);
         this.task = borrow.task;
-        this.trees = Trees.instance(borrow.task);
+        this.trees = JavacTreesUtil.instance(borrow.task);
         this.elements = borrow.task.getElements();
         this.types = borrow.task.getTypes();
         this.roots = new ArrayList<>();
