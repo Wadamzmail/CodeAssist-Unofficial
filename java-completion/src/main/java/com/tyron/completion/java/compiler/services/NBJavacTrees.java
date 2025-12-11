@@ -14,6 +14,8 @@ import com.sun.tools.javac.util.Context;
 import java.util.HashMap;
 import java.util.Map;
 import javax.lang.model.element.Element;
+import dev.mutwakil.javac.*;
+import javax.tools.JavaCompiler;
 
 /**
  *
@@ -26,6 +28,14 @@ public class NBJavacTrees extends JavacTrees {
     public static void preRegister(Context context) {
         context.put(JavacTrees.class, (Context.Factory<JavacTrees>) NBJavacTrees::new);
     }
+    
+    public static NBJavacTrees instance(JavaCompiler.CompilationTask task) {
+         return (NBJavacTrees)MJavacTrees.instance(task);
+    }
+    public static NBJavacTrees instance(Context context) {
+        return (NBJavacTrees)MJavacTrees.instance(context);
+    } 
+    
     protected NBJavacTrees(Context context) {
         super(context);
     }
