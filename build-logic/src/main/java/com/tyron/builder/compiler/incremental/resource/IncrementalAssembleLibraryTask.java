@@ -73,6 +73,7 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.tyron.builder.model.CodeAssistLibrary;
 
 public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
@@ -395,7 +396,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
         // getLogger().debug("Already built project: " + projectName);
         subCompileClassPath.add(new File(transformsDir, "classes.jar"));
         subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-        getModule().addLibrary(new File(transformsDir, "classes.jar"));
+        getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
         return;
       }
       javaFiles.addAll(getFiles(javaDir, ".java"));
@@ -427,7 +428,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       builtProjects.add(projectName);
       subCompileClassPath.add(new File(transformsDir, "classes.jar"));
       subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-      getModule().addLibrary(new File(transformsDir, "classes.jar"));
+      getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
 
     } else if (pluginType.equals("[java-library, kotlin]")
         || pluginType.equals("[kotlin, java-library]")) {
@@ -435,7 +436,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
         // getLogger().debug("Already built project: " + projectName);
         subCompileClassPath.add(new File(transformsDir, "classes.jar"));
         subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-        getModule().addLibrary(new File(transformsDir, "classes.jar"));
+        getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
         return;
       }
       kotlinFiles.addAll(getFiles(kotlinDir, ".kt"));
@@ -479,13 +480,13 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       builtProjects.add(projectName);
       subCompileClassPath.add(new File(transformsDir, "classes.jar"));
       subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-      getModule().addLibrary(new File(transformsDir, "classes.jar"));
+      getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
     } else if (pluginType.equals("[com.android.library]")) {
       if (builtProjects.contains(projectName)) {
         // getLogger().debug("Already built project: " + projectName);
         subCompileClassPath.add(new File(transformsDir, "classes.jar"));
         subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-        getModule().addLibrary(new File(transformsDir, "classes.jar"));
+        getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
         return;
       }
       javaFiles.addAll(getFiles(javaDir, ".java"));
@@ -544,7 +545,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       builtProjects.add(projectName);
       subCompileClassPath.add(new File(transformsDir, "classes.jar"));
       subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-      getModule().addLibrary(new File(transformsDir, "classes.jar"));
+      getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
     } else if (pluginType.equals("[com.android.library, kotlin]")
         || pluginType.equals("[kotlin, com.android.library]")
         || pluginType.equals("[com.android.library, kotlin-android]")
@@ -553,7 +554,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
         // getLogger().debug("Already built project: " + projectName);
         subCompileClassPath.add(new File(transformsDir, "classes.jar"));
         subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-        getModule().addLibrary(new File(transformsDir, "classes.jar"));
+        getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
         return;
       }
       kotlinFiles.addAll(getFiles(kotlinDir, ".kt"));
@@ -620,7 +621,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       builtProjects.add(projectName);
       subCompileClassPath.add(new File(transformsDir, "classes.jar"));
       subRuntimeClassPath.add(new File(transformsDir, "classes.jar"));
-      getModule().addLibrary(new File(transformsDir, "classes.jar"));
+      getModule().addLibrary(CodeAssistLibrary.forJar(new File(transformsDir, "classes.jar")));
     }
   }
 
@@ -643,7 +644,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
     classPath.addAll(getJarFiles(new File(libraries, "api_files/libs")));
     classPath.addAll(getJarFiles(new File(libraries, "api_libs")));
     for (File jar : classPath) {
-      getModule().addLibrary(jar);
+      getModule().addLibrary(CodeAssistLibrary.forJar(jar));
     }
     return classPath;
   }
