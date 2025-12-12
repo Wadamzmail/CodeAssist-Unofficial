@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.tyron.code.ApplicationLoader;
 
 /** Handles the communication between the Index service and the main fragment */
 public class IndexServiceConnection implements ServiceConnection {
@@ -90,8 +91,8 @@ public class IndexServiceConnection implements ServiceConnection {
         List<FileEditorSavedState> savedStates = new Gson().fromJson(openedFilesString, type);
         return savedStates.stream()
             .filter(it -> it.getFile().exists())
-            .map(state -> FileEditorManagerImpl.getInstance().openFile(IndexServiceConnection.this, state))
-            .collect(Collectors.toList());
+            .map(state -> FileEditorManagerImpl.getInstance().openFile(ApplicationLoader.getApplicationContext(), state))
+            .collect(Collectors.<FileEditor>toList());
       } catch (Throwable e) {
         // ignored, users may have edited the file manually and is corrupt
         // just return an empty editor list
