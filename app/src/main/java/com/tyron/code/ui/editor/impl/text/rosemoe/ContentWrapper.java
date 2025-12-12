@@ -159,13 +159,5 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
     public long getModificationStamp() {
         return modificationStamp;
     }
-    @Override 
-    public void redo(){
-      super.redo();
-    }
-    @Override
-    public void undo(){
-    super.undo();
-    }
     
 }

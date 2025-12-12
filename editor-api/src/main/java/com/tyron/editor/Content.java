@@ -3,6 +3,7 @@ package com.tyron.editor;
 import com.tyron.editor.event.ContentListener;
 
 import org.jetbrains.annotations.NotNull;
+import io.github.rosemoe.sora.text.TextRange;
 
 public interface Content extends CharSequence {
 
@@ -26,7 +27,7 @@ public interface Content extends CharSequence {
     /**
      * Revert to the previous action
      */
-    void undo();
+    TextRange undo();
 
     int getLineCount();
 
