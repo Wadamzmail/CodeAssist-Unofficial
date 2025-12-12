@@ -162,8 +162,8 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
     }
     
     @Override
-    public void mUndo(){
-         (TextRange)undo();
+    public void undo(){
+         (TextRange)super.undo();
     }
     
 }
