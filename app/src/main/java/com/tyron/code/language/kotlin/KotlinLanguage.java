@@ -128,7 +128,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
 
     KotlinAutoCompleteProvider provider =
-                new KotlinAutoCompleteProvider(editor);
+                new KotlinAutoCompleteProvider(mEditor);
         CompletionList completionList = provider.getCompletionList(identifierPart,
                 position.getLine(),
                 position.getColumn());

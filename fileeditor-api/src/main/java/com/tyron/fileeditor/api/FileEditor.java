@@ -17,6 +17,10 @@ public interface FileEditor {
     /**
      * @return the fragment which represents the editor in UI
      */
+  /* default Fragment getFragment(){
+    return null;
+   } */
+      
     View getView();
 
     /**

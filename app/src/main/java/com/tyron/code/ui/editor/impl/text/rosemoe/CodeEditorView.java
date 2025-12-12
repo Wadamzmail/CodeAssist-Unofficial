@@ -392,4 +392,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
+    @Override 
+ public void moveSelectionRight(){}
+  @Override 
+public  void moveSelectionUp(){} 
+  @Override 
+public  void moveSelectionDown(){}
+  @Override 
+public  void moveSelectionLeft(){}
 }

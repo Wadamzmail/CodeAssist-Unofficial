@@ -49,6 +49,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import com.tyron.completion.xml.task.InjectResourcesTask; 
 import com.tyron.language.api.CodeAssistLanguage;
 import com.tyron.viewbinding.task.InjectViewBindingTask;
+import com.tyron.builder.project.api.AndroidModule;
 
 public class LanguageXML extends EmptyTextMateLanguage implements Language, CodeAssistLanguage{
 
@@ -208,8 +209,9 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
         if (mEditor.getProject() == null) {
             return;
         }
-        InjectResourcesTask.inject(mEditor.getProject());
-        InjectViewBindingTask.inject(mEditor.getProject());
+        AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
+        InjectResourcesTask.inject(mEditor.getProject(),mainModule);
+        InjectViewBindingTask.inject(mEditor.getProject(),mainModule);
     }
 
   @Override
