@@ -26,7 +26,7 @@ public interface Content extends CharSequence {
     /**
      * Revert to the previous action
      */
-    void undo();
+    default void undo(){mUndo();}
     default void mUndo(){} 
 
     int getLineCount();
