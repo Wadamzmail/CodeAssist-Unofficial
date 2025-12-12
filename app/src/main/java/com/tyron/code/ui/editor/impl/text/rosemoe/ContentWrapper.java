@@ -161,7 +161,5 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
     }
     @Override 
     public void redo(){} 
-    @Override 
-    public void undo(){}
     
 }

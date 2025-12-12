@@ -11,6 +11,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.codeassist.unofficial.BuildConfig;
+import androidx.core.content.FileProvider;
 
 public class ApkInstaller {
 
