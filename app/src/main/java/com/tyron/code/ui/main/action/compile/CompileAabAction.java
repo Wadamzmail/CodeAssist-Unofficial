@@ -25,6 +25,6 @@ public class CompileAabAction extends CompileAction {
 
     @Override
     public String getTitle(Context context) {
-        return context.getString(R.string.action_menu_build_aab);
+         return context.getString(R.string.action_menu_build_aab);
     }
 }

@@ -54,6 +54,7 @@ import java.util.Locale;
 import java.util.logging.Handler;
 import javax.tools.Diagnostic;
 import org.codeassist.unofficial.R;
+import com.tyron.actions.DataContext;
 
 public class AppLogFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
 
@@ -187,7 +188,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                                 if (selectedErrorItem.getDiagnosticWrapper().getLineNumber() > 0
                                     && selectedErrorItem.getDiagnosticWrapper().getColumnNumber()
                                         > 0) {
-                                  Bundle bundle = new Bundle(it.getFragment().getArguments());
+                                /*  Bundle bundle = new Bundle(it.getFragment().getArguments());
                                   bundle.putInt(
                                       CodeEditorFragment.KEY_LINE,
                                       (int)
@@ -199,7 +200,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                                               .getDiagnosticWrapper()
                                               .getColumnNumber());
                                   it.getFragment().setArguments(bundle);
-                                  manager.openFileEditor(it);
+                                  manager.openFileEditor(it);*/
                                 }
                               });
                         }

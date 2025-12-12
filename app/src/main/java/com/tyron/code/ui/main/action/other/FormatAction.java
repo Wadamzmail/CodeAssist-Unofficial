@@ -35,7 +35,7 @@ public class FormatAction extends AnAction {
    // FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
     Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
     if (fragment instanceof CodeEditorFragment) {
-      ((CodeEditorFragment) fragment).format();
+       ((CodeEditorFragment) fragment).format();
     }
   }
 }

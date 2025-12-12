@@ -35,10 +35,10 @@ public class SearchAction extends AnAction {
     Context context = e.getRequiredData(CommonDataKeys.CONTEXT);
     context = getActivityContext(context);
 
-    FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-    Fragment fragment = fileEditor.getFragment();
+   // FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
+    Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
     if (fragment instanceof CodeEditorFragment) {
-      ((CodeEditorFragment) fragment).search();
+       ((CodeEditorFragment) fragment).search();
     }
   }
 

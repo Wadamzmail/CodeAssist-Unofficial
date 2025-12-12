@@ -86,7 +86,7 @@ public class CompileAabAction extends AnAction {
       return;
     }
     // save files before build
-    Stream<FileEditor> validEditors =
+   /* Stream<FileEditor> validEditors =
         editors.stream()
             .filter(it -> it.getFragment() instanceof Savable)
             .filter(it -> ((Savable) it.getFragment()).canSave());
@@ -106,7 +106,8 @@ public class CompileAabAction extends AnAction {
                             .collect(Collectors.joining("\n\n")))
                     .show();
               }
-            });
+            });*/
+        SaveAction.doSave();   
 
     callback.compile(BuildType.AAB);
   }
