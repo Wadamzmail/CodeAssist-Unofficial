@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.text.TextRange;
 
 public class ContentWrapper extends Content implements com.tyron.editor.Content {
 
@@ -158,6 +159,11 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
     @Override
     public long getModificationStamp() {
         return modificationStamp;
+    }
+    
+    @Override
+    public void mUndo(){
+         (TextRange)undo();
     }
     
 }

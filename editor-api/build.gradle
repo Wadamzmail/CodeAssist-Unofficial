@@ -10,7 +10,6 @@ dependencies {
     implementation project(path: ':project')
     implementation project(path: ':language-api')
     implementation project(path: ':common')
-    implementation 'io.github.rosemoe:editor:0.24.2'
     
     implementation("org.checkerframework:checker-qual:3.50.0")
     
