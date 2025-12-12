@@ -91,7 +91,7 @@ public class IndexServiceConnection implements ServiceConnection {
         List<FileEditorSavedState> savedStates = new Gson().fromJson(openedFilesString, type);
         return savedStates.stream()
             .filter(it -> it.getFile().exists())
-            .map(state -> FileEditorManagerImpl.getInstance().openFile(ApplicationLoader.getApplicationContext(), state))
+            .map(state -> FileEditorManagerImpl.getInstance().openFile(ApplicationLoader.getInstance(), state))
             .collect(Collectors.<FileEditor>toList());
       } catch (Throwable e) {
         // ignored, users may have edited the file manually and is corrupt
