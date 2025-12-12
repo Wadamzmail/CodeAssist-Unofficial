@@ -10,6 +10,7 @@ dependencies {
     implementation project(path: ':project')
     implementation project(path: ':language-api')
     implementation project(path: ':common')
+    implementation project(path: ':code-editor')
     
     implementation("org.checkerframework:checker-qual:3.50.0")
     
