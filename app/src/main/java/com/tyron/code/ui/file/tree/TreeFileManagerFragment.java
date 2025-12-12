@@ -74,6 +74,7 @@ import java.util.List;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
+import com.tyron.code.util.EventManagerUtilsKt;
 
 public class TreeFileManagerFragment extends Fragment {
 
@@ -194,10 +195,7 @@ public class TreeFileManagerFragment extends Fragment {
     treeView.getView().setNestedScrollingEnabled(false);
 
     EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
-    eventManager.subscribeEvent(
-        getViewLifecycleOwner(),
-        RefreshRootEvent.class,
-        (event, unsubscribe) -> {
+    EventManagerUtilsKt.subscribeEvent(eventManager, getViewLifecycleOwner(), RefreshRootEvent.class, (event, unsubscribe) -> {
           File refreshRoot = event.getRoot();
           TreeNode<TreeFile> currentRoot = treeView.getRoot();
           if (currentRoot != null && refreshRoot.equals(currentRoot.getValue().getFile())) {
