@@ -46,6 +46,10 @@ dependencies {
     api 'org.apache.bcel:bcel:6.5.0'
     implementation 'org.antlr:antlr4-runtime:4.13.2'
     api 'org.jsoup:jsoup:1.18.1'
+    
+    // v2 dependencies
+    implementation 'it.unimi.dsi:fastutil:8.5.8'
+    implementation 'net.sf.kxml:kxml2:2.3.0'
 
     implementation project(path: ':language-api')
     implementation project(path: ':completion-api')
@@ -56,6 +60,7 @@ dependencies {
     implementation project(path: ':project')
     implementation project(path: ':manifmerger')
     implementation project(path: ':xml-repository')
+    implementation project(path: ':android-common-resources')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

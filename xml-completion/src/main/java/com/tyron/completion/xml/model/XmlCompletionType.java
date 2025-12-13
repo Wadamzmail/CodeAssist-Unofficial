@@ -1,11 +1,12 @@
 package com.tyron.completion.xml.model;
 
 public enum XmlCompletionType {
-  TAG,
 
-  ATTRIBUTE,
+    TAG,
 
-  ATTRIBUTE_VALUE,
+    ATTRIBUTE,
 
-  UNKNOWN
+    ATTRIBUTE_VALUE,
+
+    UNKNOWN
 }

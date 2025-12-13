@@ -50,6 +50,13 @@ import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.language.api.CodeAssistLanguage;
 import com.tyron.viewbinding.task.InjectViewBindingTask;
 import com.tyron.builder.project.api.AndroidModule;
+import com.tyron.completion.xml.v2.AndroidXmlCompletionProvider;
+import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
+import com.tyron.code.language.CompletionItemWrapper;
+import com.tyron.code.ui.project.ProjectManager;
+import com.tyron.completion.CompletionParameters;
+import com.tyron.builder.project.api.Module;
+import com.tyron.code.event.EventManager;
 
 public class LanguageXML extends EmptyTextMateLanguage implements Language, CodeAssistLanguage{
 
@@ -192,16 +199,32 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
       @NonNull CompletionPublisher publisher,
       @NonNull Bundle extraArguments)
       throws CompletionCancelledException {
-    String prefix = CompletionHelper.computePrefix(content, position, this::isAutoCompleteChar);
-    List<CompletionItem> items =
-        new XMLAutoCompleteProvider(mEditor)
-            .getAutoCompleteItems(prefix, position.getLine(), position.getColumn());
-    if (items == null) {
-      return;
-    }
-    for (CompletionItem item : items) {
-      publisher.addItem(item);
-    }
+    if (mEditor.getProject() == null) {
+            return;
+        }
+        Module module = mEditor.getProject().getModule(mEditor.getCurrentFile());
+        if (!(module instanceof AndroidModule)) {
+            return;
+        }
+        String prefix = CompletionHelper.computePrefix(content, position, this::isAutoCompleteChar);
+        CompletionParameters parameters = CompletionParameters.builder()
+                .setPrefix(prefix)
+                .setModule(module)
+                .setProject(mEditor.getProject())
+                .setFile(mEditor.getCurrentFile())
+                .setIndex(position.getIndex())
+                .setLine(position.getLine())
+                .setColumn(position.getColumn())
+                .setContents(content.getReference().toString())
+                .build();
+        CompletionList items =
+                new AndroidXmlCompletionProvider().complete(parameters);
+        if (items == null) {
+            return;
+        }
+        for (CompletionItem item : items.getItems()) {
+            publisher.addItem(new CompletionItemWrapper(item));
+        }
   }
   
   @Override
@@ -210,7 +233,7 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
             return;
         }
         AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
-       try{ InjectResourcesTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}
+       try{ InjectResourcesTask.inject(mEditor.getProject());}catch(Exception e){}
        try{ InjectViewBindingTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}
     }
 
