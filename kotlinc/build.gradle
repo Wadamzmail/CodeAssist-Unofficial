@@ -11,7 +11,8 @@ configurations.implementation {
 dependencies {
     implementation 'com.github.marschall:zipfilesystem-standalone:1.0.1'
     implementation 'androidx.annotation:annotation:1.8.2'
-    implementation project(path: ':jaxp')
+    implementation project(path: ':jaxp:jaxp-internal')
+    implementation project(path: ':jaxp:xml')
 
     runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.0.20')
 
