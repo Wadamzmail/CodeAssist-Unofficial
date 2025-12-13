@@ -1,6 +1,7 @@
 include ':app'
 
-include ':jaxp'
+include ':jaxp:xml'
+include ':jaxp:jaxp-internal'
 include ':build-logic'
 include ':kotlinc'
 include ':viewbinding-lib'

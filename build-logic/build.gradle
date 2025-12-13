@@ -25,6 +25,11 @@ dependencies {
     implementation project(path: ':manifmerger')
     implementation project(path: ':project')
     implementation project(path: ':viewbinding-lib')
+    
+    // required so internal classes would be included 
+    api project(path: ':jaxp:jaxp-internal')
+    api project(path: ':jaxp:xml')
+    api project(path: ':kotlinc')
 
     // javac
     implementation project(path: ':javac')
