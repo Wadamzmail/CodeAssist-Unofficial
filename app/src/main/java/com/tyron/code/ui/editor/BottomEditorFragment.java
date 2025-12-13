@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.common.base.Strings;
 import com.tyron.builder.log.LogViewModel;
 import com.tyron.code.ApplicationLoader;
-import org.codeassist.unofficial.R;
+import com.tyron.code.R;
 import com.tyron.code.event.EventManager;
 import com.tyron.code.event.PerformShortcutEvent;
 import com.tyron.code.ui.editor.log.AppLogFragment;
