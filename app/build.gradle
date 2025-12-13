@@ -94,7 +94,6 @@ signingConfigs.debug
 
 configurations.implementation {
     exclude group: "org.jetbrains", module: "annotations"
-    exclude group: "org.apache.commons", module: "commons-lang3"
 }
 
 dependencies {
