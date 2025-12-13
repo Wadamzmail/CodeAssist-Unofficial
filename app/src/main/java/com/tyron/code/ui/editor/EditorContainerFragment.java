@@ -183,7 +183,7 @@ public class EditorContainerFragment extends Fragment implements
     }
 
     private void updateTabs() {
-        FileEditor fileEditor = mMainViewModel.getCurrentFileEditor();
+        FileEditor fileEditor = Objects.requireNonNull(mMainViewModel.getCurrentFileEditor());
         int index = mEditors.indexOf(fileEditor);
         if (index != -1) {
             updateTab(index);
