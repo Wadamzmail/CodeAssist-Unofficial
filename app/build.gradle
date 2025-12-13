@@ -94,6 +94,7 @@ signingConfigs.debug
 
 configurations.implementation {
     exclude group: "org.jetbrains", module: "annotations"
+    exclude group: 'com.android.tools', module: 'common'
 }
 
 dependencies {
