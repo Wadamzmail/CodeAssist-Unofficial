@@ -357,7 +357,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     @Override
     public Content getContent() {
-        return (Content) getText();
+        return new ContentWrapper(CodeEditorView.this.getText());
     }
 
     /**

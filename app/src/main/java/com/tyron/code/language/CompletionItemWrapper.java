@@ -24,6 +24,9 @@ public class CompletionItemWrapper extends CompletionItem {
     }
 
     Editor rawEditor = ((Editor) editor);
+    if(rawEditor==null){
+     throw new RuntimeException("Editor is null, cannot handle insert");
+    }
     item.handleInsert(rawEditor);
   }
 }

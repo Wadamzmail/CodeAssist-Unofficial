@@ -18,6 +18,7 @@ import com.tyron.completion.util.CompletionUtils;
 import com.tyron.editor.Editor;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
+import com.tyron.code.language.CompletionItemWrapper;
 
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 

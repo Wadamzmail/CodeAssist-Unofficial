@@ -53,6 +53,9 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import com.tyron.common.util.DebouncerStore;
 import com.tyron.builder.BuildModule;
+import com.tyron.completion.java.compiler.Parser;
+import com.tyron.completion.java.parse.CompilationInfo;
+
 
 public class ProjectManager {
 
@@ -225,9 +228,9 @@ public class ProjectManager {
                     }
                 })));
 
-        // the following will extract the jar files if it does not exist
-        BuildModule.getAndroidJar();
-        BuildModule.getLambdaStubs();
+     // the following will extract the jar files if it does not exist
+       BuildModule.getAndroidJar();
+       BuildModule.getLambdaStubs();
 
     JavaModule javaModule = (JavaModule) module;
     if (gradleFile.exists() && indexFiles.containsKey(DOWNLOAD)) {
@@ -306,6 +309,9 @@ public class ProjectManager {
                 if (module instanceof AndroidModule) {
                   String packageName = getApplicationId(((AndroidModule) module));
                   if (packageName != null) {
+                    //new 
+                    ResourceRepositoryManager.getProjectResources((AndroidModule)module);
+                    //
                     InjectResourcesTask.inject(project, (AndroidModule) module);
                     InjectViewBindingTask.inject(project, (AndroidModule) module);
                     logger.debug(
@@ -313,11 +319,14 @@ public class ProjectManager {
                   }
                 }
               }
-              Collection<File> files = javaModule.getJavaFiles().values();
+              /*Collection<File> files = javaModule.getJavaFiles().values();
               File first = files.size()>0?((File)files.toArray()[0]):null;//CollectionsKt.firstOrNull(files);
               if (first != null) {
                 service.compile(first.toPath());
-              }
+              }*/
+              
+              //new instead of the upper ^
+              indexModule(module);
           }
         } catch (Throwable e) {
           String message = "Failure indexing project.\n" + Throwables.getStackTraceAsString(e);
@@ -325,7 +334,8 @@ public class ProjectManager {
         }
         }
     }
-
+    
+    mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
     mCurrentProject.setIndexing(false);
     mListener.onComplete(project, true, "Index successful");
 
@@ -338,6 +348,31 @@ public class ProjectManager {
       logger.debug("TIME TOOK " + seconds + "s");
     }
   }
+  
+  private void indexModule(Module module) throws IOException {
+        module.open();
+        module.index();
+         if(!module instanceof JavaModule)return;
+        JavaModule javaModule = (JavaModule) module;
+        for (File value : javaModule.getJavaFiles().values()) {
+            CompilationInfo info = CompilationInfo.get(module.getProject(), value);
+            if (info == null) {
+                continue;
+            }
+            info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
+                    JavaFileObject.Kind.SOURCE) {
+                @Override
+                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                    Parser parser = Parser.parseFile(module.getProject(), value.toPath());
+                    // During indexing, statements inside methods are not needed so
+                    // it is stripped to speed up the index process
+                    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+                }
+            });
+        }
+
+        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module);
+    }
 
   private void downloadLibraries(JavaModule project, TaskListener listener, ILogger logger)
       throws IOException {

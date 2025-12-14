@@ -14,12 +14,12 @@ dependencies {
 
     api files('libs/org.eclipse.lemminx-0.11.0-uber.jar')
     api 'org.apache.commons:commons-lang3:3.12.0' 
+    implementation 'xerces:xercesImpl:2.12.2'
     implementation project(path: ':project')
 
     compileOnly project(path: ':android-stubs')
     compileOnly project(path: ':kotlinc')
-	// https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-implementation("com.google.code.findbugs:jsr305:3.0.2")
+    implementation("com.google.code.findbugs:jsr305:3.0.2")
 }
 
 spotless {
