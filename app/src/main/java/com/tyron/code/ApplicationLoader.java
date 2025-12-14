@@ -39,8 +39,8 @@ import com.tyron.completion.java.JavaCompletionProvider;
 import com.tyron.completion.main.CompletionEngine;
 import com.tyron.completion.xml.XmlCompletionModule;
 import com.tyron.completion.xml.XmlIndexProvider;
-import com.tyron.completion.xml.providers.AndroidManifestCompletionProvider;
-import com.tyron.completion.xml.providers.EmptyCompletionProvider;
+//import com.tyron.completion.xml.providers.AndroidManifestCompletionProvider;
+//import com.tyron.completion.xml.providers.EmptyCompletionProvider;
 import com.tyron.completion.xml.providers.LayoutXmlCompletionProvider;
 import com.tyron.editor.selection.ExpandSelectionProvider;
 import com.tyron.kotlin_completion.KotlinCompletionModule;
@@ -160,12 +160,12 @@ public class ApplicationLoader extends Application {
         () -> {
           CompletionProvider.registerCompletionProvider(
               JavaLanguage.INSTANCE, new JavaCompletionProvider());
-          CompletionProvider.registerCompletionProvider(
-              XmlLanguage.INSTANCE, new LayoutXmlCompletionProvider());
-          CompletionProvider.registerCompletionProvider(
-              XmlLanguage.INSTANCE, new AndroidManifestCompletionProvider());
-          CompletionProvider.registerCompletionProvider(
-              XmlLanguage.INSTANCE, new EmptyCompletionProvider());
+        //  CompletionProvider.registerCompletionProvider(
+           //   XmlLanguage.INSTANCE, new LayoutXmlCompletionProvider());
+         // CompletionProvider.registerCompletionProvider(
+          //    XmlLanguage.INSTANCE, new AndroidManifestCompletionProvider());
+        //  CompletionProvider.registerCompletionProvider(
+          //    XmlLanguage.INSTANCE, new EmptyCompletionProvider());
         });
     startupManager.addStartupActivity(
         () -> {

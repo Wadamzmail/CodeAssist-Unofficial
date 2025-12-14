@@ -16,7 +16,7 @@ import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.completion.CompletionCancelledException;
 import io.github.rosemoe.sora.lang.completion.CompletionHelper;
-import io.github.rosemoe.sora.lang.completion.CompletionItem;
+//import io.github.rosemoe.sora.lang.completion.CompletionItem;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
@@ -57,6 +57,8 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.completion.CompletionParameters;
 import com.tyron.builder.project.api.Module;
 import com.tyron.code.event.EventManager;
+import com.tyron.completion.model.CompletionItem;
+import com.tyron.completion.model.CompletionList;
 
 public class LanguageXML extends EmptyTextMateLanguage implements Language, CodeAssistLanguage{
 

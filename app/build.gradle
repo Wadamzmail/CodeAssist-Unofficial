@@ -82,6 +82,7 @@ signingConfigs.debug
         exclude "about_files/*"
         exclude "META-INF/eclipse.inf"
         pickFirst "META-INF/native-image/reflect-config.json"
+        exclude "README.md"
         pickFirst "META-INF/sisu/*"
         pickFirst "*/*.kotlin_builtins"
         pickFirst "*/*/*.kotlin_builtins"
