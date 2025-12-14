@@ -23,6 +23,7 @@ public class MockAndroidModule extends MockJavaModule implements AndroidModule {
   private final Map<String, File> mKotlinFiles = new HashMap<>();
 
   private File mAndroidResourcesDir;
+  private String packageName = "";
 
   private final ModuleSettings mockSettings = new MockModuleSettings();
 
@@ -654,4 +655,9 @@ public class MockAndroidModule extends MockJavaModule implements AndroidModule {
 
   @Override
   public void addInjectedClass(@NonNull File file) {}
+  @Override
+    public String getPackageName() {
+        return packageName;
+    }
+  
 }

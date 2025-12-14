@@ -36,6 +36,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   
   private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
+  private String packageName;
   
   private final Set<String> moduleDependencies = new HashSet<>();
   private final Set<ContentRoot> contentRoots = new HashSet<>(3);
@@ -754,4 +755,14 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
       throw new Error(e);
     }
   }
+  
+  @Override
+    public String getPackageName() {
+        return getNameSpace();
+    }
+    
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+    
 }

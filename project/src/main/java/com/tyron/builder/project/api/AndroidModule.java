@@ -16,6 +16,8 @@ public interface AndroidModule extends JavaModule, KotlinModule {
   File getNativeLibrariesDirectory();
 
   File getAssetsDirectory();
+  
+  String getPackageName();
 
   String getNameSpace();
 
