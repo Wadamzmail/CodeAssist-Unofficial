@@ -42,6 +42,17 @@ import java.util.logging.Logger;
 //import kotlin.collections.CollectionsKt;
 import org.apache.commons.io.FileUtils;
 
+//new
+import com.tyron.completion.xml.v2.events.XmlReparsedEvent;
+import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
+import com.tyron.completion.xml.v2.project.ResourceRepositoryManager; 
+import java.util.function.Consumer;
+import com.tyron.code.event.FileCreatedEvent;
+import com.tyron.code.event.FileDeletedEvent;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import com.tyron.common.util.DebouncerStore;
+
 public class ProjectManager {
 
   private static final Logger LOG = IdeLog.getCurrentLogger(ProjectManager.class);
@@ -110,8 +121,7 @@ public class ProjectManager {
     mCurrentProject = project;
     Module module = mCurrentProject.getMainModule();
     
-  //  mPreferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance());
- //   boolean isCustomIndex = mPreferences.getBoolean("custom_index_project", false);
+ 
 
     now = Instant.now();
     boolean shouldReturn = false;
@@ -175,6 +185,48 @@ public class ProjectManager {
     } catch (IOException exception) {
       logger.warning("Failed to open project: " + exception.getMessage());
     }
+    
+    Consumer<File> modifiedEventConsumer = file -> {
+            // we only want xml files
+            if (!ProjectUtils.isResourceXMLFile(file)) {
+                return;
+            }
+            // this will cause an update to repository, causing reparse to the affected file
+            mCurrentProject.getEventManager().dispatchEvent(
+                    new XmlResourceChangeEvent(file, null)
+            );
+        };
+        mCurrentProject.getEventManager().subscribeEvent(FileDeletedEvent.class, (event, u) -> {
+            modifiedEventConsumer.accept(event.getDeletedFile());
+
+            mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(event.getDeletedFile()));
+        });
+        // listen for newly created files and notify the resources repository
+        mCurrentProject.getEventManager().subscribeEvent(FileCreatedEvent.class, (event, u) -> {
+            modifiedEventConsumer.accept(event.getFile());
+        });
+        mCurrentProject.getEventManager().subscribeEvent(XmlReparsedEvent.class,
+                (event, unsubscribe) -> DebouncerStore.DEFAULT.registerOrGetDebouncer("ResourceInjector").debounce(300, () -> ProgressManager.getInstance().runNonCancelableAsync(() -> {
+                    File file = event.getFile();
+                    Module module2;
+                    if (file == null) {
+                        //module2 = mCurrentProject.getModuleByName(":app");
+                        module2 = mCurrentProject.getMainModule();
+                    } else {
+                        module2 = mCurrentProject.getModule(file);
+                    }
+                    if (module2 instanceof AndroidModule && indexFiles.containsKey(RES)) {
+                        try {
+                            InjectResourcesTask.inject(mCurrentProject, (AndroidModule) module2);
+                        } catch (IOException e) {
+                            IdeLog.getLogger().severe(e.getMessage());
+                        }
+                    }
+                })));
+
+        // the following will extract the jar files if it does not exist
+        BuildModule.getAndroidJar();
+        BuildModule.getLambdaStubs();
 
     JavaModule javaModule = (JavaModule) module;
     if (gradleFile.exists() && indexFiles.containsKey(DOWNLOAD)) {
