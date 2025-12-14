@@ -39,7 +39,7 @@ spotless {
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = '17'
-        freeCompilerArgs += ['-Xjvm-default=all']
+        freeCompilerArgs += ['-Xjvm-default=all-compatibility']
     }
 }
 
