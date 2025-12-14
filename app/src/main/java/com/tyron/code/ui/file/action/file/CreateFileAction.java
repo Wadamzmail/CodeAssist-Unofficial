@@ -80,7 +80,7 @@ public class CreateFileAction extends FileAction {
 
                   try {
                     InjectResourcesTask.inject(ProjectManager.getInstance().getCurrentProject());
-                  } catch (IOException e) {
+                  } catch (Exception e) {
                     // ignored
                   }
                 }
