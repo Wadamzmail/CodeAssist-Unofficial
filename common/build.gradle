@@ -11,7 +11,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.8.2'
     // api 'com.google.guava:guava:33.3.0-jre'
 	api 'com.google.guava:guava:33.4.8-jre'
-    compileOnlyApi 'com.google.code.gson:gson:2.11.0'
+    api 'com.google.code.gson:gson:2.11.0'
     api 'commons-io:commons-io:2.16.1'
     api 'net.lingala.zip4j:zip4j:2.11.5'
     compileOnly project(path: ':android-stubs')

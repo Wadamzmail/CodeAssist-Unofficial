@@ -765,4 +765,8 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
         this.packageName = packageName;
     }
     
+    @Override
+    public String getNamespace() {
+        return getNameSpace();
+    }
 }
