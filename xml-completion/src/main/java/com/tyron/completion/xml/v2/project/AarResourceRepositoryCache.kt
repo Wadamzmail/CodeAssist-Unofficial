@@ -113,8 +113,15 @@ class AarResourceRepositoryCache private constructor() {
         @JvmStatic
         val instance: AarResourceRepositoryCache = AarResourceRepositoryCache()
 
-        private fun <K, T : AarResourceRepository> getRepository(key: K, cache: Cache<K, T>, factory: () -> T): T {
+       /* private fun <K, T : AarResourceRepository> getRepository(key: K, cache: Cache<K, T>, factory: () -> T): T {
             return cache.getAndUnwrap(key) { factory() }
-        }
+        }*/
+      private fun <K : Any, T : AarResourceRepository> getRepository(
+            key: K,
+            cache: Cache<K, T>,
+            factory: () -> T
+             ): T {
+                return cache.getAndUnwrap(key) { factory() }
+       }   
     }
 }
