@@ -75,6 +75,6 @@ interface ExternalAndroidLibrary {
     /**
      * Returns a library name which can be used as library identifier and displayed to the user.
      */
-    @JvmDefault
+  //  @JvmDefault
     fun libraryName(): String = location?.fileName ?: address
 }

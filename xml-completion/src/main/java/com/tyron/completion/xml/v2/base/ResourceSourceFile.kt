@@ -19,7 +19,7 @@ interface ResourceSourceFile {
    */
   val configuration: RepositoryConfiguration
 
-  @JvmDefault
+  //@JvmDefault
   val repository : LoadableResourceRepository
     get() = configuration.repository
 
