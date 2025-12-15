@@ -73,6 +73,7 @@ import com.tyron.builder.log.LogViewModel;
 import com.tyron.builder.model.DiagnosticWrapper;
 import androidx.lifecycle.ViewModelProvider;
 import com.tyron.code.MainActivity;
+import java.util.stream.Collectors;
 
 public class RosemoeEditorFacade {
 
@@ -156,7 +157,7 @@ public class RosemoeEditorFacade {
                             severitySupplier.apply(it.getKind())))
                     .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
              ProgressManager.getInstance()
-              .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new)));       
+              .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList())));       
         }
     }
 
