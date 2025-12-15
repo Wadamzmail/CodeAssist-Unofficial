@@ -55,6 +55,8 @@ import com.tyron.common.util.DebouncerStore;
 import com.tyron.builder.BuildModule;
 import com.tyron.completion.java.compiler.Parser;
 import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.kotlin.completion.KotlinEnvironment;
+import com.tyron.completion.java.provider.PruneMethodBodies;
 
 
 public class ProjectManager {
