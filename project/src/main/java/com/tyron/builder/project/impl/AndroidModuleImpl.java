@@ -28,6 +28,7 @@ import com.tyron.builder.model.CodeAssistAndroidLibrary;
 import com.tyron.builder.model.CodeAssistLibrary;
 import java.io.UncheckedIOException;
 import com.tyron.builder.project.api.ContentRoot;
+import com.tyron.builder.project.Project;
 
 
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
@@ -37,6 +38,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
   private String packageName;
+  private Project project;
   
   private final Set<String> moduleDependencies = new HashSet<>();
   private final Set<ContentRoot> contentRoots = new HashSet<>(3);
@@ -768,5 +770,14 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     @Override
     public String getNamespace() {
         return getNameSpace();
+    }
+    @Override
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    @Override
+    public Project getProject() {
+        return project;
     }
 }

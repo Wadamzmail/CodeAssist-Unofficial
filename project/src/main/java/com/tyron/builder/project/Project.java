@@ -66,6 +66,7 @@ public class Project {
         mModules = new LinkedHashMap<>();
         eventManager = new EventManager();
         mMainModule = new AndroidModuleImpl(new File(mRoot, mName));
+        mMainModule.setProject(this);
         File codeassist = new File(root, ".idea");
     if (!codeassist.exists()) {
       if (!codeassist.mkdirs()) {}
