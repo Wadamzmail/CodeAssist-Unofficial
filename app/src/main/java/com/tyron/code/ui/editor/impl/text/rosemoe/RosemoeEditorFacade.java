@@ -68,6 +68,9 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora2.text.EditorUtil;
+import com.tyron.builder.log.LogViewModel;
+
+import com.tyron.builder.model.DiagnosticWrapper;
 
 public class RosemoeEditorFacade {
 
@@ -77,6 +80,9 @@ public class RosemoeEditorFacade {
     private final Content content;
     private final FrameLayout container;
     private final CodeEditorView editor;
+    
+    //my edits
+    private LogViewModel logViewModel;
 
     private View.OnTouchListener dragToOpenListener;
 
@@ -93,7 +99,7 @@ public class RosemoeEditorFacade {
         configureEditor(editor, file);
         container.addView(editor);
 
-
+        logViewModel = new ViewModelProvider(ApplicationLoader.getInstance()).get(LogViewModel.class);
         EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
         eventManager.subscribeEvent(PerformShortcutEvent.class, (event, unsubscribe) -> {
             if (event.getEditor() == rosemoeCodeEditor) {
@@ -124,7 +130,7 @@ public class RosemoeEditorFacade {
         }
 
         Objects.requireNonNull(editor.getDiagnostics()).reset();
-
+       
         ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
         for (DiagnosticProvider provider : providers) {
             List<? extends Diagnostic<?>> diagnostics =
@@ -147,6 +153,8 @@ public class RosemoeEditorFacade {
                             (int) it.getEndPosition(),
                             severitySupplier.apply(it.getKind())))
                     .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
+             ProgressManager.getInstance()
+              .runLater(() -> logViewModel.updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new)));       
         }
     }
 

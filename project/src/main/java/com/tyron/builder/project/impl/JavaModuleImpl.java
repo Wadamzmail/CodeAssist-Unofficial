@@ -39,6 +39,8 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
 
   // the index of all the class files in this module
   private final PackageTrie mClassIndex = new PackageTrie();
+  
+  protected final List<CodeAssistLibrary> libraries = new ArrayList<>(); 
 
   public JavaModuleImpl(File root) {
     super(root);
@@ -182,6 +184,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
             JarFile jarFile = new JarFile(jar);
             putJar(jar);
             mLibraries.add(jar);
+            libraries.add(library);
         } catch (IOException e) {
             // ignored, don't put the jar
         }

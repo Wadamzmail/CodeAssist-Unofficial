@@ -57,6 +57,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+//new
+import com.tyron.completion.xml.v2.AndroidXmlCompletionProvider;
 
 
 public class ApplicationLoader extends Application {
@@ -162,6 +164,8 @@ public class ApplicationLoader extends Application {
               JavaLanguage.INSTANCE, new JavaCompletionProvider());
           CompletionProvider.registerCompletionProvider(
               XmlLanguage.INSTANCE, new LayoutXmlCompletionProvider());
+             CompletionProvider.registerCompletionProvider(
+              XmlLanguage.INSTANCE, new AndroidXmlCompletionProvider());
         //  CompletionProvider.registerCompletionProvider(
           //    XmlLanguage.INSTANCE, new AndroidManifestCompletionProvider());
         //  CompletionProvider.registerCompletionProvider(

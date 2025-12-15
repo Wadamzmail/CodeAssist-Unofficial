@@ -42,7 +42,7 @@ public class AndroidXmlCompletionProvider extends CompletionProvider {
      */
     private static File getOrExtractFiles() {
         File filesDir = ApplicationProvider.getApplicationContext().getFilesDir();
-        File check = new File(filesDir, "sources/android-31/data/res/values/attrs.xml");
+        File check = new File(filesDir, "sources/android-34/data/res/values/attrs.xml");
         if (check.exists()) {
             return check;
         }

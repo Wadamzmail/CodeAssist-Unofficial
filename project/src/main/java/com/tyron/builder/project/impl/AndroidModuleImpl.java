@@ -29,11 +29,12 @@ import com.tyron.builder.model.CodeAssistLibrary;
 import java.io.UncheckedIOException;
 import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.Project;
+import com.tyron.builder.project.api.AndroidContentRoot;
 
 
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   
-  private final List<CodeAssistLibrary> libraries = new ArrayList<>();
+ // private final List<CodeAssistLibrary> libraries = new ArrayList<>();
   
   private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
@@ -48,6 +49,8 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
     mKotlinFiles = new HashMap<>();
     mResourceClasses = new HashMap<>(1);
+    addLibrary(CodeAssistLibrary.forJar(getBootstrapJarFile());
+    addLibrary(CodeAssistLibrary.forJar(getLambdaStubsJarFile());
   }
 
   @Override
@@ -86,7 +89,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   public void index() {
     super.index();
 
-    Consumer<File> kotlinConsumer = this::addKotlinFile;
+  /*  Consumer<File> kotlinConsumer = this::addKotlinFile;
 
     if (getJavaDirectory().exists()) {
       FileUtils.iterateFiles(
@@ -100,7 +103,24 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
               FileFilterUtils.suffixFileFilter(".kt"),
               TrueFileFilter.INSTANCE)
           .forEachRemaining(kotlinConsumer);
-    }
+    }*/
+    
+    Consumer<File> kotlinConsumer = this::addKotlinFile;
+
+        for (ContentRoot contentRoot : getContentRoots()) {
+            if (contentRoot instanceof AndroidContentRoot) {
+                AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
+                for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
+                    // java source root may contain kotlin files aswell
+                    FileUtils.iterateFiles(javaDirectory,
+                            FileFilterUtils.suffixFileFilter(".kt"),
+                            TrueFileFilter.INSTANCE).forEachRemaining(kotlinConsumer);
+                    FileUtils.iterateFiles(javaDirectory,
+                            FileFilterUtils.suffixFileFilter(".java"),
+                            TrueFileFilter.INSTANCE).forEachRemaining(this::addJavaFile);
+                }
+            }
+        } 
 
     // R.java files
     //        File gen = new File(getBuildDirectory(), "gen");
