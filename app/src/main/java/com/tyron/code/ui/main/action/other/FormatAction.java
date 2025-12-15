@@ -38,7 +38,7 @@ public class FormatAction extends AnAction {
     if (fragment instanceof CodeEditorFragment) {
        ((CodeEditorFragment) fragment).format();
     }*/
-    CodeEditorView cEditor = e.getRequiredData(CommonDataKeys.EDITOR);
+    CodeEditorView cEditor = (CodeEditorView)e.getRequiredData(CommonDataKeys.EDITOR);
     if(cEditor==null)return;
     cEditor.formatCodeAsync();
   }

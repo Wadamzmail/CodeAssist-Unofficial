@@ -41,7 +41,7 @@ public class SearchAction extends AnAction {
   //if (fragment instanceof CodeEditorFragment) {
    //    ((CodeEditorFragment) fragment).search();
    // }
-   CodeEditorView cEditor = e.getRequiredData(CommonDataKeys.EDITOR);
+   CodeEditorView cEditor = (CodeEditorView)e.getRequiredData(CommonDataKeys.EDITOR);
     if(cEditor==null)return;
     cEditor.getSearcher().stopSearch();
     cEditor.beginSearchMode();
