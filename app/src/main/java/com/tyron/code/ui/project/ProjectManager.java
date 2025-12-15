@@ -278,6 +278,9 @@ public class ProjectManager {
         if (module instanceof JavaModule && indexFiles.containsKey(XML)) {
           if (module instanceof AndroidModule) {
             mListener.onTaskStarted("Indexing XML files.");
+            
+            //new 
+            ResourceRepositoryManager.getProjectResources((AndroidModule)module);
 
             XmlIndexProvider index = CompilerService.getInstance().getIndex(XmlIndexProvider.KEY);
             index.clear();
@@ -289,6 +292,7 @@ public class ProjectManager {
                 logger.debug(
                     "> Task :" + module.getRootFile().getName() + ":" + "indexingResources");
                 xmlRepository.initialize((AndroidModule) module);
+                
               }
             } catch (IOException e) {
               String message =
@@ -312,7 +316,7 @@ public class ProjectManager {
                   String packageName = getApplicationId(((AndroidModule) module));
                   if (packageName != null) {
                     //new 
-                    ResourceRepositoryManager.getProjectResources((AndroidModule)module);
+                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null));
                     //
                     InjectResourcesTask.inject(project, (AndroidModule) module);
                     InjectViewBindingTask.inject(project, (AndroidModule) module);

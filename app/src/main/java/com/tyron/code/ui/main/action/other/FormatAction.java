@@ -11,6 +11,8 @@ import com.tyron.fileeditor.api.FileEditor;
 import org.codeassist.unofficial.R;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.editor.Editor;
+import com.tyron.actions.DataContext;
+import com.tyron.actions.util.DataContextUtils;
 
 public class FormatAction extends AnAction {
 
@@ -34,12 +36,15 @@ public class FormatAction extends AnAction {
 
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
-   // FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
+    FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
    /* Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
     if (fragment instanceof CodeEditorFragment) {
        ((CodeEditorFragment) fragment).format();
     }*/
-    Editor cEditor = (Editor)e.getRequiredData(CommonDataKeys.EDITOR);
+    
+   // Editor cEditor = (Editor)e.getRequiredData(CommonDataKeys.EDITOR);
+   DataContext dataContext = DataContextUtils.getDataContext(fileEditor.getView());
+   CodeEditorView cEditor = (CodeEditorView)dataContext.getData(CommonDataKeys.EDITOR);
     if(cEditor==null)return;
     cEditor.formatCodeAsync();
   }
