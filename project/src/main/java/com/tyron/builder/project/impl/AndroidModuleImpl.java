@@ -49,8 +49,8 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
     mKotlinFiles = new HashMap<>();
     mResourceClasses = new HashMap<>(1);
-    addLibrary(CodeAssistLibrary.forJar(getBootstrapJarFile());
-    addLibrary(CodeAssistLibrary.forJar(getLambdaStubsJarFile());
+    addLibrary(CodeAssistLibrary.forJar(getBootstrapJarFile()));
+    addLibrary(CodeAssistLibrary.forJar(getLambdaStubsJarFile()));
   }
 
   @Override
