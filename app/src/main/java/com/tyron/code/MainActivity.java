@@ -24,10 +24,13 @@ import org.codeassist.unofficial.R;
 
 public class MainActivity extends AppCompatActivity {
 
+   public static MainActivity instance;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+    instance = this;
     WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
         != PackageManager.PERMISSION_GRANTED) {

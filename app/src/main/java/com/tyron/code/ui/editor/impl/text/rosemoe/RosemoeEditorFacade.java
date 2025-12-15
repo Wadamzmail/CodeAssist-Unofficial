@@ -72,6 +72,7 @@ import com.tyron.builder.log.LogViewModel;
 
 import com.tyron.builder.model.DiagnosticWrapper;
 import androidx.lifecycle.ViewModelProvider;
+import com.tyron.code.MainActivity;
 
 public class RosemoeEditorFacade {
 
@@ -98,9 +99,9 @@ public class RosemoeEditorFacade {
 
         editor = new CodeEditorView(context);
         configureEditor(editor, file);
-        container.addView(editor);
+        container.addView(editor); 
 
-        logViewModel = new ViewModelProvider(ApplicationLoader.getInstance()).get(LogViewModel.class);
+        logViewModel = new ViewModelProvider(MainActivity.instance).get(LogViewModel.class);
         EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
         eventManager.subscribeEvent(PerformShortcutEvent.class, (event, unsubscribe) -> {
             if (event.getEditor() == rosemoeCodeEditor) {
@@ -155,7 +156,7 @@ public class RosemoeEditorFacade {
                             severitySupplier.apply(it.getKind())))
                     .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
              ProgressManager.getInstance()
-              .runLater(() -> logViewModel.updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new)));       
+              .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new)));       
         }
     }
 
