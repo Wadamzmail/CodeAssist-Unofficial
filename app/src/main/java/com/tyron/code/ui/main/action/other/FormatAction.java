@@ -9,6 +9,7 @@ import com.tyron.actions.CommonDataKeys;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.fileeditor.api.FileEditor;
 import org.codeassist.unofficial.R;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 public class FormatAction extends AnAction {
 
@@ -33,9 +34,12 @@ public class FormatAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
    // FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-    Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
+   /* Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
     if (fragment instanceof CodeEditorFragment) {
        ((CodeEditorFragment) fragment).format();
-    }
+    }*/
+    CodeEditorView cEditor = e.getRequiredData(CommonDataKeys.EDITOR);
+    if(cEditor==null)return;
+    cEditor.formatCodeAsync();
   }
 }
