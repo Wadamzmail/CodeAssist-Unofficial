@@ -45,6 +45,7 @@ import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
+import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
@@ -117,6 +118,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     private void init() {
         setColorScheme(EditorUtil.getDefaultColorScheme(getContext()));
+        mCompletionWindow = new CodeAssistCompletionWindow(this);
+        mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
+        replaceComponent(EditorAutoCompletion.class, mCompletionWindow);
         replaceComponent(EditorTextActionWindow.class, new NoOpTextActionWindow(this));
     }
 

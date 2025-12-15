@@ -354,7 +354,7 @@ public class ProjectManager {
   private void indexModule(Module module) throws IOException {
         module.open();
         module.index();
-         if(!module instanceof JavaModule)return;
+         if(!(module instanceof JavaModule))return;
         JavaModule javaModule = (JavaModule) module;
         for (File value : javaModule.getJavaFiles().values()) {
             CompilationInfo info = CompilationInfo.get(module.getProject(), value);

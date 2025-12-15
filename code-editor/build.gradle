@@ -59,8 +59,8 @@ dependencies {
  //   api 'io.github.Rosemoe.sora-editor:editor:0.15.1'
   //  api 'io.github.Rosemoe.sora-editor:language-textmate:0.15.1'
 	
-	api 'io.github.rosemoe:editor:0.24.2'
-    api 'io.github.rosemoe:language-textmate:0.24.2'
+	api 'io.github.rosemoe:editor:0.24.3'
+    api 'io.github.rosemoe:language-textmate:0.24.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
