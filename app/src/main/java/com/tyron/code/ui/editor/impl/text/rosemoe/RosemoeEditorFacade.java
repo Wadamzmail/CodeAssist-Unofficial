@@ -156,8 +156,8 @@ public class RosemoeEditorFacade {
                             (int) it.getEndPosition(),
                             severitySupplier.apply(it.getKind())))
                     .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
-             ProgressManager.getInstance()
-              .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList())));       
+           //  ProgressManager.getInstance()
+             // .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG, diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList())));       
         }
     }
 
