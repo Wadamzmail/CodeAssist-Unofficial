@@ -71,6 +71,7 @@ import io.github.rosemoe.sora2.text.EditorUtil;
 import com.tyron.builder.log.LogViewModel;
 
 import com.tyron.builder.model.DiagnosticWrapper;
+import androidx.lifecycle.ViewModelProvider;
 
 public class RosemoeEditorFacade {
 
