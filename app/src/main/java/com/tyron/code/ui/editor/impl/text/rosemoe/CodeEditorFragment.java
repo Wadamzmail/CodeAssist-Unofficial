@@ -291,7 +291,10 @@ public class CodeEditorFragment extends Fragment implements Savable,
         editor.setBackgroundAnalysisEnabled(false);
         editor.setTypefaceText(
                 ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));
-        editor.getComponent(EditorAutoCompletion.class).setLayout(new CodeAssistCompletionLayout());
+        CodeAssistCompletionWindow mCompletionWindow = new CodeAssistCompletionWindow(editor);
+        mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
+        mCompletionWindow.setLayout(new CodeAssistCompletionLayout());
+        replaceComponent(EditorAutoCompletion.class, mCompletionWindow);    
         editor.setLigatureEnabled(true);
         editor.setHighlightCurrentBlock(true);
         editor.setEdgeEffectColor(Color.TRANSPARENT);

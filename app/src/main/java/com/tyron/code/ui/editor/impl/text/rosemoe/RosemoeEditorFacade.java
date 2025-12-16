@@ -28,6 +28,7 @@ import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
+import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.code.util.CoordinatePopupMenu;
 import com.tyron.code.util.PopupMenuHelper;
@@ -180,8 +181,10 @@ public class RosemoeEditorFacade {
         editor.setTypefaceText(ResourcesCompat.getFont(editor.getContext(),
                 R.font.jetbrains_mono_regular));
 
-        editor.replaceComponent(EditorAutoCompletion.class, new CodeAssistCompletionWindow(editor));
-        //editor.setAutoCompletionItemAdapter(new CodeAssistCompletionAdapter());
+        CodeAssistCompletionWindow mCompletionWindow = new CodeAssistCompletionWindow(editor);
+        mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
+        mCompletionWindow.setLayout(new CodeAssistCompletionLayout());
+        replaceComponent(EditorAutoCompletion.class, mCompletionWindow);   
         editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         editor.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
                             EditorInfo.TYPE_CLASS_TEXT |
