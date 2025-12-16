@@ -39,7 +39,7 @@ class CachedAutoCompleteProvider(
                 editor.currentFile,
                 line,
                 column,
-                result.getOrThrow().prefix,
+                result.getOrThrow().completionPrefix,
                 result.getOrThrow()
             )
         } else {
@@ -49,7 +49,7 @@ class CachedAutoCompleteProvider(
         return result.getOrNull()
     }
 
-    override fun getPrefix(editor: Editor?, line: Int, column: Int): String {
+    override fun getPrefix(editor: Editor, line: Int, column: Int): String {
         return provider.getPrefix(editor, line, column)
     }
 
