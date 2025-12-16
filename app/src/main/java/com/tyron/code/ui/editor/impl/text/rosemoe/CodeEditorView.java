@@ -357,7 +357,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     @Override
     public boolean formatCodeAsync(int startIndex, int endIndex) {
-        return return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
+        return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
     }
 
     @Override
