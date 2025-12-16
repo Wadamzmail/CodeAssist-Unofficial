@@ -357,7 +357,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     @Override
     public boolean formatCodeAsync(int startIndex, int endIndex) {
-        return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
+        return formatCodeAsync(getText().getIndexer().getCharPosition(startIndex),getText().getIndexer().getCharPosition(endIndex));
     }
 
     @Override
@@ -367,7 +367,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     @Override
     public Content getContent() {
-        return ContentWrapper(CodeEditorView.this.getText());
+        return new ContentWrapper(CodeEditorView.this.getText());
     }
 
     /**
@@ -402,4 +402,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
+       @Override 
+ public void moveSelectionRight(){}
+  @Override 
+public  void moveSelectionUp(){} 
+  @Override 
+public  void moveSelectionDown(){}
+  @Override 
+public  void moveSelectionLeft(){}  
 }

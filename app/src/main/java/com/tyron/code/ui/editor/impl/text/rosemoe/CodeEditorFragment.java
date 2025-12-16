@@ -45,6 +45,7 @@ import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
+import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.Savable;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;

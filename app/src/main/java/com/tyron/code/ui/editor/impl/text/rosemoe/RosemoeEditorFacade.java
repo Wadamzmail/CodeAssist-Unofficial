@@ -184,7 +184,7 @@ public class RosemoeEditorFacade {
         CodeAssistCompletionWindow mCompletionWindow = new CodeAssistCompletionWindow(editor);
         mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
         mCompletionWindow.setLayout(new CodeAssistCompletionLayout());
-        replaceComponent(EditorAutoCompletion.class, mCompletionWindow);   
+        editor.replaceComponent(EditorAutoCompletion.class, mCompletionWindow);   
         editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
         editor.setInputType(EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS |
                             EditorInfo.TYPE_CLASS_TEXT |
