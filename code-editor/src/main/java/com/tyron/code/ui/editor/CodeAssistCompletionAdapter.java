@@ -23,6 +23,7 @@ public class CodeAssistCompletionAdapter extends EditorCompletionAdapter {
 
     @Override
     protected View getView(int pos, View view, ViewGroup parent, boolean isCurrentCursorPosition) {
+     try{
         if (view == null) {
             view = LayoutInflater.from(getContext())
                     .inflate(R.layout.completion_result_item, parent, false);
@@ -47,7 +48,7 @@ public class CodeAssistCompletionAdapter extends EditorCompletionAdapter {
             iv.setVisibility(View.VISIBLE);
             iv.setImageDrawable(item.icon);
         }
-
+      }catch(Exception e) {}
         return view;
     }
 }

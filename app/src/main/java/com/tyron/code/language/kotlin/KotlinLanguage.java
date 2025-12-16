@@ -36,6 +36,7 @@ import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.TextRange;
 import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import com.tyron.code.language.CachedAutoCompleteProvider;
 
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
@@ -48,6 +49,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final TextMateLanguage delegate;
     private final Editor editor;
     public boolean createIdentifiers = false;
+    private final CachedAutoCompleteProvider autoCompleteProvider;
+
     
     private final Formatter formatter = new AsyncFormatter() {
         @Nullable
@@ -86,6 +89,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     public KotlinLanguage(Editor editor) {
         this.editor = editor;
         delegate = LanguageManager.createTextMateLanguage(SCOPE_NAME);
+        autoCompleteProvider = new CachedAutoCompleteProvider(editor,
+                new KotlinAutoCompleteProvider(editor));
     }
 
     @NonNull
@@ -104,16 +109,14 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
-        String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
-        KotlinAutoCompleteProvider provider =
-                new KotlinAutoCompleteProvider(editor);
-        CompletionList completionList = provider.getCompletionList(identifierPart,
+        CompletionList completionList = autoCompleteProvider.getCompletionList(null,
                 position.getLine(),
                 position.getColumn());
         if (completionList == null) {
             return;
         }
-        completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
+        //completionList.getItems().forEach(publisher::addItem);
+        completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem); 
     }
 
     private KotlinEnvironment getOrCreateKotlinEnvironment() {

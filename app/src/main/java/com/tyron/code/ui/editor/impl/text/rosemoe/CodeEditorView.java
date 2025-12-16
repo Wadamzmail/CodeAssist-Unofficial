@@ -187,12 +187,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     @Override
     public void commitText(CharSequence text) {
-        super.commitText(text);
+        try{super.commitText(text);}catch(Exception e){} 
     }
 
     @Override
    public void commitText(CharSequence text, boolean applyAutoIndent) {
-
+     try{
     if (text.length() == 1) {
         int index = getCursor().getLeft();
         int length = getText().length();
@@ -214,9 +214,11 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
     super.commitText(text, applyAutoIndent);
 
-    if (text.length() == 1) {
+     if (text.length() == 1) {
         handleAutoInsert(text.charAt(0));
-    }
+     }
+    }catch(Exception e){}
+   
    }
 
     private void handleAutoInsert(char c) {
