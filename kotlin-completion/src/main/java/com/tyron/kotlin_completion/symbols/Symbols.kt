@@ -3,7 +3,7 @@ package com.tyron.kotlin_completion.symbols
 import com.tyron.kotlin_completion.model.DocumentSymbol
 import com.tyron.kotlin_completion.model.SymbolKind
 import com.tyron.kotlin_completion.position.Position
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.psi.*
 import java.lang.IllegalArgumentException
 

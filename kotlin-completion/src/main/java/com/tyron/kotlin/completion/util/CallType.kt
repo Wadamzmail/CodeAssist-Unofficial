@@ -4,7 +4,7 @@ import com.tyron.kotlin.completion.resolve.ResolutionFacade
 import com.tyron.kotlin.completion.resolve.frontendService
 import com.tyron.kotlin.completion.resolve.getDataFlowValueFactory
 import com.tyron.kotlin.completion.resolve.getLanguageVersionSettings
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.idea.FrontendInternals

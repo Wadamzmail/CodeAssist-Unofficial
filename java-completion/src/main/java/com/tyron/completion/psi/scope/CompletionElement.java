@@ -4,22 +4,22 @@ import com.tyron.completion.psi.util.CompletionUtilCoreImpl;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.com.intellij.openapi.util.Comparing;
-import org.jetbrains.kotlin.com.intellij.openapi.util.Trinity;
-import org.jetbrains.kotlin.com.intellij.psi.PsiClass;
-import org.jetbrains.kotlin.com.intellij.psi.PsiClassType;
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
-import org.jetbrains.kotlin.com.intellij.psi.PsiKeyword;
-import org.jetbrains.kotlin.com.intellij.psi.PsiMethod;
-import org.jetbrains.kotlin.com.intellij.psi.PsiMethodReferenceType;
-import org.jetbrains.kotlin.com.intellij.psi.PsiModifier;
-import org.jetbrains.kotlin.com.intellij.psi.PsiPackage;
-import org.jetbrains.kotlin.com.intellij.psi.PsiSubstitutor;
-import org.jetbrains.kotlin.com.intellij.psi.PsiType;
-import org.jetbrains.kotlin.com.intellij.psi.PsiVariable;
-import org.jetbrains.kotlin.com.intellij.psi.util.MethodSignature;
-import org.jetbrains.kotlin.com.intellij.psi.util.MethodSignatureUtil;
-import org.jetbrains.kotlin.com.intellij.psi.util.TypeConversionUtil;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Trinity;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiClassType;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiKeyword;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodReferenceType;
+import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiPackage;
+import com.intellij.psi.PsiSubstitutor;
+import com.intellij.psi.PsiType;
+import com.intellij.psi.PsiVariable;
+import com.intellij.psi.util.MethodSignature;
+import com.intellij.psi.util.MethodSignatureUtil;
+import com.intellij.psi.util.TypeConversionUtil;
 
 import java.util.Arrays;
 

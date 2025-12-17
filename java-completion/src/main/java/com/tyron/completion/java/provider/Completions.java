@@ -24,7 +24,7 @@ import com.tyron.completion.java.util.FileContentFixer;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.completion.progress.ProcessCanceledException;
 
-import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
+import com.intellij.util.ProcessingContext;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.IdentifierTree;

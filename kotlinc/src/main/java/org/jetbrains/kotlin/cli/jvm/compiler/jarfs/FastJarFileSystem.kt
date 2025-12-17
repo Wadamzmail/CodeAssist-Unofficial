@@ -4,12 +4,12 @@
  */
 package org.jetbrains.kotlin.cli.jvm.compiler.jarfs
 
-import org.jetbrains.kotlin.com.intellij.openapi.util.Couple
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.DeprecatedVirtualFileSystem
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.StandardFileSystems
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.VirtualFile
-import org.jetbrains.kotlin.com.intellij.util.containers.ConcurrentFactoryMap
-import org.jetbrains.kotlin.com.intellij.util.io.FileAccessorCache
+import com.intellij.openapi.util.Couple
+import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem
+import com.intellij.openapi.vfs.StandardFileSystems
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.containers.ConcurrentFactoryMap
+import com.intellij.util.io.FileAccessorCache
 import java.io.File
 import java.io.IOException
 import java.io.RandomAccessFile
@@ -58,6 +58,10 @@ class FastJarFileSystem private constructor(internal val unmapBuffer: MappedByte
 
     fun clearHandlersCache() {
         myHandlers.clear()
+        cleanOpenFilesCache()
+    }
+
+    fun cleanOpenFilesCache() {
         cachedOpenFileHandles.clear()
     }
 
@@ -78,19 +82,23 @@ class FastJarFileSystem private constructor(internal val unmapBuffer: MappedByte
 }
 
 
-//private val IS_PRIOR_9_JRE = System.getProperty("java.specification.version", "").startsWith("1.")
+// private val IS_PRIOR_9_JRE = System.getProperty("java.specification.version", "").startsWith("1.")
 
 private fun prepareCleanerCallback(): ((ByteBuffer) -> Unit)? {
     return try {
-          // API 26+ already allow using these methods
-//        if (IS_PRIOR_9_JRE) {
-            val cleaner = Class.forName("java.nio.DirectByteBuffer").getMethod("cleaner")
-            cleaner.isAccessible = true
+        // We can use these on API 26+
+        // if (IS_PRIOR_9_JRE) {
+        val directByteBuffer = Class.forName("java.nio.DirectByteBuffer")
+        if (directByteBuffer.declaredMethods.any { it.name == "cleaner" }.not()) {
+            return null
+        }
+        val cleaner = directByteBuffer.getMethod("cleaner")
+        cleaner.isAccessible = true
 
-            val clean = Class.forName("sun.misc.Cleaner").getMethod("clean")
-            clean.isAccessible = true
+        val clean = Class.forName("sun.misc.Cleaner").getMethod("clean")
+        clean.isAccessible = true
 
-            { buffer: ByteBuffer -> clean.invoke(cleaner.invoke(buffer)) }
+        { buffer: ByteBuffer -> clean.invoke(cleaner.invoke(buffer)) }
 //        } else {
 //            val unsafeClass = try {
 //                Class.forName("sun.misc.Unsafe")

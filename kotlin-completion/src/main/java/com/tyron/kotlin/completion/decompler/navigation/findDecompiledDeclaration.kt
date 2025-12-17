@@ -6,9 +6,9 @@ import org.jetbrains.kotlin.analyzer.ModuleInfo
 import org.jetbrains.kotlin.builtins.DefaultBuiltIns
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.builtins.jvm.JvmBuiltInsSignatures
-import org.jetbrains.kotlin.com.intellij.openapi.project.Project
-import org.jetbrains.kotlin.com.intellij.psi.search.EverythingGlobalScope
-import org.jetbrains.kotlin.com.intellij.psi.search.GlobalSearchScope
+import com.intellij.openapi.project.Project
+import com.intellij.psi.search.EverythingGlobalScope
+import com.intellij.psi.search.GlobalSearchScope
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.impl.TypeAliasConstructorDescriptor
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation

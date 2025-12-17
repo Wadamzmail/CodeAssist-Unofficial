@@ -1,12 +1,18 @@
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+/*
+ * This file is part of Cosmic IDE.
+ * Cosmic IDE is a free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * Cosmic IDE is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with Cosmic IDE. If not, see <https://www.gnu.org/licenses/>.
+ */
 
 package org.jetbrains.kotlin.utils
 
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.PathManager
 import org.jetbrains.jps.model.java.impl.JavaSdkUtil
-import org.jetbrains.kotlin.com.intellij.openapi.application.ApplicationManager
-import org.jetbrains.kotlin.com.intellij.openapi.application.PathManager
+
 import java.io.File
-import java.lang.IllegalStateException
+import java.nio.file.Paths
 import java.util.regex.Pattern
 
 object PathUtil {
@@ -57,8 +63,6 @@ object PathUtil {
     const val KOTLIN_SCRIPTING_COMMON_JAR = "$KOTLIN_SCRIPTING_COMMON_NAME.jar"
     const val KOTLIN_SCRIPTING_JVM_NAME = "kotlin-scripting-jvm"
     const val KOTLIN_SCRIPTING_JVM_JAR = "$KOTLIN_SCRIPTING_JVM_NAME.jar"
-    const val KOTLIN_SCRIPTING_JS_NAME = "kotlin-scripting-js"
-    const val KOTLIN_SCRIPTING_JS_JAR = "$KOTLIN_SCRIPTING_JS_NAME.jar"
     const val KOTLIN_DAEMON_NAME = "kotlin-daemon"
     const val KOTLIN_DAEMON_JAR = "$KOTLIN_SCRIPTING_JVM_NAME.jar"
     const val KOTLIN_SCRIPTING_COMPILER_PLUGIN_NAME = "kotlin-scripting-compiler"
@@ -73,9 +77,7 @@ object PathUtil {
 
     val KOTLIN_SCRIPTING_PLUGIN_CLASSPATH_JARS = arrayOf(
         KOTLIN_SCRIPTING_COMPILER_PLUGIN_JAR, KOTLIN_SCRIPTING_COMPILER_IMPL_JAR,
-        KOTLINX_COROUTINES_CORE_JAR,
         KOTLIN_SCRIPTING_COMMON_JAR, KOTLIN_SCRIPTING_JVM_JAR,
-        KOTLIN_SCRIPTING_JS_JAR, JS_ENGINES_JAR
     )
 
     const val KOTLIN_TEST_NAME = "kotlin-test"
@@ -128,12 +130,8 @@ object PathUtil {
             if (!jar.exists()) return NO_PATH
 
             if (jar.name == KOTLIN_COMPILER_JAR) {
-                val lib = jar.parentFile ?: return NO_PATH
-                return if (lib.parentFile != null) {
-                    NO_PATH
-                } else {
-                    lib.parentFile!!
-                }
+                val lib = jar.parentFile
+                return lib.parentFile
             }
 
             return NO_PATH
@@ -146,7 +144,7 @@ object PathUtil {
 
             if (jar.name == "kotlin-plugin.jar") {
                 val lib = jar.parentFile
-                val pluginHome = lib!!.parentFile
+                val pluginHome = lib.parentFile
 
                 return File(pluginHome, HOME_FOLDER_NAME)
             }
@@ -159,24 +157,26 @@ object PathUtil {
 
     @JvmStatic
     fun getResourcePathForClass(aClass: Class<*>): File {
-        val resourceRoot = PathManager.getResourceRoot(aClass, aClass.name)
-        if (resourceRoot != null) {
-            return File(resourceRoot).absoluteFile
-        }
         val path = "/" + aClass.name.replace('.', '/') + ".clazz"
-        val modified = PathManager.getResourceRoot(aClass, path) ?: throw IllegalStateException("Unable to find resource $path")
-        return File(modified).absoluteFile
+        val resourceRoot = PathManager.getResourceRoot(aClass, path) ?: throw IllegalStateException("Resource not found: $path")
+        return File(resourceRoot).absoluteFile
     }
 
     @JvmStatic
     fun getJdkClassesRootsFromCurrentJre(): List<File> =
-        getJdkClassesRootsFromJre(System.getProperty("java.home")!!)
+        getJdkClassesRootsFromJre(System.getProperty("java.home"))
 
     @JvmStatic
     fun getJdkClassesRootsFromJre(javaHome: String): List<File> =
-        JavaSdkUtil.getJdkClassesRoots(File(javaHome), true)
+        JavaSdkUtil.getJdkClassesRoots(Paths.get(javaHome), true).map { it.toFile() }
 
     @JvmStatic
     fun getJdkClassesRoots(jdkHome: File): List<File> =
-        JavaSdkUtil.getJdkClassesRoots(jdkHome, false)
+        JavaSdkUtil.getJdkClassesRoots(jdkHome.toPath(), false).map { it.toFile() }
+
+    @JvmStatic
+    fun getJdkClassesRootsFromJdkOrJre(javaRoot: File): List<File> {
+        val isJdk = File(javaRoot, "jre/lib").exists()
+        return JavaSdkUtil.getJdkClassesRoots(javaRoot.toPath(), !isJdk).map { it.toFile() }
+    }
 }

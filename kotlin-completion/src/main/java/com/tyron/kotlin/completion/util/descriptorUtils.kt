@@ -2,8 +2,8 @@ package com.tyron.kotlin.completion.util
 
 import com.tyron.kotlin.completion.codeInsight.DescriptorToSourceUtilsIde
 import com.tyron.kotlin.completion.resolve.ResolutionFacade
-import org.jetbrains.kotlin.com.intellij.openapi.project.Project
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.lexer.KtModifierKeywordToken
 import org.jetbrains.kotlin.lexer.KtTokens

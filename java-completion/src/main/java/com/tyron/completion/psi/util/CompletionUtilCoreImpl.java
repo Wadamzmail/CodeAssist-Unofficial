@@ -3,14 +3,14 @@ package com.tyron.completion.psi.util;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.com.intellij.injected.editor.DocumentWindow;
-import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
-import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange;
-import org.jetbrains.kotlin.com.intellij.psi.PsiCompiledFile;
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
-import org.jetbrains.kotlin.com.intellij.psi.PsiFile;
-import org.jetbrains.kotlin.com.intellij.psi.impl.light.LightElement;
-import org.jetbrains.kotlin.com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.injected.editor.DocumentWindow;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiCompiledFile;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.impl.light.LightElement;
+import com.intellij.psi.util.PsiTreeUtil;
 
 public final class CompletionUtilCoreImpl {
     @Nullable

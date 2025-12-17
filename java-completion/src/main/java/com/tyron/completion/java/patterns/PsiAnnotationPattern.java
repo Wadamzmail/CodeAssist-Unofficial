@@ -2,13 +2,13 @@ package com.tyron.completion.java.patterns;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
-import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
-import org.jetbrains.kotlin.com.intellij.patterns.PsiElementPattern;
-import org.jetbrains.kotlin.com.intellij.psi.PsiAnnotation;
-import org.jetbrains.kotlin.com.intellij.psi.PsiArrayInitializerMemberValue;
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
-import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
+import com.intellij.patterns.ElementPattern;
+import com.intellij.patterns.PatternCondition;
+import com.intellij.patterns.PsiElementPattern;
+import com.intellij.psi.PsiAnnotation;
+import com.intellij.psi.PsiArrayInitializerMemberValue;
+import com.intellij.psi.PsiElement;
+import com.intellij.util.ProcessingContext;
 
 public final class PsiAnnotationPattern extends PsiElementPattern<PsiAnnotation, PsiAnnotationPattern> {
     public static final PsiAnnotationPattern PSI_ANNOTATION_PATTERN = new PsiAnnotationPattern();

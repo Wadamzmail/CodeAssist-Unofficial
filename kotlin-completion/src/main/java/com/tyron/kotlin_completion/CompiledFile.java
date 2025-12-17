@@ -6,9 +6,9 @@ import com.tyron.kotlin_completion.position.Position;
 import com.tyron.kotlin_completion.util.PsiUtils;
 
 import org.jetbrains.kotlin.com.google.common.collect.ImmutableMap;
-import org.jetbrains.kotlin.com.intellij.openapi.util.Pair;
-import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange;
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.container.ComponentProvider;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.psi.KtCallExpression;

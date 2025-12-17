@@ -13,7 +13,7 @@ import com.tyron.kotlin_completion.util.PsiUtils
 import com.tyron.kotlin_completion.util.containsCharactersInOrder
 import com.tyron.kotlin_completion.util.stringDistance
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.lexer.KtKeywordToken
 import org.jetbrains.kotlin.lexer.KtTokens

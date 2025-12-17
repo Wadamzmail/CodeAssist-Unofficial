@@ -1,7 +1,7 @@
 package com.tyron.completion.java.patterns;
 
 import static com.tyron.completion.java.util.TreeUtil.*;
-import static org.jetbrains.kotlin.com.intellij.patterns.StandardPatterns.string;
+import static com.intellij.patterns.StandardPatterns.string;
 
 import androidx.annotation.NonNull;
 
@@ -11,12 +11,12 @@ import com.tyron.completion.java.util.TreeUtil;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
-import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternCondition;
-import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
-import org.jetbrains.kotlin.com.intellij.patterns.StandardPatterns;
-import org.jetbrains.kotlin.com.intellij.patterns.StringPattern;
-import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
+import com.intellij.patterns.ElementPattern;
+import com.intellij.patterns.InitialPatternCondition;
+import com.intellij.patterns.PatternCondition;
+import com.intellij.patterns.StandardPatterns;
+import com.intellij.patterns.StringPattern;
+import com.intellij.util.ProcessingContext;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.util.Elements;

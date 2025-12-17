@@ -3,7 +3,7 @@ package com.tyron.kotlin.completion.codeInsight
 import com.tyron.kotlin.completion.resolve.ResolutionFacade
 import com.tyron.kotlin.completion.resolve.frontendService
 import com.tyron.kotlin.completion.util.*
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.config.LanguageVersionSettings
 import org.jetbrains.kotlin.descriptors.*

@@ -17,7 +17,8 @@ dependencies {
     runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.0.20')
 
     api 'org.jetbrains.trove4j:trove4j:20160824'
-    api files('libs/kotlin-compiler-embeddable-1.7.20-RC.jar')
+   // api files('libs/kotlin-compiler-embeddable-1.7.20-RC.jar')
+    api files('libs/kotlin-compiler-2.0.0.jar')
 	//api 'org.jetbrains.kotlin:kotlin-compiler-embeddable:2.0.0'
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
