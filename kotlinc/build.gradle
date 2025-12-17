@@ -23,7 +23,6 @@ dependencies {
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
-    implementation("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
 
 }
 
@@ -49,7 +48,7 @@ spotless {
 			googleJavaFormat()
 			}
 }
-
+/*
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += [
         "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
@@ -64,4 +63,4 @@ tasks.withType(JavaCompile).configureEach {
         "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
         "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
     ]
-}
+}*/
