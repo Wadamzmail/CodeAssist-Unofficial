@@ -117,6 +117,7 @@ dependencies {
 	
     // not used for compilation, but for analysis
     implementation project(path: ':javac')
+    implementation project(path: ':kotlinc')
 
     implementation project(path: ':language-api')
 
