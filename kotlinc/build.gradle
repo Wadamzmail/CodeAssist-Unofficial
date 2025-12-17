@@ -23,6 +23,7 @@ dependencies {
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
+    implementation("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
 
 }
 
