@@ -18,8 +18,6 @@ android {
     defaultConfig {
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.targetSdkVersion
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -36,7 +34,7 @@ android {
 }
 
 dependencies {
-     
+    implementation 'androidx.annotation:annotation:1.8.2'
 	implementation project(path: ':logging')
     implementation project(path: ':common')
 }
