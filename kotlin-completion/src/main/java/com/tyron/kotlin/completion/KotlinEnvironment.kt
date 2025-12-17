@@ -347,6 +347,7 @@ data class KotlinEnvironment(
 
     companion object {
         private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
+      //  private const val COMPLETION_SUFFIX = "æ"
 
         val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
