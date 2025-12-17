@@ -3,9 +3,9 @@ package com.tyron.kotlin_completion.position;
 import com.tyron.completion.model.Range;
 import com.tyron.kotlin_completion.model.Location;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Pair;
+import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 
 import java.io.BufferedReader;
 import java.io.File;

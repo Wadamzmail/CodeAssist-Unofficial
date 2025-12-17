@@ -4,10 +4,7 @@ plugins {
 
 dependencies {
     implementation project(path: ':eclipse-standalone')
-
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation project(path: ':common')
-}
+ }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17

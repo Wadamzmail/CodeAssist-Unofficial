@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import com.tyron.completion.java.patterns.elements.JavacElementPatternCondition;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternCondition;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.VariableElement;

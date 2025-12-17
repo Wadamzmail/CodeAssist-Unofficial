@@ -4,14 +4,12 @@
  */
 package org.jetbrains.kotlin.cli.jvm.compiler.jarfs
 
-import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.util.text.StringUtil
-import com.intellij.openapi.vfs.VirtualFile
+import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil
+import org.jetbrains.kotlin.com.intellij.openapi.vfs.VirtualFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.RandomAccessFile
 import java.nio.channels.FileChannel
-import kotlin.collections.HashMap
 
 class FastJarHandler(val fileSystem: FastJarFileSystem, path: String) {
     private val myRoot: VirtualFile?
@@ -27,10 +25,7 @@ class FastJarHandler(val fileSystem: FastJarFileSystem, path: String) {
                 entries = try {
                     mappedByteBuffer.parseCentralDirectory()
                 } catch (e: Exception) {
-                    // copying the behavior of ArchiveHandler (and therefore ZipHandler)
-                    // TODO: consider propagating to compiler error or warning, but take into account that both javac and K1 simply ignore invalid jars in such cases
-                    Logger.getInstance(this::class.java).warn("Error while reading zip file: ${file.path}: $e", e)
-                    emptyList()
+                    throw IllegalStateException("Error while reading '${file.path}': $e", e)
                 }
                 cachedManifest =
                     entries.singleOrNull { StringUtil.equals(MANIFEST_PATH, it.relativePath) }

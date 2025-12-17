@@ -16,8 +16,8 @@ import com.tyron.editor.Editor;
 import com.tyron.kotlin_completion.CompiledFile;
 import com.tyron.kotlin_completion.util.PsiUtils;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Pair;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.lexer.KtTokens;
 import org.jetbrains.kotlin.psi.KtClass;

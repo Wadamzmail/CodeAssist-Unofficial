@@ -2,14 +2,14 @@ package com.tyron.completion.java.util;
 
 import androidx.annotation.NonNull;
 
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.FakePsiElement;
-import com.intellij.psi.impl.light.LightVariableBuilder;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import org.jetbrains.kotlin.com.intellij.psi.JavaPsiFacade;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
+import org.jetbrains.kotlin.com.intellij.psi.PsiReferenceExpression;
+import org.jetbrains.kotlin.com.intellij.psi.PsiType;
+import org.jetbrains.kotlin.com.intellij.psi.ResolveState;
+import org.jetbrains.kotlin.com.intellij.psi.impl.FakePsiElement;
+import org.jetbrains.kotlin.com.intellij.psi.impl.light.LightVariableBuilder;
+import org.jetbrains.kotlin.com.intellij.psi.scope.PsiScopeProcessor;
 
 public class JavaCompletionUtil {
     @NonNull

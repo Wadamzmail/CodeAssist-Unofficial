@@ -2,7 +2,7 @@ package com.tyron.kotlin_completion.util;
 
 import com.tyron.completion.progress.ProgressManager;
 
-import com.intellij.psi.PsiElement;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor;
 import org.jetbrains.kotlin.name.FqName;
 import org.jetbrains.kotlin.psi.KtElement;

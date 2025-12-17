@@ -30,7 +30,7 @@ import com.tyron.completion.model.Position;
 import com.tyron.completion.model.Range;
 import com.tyron.completion.model.TextEdit;
 
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;

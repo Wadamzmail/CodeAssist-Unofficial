@@ -54,9 +54,9 @@ dependencies {
     api 'org.jsoup:jsoup:1.18.1'
     
     // v2 dependencies
-   // implementation 'it.unimi.dsi:fastutil:8.5.8'
+    implementation 'it.unimi.dsi:fastutil:8.5.8'
     implementation 'net.sf.kxml:kxml2:2.3.0'
-    implementation project(':kotlinc')
+ //   implementation project(':kotlinc')
 
     implementation project(path: ':language-api')
     implementation project(path: ':completion-api')
@@ -70,31 +70,4 @@ dependencies {
     implementation project(path: ':android-common-resources')
     
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = '17'
-        freeCompilerArgs += ['-Xjvm-default=all']
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
-    ]
 }

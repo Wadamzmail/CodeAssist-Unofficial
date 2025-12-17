@@ -2,15 +2,15 @@ package com.tyron.completion.psi.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.editor.impl.event.DocumentEventImpl;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Key;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiModificationTracker;
+import org.jetbrains.kotlin.com.intellij.openapi.Disposable;
+import org.jetbrains.kotlin.com.intellij.openapi.editor.Document;
+import org.jetbrains.kotlin.com.intellij.openapi.editor.event.DocumentEvent;
+import org.jetbrains.kotlin.com.intellij.openapi.editor.event.DocumentListener;
+import org.jetbrains.kotlin.com.intellij.openapi.editor.impl.event.DocumentEventImpl;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Disposer;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
+import org.jetbrains.kotlin.com.intellij.psi.PsiFile;
+import org.jetbrains.kotlin.com.intellij.psi.util.PsiModificationTracker;
 
 import java.util.ArrayList;
 import java.util.List;

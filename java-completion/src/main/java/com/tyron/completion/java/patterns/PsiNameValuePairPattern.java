@@ -2,13 +2,13 @@ package com.tyron.completion.java.patterns;
 
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PatternCondition;
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.patterns.PsiNamePatternCondition;
-import com.intellij.psi.PsiNameValuePair;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
+import org.jetbrains.kotlin.com.intellij.patterns.PsiElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.PsiNamePatternCondition;
+import org.jetbrains.kotlin.com.intellij.psi.PsiNameValuePair;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 
 /**
  * @author peter

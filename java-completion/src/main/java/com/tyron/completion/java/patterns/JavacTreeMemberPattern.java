@@ -6,11 +6,11 @@ import com.tyron.completion.java.patterns.elements.JavacElementPattern;
 import com.tyron.completion.java.patterns.elements.JavacElementPatternConditionPlus;
 
 import org.jetbrains.annotations.Nullable;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.patterns.PatternCondition;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternCondition;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
+import org.jetbrains.kotlin.com.intellij.util.PairProcessor;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import javax.lang.model.element.Element;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;

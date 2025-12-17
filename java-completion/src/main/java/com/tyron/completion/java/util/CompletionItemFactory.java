@@ -14,11 +14,11 @@ import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.model.CompletionItem;
 import com.tyron.completion.model.DrawableKind;
 
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiParameter;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.PsiType;
+import org.jetbrains.kotlin.com.intellij.psi.PsiMethod;
+import org.jetbrains.kotlin.com.intellij.psi.PsiNamedElement;
+import org.jetbrains.kotlin.com.intellij.psi.PsiParameter;
+import org.jetbrains.kotlin.com.intellij.psi.PsiParameterList;
+import org.jetbrains.kotlin.com.intellij.psi.PsiType;
 import org.openjdk.javax.annotation.processing.Completion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;

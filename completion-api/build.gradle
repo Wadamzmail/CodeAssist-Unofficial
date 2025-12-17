@@ -41,11 +41,7 @@ dependencies {
     implementation project(path: ':common')
     implementation project(path: ':language-api')
 	// https://mvnrepository.com/artifact/org.checkerframework/checker-qual
-    implementation("org.checkerframework:checker-qual:3.50.0")
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    implementation("org.checkerframework:checker-qual:3.50.0") 
 }
 
 spotless {
@@ -53,20 +49,4 @@ spotless {
 			target "**/*.java"
 			googleJavaFormat()
 			}
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
-    ]
 }

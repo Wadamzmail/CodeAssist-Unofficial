@@ -36,8 +36,6 @@ dependencies {
     implementation("org.checkerframework:checker-qual:3.50.0")
     
     implementation 'it.unimi.dsi:fastutil:8.5.8'
-
-    testImplementation 'junit:junit:4.13.2'
     
 }
 
@@ -46,20 +44,4 @@ spotless {
 			target "**/*.java"
 			googleJavaFormat()
 			}
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
-    ]
 }

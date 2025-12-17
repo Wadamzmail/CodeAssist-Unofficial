@@ -4,15 +4,15 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.patterns.ObjectPattern;
-import com.intellij.patterns.PatternCondition;
-import com.intellij.patterns.PatternConditionPlus;
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.patterns.StandardPatterns;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternCondition;
+import org.jetbrains.kotlin.com.intellij.patterns.ObjectPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternConditionPlus;
+import org.jetbrains.kotlin.com.intellij.patterns.PsiElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.StandardPatterns;
+import org.jetbrains.kotlin.com.intellij.util.PairProcessor;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import com.sun.source.tree.Tree;
 
 import java.util.Arrays;

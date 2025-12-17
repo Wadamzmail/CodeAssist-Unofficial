@@ -7,8 +7,8 @@
 
 package org.jetbrains.kotlin.utils
 
-import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.application.PathManager
+import org.jetbrains.kotlin.com.intellij.openapi.application.ApplicationManager
+import org.jetbrains.kotlin.com.intellij.openapi.application.PathManager
 import org.jetbrains.jps.model.java.impl.JavaSdkUtil
 
 import java.io.File

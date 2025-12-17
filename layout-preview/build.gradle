@@ -45,13 +45,7 @@ dependencies {
     implementation project(path: ':common')
     implementation project(path: ':xml-repository')
     implementation project(path: ':vector-parser')
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation "com.google.truth:truth:1.4.4"
-    testImplementation "org.robolectric:robolectric:4.13"
-    testImplementation('androidx.test:core:1.4.0')
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-
+     
     implementation project(path: ':build-logic')
     implementation project(path: ':project')
     implementation project(path: ':manifmerger')

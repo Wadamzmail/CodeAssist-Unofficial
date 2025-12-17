@@ -31,8 +31,7 @@ android {
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17 
-        targetCompatibility JavaVersion.VERSION_17 
-		//coreLibraryDesugaringEnabled true
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -55,31 +54,6 @@ dependencies {
     implementation project(path: ':common')
     
     implementation("org.checkerframework:checker-qual:3.50.0")
-
- //   api 'io.github.Rosemoe.sora-editor:editor:0.15.1'
-  //  api 'io.github.Rosemoe.sora-editor:language-textmate:0.15.1'
-	
-	api 'io.github.rosemoe:editor:0.24.3'
+ 	api 'io.github.rosemoe:editor:0.24.3'
     api 'io.github.rosemoe:language-textmate:0.24.3'
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-	//coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-        "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-        "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
-    ]
 }

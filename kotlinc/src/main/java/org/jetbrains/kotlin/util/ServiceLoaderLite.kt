@@ -7,8 +7,8 @@
 
 package org.jetbrains.kotlin.util
 
-import com.intellij.openapi.util.text.StringUtil.isJavaIdentifierPart
-import com.intellij.openapi.util.text.StringUtil.isJavaIdentifierStart
+import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil.isJavaIdentifierPart
+import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil.isJavaIdentifierStart
 import dalvik.system.PathClassLoader
 import java.io.File
 import java.io.IOError

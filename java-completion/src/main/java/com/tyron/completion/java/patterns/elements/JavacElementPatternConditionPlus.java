@@ -1,10 +1,10 @@
 package com.tyron.completion.java.patterns.elements;
 
 import org.jetbrains.annotations.NonNls;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PatternConditionPlus;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternConditionPlus;
+import org.jetbrains.kotlin.com.intellij.util.PairProcessor;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import javax.lang.model.element.Element;
 
 public abstract class JavacElementPatternConditionPlus<Target, Value> extends PatternConditionPlus<Target, Value> implements JavacElementPattern {

@@ -3,11 +3,11 @@ package com.tyron.completion.java.patterns;
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.patterns.PatternCondition;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternCondition;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
+import org.jetbrains.kotlin.com.intellij.psi.PsiMethodCallExpression;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import com.sun.source.tree.CompilationUnitTree;

@@ -2,10 +2,10 @@ package com.tyron.completion.java.patterns;
 
 import androidx.annotation.Nullable;
 
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.InitialPatternConditionPlus;
-import com.intellij.patterns.ObjectPattern;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternConditionPlus;
+import org.jetbrains.kotlin.com.intellij.patterns.ObjectPattern;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;

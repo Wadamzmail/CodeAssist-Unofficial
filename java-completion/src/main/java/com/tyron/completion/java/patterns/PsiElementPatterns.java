@@ -1,23 +1,23 @@
 package com.tyron.completion.java.patterns;
 
-import static com.intellij.patterns.PsiJavaPatterns.psiElement;
+import static org.jetbrains.kotlin.com.intellij.patterns.PsiJavaPatterns.psiElement;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.patterns.ElementPattern;
-import com.intellij.patterns.PatternCondition;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiExpressionStatement;
-import com.intellij.psi.PsiIfStatement;
-import com.intellij.psi.PsiReferenceExpression;
-import com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange;
+import org.jetbrains.kotlin.com.intellij.patterns.ElementPattern;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
+import org.jetbrains.kotlin.com.intellij.psi.PsiExpressionStatement;
+import org.jetbrains.kotlin.com.intellij.psi.PsiIfStatement;
+import org.jetbrains.kotlin.com.intellij.psi.PsiReferenceExpression;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class PsiElementPatterns {
 
-    public static com.intellij.patterns.PsiJavaElementPattern.@NotNull Capture<PsiElement> insideStarting(final ElementPattern<? extends PsiElement> ancestor) {
+    public static org.jetbrains.kotlin.com.intellij.patterns.PsiJavaElementPattern.@NotNull Capture<PsiElement> insideStarting(final ElementPattern<? extends PsiElement> ancestor) {
         return psiElement().with(new PatternCondition<PsiElement>("insideStarting") {
             @Override
             public boolean accepts(@NotNull PsiElement start, ProcessingContext context) {
@@ -37,7 +37,7 @@ public class PsiElementPatterns {
         });
     }
 
-    public static com.intellij.patterns.PsiJavaElementPattern.@NotNull Capture<PsiElement> withParents(Class<? extends PsiElement>... types) {
+    public static org.jetbrains.kotlin.com.intellij.patterns.PsiJavaElementPattern.@NotNull Capture<PsiElement> withParents(Class<? extends PsiElement>... types) {
         return psiElement().with(new PatternCondition<PsiElement>("withParents") {
             @Override
             public boolean accepts(@NotNull PsiElement psiElement,

@@ -3,10 +3,10 @@ package com.tyron.completion.java.patterns;
 import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.patterns.PatternCondition;
-import com.intellij.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
+import org.jetbrains.kotlin.com.intellij.patterns.InitialPatternCondition;
+import org.jetbrains.kotlin.com.intellij.patterns.PatternCondition;
+import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
+import org.jetbrains.kotlin.com.intellij.util.containers.ContainerUtil;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.util.Trees;

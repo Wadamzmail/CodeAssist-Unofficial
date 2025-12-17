@@ -4,8 +4,8 @@ import com.tyron.kotlin_completion.compiler.CompletionKind
 import com.tyron.kotlin_completion.completion.findParent
 import com.tyron.kotlin_completion.position.Position.changedRegion
 import com.tyron.kotlin_completion.util.PsiUtils
-import com.intellij.openapi.util.TextRange
-import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.com.intellij.openapi.util.TextRange
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
 import java.nio.file.Paths

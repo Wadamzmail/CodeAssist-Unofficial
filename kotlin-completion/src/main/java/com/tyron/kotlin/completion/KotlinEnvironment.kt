@@ -19,8 +19,8 @@
 package com.tyron.kotlin.completion
 
 import android.util.Log
-import com.intellij.psi.PsiElement
-import com.intellij.psi.tree.TokenSet
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet
 import com.tyron.kotlin.completion.codeInsight.ReferenceVariantsHelper
 import com.tyron.kotlin.completion.model.Analysis
 import com.tyron.kotlin.completion.util.IdeDescriptorRenderersScripting
@@ -101,7 +101,8 @@ import com.tyron.completion.model.DrawableKind
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
-) {
+) { 
+    @JvmField
     val kotlinFiles = mutableMapOf<String, KotlinFile>()
 
     fun updateKotlinFile(name: String, contents: String): KotlinFile {
@@ -176,7 +177,8 @@ data class KotlinEnvironment(
             messageCollector
         )
     }
-
+    
+    @JvmField
     var analysis: TopDownAnalysisContext? = null
 
     private fun getPrefix(element: PsiElement): String {

@@ -2,7 +2,7 @@ package com.tyron.completion.java.action;
 
 import com.tyron.completion.java.compiler.JavaCompilerService;
 
-import com.intellij.openapi.util.Key;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import com.sun.source.util.TreePath;
 
 public class CommonJavaContextKeys {
