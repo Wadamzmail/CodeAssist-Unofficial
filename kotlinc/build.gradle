@@ -45,7 +45,7 @@ dependencies {
     compileOnly project(path: ':android-stubs')
     implementation project(':javac')
    
-    compileOnly 'org.jetbrains:annotations:26.0.2-1'
+    compileOnly 'org.jetbrains:annotations:13.0'
     api("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
     api("org.codehaus.woodstox:stax2-api:4.2.2")
     api("org.jetbrains.intellij.deps:trove4j:1.0.20200330")
