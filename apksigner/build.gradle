@@ -1,10 +1,30 @@
 plugins {
-	
-    id 'java-library'
+    id 'com.android.library'
 }
 
 apply plugin: 'com.diffplug.spotless'
 
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.android.apksig"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+     
+}
 dependencies {
 	implementation project(path: ':common')
     api "com.android.tools.build:apksig:8.6.0"   

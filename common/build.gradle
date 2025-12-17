@@ -1,10 +1,32 @@
 plugins {
-    id 'java-library'
-    id 'kotlin'
+    id 'com.android.library'
 }
-
+apply plugin: 'kotlin-android'
 apply plugin: 'com.diffplug.spotless'
 
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.common"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
 dependencies {
     testImplementation 'junit:junit:4.13.2'
 

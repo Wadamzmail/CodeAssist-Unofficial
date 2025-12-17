@@ -1,11 +1,29 @@
 plugins {
-    id 'java-library'
+    id 'com.android.library'
 }
+apply plugin: 'kotlin-android'
 apply plugin: 'com.diffplug.spotless'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.google.googlejavaformat"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    
 }
 
 dependencies {
