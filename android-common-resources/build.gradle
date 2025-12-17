@@ -15,7 +15,8 @@ dependencies {
     api("com.android.tools.layoutlib:layoutlib-api:30.4.0-alpha09") {
         exclude group: 'com.android.tools', module: 'common'
     }
-    implementation 'javax.inject:javax.inject:1'
+   // implementation 'javax.inject:javax.inject:1'
+   implementation project(':kotlinc') 
     implementation project(path: ':common')
    // implementation project(path: ':jaxp')
     implementation project(path: ':jaxp:jaxp-internal')

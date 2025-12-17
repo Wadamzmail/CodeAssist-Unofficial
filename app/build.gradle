@@ -96,6 +96,7 @@ signingConfigs.debug
 configurations.implementation {
     exclude group: "org.jetbrains", module: "annotations"
     exclude group: 'com.android.tools', module: 'common'
+  //  exclude group: "it.unimi.dsi", module: "fastutil"
 }
 
 dependencies {
