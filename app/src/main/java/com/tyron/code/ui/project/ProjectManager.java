@@ -325,11 +325,11 @@ public class ProjectManager {
                   }
                 }
               }
-              /*Collection<File> files = javaModule.getJavaFiles().values();
+              Collection<File> files = javaModule.getJavaFiles().values();
               File first = files.size()>0?((File)files.toArray()[0]):null;//CollectionsKt.firstOrNull(files);
               if (first != null) {
                 service.compile(first.toPath());
-              }*/
+              }
               
               //new instead of the upper ^
               indexModule(module);

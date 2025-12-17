@@ -36,6 +36,17 @@ import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.TextRange;
 import io.github.rosemoe.sora.lang.format.AsyncFormatter;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
+import com.tyron.code.ui.project.ProjectManager;
+import com.tyron.builder.project.api.Module;
+import com.tyron.builder.project.Project;
+
+//for analysis 
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
  
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
@@ -48,6 +59,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final TextMateLanguage delegate;
     private final Editor editor;
     public boolean createIdentifiers = false;
+    private final DiagnosticsContainer container = new DiagnosticsContainer();
      
     
     private final Formatter formatter = new AsyncFormatter() {
@@ -87,7 +99,11 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     public KotlinLanguage(Editor editor) {
         this.editor = editor;
         delegate = LanguageManager.createTextMateLanguage(SCOPE_NAME);
-
+        
+        Project project = ProjectManager.getInstance().getCurrentProject();
+        Module currentModule = project.getModule(editor.getCurrentFile());
+          kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+          initAnalysis();
     }
 
     @NonNull
@@ -106,16 +122,26 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
+       try{                             
         String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
         KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
+           
+           container.reset();
+                     
         CompletionList completionList = provider.getCompletionList(identifierPart,
                 position.getLine(),
                 position.getColumn());
         if (completionList == null) {
             return;
         }
+         Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
         completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
+       }catch(Exception e){
+       kotlinEnvironment.setAnalysis(null);
+       throw new CompletionCancelledException(e);
+       }
+       kotlinEnvironment.setAnalysis(null);
     }
 
     private KotlinEnvironment getOrCreateKotlinEnvironment() {
@@ -157,5 +183,63 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     @Override
     public void destroy() {
         delegate.destroy();
+    }
+    
+    private void initAnalysis() {
+        new Thread(() -> {
+         //   if (Prefs.kotlinRealtimeErrors) {
+                kotlinEnvironment.addIssueListener(issue -> {
+                    int severity;
+                    CompilerMessageSeverity s = issue.getSeverity();
+
+                    if (s == CompilerMessageSeverity.ERROR) {
+                        severity = DiagnosticRegion.SEVERITY_ERROR;
+                    } else if (s == CompilerMessageSeverity.WARNING
+                            || s == CompilerMessageSeverity.STRONG_WARNING) {
+                        severity = DiagnosticRegion.SEVERITY_WARNING;
+                    } else {
+                        return;
+                    }
+
+                    Objects.requireNonNull((CodeEditorView)editor).post(() -> {
+                        Log.d(TAG, "Diagnostic: " + issue);
+                        container.addDiagnostic(
+                                new DiagnosticRegion(
+                                        issue.getStartOffset(),
+                                        issue.getEndOffset(),
+                                        severity //,
+                                      //  0,
+                                     //   new DiagnosticDetail(issue.getMessage())
+                                )
+                        );
+                    });
+                });
+         //   }
+
+            var fileEntry = kotlinEnvironment.getKotlinFiles()
+                    .get(file.getAbsolutePath());
+            if (fileEntry == null) return;
+
+            var ktFile = fileEntry.getKotlinFile();
+
+            try {
+                kotlinEnvironment.analysisOf(
+                        kotlinEnvironment.getKotlinFiles()
+                                .values()
+                                .stream()
+                                .map(it -> it.getKotlinFile())
+                                .toList(),
+                        ktFile
+                );
+
+                  Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
+
+            } catch (Throwable e) {
+                if (!(e instanceof InterruptedException)
+                        && !(e instanceof ProcessCanceledException)) {
+                    Log.e(TAG, "Failed to analyze file", e);
+                }
+            }
+        }).start();
     }
 }

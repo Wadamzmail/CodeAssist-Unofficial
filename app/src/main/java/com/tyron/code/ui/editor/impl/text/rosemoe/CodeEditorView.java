@@ -46,6 +46,15 @@ import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 
+import java.util.Objects;
+import java.util.function.Function;
+
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+
 public class CodeEditorView extends CodeEditor implements Editor {
 
     private final Set<Character> IGNORED_PAIR_ENDS = ImmutableSet.<Character>builder()
@@ -136,6 +145,8 @@ public class CodeEditorView extends CodeEditor implements Editor {
     @Override
     public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
         mDiagnostics = diagnostics;
+        convDiagnostics(diagnostics);
+        
     }
 
     public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
@@ -405,6 +416,30 @@ public class CodeEditorView extends CodeEditor implements Editor {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
     }
+     private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
+    Objects.requireNonNull(getDiagnostics()).reset();
+    Function<Diagnostic.Kind, Short> severitySupplier = it -> {
+        switch (it) {
+            case ERROR:
+                return DiagnosticRegion.SEVERITY_ERROR;
+            case MANDATORY_WARNING:
+            case WARNING:
+                return DiagnosticRegion.SEVERITY_WARNING;
+            default:
+            case OTHER:
+            case NOTE:
+                return DiagnosticRegion.SEVERITY_NONE;
+        }
+    };
+
+    DiagnosticsContainer container = new DiagnosticsContainer();
+
+    diagnostics.stream()
+                    .map(it -> new DiagnosticRegion((int) it.getStartPosition(),
+                            (int) it.getEndPosition(),
+                            severitySupplier.apply(it.getKind())))
+                    .forEach(Objects.requireNonNull(getDiagnostics())::addDiagnostic);
+   } 
        @Override 
  public void moveSelectionRight(){}
   @Override 

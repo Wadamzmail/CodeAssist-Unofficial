@@ -209,24 +209,15 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
             return;
         }
         String prefix = CompletionHelper.computePrefix(content, position, this::isAutoCompleteChar);
-        CompletionParameters parameters = CompletionParameters.builder()
-                .setPrefix(prefix)
-                .setModule(module)
-                .setProject(mEditor.getProject())
-                .setFile(mEditor.getCurrentFile())
-                .setIndex(position.getIndex())
-                .setLine(position.getLine())
-                .setColumn(position.getColumn())
-                .setContents(content.getReference().toString())
-                .build();
-        CompletionList items =
-                new AndroidXmlCompletionProvider().complete(parameters);
-        if (items == null) {
-            return;
-        }
-        for (CompletionItem item : items.getItems()) {
-            publisher.addItem(new CompletionItemWrapper(item));
-        }
+    List<CompletionItem> items =
+        new XMLAutoCompleteProvider(mEditor)
+            .getAutoCompleteItems(prefix, position.getLine(), position.getColumn());
+    if (items == null) {
+      return;
+    }
+    for (CompletionItem item : items) {
+      publisher.addItem(item);
+    }
   }
   
   @Override

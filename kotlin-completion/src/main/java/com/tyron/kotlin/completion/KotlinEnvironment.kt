@@ -212,7 +212,7 @@ data class KotlinEnvironment(
         }
     }
 
-    private fun analysisOf(files: List<KtFile>): Analysis {
+        fun analysisOf(files: List<KtFile>): Analysis {
         val trace = CliBindingTrace()
         val project = files.first().project
         val componentProvider = TopDownAnalyzerFacadeForJVM.createContainer(
