@@ -186,7 +186,7 @@ dependencies {
 	    implementation 'com.blankj:utilcodex:1.31.1'
      
      //for CodeAssist
-     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.2.0'
+     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.2.21'
      
          // Virtual File System
     implementation("org.apache.commons:commons-vfs2:2.9.0") {
