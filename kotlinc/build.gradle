@@ -23,6 +23,7 @@ dependencies {
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
+    implementation project(':javac')
 
 }
 
@@ -31,9 +32,6 @@ repositories {
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
-    }
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
