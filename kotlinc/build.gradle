@@ -31,6 +31,9 @@ repositories {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
@@ -48,7 +51,7 @@ spotless {
 			googleJavaFormat()
 			}
 }
-/*
+
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += [
         "--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
@@ -63,4 +66,4 @@ tasks.withType(JavaCompile).configureEach {
         "--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
         "--add-exports=jdk.compiler/sun.nio.ch=ALL-UNNAMED"
     ]
-}*/
+}
