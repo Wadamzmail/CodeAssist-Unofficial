@@ -87,8 +87,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     public KotlinLanguage(Editor editor) {
         this.editor = editor;
         delegate = LanguageManager.createTextMateLanguage(SCOPE_NAME);
-        autoCompleteProvider = new CachedAutoCompleteProvider(editor,
-                new KotlinAutoCompleteProvider(editor));
+
     }
 
     @NonNull

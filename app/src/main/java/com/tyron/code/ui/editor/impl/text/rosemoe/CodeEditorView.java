@@ -211,13 +211,12 @@ public class CodeEditorView extends CodeEditor implements Editor {
             }
         }
     }
-
+   }catch(Exception e){}
     super.commitText(text, applyAutoIndent);
 
      if (text.length() == 1) {
         handleAutoInsert(text.charAt(0));
      }
-    }catch(Exception e){}
    
    }
 
@@ -249,6 +248,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
       @Override
   public void deleteText() {
+   try{
     Cursor cursor = getCursor();
     if (!cursor.isSelected()) {
       io.github.rosemoe.sora.text.Content text = getText();
@@ -270,6 +270,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
         }
       }
     }
+   }catch(Exception e){}
     super.deleteText();
   }
 

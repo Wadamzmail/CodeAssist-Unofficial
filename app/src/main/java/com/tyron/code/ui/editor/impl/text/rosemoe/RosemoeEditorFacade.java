@@ -200,6 +200,7 @@ public class RosemoeEditorFacade {
             return false;
         });
         editor.subscribeEvent(LongPressEvent.class, (event, unsubscribe) -> {
+         try{
             event.intercept();
 
             Cursor cursor = editor.getCursor();
@@ -223,8 +224,10 @@ public class RosemoeEditorFacade {
             }
 
             ProgressManager.getInstance().runLater(() -> showPopupMenu(event));
+           }catch(Exception e){}
         });
         editor.subscribeEvent(ClickEvent.class, (event, unsubscribe) -> {
+          try{
             Cursor cursor = editor.getCursor();
             if (editor.getCursor().isSelected()) {
                 int index = editor.getCharIndex(event.getLine(), event.getColumn());
@@ -237,6 +240,7 @@ public class RosemoeEditorFacade {
                     event.intercept();
                 }
             }
+          }catch(Exception e){}
         });
 
         editor.subscribeEvent(EditorKeyEvent.class, (event, unsubscribe) -> {
