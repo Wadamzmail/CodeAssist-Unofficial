@@ -28,6 +28,12 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        force("org.jetbrains:annotations:26.0.2")
+    }
+}
+
 dependencies {
     implementation 'com.github.marschall:zipfilesystem-standalone:1.0.1'
     implementation 'androidx.annotation:annotation:1.8.2'
