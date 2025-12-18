@@ -30,7 +30,7 @@ import org.jetbrains.kotlin.org.jdom.Element;
 import org.jetbrains.kotlin.org.jdom.JDOMException;
 import org.jetbrains.kotlin.org.jdom.Namespace;
 import org.jetbrains.kotlin.org.jdom.Text;
-import org.jetbrains.kotlin.org.jdom.filter2.Filter;
+import org.jetbrains.kotlin.org.jdom.filter.Filter;
 import org.jetbrains.kotlin.org.jdom.output.Format;
 import org.jetbrains.kotlin.org.jdom.output.Format.TextMode;
 import org.jetbrains.kotlin.org.jdom.output.XMLOutputter;

@@ -4,12 +4,14 @@
  */
 package org.jetbrains.kotlin.cli.jvm.compiler.jarfs
 
-import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil
-import org.jetbrains.kotlin.com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.util.text.StringUtil
+import com.intellij.openapi.vfs.VirtualFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.RandomAccessFile
 import java.nio.channels.FileChannel
+import kotlin.collections.HashMap
 
 class FastJarHandler(val fileSystem: FastJarFileSystem, path: String) {
     private val myRoot: VirtualFile?
@@ -22,11 +24,15 @@ class FastJarHandler(val fileSystem: FastJarFileSystem, path: String) {
         RandomAccessFile(file, "r").use { randomAccessFile ->
             val mappedByteBuffer = randomAccessFile.channel.map(FileChannel.MapMode.READ_ONLY, 0, randomAccessFile.length())
             try {
-                entries = try {
-                    mappedByteBuffer.parseCentralDirectory()
-                } catch (e: Exception) {
-                    throw IllegalStateException("Error while reading '${file.path}': $e", e)
-                }
+                entries =
+                    try {
+                        mappedByteBuffer.parseCentralDirectory()
+                    } catch (e: Exception) {
+                        // copying the behavior of ArchiveHandler (and therefore ZipHandler)
+                        // TODO: consider propagating to compiler error or warning, but take into account that both javac and K1 simply ignore invalid jars in such cases
+                        Logger.getInstance(this::class.java).warn("Error while reading zip file: ${file.path}: $e", e)
+                        emptyList()
+                    }
                 cachedManifest =
                     entries.singleOrNull { StringUtil.equals(MANIFEST_PATH, it.relativePath) }
                         ?.let(mappedByteBuffer::contentsToByteArray)
@@ -57,7 +63,10 @@ class FastJarHandler(val fileSystem: FastJarFileSystem, path: String) {
         }
     }
 
-    private fun createFile(entry: ZipEntryDescription, directories: MutableMap<String, FastJarVirtualFile>): FastJarVirtualFile {
+    private fun createFile(
+        entry: ZipEntryDescription,
+        directories: MutableMap<String, FastJarVirtualFile>,
+    ): FastJarVirtualFile {
         val (parentName, shortName) = entry.relativePath.splitPath()
 
         val parentFile = getOrCreateDirectory(parentName, directories)
@@ -66,14 +75,18 @@ class FastJarHandler(val fileSystem: FastJarFileSystem, path: String) {
         }
 
         return FastJarVirtualFile(
-            this, shortName,
+            this,
+            shortName,
             if (entry.isDirectory) -1 else entry.uncompressedSize,
             parentFile,
             entry,
         )
     }
 
-    private fun getOrCreateDirectory(entryName: CharSequence, directories: MutableMap<String, FastJarVirtualFile>): FastJarVirtualFile {
+    private fun getOrCreateDirectory(
+        entryName: CharSequence,
+        directories: MutableMap<String, FastJarVirtualFile>,
+    ): FastJarVirtualFile {
         return directories.getOrPut(entryName.toString()) {
             val (parentPath, shortName) = entryName.splitPath()
             val parentFile = getOrCreateDirectory(parentPath, directories)
