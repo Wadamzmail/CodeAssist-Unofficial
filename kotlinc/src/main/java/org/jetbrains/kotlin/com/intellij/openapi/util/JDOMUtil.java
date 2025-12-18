@@ -10,7 +10,7 @@ import org.jetbrains.kotlin.com.intellij.util.io.URLUtil;
 import org.jetbrains.kotlin.com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.kotlin.com.intellij.util.text.CharSequenceReader;
 import org.jetbrains.kotlin.com.intellij.util.xml.dom.StaxFactory;
-import org.jetbrains.kotlin.com.intellij.xml.util.XmlStringUtil;
+import com.intellij.xml.util.XmlStringUtil;
 import org.codehaus.stax2.XMLStreamReader2;
 import org.jdom.*;
 import org.jdom.output.Format;

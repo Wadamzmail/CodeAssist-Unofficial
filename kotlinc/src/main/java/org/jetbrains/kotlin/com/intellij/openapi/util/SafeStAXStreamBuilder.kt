@@ -2,7 +2,7 @@
 @file:ApiStatus.Internal
 package com.intellij.openapi.util
 
-import org.jetbrains.kotlin.com.intellij.util.xml.dom.createXmlStreamReader
+import com.intellij.util.xml.dom.createXmlStreamReader
 import org.codehaus.stax2.XMLStreamReader2
 import org.jdom.*
 import org.jetbrains.annotations.ApiStatus

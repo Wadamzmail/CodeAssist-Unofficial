@@ -58,9 +58,9 @@ dependencies {
    
    //XML
    api("org.jdom:jdom:2.0.2")
-   implementation("javax.xml.bind:jsr173_api:1.0")
    implementation("org.codehaus.woodstox:stax2-api:4.2.2")
    implementation files('libs/util-jdom-253.28294.357.jar')
+   implementation files('libs/util-xml-dom-253.28294.357.jar')
 
 }
 
