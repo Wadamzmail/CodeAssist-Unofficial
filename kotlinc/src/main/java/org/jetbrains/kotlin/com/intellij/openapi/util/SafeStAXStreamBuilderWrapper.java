@@ -9,9 +9,9 @@ import static org.openjdk.javax.xml.stream.XMLStreamConstants.SPACE;
 import static org.openjdk.javax.xml.stream.XMLStreamConstants.START_DOCUMENT;
 import static org.openjdk.javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
-import org.jdom.AttributeType;
-import org.jdom.Element;
-import org.jdom.Namespace;
+import org.jdom2.AttributeType;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 import org.openjdk.javax.xml.stream.XMLStreamException;
 import org.openjdk.javax.xml.stream.XMLStreamReader;
 
