@@ -12,12 +12,12 @@ import org.jetbrains.kotlin.com.intellij.util.text.CharSequenceReader;
 import org.jetbrains.kotlin.com.intellij.util.xml.dom.StaxFactory;
 import org.jetbrains.kotlin.com.intellij.xml.util.XmlStringUtil;
 import org.jetbrains.kotlin.org.codehaus.stax2.XMLStreamReader2;
-import org.jetbrains.kotlin.org.jdom.*;
-import org.jetbrains.kotlin.org.jdom.output.Format;
-import org.jetbrains.kotlin.org.jdom.output.XMLOutputter;
+import org.jdom2.*;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.jetbrains.annotations.*;
 
-import javax.xml.stream.XMLStreamException;
+import org.openjdk.javax.xml.stream.XMLStreamException;
 import java.awt.*;
 import java.io.*;
 import java.net.URL;
@@ -886,7 +886,7 @@ public final class JDOMUtil {
    * will return the same element {@code <xxx/>}<br/>
    * - getParent() method is not implemented (and will throw exception; interning would not make sense otherwise)<br/>
    * - is immutable (all modifications methods like setName(), setParent() etc. will throw)<br/>
-   * - has {@code clone()} method which will return modifiable org.jetbrains.kotlin.org.jdom.Element copy.<br/>
+   * - has {@code clone()} method which will return modifiable org.jdom2.Element copy.<br/>
    */
   public static @NotNull Element internElement(@NotNull Element element) {
     return JDOMInterner.INSTANCE.internElement(element);
