@@ -45,13 +45,16 @@ dependencies {
     compileOnly project(path: ':android-stubs')
     implementation project(':javac')
    
-    compileOnly 'org.jetbrains:annotations:13.0'
+    compileOnly 'org.jetbrains:annotations:26.0.2'
     api("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
-    api("org.codehaus.woodstox:stax2-api:4.2.2")
     api("org.jetbrains.intellij.deps:trove4j:1.0.20200330")
-    api("org.jdom:jdom:2.0.2")
-   // implementation("com.jetbrains.intellij.platform:jps-model-impl:253.28294.357")
-   implementation files('libs/jps-model-impl-253.28294.357.jar') 
+    implementation files('libs/jps-model-impl-253.28294.357.jar') 
+   
+   //XML
+   api("org.jdom:jdom:2.0.2")
+   implementation("javax.xml.bind:jsr173_api:1.0")
+   implementation("org.codehaus.woodstox:stax2-api:4.2.2")
+   implementation files('libs/util-jdom-253.28294.357.jar')
 
 }
 

@@ -3,14 +3,14 @@
 package com.intellij.openapi.util
 
 import org.jetbrains.kotlin.com.intellij.util.xml.dom.createXmlStreamReader
-import org.jetbrains.kotlin.org.codehaus.stax2.XMLStreamReader2
-import org.jdom2.*
+import org.codehaus.stax2.XMLStreamReader2
+import org.jdom.*
 import org.jetbrains.annotations.ApiStatus
 import java.io.Reader
 import java.nio.file.Files
 import java.nio.file.Path
-import org.openjdk.javax.xml.stream.XMLStreamConstants
-import org.openjdk.javax.xml.stream.XMLStreamException
+import javax.xml.stream.XMLStreamConstants
+import javax.xml.stream.XMLStreamException
 
 // DTD, COMMENT and PROCESSING_INSTRUCTION are ignored
 
