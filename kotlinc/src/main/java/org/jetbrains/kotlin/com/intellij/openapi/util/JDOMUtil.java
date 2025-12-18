@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import org.jetbrains.kotlin.com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.kotlin.com.intellij.openapi.vfs.CharsetToolkit;
 import org.jetbrains.kotlin.com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.kotlin.com.intellij.xml.util.XmlStringUtil;
+import com.intellij.xml.util.XmlStringUtil;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
