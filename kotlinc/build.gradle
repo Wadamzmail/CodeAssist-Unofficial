@@ -49,7 +49,7 @@ dependencies {
     api("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
     api("org.codehaus.woodstox:stax2-api:4.2.2")
     api("org.jetbrains.intellij.deps:trove4j:1.0.20200330")
-   // api("org.jdom:jdom:2.0.2")
+    api("org.jdom:jdom:2.0.2")
    // implementation("com.jetbrains.intellij.platform:jps-model-impl:253.28294.357")
    implementation files('libs/jps-model-impl-253.28294.357.jar') 
 
