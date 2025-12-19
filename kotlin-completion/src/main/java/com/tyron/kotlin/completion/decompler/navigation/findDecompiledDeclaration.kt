@@ -1,7 +1,7 @@
 package com.tyron.kotlin.completion.decompler.navigation
 
 import org.jetbrains.kotlin.analysis.decompiler.psi.file.KtDecompiledFile
-import org.jetbrains.kotlin.analysis.decompiler.psi.text.DecompiledTextIndexer
+//import org.jetbrains.kotlin.analysis.decompiler.psi.text.DecompiledTextIndexer
 import org.jetbrains.kotlin.analyzer.ModuleInfo
 import org.jetbrains.kotlin.builtins.DefaultBuiltIns
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns

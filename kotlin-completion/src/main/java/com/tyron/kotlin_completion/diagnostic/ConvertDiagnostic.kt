@@ -36,8 +36,9 @@ fun message(diagnostic: KotlinDiagnostic) =
     DefaultErrorMessages.render(diagnostic)
 
 fun severity(severity: Severity): Diagnostic.Kind =
-    when(severity) {
+    when (severity) {
         Severity.INFO -> Diagnostic.Kind.NOTE
         Severity.ERROR -> Diagnostic.Kind.ERROR
         Severity.WARNING -> Diagnostic.Kind.WARNING
-    }
+        Severity.FIXED_WARNING -> Diagnostic.Kind.WARNING
+    }   

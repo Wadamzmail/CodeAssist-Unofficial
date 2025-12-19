@@ -213,7 +213,7 @@ data class KotlinEnvironment(
     }
 
       fun analysisOf(files: List<KtFile>): Analysis {
-        val trace = CliBindingTrace()
+        val trace = CliBindingTrace(kotlinEnvironment.project)
         val project = files.first().project
         val componentProvider = TopDownAnalyzerFacadeForJVM.createContainer(
             kotlinEnvironment.project,
@@ -364,7 +364,7 @@ data class KotlinEnvironment(
             setIdeaIoUseFallback()
             setupIdeaStandaloneExecution()
             return KotlinEnvironment(classpath, KotlinCoreEnvironment.createForProduction(
-                parentDisposable = {},
+                projectDisposable = {},
                 configFiles = EnvironmentConfigFiles.JVM_CONFIG_FILES,
                 configuration = CompilerConfiguration().apply {
                     addJvmClasspathRoots(classpath.filter { it.exists() && it.isFile && it.extension == "jar" })

@@ -19,7 +19,7 @@ fun test() {
 }
 
 fun createContainer(environment: KotlinCoreEnvironment, sourcePath: Collection<KtFile>): Pair<ComponentProvider, BindingTraceContext> {
-    val cliBindingTrace = CliBindingTrace()
+    val cliBindingTrace = CliBindingTrace(environment.project)
     val container = TopDownAnalyzerFacadeForJVM.createContainer(
         environment.project,
         sourcePath,
