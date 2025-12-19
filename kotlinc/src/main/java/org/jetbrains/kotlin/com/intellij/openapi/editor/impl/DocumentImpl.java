@@ -69,8 +69,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.IntArrayList;
+import org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.IntList;
 
 public final class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     static final Key<Reference<RangeMarkerTree<RangeMarkerEx>>> RANGE_MARKERS_KEY =

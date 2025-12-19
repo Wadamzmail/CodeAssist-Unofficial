@@ -60,7 +60,7 @@ import org.jetbrains.kotlin.com.intellij.util.graph.impl.GraphAlgorithmsImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.picocontainer.MutablePicoContainer;
+import org.jetbrains.kotlin.org.picocontainer.MutablePicoContainer;
 
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;

@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-import it.unimi.dsi.fastutil.bytes.ByteArrayList;
-import it.unimi.dsi.fastutil.bytes.ByteList;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import org.jetbrains.kotlin.it.unimi.dsi.fastutil.bytes.ByteArrayList;
+import org.jetbrains.kotlin.it.unimi.dsi.fastutil.bytes.ByteList;
+import org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.IntArrayList;
+import org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.IntList;
 
 /**
  * Data structure specialized for working with document text lines, i.e. stores information about line mapping to document
