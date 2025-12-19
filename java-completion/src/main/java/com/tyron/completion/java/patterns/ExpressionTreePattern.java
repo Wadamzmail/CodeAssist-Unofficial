@@ -24,7 +24,7 @@ public class ExpressionTreePattern<T extends ExpressionTree, Self extends Expres
        // final JavacTreeNamePatternCondition nameCondition = ContainerUtil.findInstance(method.getCondition().getConditions(), JavacTreeNamePatternCondition.class);
         final JavacTreeNamePatternCondition nameCondition =
            (JavacTreeNamePatternCondition) ContainerUtil.find(
-               methodPattern.getCondition().getConditions(),
+               method.getCondition().getConditions(),
                condition -> condition instanceof JavacTreeNamePatternCondition
             );
         return new MethodInvocationTreePattern().and(this).with(new PatternCondition<MethodInvocationTree>("methodCall") {
