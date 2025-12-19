@@ -87,6 +87,7 @@ signingConfigs.debug
         pickFirst "*/*.kotlin_builtins"
         pickFirst "*/*/*.kotlin_builtins"
         pickFirst "*/*/*/*.kotlin_builtins"
+        pickFirst "kotlin/concurrent/atomics/atomics.kotlin_builtins"
 		
         //exclude 'com/sun/tools/javac/resources/legacy.properties'
 		
