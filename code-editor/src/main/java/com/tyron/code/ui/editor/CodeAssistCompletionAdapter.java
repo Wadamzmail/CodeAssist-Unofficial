@@ -23,7 +23,12 @@ public class CodeAssistCompletionAdapter extends EditorCompletionAdapter {
       itemsField.setAccessible(true);
       itemsField.set(this, items);
 
-      Field windowField = ReflectionUtil.getDeclaredField(EditorCompletionAdapter.class, "window");
+      //Field windowField = ReflectionUtil.getDeclaredField(EditorCompletionAdapter.class, "window");
+      Field windowField =
+       ReflectionUtil.findFieldInHierarchy(
+          EditorCompletionAdapter.class,
+          field -> "window".equals(field.getName())
+        );
       if (windowField != null) {
         windowField.setAccessible(true);
         windowField.set(this, window);
