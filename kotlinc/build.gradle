@@ -57,11 +57,13 @@ dependencies {
     implementation files('libs/jps-model-impl-253.28294.357.jar') 
    
    //XML
-   api("org.jdom:jdom:2.0.2")
-   implementation("org.codehaus.woodstox:stax2-api:4.2.2")
+   //api("org.jdom:jdom:2.0.2")
+  // implementation("org.codehaus.woodstox:stax2-api:4.2.2")
    
    //intellij util
   // implementation files('libs/util-253.28294.357.jar')
+  api files('file/concurrency-253.28294.357.jar')
+  
 
 }
 
