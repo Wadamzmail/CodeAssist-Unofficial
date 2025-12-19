@@ -254,7 +254,11 @@ public class RosemoeEditorFacade {
                     // KeyEvent cannot be intercepted???
                     // workaround
                     Field mInterceptTargets =
-                            ReflectionUtil.getDeclaredField(Event.class, "mInterceptTargets");
+                            ReflectionUtil.findFieldInHierarchy(
+                               Event.class,
+                               field -> "mInterceptTargets".equals(field.getName())
+                            );    
+                         
                     mInterceptTargets.setAccessible(true);
                     try {
                         mInterceptTargets.set(event, InterceptTarget.TARGET_EDITOR);
