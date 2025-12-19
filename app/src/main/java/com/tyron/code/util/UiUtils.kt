@@ -66,5 +66,5 @@ fun View.addSystemWindowInsetToMargin(
 }
 
 fun View.removeFromParent() {
-    parent?.cast<ViewGroup>()?.removeView(this)
+    (parent as? ViewGroup)?.removeView(this)
 }
