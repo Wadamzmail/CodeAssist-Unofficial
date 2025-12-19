@@ -33,6 +33,7 @@ dependencies {
 
     compileOnly project(path: ':android-stubs')
     implementation project(path: ':project')
+    implementation project(':javac')
 }
 
 spotless {
