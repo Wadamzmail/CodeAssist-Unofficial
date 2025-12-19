@@ -61,7 +61,7 @@ public class JavacTreeNamePatternCondition extends PatternConditionPlus<Tree, St
     }
 
     @Override
-    public boolean processValues(Tree tree, ProcessingContext context, PairProcessor<String, ProcessingContext> processor) {
+    public boolean processValues(Tree tree, ProcessingContext context, PairProcessor<? super String,? super ProcessingContext> processor) {
         return processor.process(getPropertyValue(tree), context);
     }
 

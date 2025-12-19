@@ -83,7 +83,12 @@ public class JavacTreePattern<T extends Tree, Self extends JavacTreePattern<T, S
     }
 
     public Self methodCallParameter(final int index, final ElementPattern<?> methodPattern) {
-        final JavacTreeNamePatternCondition nameCondition = ContainerUtil.findInstance(methodPattern.getCondition().getConditions(), JavacTreeNamePatternCondition.class);
+      //  final JavacTreeNamePatternCondition nameCondition = ContainerUtil.findInstance(methodPattern.getCondition().getConditions(), JavacTreeNamePatternCondition.class);
+      final JavacTreeNamePatternCondition nameCondition =
+            ContainerUtil.find(
+               methodPattern.getCondition().getConditions(),
+               condition -> condition instanceof JavacTreeNamePatternCondition
+             );
 
         return with(new PatternCondition<T>("methodCallParameter") {
             @Override

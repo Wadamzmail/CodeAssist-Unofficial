@@ -33,13 +33,13 @@ public class JavacTreeMemberPattern<T extends Tree, Self extends JavacTreeMember
         return with(new JavacElementPatternConditionPlus<T, ClassTree>("inClass", elementPattern) {
             @Override
             public boolean processValues(T t, ProcessingContext processingContext,
-                                         PairProcessor<ClassTree, ProcessingContext> pairProcessor) {
+                                         PairProcessor<? super ClassTree,? super ProcessingContext> pairProcessor) {
                 return elementPattern.accepts(t, processingContext);
             }
 
             @Override
             public boolean processValues(Element target, ProcessingContext context,
-                                         PairProcessor<Element, ProcessingContext> processor) {
+                                         PairProcessor<? super Element,? super ProcessingContext> processor) {
                 return false;
             }
         });
