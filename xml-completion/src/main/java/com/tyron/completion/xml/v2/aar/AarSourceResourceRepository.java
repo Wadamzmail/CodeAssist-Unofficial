@@ -94,7 +94,7 @@ public class AarSourceResourceRepository extends AbstractAarResourceRepository {
     myResourcePathPrefix = loader.getResourcePathPrefix();
     myResourceUrlPrefix = loader.getResourceUrlPrefix();
 
-    myManifestPackageName = NullableLazyValue.createValue(() -> {
+    myManifestPackageName = NullableLazyValue.lazyNullable(() -> {
       try {
         PathString manifestPath = getSourceFile("../" + FN_ANDROID_MANIFEST_XML, true);
         return AndroidManifestPackageNameUtils.getPackageNameFromManifestFile(manifestPath);
