@@ -70,7 +70,8 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation;
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
-import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
+//import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
+import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.tyron.builder.model.CodeAssistLibrary;
@@ -1142,7 +1143,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
           fileList.add(kotlinDir);
         }
 
-        IncrementalJvmCompilerRunnerKt.makeIncrementally(
+        CompilerRunnerUtils.makeJvmIncrementally(
             cacheDir,
             Arrays.asList(fileList.toArray(new File[0])),
             args,
