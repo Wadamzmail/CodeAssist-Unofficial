@@ -62,7 +62,7 @@ dependencies {
    
    //intellij util
   // implementation files('libs/util-253.28294.357.jar')
-  api files('file/concurrency-253.28294.357.jar')
+  api files('libs/concurrency-253.28294.357.jar')
   
 
 }
