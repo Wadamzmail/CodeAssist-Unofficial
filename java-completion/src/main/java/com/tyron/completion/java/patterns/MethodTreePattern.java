@@ -62,7 +62,7 @@ public class MethodTreePattern<T extends Tree, Self extends MethodTreePattern<T,
         return with(new JavacElementPatternConditionPlus<Tree, Tree>("definedInClass", pattern) {
             @Override
             public boolean processValues(Element target, ProcessingContext context,
-                                         PairProcessor<? super Element,? super ProcessingContext> processor) {
+                                         PairProcessor< Element, ProcessingContext> processor) {
                 if (!processor.process(target.getEnclosingElement(), context)) {
                     return false;
                 }

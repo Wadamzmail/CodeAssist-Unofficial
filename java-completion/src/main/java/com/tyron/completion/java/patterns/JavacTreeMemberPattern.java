@@ -39,7 +39,7 @@ public class JavacTreeMemberPattern<T extends Tree, Self extends JavacTreeMember
 
             @Override
             public boolean processValues(Element target, ProcessingContext context,
-                                         PairProcessor<? super Element,? super ProcessingContext> processor) {
+                                         PairProcessor<Element, ProcessingContext> processor) {
                 return false;
             }
         });
