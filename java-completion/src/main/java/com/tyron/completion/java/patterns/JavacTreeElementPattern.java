@@ -81,11 +81,18 @@ public abstract class JavacTreeElementPattern<ParentType, T extends ParentType, 
 
     public Self withChildren(@NotNull final ElementPattern<Collection<ParentType>> pattern) {
         return with(new PatternConditionPlus<T, Collection<ParentType>>("withChildren", pattern) {
-            @Override
+           /* @Override
             public boolean processValues(T t,
                                          ProcessingContext context,
                                          PairProcessor<Collection<ParentType>, ProcessingContext> processor) {
                 return processor.process(Arrays.asList(getChildren(t)), context);
+            }*/
+            @Override
+           public boolean processValues(T t,
+                                         ProcessingContext context,
+                                         PairProcessor<? super Collection<ParentType>, ? super ProcessingContext> processor) {
+
+                                         return processor.process(Arrays.asList(getChildren(t)), context);
             }
         });
     }
