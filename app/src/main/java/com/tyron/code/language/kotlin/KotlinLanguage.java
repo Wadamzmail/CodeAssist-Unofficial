@@ -103,7 +103,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
           kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-          initAnalysis();
+        //  initAnalysis();
     }
 
     @NonNull
@@ -127,7 +127,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
            
-           container.reset();
+       //    container.reset();
                      
         CompletionList completionList = provider.getCompletionList(identifierPart,
                 position.getLine(),
@@ -138,10 +138,10 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
          Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
         completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
        }catch(Exception e){
-       kotlinEnvironment.analysis = null;
+      // kotlinEnvironment.analysis = null;
        throw new CompletionCancelledException(e.toString());
        }
-       kotlinEnvironment.analysis = null;
+     //  kotlinEnvironment.analysis = null;
     }
 
     private KotlinEnvironment getOrCreateKotlinEnvironment() {
@@ -185,7 +185,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         delegate.destroy();
     }
     
-    private void initAnalysis() {
+ /*   private void initAnalysis() {
         new Thread(() -> {
          //   if (Prefs.kotlinRealtimeErrors) {
                 kotlinEnvironment.addIssueListener(issue -> {
@@ -241,5 +241,5 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                 }
             }
         }).start();
-    }
+    }*/
 }
