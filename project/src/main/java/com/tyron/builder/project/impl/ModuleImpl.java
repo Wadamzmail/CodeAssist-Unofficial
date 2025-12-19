@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import org.jetbrains.kotlin.com.intellij.openapi.util.KeyWithDefaultValue;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import org.jetbrains.kotlin.com.intellij.util.concurrency.AtomicFieldUpdater;
+import com.intellij.util.concurrency.AtomicFieldUpdater;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
