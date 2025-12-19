@@ -61,6 +61,9 @@ dependencies {
    implementation("org.codehaus.woodstox:stax2-api:4.2.2")
    implementation files('libs/util-jdom-253.28294.357.jar')
    implementation files('libs/util-xml-dom-253.28294.357.jar')
+   
+   //intellij util
+  // implementation files('libs/util-253.28294.357.jar')
 
 }
 

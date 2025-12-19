@@ -1,6 +1,5 @@
+// Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package org.jetbrains.kotlin.com.intellij.openapi.editor.impl;
-
-import androidx.annotation.NonNull;
 
 import org.jetbrains.kotlin.com.intellij.openapi.util.text.LineTokenizer;
 import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
@@ -8,12 +7,15 @@ import org.jetbrains.kotlin.com.intellij.util.ArrayUtil;
 import org.jetbrains.kotlin.com.intellij.util.BitUtil;
 import org.jetbrains.kotlin.com.intellij.util.text.CharArrayUtil;
 import org.jetbrains.kotlin.com.intellij.util.text.MergingCharSequence;
-import org.jetbrains.kotlin.it.unimi.dsi.fastutil.bytes.ByteArrayList;
-import org.jetbrains.kotlin.it.unimi.dsi.fastutil.bytes.ByteList;
-import org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.IntArrayList;
-import org.jetbrains.kotlin.it.unimi.dsi.fastutil.ints.IntList;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+
+import it.unimi.dsi.fastutil.bytes.ByteArrayList;
+import it.unimi.dsi.fastutil.bytes.ByteList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 
 /**
  * Data structure specialized for working with document text lines, i.e. stores information about line mapping to document
@@ -39,8 +41,8 @@ public final class LineSet {
         return createLineSet(text, false);
     }
 
-    @NonNull
-    private static LineSet createLineSet(@NonNull CharSequence text, boolean markModified) {
+    @NotNull
+    private static LineSet createLineSet(@NotNull CharSequence text, boolean markModified) {
         IntList starts = new IntArrayList();
         ByteList flags = new ByteArrayList();
 
@@ -53,8 +55,12 @@ public final class LineSet {
         return new LineSet(starts.toIntArray(), flags.toByteArray(), text.length());
     }
 
-    @NonNull
-    LineSet update(@NonNull CharSequence prevText, int start, int end, @NonNull CharSequence replacement, boolean wholeTextReplaced) {
+    private static boolean hasChar(CharSequence s, int index, char c) {
+        return index >= 0 && index < s.length() && s.charAt(index) == c;
+    }
+
+    @NotNull
+    LineSet update(@NotNull CharSequence prevText, int start, int end, @NotNull CharSequence replacement, boolean wholeTextReplaced) {
         if (myLength == 0) {
             return createLineSet(replacement, !wholeTextReplaced);
         }
@@ -62,13 +68,13 @@ public final class LineSet {
         // if we're breaking or creating a '\r\n' pair, expand the changed range to include it fully
         CharSequence newText = StringUtil.replaceSubSequence(prevText, start, end, replacement);
         if (hasChar(prevText, start - 1, '\r') &&
-            (hasChar(prevText, start, '\n') || hasChar(newText, start, '\n'))) {
+                (hasChar(prevText, start, '\n') || hasChar(newText, start, '\n'))) {
             replacement = new MergingCharSequence("\r", replacement);
             start--;
         }
 
         if (hasChar(prevText, end, '\n') &&
-            (hasChar(prevText, end -1, '\r') || hasChar(newText, start + replacement.length() - 1, '\r'))) {
+                (hasChar(prevText, end - 1, '\r') || hasChar(newText, start + replacement.length() - 1, '\r'))) {
             replacement = new MergingCharSequence(replacement, "\n");
             end++;
         }
@@ -80,18 +86,14 @@ public final class LineSet {
         return wholeTextReplaced ? result.clearModificationFlags() : result;
     }
 
-    private static boolean hasChar(CharSequence s, int index, char c) {
-        return index >= 0 && index < s.length() && s.charAt(index) == c;
-    }
-
-    private boolean isSingleLineChange(int start, int end, @NonNull CharSequence replacement) {
+    private boolean isSingleLineChange(int start, int end, @NotNull CharSequence replacement) {
         if (start == 0 && end == myLength && replacement.length() == 0) return false;
 
         int startLine = findLineIndex(start);
         return startLine == findLineIndex(end) && !CharArrayUtil.containLineBreaks(replacement) && !isLastEmptyLine(startLine);
     }
 
-    @NonNull
+    @NotNull
     private LineSet updateInsideOneLine(int line, int lengthDelta) {
         int[] starts = myStarts.clone();
         for (int i = line + 1; i < starts.length; i++) {
@@ -115,11 +117,14 @@ public final class LineSet {
         boolean addStartLine = startOffset - startLineStart > 0 || patch.myStarts.length > 0 || endOffset < myLength;
         boolean addEndLine = endOffset < myLength && patch.myLength > 0 && patch.getSeparatorLength(patch.myStarts.length - 1) > 0;
         int newLineCount = startLine + (addStartLine ? 1 : 0) +
-                           Math.max(patch.myStarts.length - 1, 0) +
-                           (addEndLine ? 1 : 0) + Math.max(myStarts.length - endLine - 1, 0);
+                Math.max(patch.myStarts.length - 1, 0) +
+                (addEndLine ? 1 : 0) + Math.max(myStarts.length - endLine - 1, 0);
 
         int[] starts = ArrayUtil.newIntArray(newLineCount);
-        byte[] flags = new byte[newLineCount];
+
+        // ArrayUtil.newByteArray is not present
+        // byte[] flags = ArrayUtil.newByteArray(newLineCount);
+        byte[] flags = newLineCount == 0 ? ArrayUtil.EMPTY_BYTE_ARRAY : new byte[newLineCount];
 
         if (startLine > 0) {
             System.arraycopy(myStarts, 0, starts, 0, startLine);
@@ -170,8 +175,8 @@ public final class LineSet {
         int bsResult = Arrays.binarySearch(myStarts, offset);
         return bsResult >= 0 ? bsResult : -bsResult - 2;
     }
-
-//    @NonNull
+//
+//    @NotNull
 //    public LineIterator createIterator() {
 //        return new LineIteratorImpl(this);
 //    }
@@ -205,7 +210,8 @@ public final class LineSet {
         return !isLastEmptyLine(index) && BitUtil.isSet(myFlags[index], MODIFIED_MASK);
     }
 
-    @NonNull LineSet setModified(@NonNull IntList indices) {
+    @NotNull
+    LineSet setModified(@NotNull IntList indices) {
         if (indices.isEmpty()) {
             return this;
         }
@@ -215,14 +221,14 @@ public final class LineSet {
         }
 
         byte[] flags = myFlags.clone();
-        for (int i=0; i<indices.size();i++) {
+        for (int i = 0; i < indices.size(); i++) {
             int index = indices.getInt(i);
             flags[index] |= MODIFIED_MASK;
         }
         return new LineSet(myStarts, flags, myLength);
     }
 
-    @NonNull
+    @NotNull
     LineSet clearModificationFlags(int startLine, int endLine) {
         if (startLine > endLine) {
             throw new IllegalArgumentException("endLine < startLine: " + endLine + " < " + startLine + "; lineCount: " + getLineCount());
@@ -240,7 +246,7 @@ public final class LineSet {
         return new LineSet(myStarts, flags, myLength);
     }
 
-    @NonNull
+    @NotNull
     LineSet clearModificationFlags() {
         return getLineCount() == 0 ? this : clearModificationFlags(0, getLineCount());
     }
