@@ -125,7 +125,7 @@ public abstract class JavacTreeElementPattern<ParentType, T extends ParentType, 
             @Override
             public boolean processValues(T t,
                                          ProcessingContext context,
-                                         PairProcessor<ParentType, ProcessingContext> processor) {
+                                         PairProcessor<? super Collection<ParentType>, ? super ProcessingContext> processor) {
                 ParentType parent = t;
                 for (int i = 0; i < level; i++) {
                     if (parent == null) return true;
@@ -148,8 +148,9 @@ public abstract class JavacTreeElementPattern<ParentType, T extends ParentType, 
         return with(new PatternConditionPlus<T, ParentType>("inside", pattern) {
 
             @Override
-            public boolean processValues(T t, ProcessingContext context,
-                                         PairProcessor<ParentType, ProcessingContext> processor) {
+            public boolean processValues(T t,
+                                         ProcessingContext context,
+                                         PairProcessor<? super Collection<ParentType>, ? super ProcessingContext> processor) {
                 ParentType element = strict ? getParent(context, t) : t;
                 while (element != null) {
                     if (!processor.process(element, context)) return false;
