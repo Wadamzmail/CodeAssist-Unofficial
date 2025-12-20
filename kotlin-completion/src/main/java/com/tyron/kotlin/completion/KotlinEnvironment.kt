@@ -45,6 +45,18 @@ import org.jetbrains.kotlin.types.isFlexible
 import java.io.File
 import java.util.*
 import kotlin.collections.set
+//new
+import org.jetbrains.kotlin.config.CommonConfigurationKeys
+import org.jetbrains.kotlin.config.CompilerConfiguration
+import org.jetbrains.kotlin.config.JVMConfigurationKeys
+import org.jetbrains.kotlin.config.LanguageFeature
+import org.jetbrains.kotlin.config.LanguageVersion
+import org.jetbrains.kotlin.config.LanguageVersionSettingsImpl
+import org.jetbrains.kotlin.cli.jvm.config.JvmClasspathRoot
+import org.jetbrains.kotlin.cli.common.CommonCompilerPerformanceManager 
+import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
+import org.jetbrains.kotlin.config.AnalysisFlags
+import org.jetbrains.kotlin.config.ApiVersion
 
 data class KotlinEnvironment(
     val classpath: List<File>,
@@ -368,6 +380,8 @@ data class KotlinEnvironment(
                 configFiles = EnvironmentConfigFiles.JVM_CONFIG_FILES,
                 configuration = CompilerConfiguration().apply {
                     addJvmClasspathRoots(classpath.filter { it.exists() && it.isFile && it.extension == "jar" })
+                    //disable PM
+                   // put(CLIConfigurationKeys.PERF_MANAGER, null) 
                     put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, LoggingMessageCollector)
                     put(CommonConfigurationKeys.MODULE_NAME, UUID.randomUUID().toString())
 
@@ -375,16 +389,26 @@ data class KotlinEnvironment(
                     for (langFeature in LanguageFeature.values()) {
                         langFeatures[langFeature] = LanguageFeature.State.ENABLED
                     }
-                    val languageVersionSettings = LanguageVersionSettingsImpl(
-                        LanguageVersion.LATEST_STABLE,
-                        ApiVersion.createByLanguageVersion(LanguageVersion.LATEST_STABLE),
-                        emptyMap(),
-                        langFeatures
-                    )
-                    put(
-                        CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
-                        languageVersionSettings
-                    )
+             
+                   // val languageVersion =
+                            //    LanguageVersion.fromVersionString(Prefs.kotlinVersion)!!
+                            val languageVersionSettings = LanguageVersionSettingsImpl(
+                                LanguageVersion.LATEST_STABLE,
+                                ApiVersion.createByLanguageVersion(LanguageVersion.LATEST_STABLE),
+                                mapOf(
+                                    AnalysisFlags.extendedCompilerChecks to false,
+                                    AnalysisFlags.ideMode to true,
+                                    AnalysisFlags.skipMetadataVersionCheck to true,
+                                    AnalysisFlags.skipPrereleaseCheck to true,
+                                ),
+                                langFeatures
+                            )
+                            put(
+                                CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
+                                languageVersionSettings
+                            )
+                            
+                            
                     put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
                     put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
 
@@ -392,6 +416,37 @@ data class KotlinEnvironment(
                         put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
                         put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
                     }
+                    //new
+                            put(JVMConfigurationKeys.NO_JDK, true)
+                            put(JVMConfigurationKeys.NO_REFLECT, true)
+                            put(
+                                CLIConfigurationKeys.PERF_MANAGER,
+                                object : CommonCompilerPerformanceManager("Profiling") {
+                                    override fun notifyAnalysisStarted() {
+                                       // Log.i("Profiling", "Analysis started")
+                                    }
+
+                                    override fun notifyAnalysisFinished() {
+                                        //Log.i("Profiling", "Analysis started")
+                                    }
+                                })
+                            put(
+                                CommonConfigurationKeys.MODULE_NAME,
+                                JvmProtoBufUtil.DEFAULT_MODULE_NAME
+                            )
+                            put(JVMConfigurationKeys.VALIDATE_IR, false)
+                            put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, true)
+                            put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
+                            put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
+                            put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
+                            put(CommonConfigurationKeys.USE_FIR, true)
+                            put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
+                            put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)
+                            put(CommonConfigurationKeys.USE_FIR_EXTENDED_CHECKERS, false)
+                            
+                            addJvmClasspathRoots(
+                                classpath
+                            )
                 }
             ))
         }
