@@ -215,7 +215,7 @@ data class KotlinEnvironment(
     }
 
     private fun analysisOf(files: List<KtFile>): Analysis {
-        val trace = CliBindingTrace()
+        val trace = CliBindingTrace(project)
         val project = files.first().project
         val componentProvider = TopDownAnalyzerFacadeForJVM.createContainer(
             kotlinEnvironment.project,
@@ -365,7 +365,7 @@ data class KotlinEnvironment(
             setIdeaIoUseFallback()
             setupIdeaStandaloneExecution()
             return KotlinEnvironment(classpath, KotlinCoreEnvironment.createForProduction(
-                parentDisposable = {},
+                projectDisposable = {},
                 configFiles = EnvironmentConfigFiles.JVM_CONFIG_FILES,
                 configuration = CompilerConfiguration().apply {
                     addJvmClasspathRoots(classpath.filter { it.exists() && it.isFile && it.extension == "jar" })
@@ -389,7 +389,7 @@ data class KotlinEnvironment(
                     put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
                     put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
                     //new
-                    put(CLIConfigurationKeys.PERF_MANAGER, null)
+                 //   put(CLIConfigurationKeys.PERF_MANAGER, null)
                     put(
                        CommonConfigurationKeys.MODULE_NAME,
                         JvmProtoBufUtil.DEFAULT_MODULE_NAME
