@@ -42,10 +42,7 @@ dependencies {
 
     runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.2.21')
 
-  //  api 'org.jetbrains.trove4j:trove4j:20160824'
-   // api files('libs/kotlin-compiler-embeddable-1.7.20-RC.jar')
-  //  api files('libs/kotlin-compiler-2.0.0.jar')
-	api 'org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21'
+	api files('libs/org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21')
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
