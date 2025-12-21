@@ -91,6 +91,7 @@ import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 //import org.jetbrains.kotlin.util.PerformanceManager
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
+import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
