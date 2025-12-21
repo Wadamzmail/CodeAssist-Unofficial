@@ -198,7 +198,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                             || s == CompilerMessageSeverity.STRONG_WARNING) {
                         severity = DiagnosticRegion.SEVERITY_WARNING;
                     } else {
-                        return;
+                        
                     }
 
                     Objects.requireNonNull((CodeEditorView)editor).post(() -> {
@@ -214,6 +214,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                         );
                     });
                 });
+                
          //   }
 
             var fileEntry = kotlinEnvironment.kotlinFiles

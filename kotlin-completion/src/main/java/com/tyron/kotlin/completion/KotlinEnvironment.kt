@@ -169,7 +169,8 @@ data class KotlinEnvironment(
             messageCollector
         )
     }
-
+     
+    @JvmField
     var analysis: TopDownAnalysisContext? = null
 
     private fun getPrefix(element: PsiElement): String {
