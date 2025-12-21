@@ -229,7 +229,7 @@ public void destroy() {
 
         if (!analysisRunning) return;
         if (editor==null) return;
-        if (editor.getCurrentFile==null)return;
+        if (editor.getCurrentFile()==null)return;
 
         var fileEntry = kotlinEnvironment.kotlinFiles.get(editor.getCurrentFile().getAbsolutePath());
         if (fileEntry == null) return;
