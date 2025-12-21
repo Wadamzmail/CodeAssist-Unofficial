@@ -557,8 +557,8 @@ data class KotlinEnvironment(
                             )
                             put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
                            // put(JVMConfigurationKeys.VALIDATE_IR, false)
-                            //put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, true)
-                            //put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
+                            put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, true)
+                            put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
                             put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                             put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
@@ -569,7 +569,7 @@ data class KotlinEnvironment(
                            with(K2JVMCompilerArguments()) {
                              put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
                              put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
-                           }
+                          }
 
                             // enable all language features
                             val langFeatures =
