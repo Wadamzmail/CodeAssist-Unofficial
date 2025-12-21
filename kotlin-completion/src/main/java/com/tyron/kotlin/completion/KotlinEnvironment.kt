@@ -87,6 +87,10 @@ import org.jetbrains.kotlin.com.intellij.openapi.util.Key
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
+//import org.jetbrains.kotlin.util.PhaseMeasurementType
+//import org.jetbrains.kotlin.util.PerformanceManager
+import com.tyron.completion.util.CompletionUtils
+import com.tyron.completion.DefaultInsertHandler
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -228,7 +232,7 @@ data class KotlinEnvironment(
         val (name, tail) = descriptor.presentableName()
 
         var completionText = name
-        var position = completionText.indexOf('(')
+        val position = completionText.indexOf('(')
         if (position != -1) {
             completionText = StringBuilder(completionText).apply {
                 replace(position, completionText.length, "()")
@@ -247,12 +251,17 @@ data class KotlinEnvironment(
         }
 
         return if (name.startsWith(prefix)) {
-            CompletionItem(name).apply {
-                iconKind = iconFrom(descriptor)
-                detail = tailName
-                commitText = completionText
-                position = commitText.length
-            }
+              CompletionItem.create(
+                     name,
+                    tailName,
+                    completionText,
+                    iconFrom(descriptor)
+              ).apply {
+                    cursorOffset = commitText.length
+                    setInsertHandler(
+                      DefaultInsertHandler(CompletionUtils.JAVA_PREDICATE, this)
+                    )
+              }
         } else {
             null
         }
@@ -526,12 +535,18 @@ data class KotlinEnvironment(
                          /*   put(
                                 CLIConfigurationKeys.PERF_MANAGER,
                                 object : PerformanceManager("Profiling") {
-                                    override fun notifyAnalysisStarted() {
-                                        Log.i("Profiling", "Analysis started")
+                                    override fun notifyPhaseStarted(newPhaseType: PhaseType) {
+                                       //PhaseType.Analysis
+                                       if(newPhaseType == PhaseType.Analysis){
+                                       // Log.i("Profiling", "Analysis started")
+                                       }
                                     }
 
-                                    override fun notifyAnalysisFinished() {
-                                        Log.i("Profiling", "Analysis started")
+                                    override fun notifyPhaseFinished(phaseType: PhaseType) {
+                                       // PhaseType.Analysis
+                                       if(phaseType == PhaseType.Analysis){
+                                       // Log.i("Profiling", "Analysis started")
+                                       }
                                     }
                                 })*/
                             put(

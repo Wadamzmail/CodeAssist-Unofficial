@@ -185,7 +185,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         delegate.destroy();
     }
     
-    private void initAnalysis() {
+ /*   private void initAnalysis() {
         new Thread(() -> {
          //   if (Prefs.kotlinRealtimeErrors) {
                 kotlinEnvironment.addIssueListener(issue -> {
@@ -241,5 +241,5 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                 }
             }
         }).start();
-    }
+    }*/
 }
