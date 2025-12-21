@@ -200,7 +200,7 @@ public void destroy() {
     analysisRunning = true;
     analysisThread = new Thread(() -> {
         kotlinEnvironment.addIssueListener(issue -> {
-            if (!analysisRunning) return;
+            if (!analysisRunning) return kotlin.Unit.INSTANCE;
 
             int severity;
             CompilerMessageSeverity s = issue.getSeverity();
