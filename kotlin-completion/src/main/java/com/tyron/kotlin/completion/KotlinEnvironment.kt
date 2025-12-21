@@ -34,12 +34,12 @@ import com.tyron.kotlin.completion.util.importableFqName
 import com.tyron.kotlin.completion.util.isVisible
 import com.tyron.kotlin.completion.util.logTime
 import com.tyron.kotlin_completion.util.PsiUtils
+import com.tyron.kotlin.completion.util.PsiUtilsKt
 //import io.github.rosemoe.sora.lang.completion.CompletionItem
 //import io.github.rosemoe.sora.lang.completion.CompletionItemKind
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.cosmicide.rewrite.util.FileUtil
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.environment.setIdeaIoUseFallback
@@ -99,6 +99,10 @@ import org.jetbrains.kotlin.types.asFlexibleType
 import org.jetbrains.kotlin.types.isFlexible
 import java.io.File
 import kotlin.collections.set
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key
+import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
+import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -183,7 +187,7 @@ data class KotlinEnvironment(
     private fun getPrefix(element: PsiElement): String {
         var text = (element as? KtSimpleNameExpression)?.text
         if (text == null) {
-            val type = PsiUtils.findParent(element)
+            val type = PsiUtilsKt.findParent(element)
             if (type != null) {
                 text = type.text
             }
@@ -240,7 +244,7 @@ data class KotlinEnvironment(
         val (name, tail) = descriptor.presentableName()
 
         var completionText = name
-        val position = completionText.indexOf('(')
+        var position = completionText.indexOf('(')
         if (position != -1) {
             completionText = StringBuilder(completionText).apply {
                 replace(position, completionText.length, "()")
@@ -510,6 +514,8 @@ data class KotlinEnvironment(
 
     companion object {
         private const val COMPLETION_SUFFIX = "æ"
+        
+        val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
         private val excludedFromCompletion: List<String> =
             listOf(
@@ -554,7 +560,7 @@ data class KotlinEnvironment(
                             put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
                             put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
-                            put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.useFastJarFs)
+                            put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
                           //  put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)
@@ -568,7 +574,7 @@ data class KotlinEnvironment(
                             }
 
                             val languageVersion =
-                                LanguageVersion.fromVersionString(Prefs.kotlinVersion)!!
+                                LanguageVersion.fromVersionString("2.2")!!
                             val languageVersionSettings = LanguageVersionSettingsImpl(
                                 languageVersion,
                                 ApiVersion.createByLanguageVersion(languageVersion),
@@ -594,7 +600,7 @@ data class KotlinEnvironment(
             )
         }
 
-        fun get(module: Module): KotlinEnvironment? {
+        fun get(module: Module): KotlinEnvironment {
             val androidModule = module as? AndroidModuleImpl ?: return null
 
             val existingEnvironment = androidModule.getUserData(ENVIRONMENT_KEY)
