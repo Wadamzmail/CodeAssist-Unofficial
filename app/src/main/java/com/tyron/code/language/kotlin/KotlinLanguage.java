@@ -60,6 +60,9 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final Editor editor;
     public boolean createIdentifiers = false;
     private final DiagnosticsContainer container = new DiagnosticsContainer();
+    private File file;
+    private Thread analysisThread;
+    private volatile boolean analysisRunning = true;
      
     
     private final Formatter formatter = new AsyncFormatter() {
@@ -102,8 +105,9 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
-          kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-          initAnalysis();
+        file = editor.getCurrentFile(); 
+        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        initAnalysis();
     }
 
     @NonNull
@@ -180,68 +184,80 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         return new NewlineHandler[0];
     }
 
-    @Override
-    public void destroy() {
-        delegate.destroy();
+@Override
+public void destroy() {
+    analysisRunning = false;
+    if (analysisThread != null && analysisThread.isAlive()) {
+        analysisThread.interrupt();  
+        try {
+            analysisThread.join();  
+        } catch (InterruptedException ignored) {}
     }
+    delegate.destroy();
+}
     
-    private void initAnalysis() {
-        new Thread(() -> {
-         //   if (Prefs.kotlinRealtimeErrors) {
-                kotlinEnvironment.addIssueListener(issue -> {
-                    int severity;
-                    CompilerMessageSeverity s = issue.getSeverity();
+   private void initAnalysis() {
+    analysisRunning = true;
+    analysisThread = new Thread(() -> {
+        kotlinEnvironment.addIssueListener(issue -> {
+            if (!analysisRunning) return;
 
-                    if (s == CompilerMessageSeverity.ERROR) {
-                        severity = DiagnosticRegion.SEVERITY_ERROR;
-                    } else if (s == CompilerMessageSeverity.WARNING
-                            || s == CompilerMessageSeverity.STRONG_WARNING) {
-                        severity = DiagnosticRegion.SEVERITY_WARNING;
-                    } else {
-                        return kotlin.Unit.INSTANCE;
-                    }
+            int severity;
+            CompilerMessageSeverity s = issue.getSeverity();
 
-                    Objects.requireNonNull((CodeEditorView)editor).post(() -> {
-                     //   Log.d(TAG, "Diagnostic: " + issue);
-                        container.addDiagnostic(
-                                new DiagnosticRegion(
-                                        issue.getStartOffset(),
-                                        issue.getEndOffset(),
-                                        severity //,
-                                      //  0,
-                                     //   new DiagnosticDetail(issue.getMessage())
-                                )
-                        );
-                    });
-                    return kotlin.Unit.INSTANCE;
-                });
-                
-         //   }
-
-            var fileEntry = kotlinEnvironment.kotlinFiles
-                    .get(file.getAbsolutePath());
-            if (fileEntry == null) return;
-
-            var ktFile = fileEntry.getKotlinFile();
-
-            try {
-                kotlinEnvironment.analysisOf(
-                        kotlinEnvironment.getKotlinFiles()
-                                .values()
-                                .stream()
-                                .map(it -> it.getKotlinFile())
-                                .toList(),
-                        ktFile
-                );
-
-                  Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
-
-            } catch (Throwable e) {
-                if (!(e instanceof InterruptedException)
-                        && !(e instanceof ProcessCanceledException)) {
-                    //Log.e(TAG, "Failed to analyze file", e);
-                }
+            if (s == CompilerMessageSeverity.ERROR) {
+                severity = DiagnosticRegion.SEVERITY_ERROR;
+            } else if (s == CompilerMessageSeverity.WARNING
+                    || s == CompilerMessageSeverity.STRONG_WARNING) {
+                severity = DiagnosticRegion.SEVERITY_WARNING;
+            } else {
+                return kotlin.Unit.INSTANCE;
             }
-        }).start();
-    }
+
+            if (!analysisRunning) return kotlin.Unit.INSTANCE;
+
+            Objects.requireNonNull((CodeEditorView) editor).post(() -> {
+                container.addDiagnostic(
+                        new DiagnosticRegion(
+                                issue.getStartOffset(),
+                                issue.getEndOffset(),
+                                severity
+                        )
+                );
+            });
+            return kotlin.Unit.INSTANCE;
+        });
+
+        if (!analysisRunning) return;
+
+        var fileEntry = kotlinEnvironment.kotlinFiles.get(file.getAbsolutePath());
+        if (fileEntry == null) return;
+
+        var ktFile = fileEntry.getKotlinFile();
+
+        try {
+            if (!analysisRunning) return;
+
+            kotlinEnvironment.analysisOf(
+                    kotlinEnvironment.getKotlinFiles().values().stream()
+                            .map(it -> it.getKotlinFile())
+                            .toList(),
+                    ktFile
+            );
+
+            if (!analysisRunning) return;
+
+            Objects.requireNonNull((CodeEditorView) editor)
+                    .post(() -> ((CodeEditorView) editor).setDiagnostics(container));
+
+        } catch (Throwable e) {
+            if (!(e instanceof InterruptedException)
+                    && !(e instanceof ProcessCanceledException)) {
+                // Log.e(TAG, "Failed to analyze file", e);
+            }
+        }
+    });
+    analysisThread.start();
+  }
+  
 }

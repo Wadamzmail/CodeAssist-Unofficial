@@ -95,6 +95,7 @@ import com.tyron.completion.DefaultInsertHandler
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
 ) {
+    @JvmField
     val kotlinFiles = mutableMapOf<String, KotlinFile>()
 
     fun updateKotlinFile(name: String, contents: String): KotlinFile {
