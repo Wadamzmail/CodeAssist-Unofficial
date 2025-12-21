@@ -1,19 +1,3 @@
-/*
- *  This file is part of CodeAssist.
- *
- *  CodeAssist is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CodeAssist is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *   along with CodeAssist.  If not, see <https://www.gnu.org/licenses/>.
- */
 @file:OptIn(FrontendInternals::class)
 
 package com.tyron.kotlin.completion
@@ -34,7 +18,7 @@ import com.tyron.kotlin.completion.util.importableFqName
 import com.tyron.kotlin.completion.util.isVisible
 import com.tyron.kotlin.completion.util.logTime
 import com.tyron.kotlin_completion.util.PsiUtils
-import com.tyron.kotlin.completion.util.PsiUtilsKt
+import com.tyron.kotlin_completion.util.PsiUtilsKt
 //import io.github.rosemoe.sora.lang.completion.CompletionItem
 //import io.github.rosemoe.sora.lang.completion.CompletionItemKind
 import kotlinx.coroutines.CoroutineScope
@@ -600,7 +584,7 @@ data class KotlinEnvironment(
             )
         }
 
-        fun get(module: Module): KotlinEnvironment {
+        fun get(module: Module): KotlinEnvironment? {
             val androidModule = module as? AndroidModuleImpl ?: return null
 
             val existingEnvironment = androidModule.getUserData(ENVIRONMENT_KEY)
