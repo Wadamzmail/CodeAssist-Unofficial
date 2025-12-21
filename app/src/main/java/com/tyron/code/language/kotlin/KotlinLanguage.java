@@ -202,7 +202,7 @@ public void destroy() {
         kotlinEnvironment.addIssueListener(issue -> {
             if (!analysisRunning) return kotlin.Unit.INSTANCE;
 
-            int severity;
+            short severity;
             CompilerMessageSeverity s = issue.getSeverity();
 
             if (s == CompilerMessageSeverity.ERROR) {
@@ -239,7 +239,7 @@ public void destroy() {
             if (!analysisRunning) return;
 
             kotlinEnvironment.analysisOf(
-                    kotlinEnvironment.getKotlinFiles().values().stream()
+                    kotlinEnvironment.kotlinFiles.values().stream()
                             .map(it -> it.getKotlinFile())
                             .toList(),
                     ktFile
