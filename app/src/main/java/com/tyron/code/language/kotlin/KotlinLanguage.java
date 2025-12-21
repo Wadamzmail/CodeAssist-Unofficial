@@ -60,7 +60,6 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final Editor editor;
     public boolean createIdentifiers = false;
     private final DiagnosticsContainer container = new DiagnosticsContainer();
-    private File file;
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
      
@@ -105,7 +104,6 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
-        file = editor.getCurrentFile(); 
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
         initAnalysis();
     }
@@ -201,6 +199,7 @@ public void destroy() {
     analysisThread = new Thread(() -> {
         kotlinEnvironment.addIssueListener(issue -> {
             if (!analysisRunning) return kotlin.Unit.INSTANCE;
+            if (editor==null) return kotlin.Unit.INSTANCE;
 
             short severity;
             CompilerMessageSeverity s = issue.getSeverity();
@@ -229,6 +228,8 @@ public void destroy() {
         });
 
         if (!analysisRunning) return;
+        if (editor==null) return;
+        if (editor.getCurrentFile==null)return;
 
         var fileEntry = kotlinEnvironment.kotlinFiles.get(editor.getCurrentFile().getAbsolutePath());
         if (fileEntry == null) return;
