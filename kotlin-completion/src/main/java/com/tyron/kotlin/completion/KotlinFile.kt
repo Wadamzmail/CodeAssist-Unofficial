@@ -13,6 +13,9 @@ import org.jetbrains.kotlin.psi.KtFile
 class KotlinFile(val name: String, val kotlinFile: KtFile) {
 
     fun elementAt(line: Int, character: Int): PsiElement? = kotlinFile.findElementAt(offsetFor(line, character))?.let { expressionFor(it) }
+    
+    fun elementAt(offset: Int): PsiElement? =
+        kotlinFile.findElementAt(offset)?.let { expressionFor(it) }
 
     fun insert(content: String, atLine: Int, atCharacter: Int): KotlinFile {
         val caretPositionOffset = offsetFor(atLine, atCharacter)
@@ -25,7 +28,7 @@ class KotlinFile(val name: String, val kotlinFile: KtFile) {
         } else this
     }
 
-      fun offsetFor(line: Int, character: Int) = (kotlinFile.viewProvider.document?.getLineStartOffset(line) ?: 0) + character
+    fun offsetFor(line: Int, character: Int) = (kotlinFile.viewProvider.document?.getLineStartOffset(line) ?: 0) + character
 
     private tailrec fun expressionFor(element: PsiElement): PsiElement =
         if (element is KtExpression) element else expressionFor(element.parent)
