@@ -220,7 +220,9 @@ public void destroy() {
                         new DiagnosticRegion(
                                 issue.getStartOffset(),
                                 issue.getEndOffset(),
-                                severity
+                                severity, 
+                                0,
+                                new DiagnosticDetail(issue.getMessage()
                         )
                 );
             });

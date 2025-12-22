@@ -19,8 +19,6 @@ import com.tyron.kotlin.completion.util.isVisible
 import com.tyron.kotlin.completion.util.logTime
 import com.tyron.kotlin_completion.util.PsiUtils
 import com.tyron.kotlin_completion.util.PsiUtilsKt
-//import io.github.rosemoe.sora.lang.completion.CompletionItem
-//import io.github.rosemoe.sora.lang.completion.CompletionItemKind
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -92,6 +90,7 @@ import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
+import kotlin.collections.Map
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -509,7 +508,8 @@ data class KotlinEnvironment(
     }
 
     companion object {
-        private const val COMPLETION_SUFFIX = "æ"
+        //private const val COMPLETION_SUFFIX = "æ"
+        private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
         
         val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
@@ -553,24 +553,21 @@ data class KotlinEnvironment(
                                     }
                                 })*/
                             put(
-                                CommonConfigurationKeys.MODULE_NAME,
-                                JvmProtoBufUtil.DEFAULT_MODULE_NAME
+                              CommonConfigurationKeys.MODULE_NAME,
+                              JvmProtoBufUtil.DEFAULT_MODULE_NAME
                             )
                             put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
-                           // put(JVMConfigurationKeys.VALIDATE_IR, false)
-                            //put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, true)
-                            //put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
                             put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                             put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
-                          //  put(CommonConfigurationKeys.USE_FIR, true)
+                            put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)
-                          //  put(CommonConfigurationKeys.USE_FIR_EXTENDED_CHECKERS, false)
-                           with(K2JVMCompilerArguments()) {
-                             put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
-                             put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
-                           }
+                            put(CommonConfigurationKeys.USE_FIR_EXTENDED_CHECKERS, false)
+                            with(K2JVMCompilerArguments()) {
+                              put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
+                              put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
+                            }
 
                             // enable all language features
                             val langFeatures =
@@ -581,18 +578,19 @@ data class KotlinEnvironment(
 
                             val languageVersion =
                                 LanguageVersion.fromVersionString("2.2")!!
-                            val languageVersionSettings = LanguageVersionSettingsImpl(
-                                languageVersion,
-                                ApiVersion.createByLanguageVersion(languageVersion),
-                                /*mapOf(
+                            val analysisFlags: Map<AnalysisFlag<*>, Any?> = mapOf(
                                     AnalysisFlags.extendedCompilerChecks to false,
                                     AnalysisFlags.ideMode to true,
                                     AnalysisFlags.skipMetadataVersionCheck to true,
                                     AnalysisFlags.skipPrereleaseCheck to true,
-                                )*/
-                                emptyMap(),
+                                )     
+                            val languageVersionSettings = LanguageVersionSettingsImpl(
+                                languageVersion,
+                                ApiVersion.createByLanguageVersion(languageVersion),
+                                analysisFlags,
+                               // emptyMap(),
                                 langFeatures
-                            )
+                                )
                             put(
                                 CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
                                 languageVersionSettings
