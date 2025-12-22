@@ -90,7 +90,6 @@ import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
-import kotlin.collections.Map
 import org.jetbrains.kotlin.config.AnalysisFlag
 
 data class KotlinEnvironment(
@@ -579,7 +578,7 @@ data class KotlinEnvironment(
                             val languageVersion =
                                 LanguageVersion.fromVersionString("2.2")!!
                             val analysisFlags: Map<AnalysisFlag<*>, Any?> = mapOf(
-                                    AnalysisFlags.extendedCompilerChecks to false,
+                                  //  AnalysisFlags.extendedCompilerChecks to false,
                                     AnalysisFlags.ideMode to true,
                                     AnalysisFlags.skipMetadataVersionCheck to true,
                                     AnalysisFlags.skipPrereleaseCheck to true,
