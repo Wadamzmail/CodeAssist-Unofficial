@@ -91,6 +91,7 @@ import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
 import kotlin.collections.Map
+import org.jetbrains.kotlin.config.AnalysisFlag
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -563,7 +564,6 @@ data class KotlinEnvironment(
                             put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)
-                            put(CommonConfigurationKeys.USE_FIR_EXTENDED_CHECKERS, false)
                             with(K2JVMCompilerArguments()) {
                               put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
                               put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
