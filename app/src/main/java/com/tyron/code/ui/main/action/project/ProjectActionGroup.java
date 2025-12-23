@@ -53,8 +53,7 @@ public class ProjectActionGroup extends ActionGroup {
       new RefreshProjectAction(),
       new DrawableManagerAction(),
       new IconManagerAction(),
-      new GitAction(),
-      new CompileAabAction()
+      new GitAction()
     };
   }
 }

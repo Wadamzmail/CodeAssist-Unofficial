@@ -389,8 +389,14 @@
     <string name="please_wait">Please wait</string>
     <string name="formatting">Formatting Codes</string>
     
-       <string name="action_menu_build_release">Build release APK</string>
+    <string name="action_menu_build_release">Build release APK</string>
     <string name="action_menu_build_debug">Build debug APK</string>
     <string name="action_menu_build_aab">Build AAB</string>
 
+    <!-- Compiler Settings -->
+    <string name="compiler_title">Compiler</string>
+    <string name="settings_title_compiler">Compiler</string>
+    <string name="settings_desc_compiler">Configure Compiler</string>
+    <string name="use_fast_jar_fs_title">Fast implementation for Jar FS</string>
+    <string name="use_fast_jar_fs_desc">This experimental mode may speed up compilation time, but use with caution</string>
 </resources>

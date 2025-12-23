@@ -71,6 +71,11 @@ public class RosemoeCodeEditor implements TextEditor {
     public File getFile() {
         return mFile;
     }
+    
+    @Override 
+    public Editor getEditor(){
+        return mEditor.getEditor();
+    }
 
     @Override
     public boolean equals(Object o) {

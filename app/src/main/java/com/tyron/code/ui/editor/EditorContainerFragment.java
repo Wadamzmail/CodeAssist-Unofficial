@@ -235,6 +235,9 @@ public class EditorContainerFragment extends Fragment implements
                 mTabLayout.removeAllTabs();
                 mTabLayout.setVisibility(View.GONE);
                 mMainViewModel.setCurrentPosition(-1);
+                
+                ProgressManager.getInstance().runLater(() -> getParentFragmentManager()
+                        .setFragmentResult(MainFragment.REFRESH_TOOLBAR_KEY, Bundle.EMPTY), 150);
             } else {
                 mTabLayout.setVisibility(View.VISIBLE);
                 EditorTabUtil.updateTabLayout(mTabLayout, oldList, files);

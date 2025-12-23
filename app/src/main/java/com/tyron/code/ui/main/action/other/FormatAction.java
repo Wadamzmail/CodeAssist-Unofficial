@@ -37,14 +37,7 @@ public class FormatAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-   /* Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
-    if (fragment instanceof CodeEditorFragment) {
-       ((CodeEditorFragment) fragment).format();
-    }*/
-    
-   // Editor cEditor = (Editor)e.getRequiredData(CommonDataKeys.EDITOR);
-   DataContext dataContext = DataContextUtils.getDataContext(fileEditor.getView());
-   CodeEditorView cEditor = (CodeEditorView)dataContext.getData(CommonDataKeys.EDITOR);
+    CodeEditorView cEditor = (CodeEditorView)fileEditor.getEditor();
     if(cEditor==null)return;
     cEditor.formatCodeAsync();
   }

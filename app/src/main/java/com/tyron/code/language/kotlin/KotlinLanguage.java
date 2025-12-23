@@ -47,6 +47,8 @@ import org.jetbrains.kotlin.com.intellij.openapi.progress.ProcessCanceledExcepti
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
+import com.tyron.code.ApplicationLoader;
+import com.tyron.common.SharedPreferenceKeys;
  
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
@@ -105,7 +107,13 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        if(isHighlightEnabled()){
         initAnalysis();
+        }
+    }
+    
+    private boolean isHighlightEnabled(){
+      return ApplicationLoader.getDefaultPreferences().getBoolean(SharedPreferenceKeys.KOTLIN_HIGHLIGHTING, false);
     }
 
     @NonNull
@@ -185,13 +193,17 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 @Override
 public void destroy() {
     analysisRunning = false;
-    if (analysisThread != null && analysisThread.isAlive()) {
+    destroyAnalysis();
+    delegate.destroy();
+}
+
+private void destroyAnalysis(){
+   if (analysisThread != null && analysisThread.isAlive()) {
         analysisThread.interrupt();  
         try {
             analysisThread.join();  
         } catch (InterruptedException ignored) {}
     }
-    delegate.destroy();
 }
     
    private void initAnalysis() {
@@ -200,6 +212,7 @@ public void destroy() {
         kotlinEnvironment.addIssueListener(issue -> {
             if (!analysisRunning) return kotlin.Unit.INSTANCE;
             if (editor==null) return kotlin.Unit.INSTANCE;
+            if (!isHighlightEnabled()) return kotlin.Unit.INSTANCE;
 
             short severity;
             CompilerMessageSeverity s = issue.getSeverity();
@@ -212,8 +225,8 @@ public void destroy() {
             } else {
                 return kotlin.Unit.INSTANCE;
             }
-
-            if (!analysisRunning) return kotlin.Unit.INSTANCE;
+            
+           if (!analysisRunning) return kotlin.Unit.INSTANCE;
 
             Objects.requireNonNull((CodeEditorView) editor).post(() -> {
                 container.addDiagnostic(
@@ -228,8 +241,9 @@ public void destroy() {
             });
             return kotlin.Unit.INSTANCE;
         });
-
+      
         if (!analysisRunning) return;
+        if (!isHighlightEnabled()) return;
         if (editor==null) return;
         if (editor.getCurrentFile()==null)return;
 

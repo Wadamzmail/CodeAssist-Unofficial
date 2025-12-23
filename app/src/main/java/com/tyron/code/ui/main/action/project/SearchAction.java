@@ -33,15 +33,8 @@ public class SearchAction extends AnAction {
 
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
-    Context context = e.getRequiredData(CommonDataKeys.CONTEXT);
-    context = getActivityContext(context);
-
-   // FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-  //  Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
-  //if (fragment instanceof CodeEditorFragment) {
-   //    ((CodeEditorFragment) fragment).search();
-   // }
-   CodeEditorView cEditor = (CodeEditorView)e.getRequiredData(CommonDataKeys.EDITOR);
+    FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
+    CodeEditorView cEditor = (CodeEditorView)fileEditor.getEditor();
     if(cEditor==null)return;
     cEditor.getSearcher().stopSearch();
     cEditor.beginSearchMode();

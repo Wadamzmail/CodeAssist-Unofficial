@@ -25,4 +25,5 @@ public class SharedPreferenceKeys {
   public static final String SSH_KEY_NAME = "ssh_key_name";
   public static final String SAVED_PROJECT_ROOT_NAME = "root_name";
   public static final String SAVED_PROJECT_PATH = "project_path";
+  public static final String FAST_JAR_FILE_SYSTEM = "use_fast_jar_fs";
 }

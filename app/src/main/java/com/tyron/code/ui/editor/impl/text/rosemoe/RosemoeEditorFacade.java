@@ -329,6 +329,10 @@ public class RosemoeEditorFacade {
     public View getView() {
         return container;
     }
+    
+    public Editor getEditor(){
+       return editor;
+    }
 
     public Content getContent() {
         return content;

@@ -68,6 +68,7 @@ import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
 import org.codeassist.unofficial.R;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
+import com.tyron.code.ui.main.action.project.SaveAction;
 
 public class MainFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
 
@@ -472,11 +473,10 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     if (CompletionEngine.isIndexing()) {
       return;
     }
-
+    
     Collection<Module> modules = mProject.getModules();
     modules.forEach(it -> it.getFileManager().saveContents());
-
-    getChildFragmentManager().setFragmentResult(EditorContainerFragment.SAVE_ALL_KEY, Bundle.EMPTY);
+    SaveAction.doSave();
 
     ProjectSettings settings = mProject.getSettings();
     if (settings == null) {
@@ -502,8 +502,6 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     if (mServiceConnection.isCompiling() || CompletionEngine.isIndexing()) {
       return;
     }
-
-    saveAll();
     mServiceConnection.setBuildType(type);
 
     mMainViewModel.setCurrentState(getString(R.string.compilation_state_compiling));
