@@ -172,8 +172,7 @@ data class KotlinEnvironment(
     }
     
     //Preferences 
-    @JvmField 
-    var FAST_JAR_FILE_SYSTEM = true
+ 
  
     @JvmField
     var analysis: TopDownAnalysisContext? = null
@@ -563,7 +562,7 @@ data class KotlinEnvironment(
                             put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
                             put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
-                            put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, FAST_JAR_FILE_SYSTEM)
+                            put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
                             put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)

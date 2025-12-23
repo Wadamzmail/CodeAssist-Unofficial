@@ -10,6 +10,7 @@
             android:iconSpaceReserved="false"
             android:key="use_fast_jar_file_system"
             app:iconSpaceReserved="false"
+            android:enabled="false" 
             android:title="@string/use_fast_jar_file_system_title"
             android:summary="@string/use_fast_jar_file_system_desc"/>
  
