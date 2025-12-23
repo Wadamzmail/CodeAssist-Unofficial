@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.codeassist.unofficial.R;
+import com.tyron.editor.Editor;
 
 public class CompileAabAction extends CompileAction {
 
@@ -92,4 +93,10 @@ public class CompileAabAction extends CompileAction {
     }
     callback.compile(BuildType.AAB);
   }
+  
+  @Override
+  public String getTitle(Context context) {
+      return context.getString(R.string.action_menu_build_aab);
+  }
+   
 }
