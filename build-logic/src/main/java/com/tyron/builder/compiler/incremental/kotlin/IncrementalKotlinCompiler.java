@@ -205,6 +205,11 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         K2JVMCompiler compiler = new K2JVMCompiler();
         K2JVMCompilerArguments args = new K2JVMCompilerArguments();
         compiler.parseArguments(arguments.toArray(new String[0]), args);
+        
+        //new
+        args.setReportPerf(false); 
+        args.setReportOutputFiles(false);
+        args.setDumpPerf(null); 
 
         args.setUseJavac(false);
         args.setCompileJava(false);
@@ -450,6 +455,11 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.add("-cp");
         args.add(BuildModule.getKotlinc().getAbsolutePath());
         args.add("org.jetbrains.kotlin.cli.jvm.K2JVMCompiler");
+        
+        //new 
+        args.add("-Xuse-k2");
+        args.add("-Xuse-fast-jar-file-system");
+        
 
         args.add("-no-jdk");
         args.add("-no-stdlib");

@@ -91,8 +91,6 @@ import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
 import org.jetbrains.kotlin.config.AnalysisFlag
-import com.tyron.code.ApplicationLoader;
-import com.tyron.common.SharedPreferenceKeys;
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -174,14 +172,9 @@ data class KotlinEnvironment(
     }
     
     //Preferences 
-    private fun isFastJarFileSystemEnabled(){
-      return ApplicationLoader.getDefaultPreferences().getBoolean(SharedPreferenceKeys.FAST_JAR_FILE_SYSTEM, true)
-    }
-    
-    private fun isHighlightEnabled(){
-      return ApplicationLoader.getDefaultPreferences().getBoolean(SharedPreferenceKeys.KOTLIN_HIGHLIGHTING, false)
-    }
-     
+    @JvmField 
+    var FAST_JAR_FILE_SYSTEM = true
+ 
     @JvmField
     var analysis: TopDownAnalysisContext? = null
 
@@ -570,7 +563,7 @@ data class KotlinEnvironment(
                             put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
                             put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
-                            put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, isFastJarFileSystemEnabled())
+                            put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, FAST_JAR_FILE_SYSTEM)
                             put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)

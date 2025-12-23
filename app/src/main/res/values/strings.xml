@@ -397,6 +397,6 @@
     <string name="compiler_title">Compiler</string>
     <string name="settings_title_compiler">Compiler</string>
     <string name="settings_desc_compiler">Configure Compiler</string>
-    <string name="use_fast_jar_fs_title">Fast implementation for Jar FS</string>
-    <string name="use_fast_jar_fs_desc">This experimental mode may speed up compilation time, but use with caution</string>
+    <string name="use_fast_jar_file_system_title">Fast implementation for Jar FS</string>
+    <string name="use_fast_jar_file_system_desc">This experimental mode may speed up compilation time, but use with caution</string>
 </resources>

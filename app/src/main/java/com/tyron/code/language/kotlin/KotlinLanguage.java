@@ -107,6 +107,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        kotlinEnvironment.FAST_JAR_FILE_SYSTEM = ApplicationLoader.getDefaultPreferences().getBoolean(SharedPreferenceKeys.FAST_JAR_FILE_SYSTEM, true);
         if(isHighlightEnabled()){
         initAnalysis();
         }
