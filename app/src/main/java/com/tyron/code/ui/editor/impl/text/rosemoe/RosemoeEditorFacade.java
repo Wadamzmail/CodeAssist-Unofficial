@@ -75,6 +75,7 @@ import com.tyron.builder.model.DiagnosticWrapper;
 import androidx.lifecycle.ViewModelProvider;
 import com.tyron.code.MainActivity;
 import java.util.stream.Collectors;
+import com.tyron.editor.Editor;
 
 public class RosemoeEditorFacade {
 
