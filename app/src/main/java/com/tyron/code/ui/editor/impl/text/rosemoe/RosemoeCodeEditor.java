@@ -17,6 +17,7 @@ import org.apache.commons.vfs2.VFS;
 
 import java.io.File;
 import java.util.Objects;
+import com.tyron.editor.Editor;
 
 public class RosemoeCodeEditor implements TextEditor {
 
