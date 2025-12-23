@@ -222,7 +222,7 @@ public void destroy() {
                                 issue.getEndOffset(),
                                 severity, 
                                 0,
-                                new DiagnosticDetail(issue.getMessage())
+                                new DiagnosticDetail(null,issue.getMessage(),null,null)
                         )
                 );
             });
