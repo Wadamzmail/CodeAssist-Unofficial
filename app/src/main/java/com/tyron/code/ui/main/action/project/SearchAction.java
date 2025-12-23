@@ -12,6 +12,7 @@ import com.tyron.actions.CommonDataKeys;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
+import com.tyron.fileeditor.api.TextEditor;
 
 public class SearchAction extends AnAction {
 
@@ -34,10 +35,12 @@ public class SearchAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-    CodeEditorView cEditor = (CodeEditorView)fileEditor.getEditor();
+   if (fileEditor instanceof TextEditor){
+    CodeEditorView cEditor = (CodeEditorView)((TextEditor)fileEditor).getEditor();
     if(cEditor==null)return;
     cEditor.getSearcher().stopSearch();
     cEditor.beginSearchMode();
+   } 
   }
 
   private Context getActivityContext(Context context) {

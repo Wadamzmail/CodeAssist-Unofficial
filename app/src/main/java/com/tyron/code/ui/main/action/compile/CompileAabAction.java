@@ -78,7 +78,7 @@ public class CompileAabAction extends CompileAction {
 
   @Override
   public void actionPerformed(@NonNull AnActionEvent event) {
-    super.actionPerformed(e);
+    super.actionPerformed(event);
     Context context = event.getData(CommonDataKeys.CONTEXT);
     CompileCallback callback = event.getData(MainFragment.COMPILE_CALLBACK_KEY);
     MainViewModel viewModel = event.getRequiredData(MainFragment.MAIN_VIEW_MODEL_KEY);

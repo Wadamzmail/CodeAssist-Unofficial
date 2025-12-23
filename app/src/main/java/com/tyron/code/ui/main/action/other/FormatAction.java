@@ -13,6 +13,7 @@ import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.editor.Editor;
 import com.tyron.actions.DataContext;
 import com.tyron.actions.util.DataContextUtils;
+import com.tyron.fileeditor.api.TextEditor;
 
 public class FormatAction extends AnAction {
 
@@ -37,8 +38,10 @@ public class FormatAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-    CodeEditorView cEditor = (CodeEditorView)fileEditor.getEditor();
+    if (fileEditor instanceof TextEditor){
+    CodeEditorView cEditor = (CodeEditorView)((TextEditor)fileEditor).getEditor();
     if(cEditor==null)return;
     cEditor.formatCodeAsync();
+   }
   }
 }
