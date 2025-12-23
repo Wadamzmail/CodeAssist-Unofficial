@@ -3,7 +3,7 @@ package com.tyron.kotlin.completion
 
 import org.jetbrains.kotlin.com.intellij.openapi.project.Project 
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlincom.intellij.psi.PsiManager
+import org.jetbrains.kotlin.com.intellij.psi.PsiManager
 import org.jetbrains.kotlin.com.intellij.testFramework.LightVirtualFile  
 import org.jetbrains.kotlin.idea.KotlinFileType
 import org.jetbrains.kotlin.psi.KtExpression
