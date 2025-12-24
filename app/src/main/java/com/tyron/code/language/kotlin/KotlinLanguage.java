@@ -53,9 +53,7 @@ import com.tyron.common.SharedPreferenceKeys;
 import android.widget.Toast;
 import com.tyron.code.MainActivity;
 //new API
-import dev.mutwakil.completion.kotlin.env.FirKotlinEnvironment;
-import dev.mutwakil.completion.kotlin.engine.FirCompletionEngine;
- 
+import dev.mutwakil.completion.kotlin.fir.FirKotlinEnvironment;
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
@@ -162,33 +160,26 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
        kotlinEnvironment.analysis = null;*/
        //new API
        // FIR (test)
-        FirKotlinEnvironment firEnv =
-        FirKotlinEnvironment.Companion.get(
-                ProjectManager.getInstance()
-                        .getCurrentProject()
-                        .getModule(editor.getCurrentFile())
-        );
+         
+            FirKotlinEnvironment env =
+               FirKotlinEnvironment.get(
+                project.getModule(editor.getCurrentFile())
+               );
 
-   if (firEnv != null) {
-    FirCompletionEngine engine =
-            new FirCompletionEngine(firEnv);
+             if (env == null) return;
 
-    FirCompletionEngine.Result result =
-            engine.analyze(
-                    content.toString(),
-                    position.getIndex()
-            );
+              KotlinFile file =
+               kotlinEnvironment.kotlinFiles.get(
+                   editor.getCurrentFile().getAbsolutePath()
+               );
 
-   if (result.getAfterDot()) {
-      Objects.requireNonNull((CodeEditorView) editor).post(() -> {
-          for (CompletionItem item : result.getItems()) {
-            publisher.addItem(item);
-          }
-     });
-     return;
-   }
-  }
+               if (file == null) return;
 
+               for (CompletionItem item :
+                     env.complete(file, position.getLine(), position.getColumn())) {
+                      publisher.addItem(item);
+                 }
+   
 
   }
 
