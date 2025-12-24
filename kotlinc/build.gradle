@@ -40,7 +40,7 @@ dependencies {
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')
 
-    runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.2.21')
+    runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0')
 
 	//api('org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21')
 	api files('libs/kotlin-compiler-embeddable-2.3.0.jar')
