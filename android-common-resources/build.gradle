@@ -24,7 +24,6 @@ dependencies {
     implementation 'javax.inject:javax.inject:1'
    implementation project(':javac') 
     implementation project(path: ':common')
-   // implementation project(path: ':jaxp')
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')
     implementation files('libs\\compilerCommon.antlr.shaded_jar.jar')

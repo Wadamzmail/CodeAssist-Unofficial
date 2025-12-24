@@ -49,6 +49,12 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.common.SharedPreferenceKeys;
+//test
+import android.widget.Toast;
+import com.tyron.code.MainActivity;
+//new API
+import dev.mutwakil.completion.kotlin.env.FirKotlinEnvironment;
+import dev.mutwakil.completion.kotlin.engine.FirCompletionEngine;
  
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
@@ -64,6 +70,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final DiagnosticsContainer container = new DiagnosticsContainer();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
+    private FirKotlinEnvironment firEnvironment;
      
     
     private final Formatter formatter = new AsyncFormatter() {
@@ -107,6 +114,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        firEnvironment = FirKotlinEnvironment.Companion.get(currentModule);
         if(isHighlightEnabled()){
         initAnalysis();
         }
@@ -132,7 +140,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
-       try{                             
+    /*   try{                             
         String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
         KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
@@ -151,7 +159,35 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
        kotlinEnvironment.analysis = null;
        throw new CompletionCancelledException(e.toString());
        }
-       kotlinEnvironment.analysis = null;
+       kotlinEnvironment.analysis = null;*/
+       //new API
+       // FIR (test)
+        FirKotlinEnvironment firEnv =
+        FirKotlinEnvironment.Companion.get(
+                ProjectManager.getInstance()
+                        .getCurrentProject()
+                        .getModule(editor.getCurrentFile())
+        );
+
+        if (firEnv != null) {
+          FirCompletionEngine engine =  new FirCompletionEngine(firEnv);
+
+      FirCompletionEngine.Result r =
+            engine.analyze(
+                    content.toString(),
+                    position.getIndex()
+            );
+
+         android.util.Log.d(
+               "FIR",
+              "afterDot=" + r.getAfterDot() + ", prefix=" + r.getPrefix()
+         );
+         MainActivity.toast(
+              "FIR",
+              "afterDot=" + r.getAfterDot() + ", prefix=" + r.getPrefix()
+         );
+         
+       } 
     }
 
     private KotlinEnvironment getOrCreateKotlinEnvironment() {

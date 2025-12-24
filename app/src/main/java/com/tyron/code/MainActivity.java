@@ -21,6 +21,9 @@ import androidx.core.view.WindowCompat;
 
 import com.tyron.code.ui.main.HomeFragment;
 import org.codeassist.unofficial.R;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,6 +113,17 @@ public class MainActivity extends AppCompatActivity {
         appDetails.setData(Uri.parse("package:" + activity.getPackageName()));
         activity.startActivity(appDetails);
       }
+    }
+  }
+  
+  public static void toast(String message) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+
+      Toast.makeText(instance, message, Toast.LENGTH_SHORT).show();
+    } else {
+
+      new Handler(Looper.getMainLooper())
+          .post(() -> Toast.makeText(instance, message, Toast.LENGTH_SHORT).show());
     }
   }
 }

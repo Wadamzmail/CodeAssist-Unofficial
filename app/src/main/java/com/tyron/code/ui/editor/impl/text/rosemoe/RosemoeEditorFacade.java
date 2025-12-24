@@ -76,6 +76,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.tyron.code.MainActivity;
 import java.util.stream.Collectors;
 import com.tyron.editor.Editor;
+import com.tyron.common.SharedPreferenceKeys;
+import android.content.SharedPreferences;
 
 public class RosemoeEditorFacade {
 
@@ -191,6 +193,10 @@ public class RosemoeEditorFacade {
                             EditorInfo.TYPE_CLASS_TEXT |
                             EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE |
                             EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                            
+        SharedPreferences pref = ApplicationLoader.getDefaultPreferences();
+        editor.setWordwrap(pref.getBoolean(SharedPreferenceKeys.EDITOR_WORDWRAP, false));
+        editor.setTextSize(Integer.parseInt(pref.getString(SharedPreferenceKeys.FONT_SIZE, "12")));                     
 
         editor.setOnTouchListener((v, motionEvent) -> {
             if (dragToOpenListener instanceof ForwardingListener) {

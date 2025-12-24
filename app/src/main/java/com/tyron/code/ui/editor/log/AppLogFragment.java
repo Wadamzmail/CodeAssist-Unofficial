@@ -42,6 +42,7 @@ import com.tyron.code.util.ApkInstaller;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.editor.Caret;
 import com.tyron.fileeditor.api.FileEditorManager;
+import com.tyron.code.language.LanguageManager;
 
 
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
@@ -55,6 +56,7 @@ import java.util.logging.Handler;
 import javax.tools.Diagnostic;
 import org.codeassist.unofficial.R;
 import com.tyron.actions.DataContext;
+import io.github.rosemoe.sora.text.Content;
 
 public class AppLogFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
 
@@ -256,17 +258,6 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     editor.setEditable(false);
     editor.setColorScheme(new CompiledEditorScheme(requireContext()));
 
-    /*   String schemeValue =
-        ApplicationLoader.getDefaultPreferences().getString(SharedPreferenceKeys.SCHEME, null);
-    if (schemeValue != null
-        && new File(schemeValue).exists()
-        && ThemeRepository.getColorScheme(schemeValue) != null) {
-      TextMateColorScheme scheme = ThemeRepository.getColorScheme(schemeValue);
-      if (scheme != null) {
-        editor.setColorScheme(scheme);
-      }
-    }*/
-
     String key =
         EditorUtil.isDarkMode(requireContext())
             ? ThemeRepository.DEFAULT_NIGHT
@@ -276,13 +267,12 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       scheme = getDefaultColorScheme(requireContext());
       ThemeRepository.putColorScheme(key, scheme);
     }
+    mEditor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
     mEditor.setColorScheme(scheme);
 
     // editor.setBackgroundAnalysisEnabled(false);
     editor.setTypefaceText(
         ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));
-    // editor.setLigatureEnabled(true);
-    // editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.setInputType(
         EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
@@ -311,7 +301,6 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     if (handler != null) {
       handler.postDelayed(
           () -> {
-            SpannableStringBuilder combinedText = new SpannableStringBuilder();
             actionFab.setVisibility(View.GONE);
             if (texts != null) {
               // Create a copy of the list to avoid ConcurrentModificationException
@@ -320,16 +309,15 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
               for (DiagnosticWrapper diagnostic : diagnostics) {
                 if (diagnostic != null) {
                   if (diagnostic.getKind() != null) {
-                    mEditor.setText(diagnostic.getKind().name());
-                    combinedText.append(diagnostic.getKind().name()).append(": ");
-                    addDiagnosticSpan(combinedText, diagnostic);
-                    combinedText.append(' ');
+                    String label = diagnostic.getKind().name()+": "+diagnostic.getSource().getName();
+                    label =" [ "+label + ":" + diagnostic.getLineNumber()+" ] ";
+                    insert(label);
                   }
 
                   if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
                     actionFab.setVisibility(View.VISIBLE);
                     actionFab.setImageResource(R.drawable.ic_error);
-                    combinedText.append(diagnostic.getMessage(Locale.getDefault()));
+                    insert(diagnostic.getMessage(Locale.getDefault()));
                   } else {
                     String msg = diagnostic.getMessage(Locale.getDefault());
 
@@ -341,23 +329,32 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                      // actionFab.setVisibility(View.GONE);
                     }
 
-                    combinedText.append(msg);
+                    insert(msg);
                   }
 
                   if (diagnostic.getSource() != null) {
-                    combinedText.append(' ');
+                    insert(' ');
                   }
 
-                  combinedText.append("\n");
+                  insert("\n");
                 }
               }
             }
-
-            mEditor.setText(combinedText);
+            
           },
           100);
     }
   }
+  
+  void insert(String text){
+        Content txt = mEditor.getText();
+        int lines = txt.getLineCount()-1;
+        if(lines>1){
+            mEditor.setText(text);
+        }else{
+            text.insert(lines,0, text);
+        }
+   }
 
   @Override
   public void onProjectOpen(Project project) {}
@@ -457,8 +454,6 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       return new File(path);
     }
   }
-
-  
 
 }
 
