@@ -183,7 +183,6 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
               "afterDot=" + r.getAfterDot() + ", prefix=" + r.getPrefix()
          );
          MainActivity.toast(
-              "FIR",
               "afterDot=" + r.getAfterDot() + ", prefix=" + r.getPrefix()
          );
          

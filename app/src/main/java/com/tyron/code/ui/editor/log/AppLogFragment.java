@@ -333,7 +333,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                   }
 
                   if (diagnostic.getSource() != null) {
-                    insert(' ');
+                    insert(" ");
                   }
 
                   insert("\n");
@@ -352,7 +352,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
         if(lines>1){
             mEditor.setText(text);
         }else{
-            text.insert(lines,0, text);
+            txt.insert(lines,0, text);
         }
    }
 
