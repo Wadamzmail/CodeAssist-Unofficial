@@ -7,8 +7,10 @@ import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.analysis.api.analyze
-import org.jetbrains.kotlin.analysis.api.symbols.KaCallableSymbol
+import org.jetbrains.kotlin.analysis.api.scopes.KaTypeScope
+import org.jetbrains.kotlin.analysis.api.symbols.KaCallableSignature
 import org.jetbrains.kotlin.psi.KtExpression
+import org.jetbrains.kotlin.name.Name
 
 object FirMemberCompletion {
 
@@ -28,34 +30,29 @@ object FirMemberCompletion {
         return analyze(expr) {
 
             val type = expr.expressionType ?: return@analyze emptyList()
+            val scope: KaTypeScope = type.scope ?: return@analyze emptyList()
 
-            type.memberScope.callables
-                .mapNotNull { symbol: KaCallableSymbol ->
+            scope.getCallableSignatures { name: Name ->
+                name.identifier.startsWith(prefix)
+            }.map { sig: KaCallableSignature<*> ->
 
-                    val name =
-                        symbol.name?.identifier ?: return@mapNotNull null
+                val name = sig.name.identifier
 
-                    if (!name.startsWith(prefix)) return@mapNotNull null
-
-                    val tail =
-                        symbol.returnType?.render() ?: ""
-
-                    CompletionItem.create(
-                        name,
-                        tail,
-                        name,
-                        FirIconMapper.iconFrom(symbol)
-                    ).apply {
-                        cursorOffset = commitText.length
-                        setInsertHandler(
-                            DefaultInsertHandler(
-                                CompletionUtils.JAVA_PREDICATE,
-                                this
-                            )
+                CompletionItem.create(
+                    name,
+                    sig.returnType?.render() ?: "",
+                    name,
+                    FirIconMapper.iconFrom(sig.symbol)
+                ).apply {
+                    cursorOffset = commitText.length
+                    setInsertHandler(
+                        DefaultInsertHandler(
+                            CompletionUtils.JAVA_PREDICATE,
+                            this
                         )
-                    }
+                    )
                 }
-                .sortedBy { it.label }
+            }.sortedBy { it.label }
         }
     }
 }

@@ -28,8 +28,9 @@ class FirKotlinEnvironment private constructor(
            column: Int
         ): List<CompletionItem> {
 
-            FirImportCompletion.tryComplete(file, line, column)
-              ?.let { return it }
+            // TODO: import completion (handled separately, not via Analysis API)
+            // FirImportCompletion.tryComplete(file, line, column)
+            //     ?.let { return it }
 
             FirKeywordCompletion.tryComplete(file, line, column)
               ?.let { return it }

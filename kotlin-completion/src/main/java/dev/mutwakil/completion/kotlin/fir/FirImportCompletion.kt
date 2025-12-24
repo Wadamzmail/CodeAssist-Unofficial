@@ -1,4 +1,4 @@
-@file:OptIn(org.jetbrains.kotlin.analysis.api.KaExperimentalApi::class)
+/*@file:OptIn(org.jetbrains.kotlin.analysis.api.KaExperimentalApi::class)
 
 package dev.mutwakil.completion.kotlin.fir
 
@@ -61,4 +61,4 @@ object FirImportCompletion {
                 .sortedBy { it.label }
         }
     }
-}
+}*/
