@@ -1,6 +1,10 @@
 package com.tyron.kotlin.completion.util
 
-import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.PropertyAccessorDescriptor
+import org.jetbrains.kotlin.descriptors.ReceiverParameterDescriptor
+import org.jetbrains.kotlin.descriptors.ScriptDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.KtExpression
@@ -13,8 +17,6 @@ import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.calls.DslMarkerUtils
 import org.jetbrains.kotlin.resolve.scopes.LexicalScope
 import org.jetbrains.kotlin.resolve.scopes.utils.getImplicitReceiversHierarchy
-import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.types.typeUtil.isSubtypeOf
 
 fun LexicalScope.getImplicitReceiversWithInstance(excludeShadowedByDslMarkers: Boolean = false): Collection<ReceiverParameterDescriptor> =
     getImplicitReceiversWithInstanceToExpression(excludeShadowedByDslMarkers).keys
@@ -24,11 +26,6 @@ interface ReceiverExpressionFactory {
     val expressionText: String
     fun createExpression(psiFactory: KtPsiFactory, shortThis: Boolean = true): KtExpression
 }
-
-fun LexicalScope.getFactoryForImplicitReceiverWithSubtypeOf(receiverType: KotlinType): ReceiverExpressionFactory? =
-    getImplicitReceiversWithInstanceToExpression().entries.firstOrNull { (receiverDescriptor, _) ->
-        receiverDescriptor.type.isSubtypeOf(receiverType)
-    }?.value
 
 fun LexicalScope.getImplicitReceiversWithInstanceToExpression(
     excludeShadowedByDslMarkers: Boolean = false
@@ -52,7 +49,10 @@ fun LexicalScope.getImplicitReceiversWithInstanceToExpression(
         outerDeclarationsWithInstance.add(current)
 
         val classDescriptor = current as? ClassDescriptor
-        if (classDescriptor != null && !classDescriptor.isInner && !DescriptorUtils.isLocal(classDescriptor)) break
+        if (classDescriptor != null && !classDescriptor.isInner && !DescriptorUtils.isLocal(
+                classDescriptor
+            )
+        ) break
 
         current = current.containingDeclaration
     }
@@ -80,7 +80,10 @@ fun LexicalScope.getImplicitReceiversWithInstanceToExpression(
             object : ReceiverExpressionFactory {
                 override val isImmediate = isImmediateThis
                 override val expressionText: String get() = expressionText
-                override fun createExpression(psiFactory: KtPsiFactory, shortThis: Boolean): KtExpression {
+                override fun createExpression(
+                    psiFactory: KtPsiFactory,
+                    shortThis: Boolean
+                ): KtExpression {
                     return psiFactory.createExpression(if (shortThis && isImmediateThis) "this" else expressionText)
                 }
             }
@@ -96,7 +99,8 @@ private fun thisQualifierName(receiver: ReceiverParameterDescriptor): Name? {
     val name = descriptor.name
     if (!name.isSpecial) return name
 
-    val functionLiteral = DescriptorToSourceUtils.descriptorToDeclaration(descriptor) as? KtFunctionLiteral
+    val functionLiteral =
+        DescriptorToSourceUtils.descriptorToDeclaration(descriptor) as? KtFunctionLiteral
     return functionLiteral?.findLabelAndCall()?.first
 }
 
@@ -111,5 +115,5 @@ private fun List<ReceiverParameterDescriptor>.shadowedByDslMarkers(): Set<Receiv
     }
 
     // for each DSL marker, all receivers except the closest one are shadowed by it; that is why we drop it
-    return typesByDslScopes.values.flatMapTo(mutableSetOf()) { it.drop(1) }
+    return typesByDslScopes.values.flatMapTo(hashSetOf()) { it.drop(1) }
 }

@@ -8,6 +8,7 @@ import com.tyron.builder.project.impl.AndroidModuleImpl
 import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.model.DrawableKind
 import android.util.Log
+import com.tyron.kotlin_completion.util.PsiUtilsKt
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet
 import com.tyron.kotlin.completion.codeInsight.ReferenceVariantsHelper
@@ -18,7 +19,8 @@ import com.tyron.kotlin.completion.util.importableFqName
 import com.tyron.kotlin.completion.util.isVisible
 import com.tyron.kotlin.completion.util.logTime
 import com.tyron.kotlin_completion.util.PsiUtils
-import com.tyron.kotlin_completion.util.PsiUtilsKt
+import io.github.rosemoe.sora.lang.completion.CompletionItem
+import io.github.rosemoe.sora.lang.completion.CompletionItemKind
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,16 +83,8 @@ import org.jetbrains.kotlin.types.asFlexibleType
 import org.jetbrains.kotlin.types.isFlexible
 import java.io.File
 import kotlin.collections.set
-import org.jetbrains.kotlin.com.intellij.openapi.util.Key
-import org.jetbrains.kotlin.descriptors.*
-import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
-import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
-//import org.jetbrains.kotlin.util.PhaseMeasurementType
-//import org.jetbrains.kotlin.util.PerformanceManager
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
-import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
-import org.jetbrains.kotlin.config.AnalysisFlag
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -171,9 +165,6 @@ data class KotlinEnvironment(
         )
     }
     
-    //Preferences 
- 
- 
     @JvmField
     var analysis: TopDownAnalysisContext? = null
 
@@ -199,9 +190,9 @@ data class KotlinEnvironment(
         currentItemCount = 0
         var list: List<CompletionItem>
         val originalFile = file.kotlinFile
-        CoroutineScope(Dispatchers.IO).launch {
-            analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
-        }
+       // CoroutineScope(Dispatchers.IO).launch {
+        //    analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
+      //  }
 
         with(file.insert(COMPLETION_SUFFIX, line, character)) {
             kotlinFiles[originalFile.name] = this
@@ -256,7 +247,7 @@ data class KotlinEnvironment(
         }
 
         return if (name.startsWith(prefix)) {
-              CompletionItem.create(
+            CompletionItem.create(
                      name,
                     tailName,
                     completionText,
@@ -283,6 +274,10 @@ data class KotlinEnvironment(
         is TypeParameterDescriptorImpl -> DrawableKind.Class
         else -> DrawableKind.Snippet
     }
+    
+    private fun formatName(builder: String, symbols: Int) =
+        if (builder.length > symbols) builder.substring(0, symbols) + "..." else builder
+
 
     private fun keywordsCompletionVariants(
         keywords: TokenSet,
@@ -304,6 +299,7 @@ data class KotlinEnvironment(
 
         return result
     }
+    
 
     private fun descriptorsFrom(element: PsiElement, current: KtFile): DescriptorInfo {
         val files = kotlinFiles.values.map { it.kotlinFile }.toList()
@@ -511,10 +507,7 @@ data class KotlinEnvironment(
     }
 
     companion object {
-        //private const val COMPLETION_SUFFIX = "æ"
-        private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
-        
-        val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
+        private const val COMPLETION_SUFFIX = "æ"
 
         private val excludedFromCompletion: List<String> =
             listOf(
@@ -538,38 +531,21 @@ data class KotlinEnvironment(
                         logTime("compilerConfig") {
                             put(JVMConfigurationKeys.NO_JDK, true)
                             put(JVMConfigurationKeys.NO_REFLECT, true)
-                         /*   put(
-                                CLIConfigurationKeys.PERF_MANAGER,
-                                object : PerformanceManager("Profiling") {
-                                    override fun notifyPhaseStarted(newPhaseType: PhaseType) {
-                                       //PhaseType.Analysis
-                                       if(newPhaseType == PhaseType.Analysis){
-                                       // Log.i("Profiling", "Analysis started")
-                                       }
-                                    }
-
-                                    override fun notifyPhaseFinished(phaseType: PhaseType) {
-                                       // PhaseType.Analysis
-                                       if(phaseType == PhaseType.Analysis){
-                                       // Log.i("Profiling", "Analysis started")
-                                       }
-                                    }
-                                })*/
                             put(
-                              CommonConfigurationKeys.MODULE_NAME,
-                              JvmProtoBufUtil.DEFAULT_MODULE_NAME
+                                CommonConfigurationKeys.MODULE_NAME,
+                                JvmProtoBufUtil.DEFAULT_MODULE_NAME
                             )
-                            put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
+                            put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, false)
+                           // put(JVMConfigurationKeys.VALIDATE_IR, false)
+                            put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, true)
+                            put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
                             put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                             put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
                             put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)
-                            with(K2JVMCompilerArguments()) {
-                              put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
-                              put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
-                            }
+                           // put(CommonConfigurationKeys.USE_FIR_EXTENDED_CHECKERS, false)
 
                             // enable all language features
                             val langFeatures =
@@ -580,19 +556,16 @@ data class KotlinEnvironment(
 
                             val languageVersion =
                                 LanguageVersion.fromVersionString("2.3")!!
-                            val analysisFlags: Map<AnalysisFlag<*>, Any?> = mapOf(
-                                  //  AnalysisFlags.extendedCompilerChecks to false,
-                                    AnalysisFlags.ideMode to true,
-                                    AnalysisFlags.skipMetadataVersionCheck to true,
-                                    AnalysisFlags.skipPrereleaseCheck to true,
-                                )     
                             val languageVersionSettings = LanguageVersionSettingsImpl(
                                 languageVersion,
                                 ApiVersion.createByLanguageVersion(languageVersion),
-                                analysisFlags,
-                               // emptyMap(),
+                                mapOf(
+                                    AnalysisFlags.ideMode to true,
+                                    AnalysisFlags.skipMetadataVersionCheck to true,
+                                    AnalysisFlags.skipPrereleaseCheck to true,
+                                ),
                                 langFeatures
-                                )
+                            )
                             put(
                                 CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
                                 languageVersionSettings
@@ -618,6 +591,9 @@ data class KotlinEnvironment(
                 it.sourceFile
             }.filter(File::exists)
             val environment = with(jars)
+            environment.kotlinEnvironment.updateClasspath(
+                jars.map { JvmClasspathRoot(it) }
+            )
             androidModule.kotlinFiles.values.forEach {
                 environment.updateKotlinFile(it.absolutePath, it.readText())
             }

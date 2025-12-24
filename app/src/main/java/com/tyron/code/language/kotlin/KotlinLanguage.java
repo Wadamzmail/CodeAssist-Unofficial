@@ -138,7 +138,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
-    /*   try{                             
+       try{                             
         String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
         KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
@@ -157,11 +157,11 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
        kotlinEnvironment.analysis = null;
        throw new CompletionCancelledException(e.toString());
        }
-       kotlinEnvironment.analysis = null;*/
+       kotlinEnvironment.analysis = null;
        //new API
        // FIR (test)
          
-            FirKotlinEnvironment env =
+          /*  FirKotlinEnvironment env =
                FirKotlinEnvironment.get(
                 project.getModule(editor.getCurrentFile())
                );
@@ -178,7 +178,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                for (CompletionItem item :
                      env.complete(file, position.getLine(), position.getColumn())) {
                       publisher.addItem(item);
-                 }
+                }*/
    
 
   }
@@ -284,12 +284,12 @@ private void destroyAnalysis(){
         try {
             if (!analysisRunning) return;
 
-            kotlinEnvironment.analysisOf(
+          /*  kotlinEnvironment.analysisOf(
                     kotlinEnvironment.kotlinFiles.values().stream()
                             .map(it -> it.getKotlinFile())
                             .toList(),
                     ktFile
-            );
+            );*/
 
             if (!analysisRunning) return;
 

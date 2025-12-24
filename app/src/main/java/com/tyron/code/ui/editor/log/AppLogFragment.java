@@ -346,14 +346,21 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     }
   }
   
-  void insert(String text){
-        Content txt = mEditor.getText();
-        int lines = txt.getLineCount()-1;
-        if(lines>1){
-            mEditor.setText(text);
-        }else{
-            txt.insert(lines,0, text);
-        }
+  void insert(String text) {
+    CodeEditorView editor = mEditor;
+    Content content = editor.getText();
+
+    int lastLine = content.getLineCount() - 1;
+    int lastColumn = content.getColumnCount(lastLine);
+
+    content.insert(lastLine, lastColumn, text );
+
+    editor.post(() -> {
+        int line = content.getLineCount() - 1;
+        int column = content.getColumnCount(line);
+        editor.getCaret().set(line, column);
+        editor.ensureCaretVisible();
+    });
    }
 
   @Override
