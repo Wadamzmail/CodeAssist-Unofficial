@@ -350,13 +350,11 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     CodeEditorView editor = mEditor;
     Content content = editor.getText();
 
-    int lastLine = content.getLineCount() - 1;
+    int lastLine = editor.getLineCount() - 1;
     int lastColumn = content.getColumnCount(lastLine);
 
     content.insert(lastLine, lastColumn, text );
-    
-     // Move caret to the last line, first column
-     int lastLine = editor.getLineCount() - 1;
+     
      editor.setSelection(Math.max(lastLine, 0), 0);
    }
 
