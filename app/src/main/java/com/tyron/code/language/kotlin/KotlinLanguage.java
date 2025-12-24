@@ -169,25 +169,28 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                         .getModule(editor.getCurrentFile())
         );
 
-        if (firEnv != null) {
-          FirCompletionEngine engine =  new FirCompletionEngine(firEnv);
+   if (firEnv != null) {
+    FirCompletionEngine engine =
+            new FirCompletionEngine(firEnv);
 
-      FirCompletionEngine.Result r =
+    FirCompletionEngine.Result result =
             engine.analyze(
                     content.toString(),
                     position.getIndex()
             );
 
-         android.util.Log.d(
-               "FIR",
-              "afterDot=" + r.getAfterDot() + ", prefix=" + r.getPrefix()
-         );
-         MainActivity.toast(
-              "afterDot=" + r.getAfterDot() + ", prefix=" + r.getPrefix()
-         );
-         
-       } 
-    }
+   if (result.getAfterDot()) {
+      Objects.requireNonNull((CodeEditorView) editor).post(() -> {
+          for (CompletionItem item : result.getItems()) {
+            publisher.addItem(item);
+          }
+     });
+     return;
+   }
+  }
+
+
+  }
 
     private KotlinEnvironment getOrCreateKotlinEnvironment() {
         if (kotlinEnvironment == null) {

@@ -16,6 +16,9 @@ class FirKotlinEnvironment(
     val coreEnvironment: KotlinCoreEnvironment
 ) {
 
+
+    lateinit var sessionHolder: FirSessionHolder
+
     companion object {
         val ENV_KEY =
             Key.create<FirKotlinEnvironment>("firKotlinEnvironment")
@@ -26,7 +29,7 @@ class FirKotlinEnvironment(
             val cached = androidModule.getUserData(ENV_KEY)
             if (cached != null) return cached
 
-             
+ 
             val jars = androidModule.codeAssistLibraries
                 .map { it.sourceFile }
                 .filter(File::exists)
@@ -34,6 +37,7 @@ class FirKotlinEnvironment(
             setIdeaIoUseFallback()
             setupIdeaStandaloneExecution()
 
+         
             val configuration = CompilerConfiguration().apply {
                 put(CommonConfigurationKeys.MODULE_NAME, "fir-completion")
                 put(CommonConfigurationKeys.USE_FIR, true)
@@ -47,7 +51,10 @@ class FirKotlinEnvironment(
                 EnvironmentConfigFiles.JVM_CONFIG_FILES
             )
 
+          
             val firEnv = FirKotlinEnvironment(env)
+            firEnv.sessionHolder = FirSessionHolder(configuration)
+
             androidModule.putUserData(ENV_KEY, firEnv)
             return firEnv
         }
