@@ -457,7 +457,7 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.add("org.jetbrains.kotlin.cli.jvm.K2JVMCompiler");
         
         //new 
-        args.add("-language-version 2.2");
+        args.add("-language-version 2.3");
         args.add("-Xuse-fast-jar-file-system");
         
 

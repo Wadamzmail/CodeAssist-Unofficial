@@ -579,7 +579,7 @@ data class KotlinEnvironment(
                             }
 
                             val languageVersion =
-                                LanguageVersion.fromVersionString("2.2")!!
+                                LanguageVersion.fromVersionString("2.3")!!
                             val analysisFlags: Map<AnalysisFlag<*>, Any?> = mapOf(
                                   //  AnalysisFlags.extendedCompilerChecks to false,
                                     AnalysisFlags.ideMode to true,
