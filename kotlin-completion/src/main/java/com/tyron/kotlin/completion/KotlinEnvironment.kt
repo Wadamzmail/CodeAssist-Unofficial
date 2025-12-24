@@ -19,8 +19,6 @@ import com.tyron.kotlin.completion.util.importableFqName
 import com.tyron.kotlin.completion.util.isVisible
 import com.tyron.kotlin.completion.util.logTime
 import com.tyron.kotlin_completion.util.PsiUtils
-import io.github.rosemoe.sora.lang.completion.CompletionItem
-import io.github.rosemoe.sora.lang.completion.CompletionItemKind
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,6 +83,10 @@ import java.io.File
 import kotlin.collections.set
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key
+import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
+import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -508,6 +510,7 @@ data class KotlinEnvironment(
 
     companion object {
         private const val COMPLETION_SUFFIX = "æ"
+                val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
         private val excludedFromCompletion: List<String> =
             listOf(
