@@ -96,7 +96,7 @@ class FirKotlinEnvironment private constructor(
                     LanguageVersionSettingsImpl(
                         languageVersion,
                         ApiVersion.createByLanguageVersion(languageVersion),
-                        AnalysisFlags,
+                        analysisFlags,
                         langFeatures
                     )
                 )

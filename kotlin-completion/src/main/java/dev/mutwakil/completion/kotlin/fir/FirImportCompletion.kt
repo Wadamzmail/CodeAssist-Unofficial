@@ -1,3 +1,5 @@
+@file:OptIn(org.jetbrains.kotlin.analysis.api.KaExperimentalApi::class)
+
 package dev.mutwakil.completion.kotlin.fir
 
 import com.tyron.kotlin.completion.KotlinFile
@@ -20,9 +22,7 @@ object FirImportCompletion {
         val lastLine =
             FirCompletionUtil.lastLineBeforeCursor(file, line, column)
 
-        if (!lastLine.trimStart().startsWith("import")) {
-            return null
-        }
+        if (!lastLine.trimStart().startsWith("import")) return null
 
         val prefix =
             FirCompletionUtil.importPrefix(file, line, column)
@@ -31,18 +31,16 @@ object FirImportCompletion {
 
             val provider = symbolProvider
 
-            val parentFqName =
-                if (prefix.contains('.')) {
+            val parent =
+                if (prefix.contains('.'))
                     FqName(prefix.substringBeforeLast('.'))
-                } else {
+                else
                     FqName.ROOT
-                }
 
-            provider.getPackageSymbols(parentFqName)
+            provider.getPackageSymbols(parent)
                 .mapNotNull { symbol: KaPackageSymbol ->
 
                     val fqName = symbol.fqName.asString()
-
                     if (!fqName.startsWith(prefix)) return@mapNotNull null
 
                     CompletionItem.create(
@@ -60,7 +58,6 @@ object FirImportCompletion {
                         )
                     }
                 }
-                .distinctBy { it.label }
                 .sortedBy { it.label }
         }
     }
