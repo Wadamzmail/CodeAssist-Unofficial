@@ -44,6 +44,7 @@ dependencies {
 
 	//api('org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21')
 	api files('libs/kotlin-compiler-embeddable-2.3.0.jar')
+	api files('libs/analysis-api-for-ide-2.3.0.jar')
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
