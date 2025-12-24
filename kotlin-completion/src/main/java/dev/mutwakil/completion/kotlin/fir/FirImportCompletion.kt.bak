@@ -4,11 +4,12 @@ import com.tyron.kotlin.completion.KotlinFile
 import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
+import com.tyron.completion.model.DrawableKind
 import org.jetbrains.kotlin.analysis.api.analyze
 import org.jetbrains.kotlin.analysis.api.symbols.*
-import org.jetbrains.kotlin.psi.KtExpression
+import org.jetbrains.kotlin.name.FqName
 
-object FirMemberCompletion {
+object FirImportCompletion {
 
     fun tryComplete(
         file: KotlinFile,
@@ -16,35 +17,30 @@ object FirMemberCompletion {
         column: Int
     ): List<CompletionItem>? {
 
-        if (!FirCompletionUtil.isAfterDot(file, line, column)) {
-            return null
-        }
+        val lastLine =
+            FirCompletionUtil.lastLineBeforeCursor(file, line, column)
 
-        val prefix = FirCompletionUtil.wordPrefix(file, line, column)
-        val offset = file.offsetFor(line, column)
+        if (!lastLine.trimStart().startsWith("import")) return null
 
-        val element = file.elementAt(offset)
-        val expr = element as? KtExpression ?: return null
+        val prefix =
+            FirCompletionUtil.importPrefix(file, line, column)
 
-        return analyze(expr) {
+        return analyze(file.kotlinFile) {
 
-            val type = expr.expressionType ?: return@analyze emptyList()
+            val provider = symbolProvider
+            val fq = FqName(prefix)
 
-            type.scope
-                .getCallableSymbols()
-                .mapNotNull { symbol: KaCallableSymbol ->
+            provider.getPackageSymbols(fq.parent())
+                .mapNotNull { symbol: KaPackageSymbol ->
 
-                    val name = symbol.name.identifier
+                    val name = symbol.fqName.asString()
                     if (!name.startsWith(prefix)) return@mapNotNull null
-
-                    val tailText =
-                        symbol.returnType?.render()?.let { ": $it" } ?: ""
 
                     CompletionItem.create(
                         name,
-                        tailText,
+                        "import",
                         name,
-                        FirIconMapper.iconFrom(symbol)
+                        DrawableKind.Package
                     ).apply {
                         cursorOffset = commitText.length
                         setInsertHandler(
@@ -55,7 +51,6 @@ object FirMemberCompletion {
                         )
                     }
                 }
-                .distinctBy { it.label }
                 .sortedBy { it.label }
         }
     }

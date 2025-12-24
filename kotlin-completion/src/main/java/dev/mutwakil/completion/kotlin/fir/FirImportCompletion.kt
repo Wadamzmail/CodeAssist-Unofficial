@@ -3,10 +3,11 @@ package dev.mutwakil.completion.kotlin.fir
 import com.tyron.kotlin.completion.KotlinFile
 import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.model.DrawableKind
-import org.jetbrains.kotlin.analysis.api.analyze
-import org.jetbrains.kotlin.psi.KtFile
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
+import org.jetbrains.kotlin.analysis.api.analyze
+import org.jetbrains.kotlin.analysis.api.symbols.KaPackageSymbol
+import org.jetbrains.kotlin.name.FqName
 
 object FirImportCompletion {
 
@@ -27,25 +28,37 @@ object FirImportCompletion {
             FirCompletionUtil.importPrefix(file, line, column)
 
         return analyze(file.kotlinFile) {
-            getTopLevelPackagesAndClasses()
-                .mapNotNull { symbol ->
-                    val fqName = symbol.fqName?.asString() ?: return@mapNotNull null
-                    if (fqName.startsWith(prefix)) {
-                        CompletionItem.create(
-                            fqName,
-                            "import",
-                            fqName,
-                            DrawableKind.Package
-                        ).apply {
-                            cursorOffset = commitText.length
-                            setInsertHandler(
-                                DefaultInsertHandler(
-                                    CompletionUtils.JAVA_PREDICATE,
-                                    this
-                                )
+
+            val provider = symbolProvider
+
+            val parentFqName =
+                if (prefix.contains('.')) {
+                    FqName(prefix.substringBeforeLast('.'))
+                } else {
+                    FqName.ROOT
+                }
+
+            provider.getPackageSymbols(parentFqName)
+                .mapNotNull { symbol: KaPackageSymbol ->
+
+                    val fqName = symbol.fqName.asString()
+
+                    if (!fqName.startsWith(prefix)) return@mapNotNull null
+
+                    CompletionItem.create(
+                        fqName,
+                        "import",
+                        fqName,
+                        DrawableKind.Package
+                    ).apply {
+                        cursorOffset = commitText.length
+                        setInsertHandler(
+                            DefaultInsertHandler(
+                                CompletionUtils.JAVA_PREDICATE,
+                                this
                             )
-                        }
-                    } else null
+                        )
+                    }
                 }
                 .distinctBy { it.label }
                 .sortedBy { it.label }

@@ -5,7 +5,6 @@ import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.analysis.api.analyze
-import org.jetbrains.kotlin.analysis.api.symbols.*
 import org.jetbrains.kotlin.psi.KtExpression
 
 object FirMemberCompletion {
@@ -16,35 +15,39 @@ object FirMemberCompletion {
         column: Int
     ): List<CompletionItem>? {
 
+        // لازم نكون بعد نقطة
         if (!FirCompletionUtil.isAfterDot(file, line, column)) {
             return null
         }
 
-        val prefix = FirCompletionUtil.wordPrefix(file, line, column)
-        val offset = file.offsetFor(line, column)
+        val prefix =
+            FirCompletionUtil.wordPrefix(file, line, column)
 
-        val element = file.elementAt(offset)
+        val element =
+            file.elementAt(file.offsetFor(line, column))
+
         val expr = element as? KtExpression ?: return null
 
         return analyze(expr) {
 
-            val type = expr.expressionType ?: return@analyze emptyList()
+            val type = expr.getKtType() ?: return emptyList()
 
-            type.scope
+            type.getMemberScope()
                 .getCallableSymbols()
-                .mapNotNull { symbol: KaCallableSymbol ->
+                .mapNotNull { symbol ->
 
-                    val name = symbol.name.identifier
+                    val name = symbol.name.asString()
+
                     if (!name.startsWith(prefix)) return@mapNotNull null
 
-                    val tailText =
-                        symbol.returnType?.render()?.let { ": $it" } ?: ""
+                    val icon =
+                        FirIconMapper.iconFrom(symbol)
 
                     CompletionItem.create(
                         name,
-                        tailText,
+                        symbol.returnType?.asString() ?: "",
                         name,
-                        FirIconMapper.iconFrom(symbol)
+                        icon
                     ).apply {
                         cursorOffset = commitText.length
                         setInsertHandler(

@@ -73,21 +73,31 @@ class FirKotlinEnvironment private constructor(
                 put(CommonConfigurationKeys.MODULE_NAME, JvmProtoBufUtil.DEFAULT_MODULE_NAME)
                 put(CommonConfigurationKeys.USE_FIR, true)
                 put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
-
-                put(AnalysisFlags.ideMode, true)
-                put(AnalysisFlags.skipMetadataVersionCheck, true)
-                put(AnalysisFlags.skipPrereleaseCheck, true)
+                put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
 
                 addJvmClasspathRoots(classpath)
+                
+                val langFeatures =
+                        mutableMapOf<LanguageFeature, LanguageFeature.State>()
+                        for (langFeature in LanguageFeature.entries) {
+                              langFeatures[langFeature] = LanguageFeature.State.ENABLED
+                        }
 
                 val languageVersion =
                     LanguageVersion.fromVersionString("2.3")!!
+                val analysisFlags: Map<AnalysisFlag<*>, Any?> = mapOf(
+                              AnalysisFlags.ideMode to true,
+                              AnalysisFlags.skipMetadataVersionCheck to true,
+                              AnalysisFlags.skipPrereleaseCheck to true,
+                            )        
 
                 put(
                     CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
                     LanguageVersionSettingsImpl(
                         languageVersion,
-                        ApiVersion.createByLanguageVersion(languageVersion)
+                        ApiVersion.createByLanguageVersion(languageVersion),
+                        AnalysisFlags,
+                        langFeatures
                     )
                 )
             }

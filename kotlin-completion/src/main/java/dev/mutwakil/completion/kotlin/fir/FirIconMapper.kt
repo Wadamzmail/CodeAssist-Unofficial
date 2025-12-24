@@ -5,14 +5,18 @@ import org.jetbrains.kotlin.analysis.api.symbols.*
 
 object FirIconMapper {
 
-    fun iconFrom(symbol: KtSymbol): DrawableKind =
+    fun iconFrom(symbol: KaSymbol): DrawableKind =
         when (symbol) {
-            is KtFunctionSymbol -> DrawableKind.Method
-            is KtPropertySymbol -> DrawableKind.Attribute
-            is KtValueParameterSymbol -> DrawableKind.LocalVariable
-            is KtClassOrObjectSymbol -> DrawableKind.Class
-            is KtPackageSymbol -> DrawableKind.Package
-            is KtTypeParameterSymbol -> DrawableKind.Class
+            is KaFunctionSymbol -> DrawableKind.Method
+
+            // variables تشمل properties + locals + parameters
+            is KaVariableSymbol -> DrawableKind.Attribute
+
+            // classes + objects + interfaces
+            is KaClassLikeSymbol -> DrawableKind.Class
+
+            is KaPackageSymbol -> DrawableKind.Package
+
             else -> DrawableKind.Snippet
         }
 }
