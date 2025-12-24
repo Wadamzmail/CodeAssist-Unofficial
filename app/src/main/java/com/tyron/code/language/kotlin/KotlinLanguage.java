@@ -235,7 +235,7 @@ private void destroyAnalysis(){
                                 issue.getEndOffset(),
                                 severity, 
                                 0,
-                                new DiagnosticDetail(null,issue.getMessage(),null,null)
+                                new DiagnosticDetail("",issue.getMessage(),null,null)
                         )
                 );
             });
