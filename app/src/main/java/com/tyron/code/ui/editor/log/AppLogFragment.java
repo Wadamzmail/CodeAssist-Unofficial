@@ -354,13 +354,10 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     int lastColumn = content.getColumnCount(lastLine);
 
     content.insert(lastLine, lastColumn, text );
-
-    editor.post(() -> {
-        int line = content.getLineCount() - 1;
-        int column = content.getColumnCount(line);
-        editor.getCaret().set(line, column);
-        editor.ensureCaretVisible();
-    });
+    
+     // Move caret to the last line, first column
+     int lastLine = editor.getLineCount() - 1;
+     editor.setSelection(Math.max(lastLine, 0), 0);
    }
 
   @Override
