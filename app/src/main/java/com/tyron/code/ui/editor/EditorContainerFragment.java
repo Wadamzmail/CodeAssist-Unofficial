@@ -306,6 +306,9 @@ public class EditorContainerFragment extends Fragment implements
         
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentResultListener listener = ((requestKey, result) -> {
+         if (mMainViewModel==null)return;
+         if (mMainViewModel.getCurrentFileEditor()==null)return;
+         if (mMainViewModel.getCurrentFileEditor().getEditor()==null)return;
          if (!(mMainViewModel.getCurrentFileEditor().getEditor() instanceof CodeEditorView))return;
             String xml = result.getString("text", ((CodeEditorView)mMainViewModel.getCurrentFileEditor().getEditor()).getText()
                     .toString());

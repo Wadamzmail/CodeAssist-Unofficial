@@ -33,12 +33,9 @@ public class PreviewLayoutAction extends AnAction {
         }
 
         FileEditor fileEditor = event.getData(CommonDataKeys.FILE_EDITOR_KEY);
-       // if (!(fileEditor instanceof LayoutEditor)) {
-       //     return;
-       // }
-         if (!ProjectUtils.isLayoutXMLFile(fileEditor.getFile())){
-              return;
-         }
+         if (fileEditor==null)return;
+         if (fileEditor.getFile()==null)return;
+         if (!ProjectUtils.isLayoutXMLFile(fileEditor.getFile()))return;
 
         presentation.setVisible(true);
         presentation.setText(event.getDataContext().getString(R.string.menu_preview_layout));
