@@ -53,6 +53,6 @@ public interface FileEditor {
     File getFile();
     
     default Editor getEditor(){
-       return new MocEditor();
+       return new EmptyEditor();
     }
 }
