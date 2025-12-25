@@ -75,11 +75,11 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
                 line,
                 column);
 
-        for (CompletionItem completionItem : itemList) {
-            completionItem.addFilterText(completionItem.commitText);
-            completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
-        }
+       // for (CompletionItem completionItem : itemList) {
+        //    completionItem.addFilterText(completionItem.commitText);
+        //    completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
+      //  }
 
-        return CompletionList.builder(prefix).addItems(itemList).build();
+        return itemList; //CompletionList.builder(prefix).addItems(itemList).build();
     }
 }
