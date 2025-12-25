@@ -49,7 +49,7 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.Module;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import com.tyron.code.ui.layoutEditor.attributeEditor.AttributeEditorDialogFragment;
 import com.tyron.code.ui.layoutEditor.model.ViewPalette;
 import com.tyron.completion.java.provider.CompletionEngine;

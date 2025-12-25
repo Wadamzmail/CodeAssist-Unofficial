@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentResultListener;
 import com.tyron.builder.compiler.manifest.xml.XmlFormatPreferences;
 import com.tyron.builder.compiler.manifest.xml.XmlFormatStyle;
 import com.tyron.builder.compiler.manifest.xml.XmlPrettyPrinter;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.code.ui.layoutEditor.LayoutEditorFragment;
 import com.tyron.code.util.ProjectUtils;

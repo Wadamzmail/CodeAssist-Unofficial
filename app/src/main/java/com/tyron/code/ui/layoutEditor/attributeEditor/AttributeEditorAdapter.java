@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 import java.util.ArrayList;
 import java.util.List;

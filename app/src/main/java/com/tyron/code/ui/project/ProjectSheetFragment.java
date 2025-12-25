@@ -44,7 +44,7 @@ import android.content.DialogInterface;
 import androidx.appcompat.app.AlertDialog;
 import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 public class ProjectSheetFragment extends BottomSheetDialogFragment {
 

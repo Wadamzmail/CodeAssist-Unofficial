@@ -43,7 +43,7 @@ ext {
     buildToolsVersion = '36.1.0'
     targetSdkVersion = 36
     minSdkVersion = 26   
-    applicationId = "org.codeassist.unofficial"
+    applicationId = "dev.mutwakil.codeassist"
     versionCode = 1
     versionName = "1.0.2"
 }

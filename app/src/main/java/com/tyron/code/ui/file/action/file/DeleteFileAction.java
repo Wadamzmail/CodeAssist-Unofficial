@@ -24,7 +24,7 @@ import java.io.IOException;
 import kotlin.io.FileWalkDirection;
 import kotlin.io.FilesKt;
 import org.apache.commons.io.FileUtils;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 public class DeleteFileAction extends FileAction {
 

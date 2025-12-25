@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 
 import com.tyron.code.ui.main.HomeFragment;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;

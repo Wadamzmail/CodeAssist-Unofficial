@@ -2,7 +2,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.codeassist.unofficial">
+    package="dev.mutwakil.codeassist">
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <!-- have full network access -->
     <uses-permission android:name="android.permission.INTERNET"/>

@@ -33,7 +33,7 @@ import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;

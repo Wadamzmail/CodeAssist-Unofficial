@@ -6,7 +6,7 @@ import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;

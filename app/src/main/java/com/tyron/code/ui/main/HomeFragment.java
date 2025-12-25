@@ -38,8 +38,8 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
 import java.io.File;
 import java.util.Objects;
-import org.codeassist.unofficial.BuildConfig;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.BuildConfig;
+import dev.mutwakil.codeassist.R;
 
 public class HomeFragment extends Fragment {
 

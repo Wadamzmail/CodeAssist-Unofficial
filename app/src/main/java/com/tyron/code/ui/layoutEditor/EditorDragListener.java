@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 
 import com.flipkart.android.proteus.ProteusView;
-import org.codeassist.unofficial.BuildConfig;
+import dev.mutwakil.codeassist.BuildConfig;
 import com.tyron.code.ui.layoutEditor.model.EditorDragState;
 import com.tyron.code.ui.layoutEditor.model.EditorShadowView;
 import com.tyron.code.ui.layoutEditor.model.ViewPalette;

@@ -8,7 +8,7 @@ import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.Presentation;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import com.tyron.code.ui.editor.action.ExpandSelectionAction;
 
 public class TextActionGroup extends ActionGroup {

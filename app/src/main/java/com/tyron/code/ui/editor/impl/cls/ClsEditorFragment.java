@@ -26,7 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.concurrent.CompletableFuture;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 public class ClsEditorFragment extends Fragment {
 

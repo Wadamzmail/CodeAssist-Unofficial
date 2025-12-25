@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import com.tyron.code.ui.main.MainViewModel;
 import com.tyron.common.ApplicationProvider;
 import com.tyron.fileeditor.api.FileEditor;

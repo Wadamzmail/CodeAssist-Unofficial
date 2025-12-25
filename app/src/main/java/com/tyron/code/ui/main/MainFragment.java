@@ -66,7 +66,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import com.tyron.code.ui.main.action.project.SaveAction;
 

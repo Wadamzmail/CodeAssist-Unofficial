@@ -13,7 +13,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.tyron.code.ui.ssh.SshKeys;
 import java.util.ArrayList;
 import java.util.List;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 public class SshKeyManagerAdapter extends RecyclerView.Adapter<SshKeyManagerAdapter.ViewHolder> {
 

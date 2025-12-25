@@ -4,7 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 import com.google.android.material.transition.MaterialSharedAxis;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 public class CompilerSettingsFragment extends PreferenceFragmentCompat {
 

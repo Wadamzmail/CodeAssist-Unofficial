@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
 import javax.tools.Diagnostic;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 import com.tyron.actions.DataContext;
 import io.github.rosemoe.sora.text.Content;
 

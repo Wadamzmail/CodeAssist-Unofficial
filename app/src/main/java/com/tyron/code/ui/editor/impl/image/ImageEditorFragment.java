@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 import java.io.File;
 

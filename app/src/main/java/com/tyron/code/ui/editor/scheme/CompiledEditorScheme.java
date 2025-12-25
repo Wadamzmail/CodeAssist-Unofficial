@@ -11,7 +11,7 @@ import androidx.appcompat.widget.ThemeUtils;
 
 import com.google.android.material.color.MaterialColors;
 import com.google.common.collect.ImmutableMap;
-import org.codeassist.unofficial.R;
+import dev.mutwakil.codeassist.R;
 
 import java.util.Map;
 

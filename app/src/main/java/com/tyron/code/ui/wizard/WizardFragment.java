@@ -44,7 +44,7 @@ import com.google.android.material.transition.MaterialSharedAxis;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
 //import com.tyron.code.R;
-import org.codeassist.unofficial.R; 
+import dev.mutwakil.codeassist.R; 
 import com.tyron.code.ui.wizard.adapter.WizardTemplateAdapter;
 import com.tyron.code.util.UiUtilsKt;
 import com.tyron.common.util.AndroidUtilities;
