@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import com.tyron.editor.*;
 
 import org.apache.commons.vfs2.FileObject;
 
@@ -50,4 +51,8 @@ public interface FileEditor {
      * @return the file this editor is editing
      */
     File getFile();
+    
+    default Editor getEditor(){
+       return new MocEditor();
+    }
 }

@@ -306,7 +306,7 @@ public class EditorContainerFragment extends Fragment implements
         
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentResultListener listener = ((requestKey, result) -> {
-            String xml = result.getString("text", getEditor().getText()
+            String xml = result.getString("text", mMainViewModel.getCurrentFileEditor().getEditor().getText()
                     .toString());
             xml = XmlPrettyPrinter.prettyPrint(xml, XmlFormatPreferences.defaults(),
                                                XmlFormatStyle.LAYOUT, "\n");
@@ -322,7 +322,7 @@ public class EditorContainerFragment extends Fragment implements
     
     public void preview() {
       if(mMainViewModel ==null) return;
-       File currentFile = mMainViewModel.getCurrentFileEditor().getCurrentFile();
+       File currentFile = mMainViewModel.getCurrentFileEditor().getFile();
 
        if (ProjectUtils.isLayoutXMLFile(currentFile)) {
            getChildFragmentManager()

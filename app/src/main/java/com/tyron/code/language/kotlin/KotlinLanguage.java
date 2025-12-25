@@ -70,7 +70,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final DiagnosticsContainer container = new DiagnosticsContainer();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
-    private FirKotlinEnvironment firEnvironment;
+   // private FirKotlinEnvironment firEnvironment;
      
     
     private final Formatter formatter = new AsyncFormatter() {
@@ -114,7 +114,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-        firEnvironment = FirKotlinEnvironment.Companion.get(currentModule);
+      //  firEnvironment = FirKotlinEnvironment.Companion.get(currentModule);
         if(isHighlightEnabled()){
         initAnalysis();
         }
