@@ -39,7 +39,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
 import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
-import org.codeassist.unofficial.BuildConfig;
+import dev.mutwakil.codeassist.BuildConfig;
 import org.eclipse.tm4e.core.internal.theme.Theme;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 import org.eclipse.tm4e.core.grammar.IGrammar;
