@@ -355,7 +355,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
 
     content.insert(lastLine, lastColumn, text );
      
-     editor.setSelection(Math.max(lastLine, 0), 0);
+     editor.setSelection(lastLine, 0);
    }
 
   @Override

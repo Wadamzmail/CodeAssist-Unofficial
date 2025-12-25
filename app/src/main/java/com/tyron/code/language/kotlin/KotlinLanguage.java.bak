@@ -157,8 +157,6 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
      //   completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
           itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
        }catch(Exception e){
-       kotlinEnvironment.analysis = null;
-        MainActivity.toast(e.toString());
        throw new CompletionCancelledException(e.toString());
        }
        kotlinEnvironment.analysis = null;

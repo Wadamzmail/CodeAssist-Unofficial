@@ -80,6 +80,52 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
         //    completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
       //  }
 
-        return itemList; //CompletionList.builder(prefix).addItems(itemList).build();
+        return CompletionList.builder(prefix).addItems(itemList).build();
+    }
+    
+    
+    @Nullable
+    public List<CompletionItem> getCompletionItems(String prefix, int line, int column) {
+        if (!mPreferences.getBoolean(SharedPreferenceKeys.KOTLIN_COMPLETIONS, false)) {
+            return null;
+        }
+
+        if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
+            return null;
+        }
+
+        if (!mPreferences.getBoolean(SharedPreferenceKeys.KOTLIN_COMPLETIONS, false)) {
+            return null;
+        }
+
+        Project project = ProjectManager.getInstance().getCurrentProject();
+        if (project == null) {
+            return null;
+        }
+
+        Module currentModule = project.getModule(mEditor.getCurrentFile());
+
+        if (!(currentModule instanceof AndroidModule)) {
+            return null;
+        }
+
+        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        if (kotlinEnvironment == null) {
+            return null;
+        }
+
+        KotlinFile updatedFile =
+                kotlinEnvironment.updateKotlinFile(mEditor.getCurrentFile().getAbsolutePath(),
+                        mEditor.getContent().toString());
+        List<CompletionItem> itemList = kotlinEnvironment.complete(updatedFile,
+                line,
+                column);
+
+       // for (CompletionItem completionItem : itemList) {
+        //    completionItem.addFilterText(completionItem.commitText);
+        //    completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
+      //  }
+
+        return  itemList;
     }
 }
