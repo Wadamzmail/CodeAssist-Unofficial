@@ -14,10 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProvider;
-//import androidx.lifecycle.ViewModelProviderKt;
+import androidx.lifecycle.ViewModelProvider;;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.transition.TransitionManager;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
@@ -47,6 +48,13 @@ import com.tyron.fileeditor.api.FileDocumentManager;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorManager;
 import com.tyron.fileeditor.api.TextEditor;
+
+import com.tyron.code.util.ProjectUtils;
+import com.tyron.code.ui.layoutEditor.LayoutEditorFragment;
+import com.tyron.builder.compiler.manifest.xml.XmlFormatPreferences;
+import com.tyron.builder.compiler.manifest.xml.XmlFormatStyle;
+import com.tyron.builder.compiler.manifest.xml.XmlPrettyPrinter;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -295,6 +303,37 @@ public class EditorContainerFragment extends Fragment implements
             mBehavior.setState(state);
             mOnBackPressedCallback.setEnabled(state == BottomSheetBehavior.STATE_EXPANDED);
         });
+        
+        FragmentManager fragmentManager = getChildFragmentManager();
+        FragmentResultListener listener = ((requestKey, result) -> {
+            String xml = result.getString("text", getEditor().getText()
+                    .toString());
+            xml = XmlPrettyPrinter.prettyPrint(xml, XmlFormatPreferences.defaults(),
+                                               XmlFormatStyle.LAYOUT, "\n");
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("loaded", true);
+            bundle.putBoolean("bg", true);
+            ((CodeEditorView)mMainViewModel.getCurrentFileEditor().getEditor()).setText(xml, bundle);
+        });
+        fragmentManager.setFragmentResultListener(LayoutEditorFragment.KEY_SAVE,
+                                                  getViewLifecycleOwner(), listener);
+        
+    }
+    
+    public void preview() {
+      if(mMainViewModel ==null) return;
+       File currentFile = mMainViewModel.getCurrentFileEditor().getCurrentFile();
+
+       if (ProjectUtils.isLayoutXMLFile(currentFile)) {
+           getChildFragmentManager()
+                   .beginTransaction()
+                   .replace(
+                          R.id.root,
+                          LayoutEditorFragment.newInstance(currentFile)
+                   )
+                  .addToBackStack("layout_preview")
+                  .commit();
+       }
     }
 
     private void restoreViewState(@NonNull Bundle state) {

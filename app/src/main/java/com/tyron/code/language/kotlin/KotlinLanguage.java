@@ -52,8 +52,9 @@ import com.tyron.common.SharedPreferenceKeys;
 //test
 import android.widget.Toast;
 import com.tyron.code.MainActivity;
+import android.util.Log;
 //new API
-import dev.mutwakil.completion.kotlin.fir.FirKotlinEnvironment;
+//import dev.mutwakil.completion.kotlin.fir.FirKotlinEnvironment;
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
@@ -61,6 +62,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
     private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
     private static final String SCOPE_NAME = "source.kotlin";
+    public static final String TAG = "KotlinLanguage";
 
     private final TextMateLanguage delegate;
     private final Editor editor;
@@ -138,52 +140,23 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
-       try{                             
-        String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
-        KotlinAutoCompleteProvider provider =
+     try{                             
+            String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
+            KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
            
-           container.reset();
-                     
-        //CompletionList completionList = provider.getCompletionList(identifierPart,
-          //      position.getLine(),
-         //       position.getColumn());
-        //if (completionList == null) {
-         //   return;
-      //  }
-        List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
-        if (itemsList==null)return;
-         Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
-     //   completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
-          itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
+            container.reset();                
+            List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
+            if (itemsList==null)return;
+            Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
+            itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
        }catch(Exception e){
-       kotlinEnvironment.analysis = null;
-        MainActivity.toast(e.toString());
-       throw new CompletionCancelledException(e.toString());
+            kotlinEnvironment.analysis = null;
+            Log.e(TAG,"Completion Canceled",e);
+            e.printStackTrace();     
+            throw new CompletionCancelledException(e.toString());
        }
        kotlinEnvironment.analysis = null;
-       //new API
-       // FIR (test)
-         
-          /*  FirKotlinEnvironment env =
-               FirKotlinEnvironment.get(
-                project.getModule(editor.getCurrentFile())
-               );
-
-             if (env == null) return;
-
-              KotlinFile file =
-               kotlinEnvironment.kotlinFiles.get(
-                   editor.getCurrentFile().getAbsolutePath()
-               );
-
-               if (file == null) return;
-
-               for (CompletionItem item :
-                     env.complete(file, position.getLine(), position.getColumn())) {
-                      publisher.addItem(item);
-                }*/
-   
 
   }
 
@@ -268,7 +241,7 @@ private void destroyAnalysis(){
                                 issue.getEndOffset(),
                                 severity, 
                                 0,
-                                new DiagnosticDetail("",issue.getMessage(),null,null)
+                                new DiagnosticDetail("Info",issue.getMessage(),null,null)
                         )
                 );
             });
@@ -288,12 +261,12 @@ private void destroyAnalysis(){
         try {
             if (!analysisRunning) return;
 
-          /*  kotlinEnvironment.analysisOf(
-                    kotlinEnvironment.kotlinFiles.values().stream()
-                            .map(it -> it.getKotlinFile())
-                            .toList(),
-                    ktFile
-            );*/
+        //    kotlinEnvironment.analysisOf(
+        //            kotlinEnvironment.kotlinFiles.values().stream()
+        //                    .map(it -> it.getKotlinFile())
+        //                    .toList(),
+        //            ktFile
+        //    );
 
             if (!analysisRunning) return;
 
@@ -303,7 +276,7 @@ private void destroyAnalysis(){
         } catch (Throwable e) {
             if (!(e instanceof InterruptedException)
                     && !(e instanceof ProcessCanceledException)) {
-                // Log.e(TAG, "Failed to analyze file", e);
+                 Log.e(TAG, "Failed to analyze file", e);
             }
         }
     });

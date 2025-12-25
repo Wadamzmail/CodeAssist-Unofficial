@@ -8,6 +8,7 @@ import com.tyron.code.ui.editor.impl.text.squircle.SquircleEditorProvider;
 import com.tyron.code.ui.editor.impl.xml.LayoutTextEditorProvider;
 import com.tyron.fileeditor.api.FileEditorProvider;
 import com.tyron.fileeditor.api.FileEditorProviderManager;
+import com.tyron.code.ui.editor.impl.xml.LayoutTextEditorProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class FileEditorProviderManagerImpl implements FileEditorProviderManager 
     private void registerBuiltInProviders() {
         registerProvider(new RosemoeEditorProvider());
         registerProvider(new ImageEditorProvider());
+        //registerProvider(new LayoutTextEditorProvider());
     }
 
     @Override

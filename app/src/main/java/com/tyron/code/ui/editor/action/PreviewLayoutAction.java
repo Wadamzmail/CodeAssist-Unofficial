@@ -16,6 +16,8 @@ import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.code.ui.editor.impl.xml.LayoutEditor;
 import com.tyron.code.ui.editor.impl.xml.LayoutTextEditorFragment;
 import com.tyron.common.util.AndroidUtilities;
+import com.tyron.code.util.ProjectUtils;
+import com.tyron.code.ui.editor.EditorContainerFragment
 
 public class PreviewLayoutAction extends AnAction {
 
@@ -31,9 +33,12 @@ public class PreviewLayoutAction extends AnAction {
         }
 
         FileEditor fileEditor = event.getData(CommonDataKeys.FILE_EDITOR_KEY);
-        if (!(fileEditor instanceof LayoutEditor)) {
-            return;
-        }
+       // if (!(fileEditor instanceof LayoutEditor)) {
+       //     return;
+       // }
+         if (!ProjectUtils.isLayoutXMLFile(fileEditor.getFile())){
+              return;
+         }
 
         presentation.setVisible(true);
         presentation.setText(event.getDataContext().getString(R.string.menu_preview_layout));
@@ -42,19 +47,19 @@ public class PreviewLayoutAction extends AnAction {
     @Override
     public void actionPerformed(@NonNull AnActionEvent e) {
 //        FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-//        Fragment fragment = fileEditor.getFragment();
-//        if (fragment == null || fragment.isDetached() || fragment.getActivity() == null) {
-//            return;
-//        }
-//        FragmentActivity activity = fragment.requireActivity();
-//        View currentFocus = activity.getCurrentFocus();
-//        if (currentFocus == null) {
-//            currentFocus = new View(activity);
-//        }
-//        AndroidUtilities.hideKeyboard(currentFocus);
-//
-//        if (fragment instanceof LayoutTextEditorFragment) {
-//            ((LayoutTextEditorFragment) fragment).preview();
-//        }
+        Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
+        if (fragment == null || fragment.isDetached() || fragment.getActivity() == null) {
+            return;
+        }
+        FragmentActivity activity = fragment.requireActivity();
+        View currentFocus = activity.getCurrentFocus();
+        if (currentFocus == null) {
+            currentFocus = new View(activity);
+        }
+        AndroidUtilities.hideKeyboard(currentFocus);
+
+        if (fragment instanceof EditorContainerFragment) {
+            ((EditorContainerFragment) fragment).preview();
+        }
     }
 }

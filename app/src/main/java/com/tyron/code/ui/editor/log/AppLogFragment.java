@@ -284,6 +284,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     // editor.setWordwrap(pref.getBoolean(SharedPreferenceKeys.EDITOR_WORDWRAP, false));
     editor.setWordwrap(true);
     editor.setTextSize(Integer.parseInt(pref.getString(SharedPreferenceKeys.FONT_SIZE, "10")));
+    editor.setCursorAnimationEnabled(false);
   }
 
   @Override
@@ -309,6 +310,9 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
               for (DiagnosticWrapper diagnostic : diagnostics) {
                 if (diagnostic != null) {
                   if (diagnostic.getKind() != null) {
+                  if (diagnostic.getSource() == null || !diagnostic.getSource().exists()) {
+                        continue;
+                    }
                     String label = diagnostic.getKind().name()+": "+diagnostic.getSource().getName();
                     label =" [ "+label + ":" + diagnostic.getLineNumber()+" ] ";
                     insert(label);
@@ -349,11 +353,12 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
   void insert(String text) {
     CodeEditorView editor = mEditor;
     Content content = editor.getText();
+    String newText = text.replace(content.toString(),"");
 
     int lastLine = editor.getLineCount() - 1;
     int lastColumn = content.getColumnCount(lastLine);
 
-    content.insert(lastLine, lastColumn, text );
+    content.insert(lastLine, lastColumn, newText );
      
      editor.setSelection(lastLine, 0);
    }

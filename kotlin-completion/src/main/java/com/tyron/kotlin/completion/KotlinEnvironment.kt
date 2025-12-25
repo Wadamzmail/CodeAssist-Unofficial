@@ -215,8 +215,14 @@ data class KotlinEnvironment(
                     .mapNotNull { descriptor ->
                         completionVariantFor(prefix, descriptor)
                     }
-                if (items.size > 50) items.subList(0, 50) else items +
-                        keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+            //    if (items.size > 50) items.subList(0, 50) else items +
+                //        keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                 if (items.size > 50) 
+                     items.subList(0, 50) +
+                     keywordsCompletionVariants(KtTokens.KEYWORDS, prefix) 
+                 else items +
+                     keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                
             }
                 ?: emptyList()
         }
