@@ -18,7 +18,7 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
   */
 public final class DiagnosticsUtils {
     
-    private final String TAG = "DiagnosticsUtils";
+    private static final String TAG = "DiagnosticsUtils";
     
     private DiagnosticsUtils() {}
 

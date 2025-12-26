@@ -150,7 +150,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
            
-            Objects.requireNonNull(editor.getDiagnostics()).reset();
+            Objects.requireNonNull(((CodeEditorView)editor).getDiagnostics()).reset();
             editor.getDiagnosticsList().clear();
             diagnostics.clear();            
             List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
