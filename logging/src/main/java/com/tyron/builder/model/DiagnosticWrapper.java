@@ -69,10 +69,6 @@ public class DiagnosticWrapper implements Diagnostic<File> {
        }
   }
 
-  public DiagnosticWrapper(Diagnostic<? extends JavaFileObject> obj) {
-    this((Diagnostic<?>) obj);
-  }
-
   public void setOnClickListener(View.OnClickListener listener) {
     onClickListener = listener;
   }
