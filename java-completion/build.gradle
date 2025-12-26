@@ -54,6 +54,7 @@ dependencies {
     implementation project(':common')
     implementation project(':completion-api')
     implementation project(':language-api')
+    implementation project(':fileeditor-api')
 
     implementation project(':javac')
     implementation project(':logging')

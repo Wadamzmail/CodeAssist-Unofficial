@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.nio.file.Files;
 
 public class JavaCompilerProvider extends CompilerProvider<JavaCompilerService> {
   public static final String KEY = JavaCompilerProvider.class.getSimpleName();
@@ -109,6 +110,27 @@ public class JavaCompilerProvider extends CompilerProvider<JavaCompilerService> 
     }
 
     return false;
+  }
+  
+  public Set<File> getFiles(File dir, String ext) {
+    Set<File> Files = new HashSet<>();
+
+    File[] files = dir.listFiles();
+    if (files == null) {
+      return Collections.emptySet();
+    }
+
+    for (File file : files) {
+      if (file.isDirectory()) {
+        Files.addAll(getFiles(file, ext));
+      } else {
+        if (file.getName().endsWith(ext)) {
+          Files.add(file);
+        }
+      }
+    }
+
+    return Files;
   }
 
   public static File getOrCreateResourceClass(JavaModule module) throws IOException {
