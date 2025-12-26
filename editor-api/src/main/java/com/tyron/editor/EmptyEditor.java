@@ -4,6 +4,7 @@ import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 import org.jetbrains.annotations.Nullable;
 
 public class EmptyEditor implements Editor {
@@ -20,6 +21,11 @@ public class EmptyEditor implements Editor {
 
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {}
+  
+  @Override 
+  public List<DiagnosticWrapper> getDiagnosticsList(){
+    return new ArrayList<DiagnosticWrapper>();
+  }
 
   @Override
   public boolean isBackgroundAnalysisEnabled() {
