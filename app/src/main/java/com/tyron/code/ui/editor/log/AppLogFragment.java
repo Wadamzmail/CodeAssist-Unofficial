@@ -264,8 +264,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     }
     mEditor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
     mEditor.setColorScheme(scheme);
-
-    // editor.setBackgroundAnalysisEnabled(false);
+    
     editor.setTypefaceText(
         ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));
     editor.setEdgeEffectColor(Color.TRANSPARENT);
@@ -276,7 +275,6 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
             | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
     SharedPreferences pref = ApplicationLoader.getDefaultPreferences();
-    // editor.setWordwrap(pref.getBoolean(SharedPreferenceKeys.EDITOR_WORDWRAP, false));
     editor.setWordwrap(true);
     editor.setTextSize(Integer.parseInt(pref.getString(SharedPreferenceKeys.FONT_SIZE, "10")));
     editor.setCursorAnimationEnabled(false);
@@ -353,7 +351,8 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     int lastLine = editor.getLineCount() - 1;
     int lastColumn = content.getColumnCount(lastLine);
 
-    content.insert(lastLine, lastColumn, newText);
+   // content.insert(lastLine, lastColumn, newText);
+    editor.setText(text);
 
     editor.setSelection(lastLine, 0);
   }

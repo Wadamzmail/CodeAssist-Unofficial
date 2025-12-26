@@ -63,28 +63,10 @@ public class IncrementalJavaFormatTask extends Task<JavaModule> {
       if (Boolean.parseBoolean(applyJavaFormat)) {
 
         for (File mJava : mJavaFiles) {
-          /*
-            StringWriter out = new StringWriter();
-            StringWriter err = new StringWriter();
-            String text = new String(Files.readAllBytes(mJava.toPath()));
-
-            com.google.googlejavaformat.java.Main main =
-                new com.google.googlejavaformat.java.Main(
-                    new PrintWriter(out, true),
-                    new PrintWriter(err, true),
-                    new ByteArrayInputStream(text.getBytes(StandardCharsets.UTF_8)));
-            int exitCode = main.format("-");
-
-            if (exitCode != 0) {
-              getLogger().debug("Error: " + mJava.getAbsolutePath() + " " + err.toString());
-              throw new CompilationFailedException(TAG + " error");
-            }
-          */
           String text = new String(Files.readAllBytes(mJava.toPath()));
           String formatted = null;
           try {
             formatted = new Formatter().formatSource(text.toString());
-            //  formatted = com.tyron.eclipse.formatter.Formatter.format(text,0,text.length());
           } catch (FormatterException e) {
             getLogger()
                 .debug(

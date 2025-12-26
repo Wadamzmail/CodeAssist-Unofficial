@@ -148,8 +148,7 @@ dependencies {
     // formatters    
     implementation project(path: ':google-java-format')
     implementation project(path: ':ktfmt')
-	implementation project(path: ':eclipse-formatter') 
-
+	 
     // about
     implementation 'com.github.daniel-stoneuk:material-about-library:3.1.2'
 

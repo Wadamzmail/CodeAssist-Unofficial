@@ -232,8 +232,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
     CharSequence formatted = null;
     try {
       formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-      // formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
-    } catch (Exception e) {
+     } catch (Exception e) {
       formatted = text;
     }
 
