@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import dev.mutwakil.javac.*;
+import com.tyron.fileeditor.api.FileEditor;
 
 public class OverrideInheritedMethodsAction extends AnAction {
 
@@ -108,9 +109,13 @@ public class OverrideInheritedMethodsAction extends AnAction {
 
     @Override
     public void actionPerformed(@NonNull AnActionEvent e) {
-        Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
+        FileEditor fileEditor = e.getData(CommonDataKeys.FILE_EDITOR_KEY);
+        if (fileEditor==null)return;
+        if (fileEditor.getFile()==null)return;
+        if (fileEditor.getEditor()==null)return;
+        Editor editor = fileEditor.getEditor(); 
+        File file = fileEditor.getFile();
         Activity activity = e.getRequiredData(CommonDataKeys.ACTIVITY);
-        File file = e.getRequiredData(CommonDataKeys.FILE);
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
         JavaCompilerService compiler = e.getRequiredData(CommonJavaContextKeys.COMPILER);
         TreePath currentPath = e.getRequiredData(CommonJavaContextKeys.CURRENT_PATH);

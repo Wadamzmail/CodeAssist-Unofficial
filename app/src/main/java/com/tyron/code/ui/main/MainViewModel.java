@@ -1,5 +1,6 @@
 package com.tyron.code.ui.main;
 
+import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -44,6 +45,16 @@ public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<Boolean> mDrawerState =
             new MutableLiveData<>(false);
+    
+    private final MutableLiveData<Activity> mActivity = new MutableLiveData<>();  
+    
+    public void setActivity(Activity a){
+       mActivity.setValue(a);
+    }
+     
+    public LiveData<Activity> getActivity(){
+      return mActivity;
+    }               
 
     public MutableLiveData<String> getCurrentState() {
         if (mCurrentState == null) {

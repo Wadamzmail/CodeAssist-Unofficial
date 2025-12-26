@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.tyron.builder.project.Project;
+import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.completion.index.CompilerProvider;
@@ -68,6 +69,21 @@ public class JavaCompilerProvider extends CompilerProvider<JavaCompilerService> 
                 paths.addAll(((JavaModule) dependency).getLibraries());
                 paths.addAll(((JavaModule) dependency).getInjectedClasses().values());
             }
+            if (dependency instanceof AndroidModule) {
+                File buildGenDir = new File(dependency.getRootFile() + "/build/gen");
+                File viewBindingDir = new File(dependency.getRootFile() + "/build/view_binding");
+
+                paths.add(
+                   new File(
+                       dependency.getRootFile(),
+                       "/build/libraries/kotlin_runtime/" + dependency.getRootFile().getName() + ".jar"));
+                if (buildGenDir.exists())   
+                   paths.addAll(getFiles(buildGenDir, ".java"));
+                  
+                if (viewBindingDir.exists())
+                   paths.addAll(getFiles(viewBindingDir, ".java"));
+            }
+            
         }
 
         if (mProvider == null || changed(mCachedPaths, paths)) {

@@ -25,6 +25,7 @@ import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.util.RewriteUtil;
 import com.tyron.editor.Editor;
+import com.tyron.fileeditor.api.FileEditor;
 
 import java.io.File;
 import java.util.List;
@@ -51,15 +52,12 @@ public class IntroduceLocalVariableAction extends AnAction {
             return;
         }
 
-        Editor editor = event.getData(CommonDataKeys.EDITOR);
-        if (editor == null) {
-            return;
-        }
-
-        File file = event.getData(CommonDataKeys.FILE);
-        if (file == null) {
-            return;
-        }
+        FileEditor fileEditor = event.getData(CommonDataKeys.FILE_EDITOR_KEY);
+        if (fileEditor==null)return;
+        if (fileEditor.getFile()==null)return;
+        if (fileEditor.getEditor()==null)return;
+        Editor editor = fileEditor.getEditor(); 
+        File file = fileEditor.getFile();
 
         CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) {
@@ -87,8 +85,12 @@ public class IntroduceLocalVariableAction extends AnAction {
 
     @Override
     public void actionPerformed(@NonNull AnActionEvent e) {
-        Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
-        File file = e.getRequiredData(CommonDataKeys.FILE);
+        FileEditor fileEditor = e.getData(CommonDataKeys.FILE_EDITOR_KEY);
+        if (fileEditor==null)return;
+        if (fileEditor.getFile()==null)return;
+        if (fileEditor.getEditor()==null)return;
+        Editor editor = fileEditor.getEditor(); 
+        File file = fileEditor.getFile();
 
         CompilationInfo compilationInfo = e.getRequiredData(CompilationInfo.COMPILATION_INFO_KEY);
         JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();

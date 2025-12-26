@@ -20,6 +20,7 @@ import com.tyron.completion.xml.XmlCompletionModule;
 import com.tyron.completion.xml.rewrite.AddPermissions;
 import com.tyron.completion.xml.util.XmlUtils;
 import com.tyron.editor.Editor;
+import com.tyron.fileeditor.api.FileEditor;
 
 import org.apache.commons.io.FileUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -39,7 +40,7 @@ public class AndroidManifestAddPermissionsAction extends AnAction {
 
     private static File getOrExtractPermissions() {
         File filesDir = XmlCompletionModule.getContext().getFilesDir();
-        File check = new File(filesDir, "sources/android-31/data/permissions.txt");
+        File check = new File(filesDir, "sources/android-36/data/permissions.txt");
         if (check.exists()) {
             return check;
         }
@@ -57,17 +58,15 @@ public class AndroidManifestAddPermissionsAction extends AnAction {
         if (!ActionPlaces.EDITOR.equals(event.getPlace())) {
             return;
         }
-
-        File file = event.getData(CommonDataKeys.FILE);
-        if (file == null || !MANIFEST_FILE_NAME.equals(file.getName())) {
-            return;
-        }
-
-        Editor editor = event.getData(CommonDataKeys.EDITOR);
-        if (editor == null) {
-            return;
-        }
-
+        
+        FileEditor fileEditor = event.getData(CommonDataKeys.FILE_EDITOR_KEY);
+        if (fileEditor==null)return;
+        if (fileEditor.getFile()==null)return;
+        if (fileEditor.getEditor()==null)return;
+        Editor editor = fileEditor.getEditor(); 
+        File file = fileEditor.getFile();
+        if (!MANIFEST_FILE_NAME.equals(file.getName())) return;
+        
         XmlPullParser parser;
         try {
             parser = newPullParser();
@@ -86,8 +85,12 @@ public class AndroidManifestAddPermissionsAction extends AnAction {
 
     @Override
     public void actionPerformed(@NonNull AnActionEvent event) {
-        Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        File file = event.getRequiredData(CommonDataKeys.FILE);
+        FileEditor fileEditor = event.getData(CommonDataKeys.FILE_EDITOR_KEY);
+        if (fileEditor==null)return;
+        if (fileEditor.getFile()==null)return;
+        if (fileEditor.getEditor()==null)return;
+        Editor editor = fileEditor.getEditor(); 
+        File file = fileEditor.getFile();
 
         List<String> permissions;
         try {

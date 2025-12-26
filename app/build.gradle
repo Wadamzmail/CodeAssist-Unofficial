@@ -59,8 +59,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            signingConfig =
-signingConfigs.debug
+            signingConfig = signingConfigs.debug
         }
     }
 	
@@ -128,7 +127,6 @@ dependencies {
     implementation project(path: ':manifmerger')
     implementation project(path: ':project')
     implementation project(path: ':logging')
-  //  implementation project(path: ':jaxp')
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')
     implementation project(path: ':common')
@@ -183,13 +181,13 @@ dependencies {
 	implementation 'androidx.documentfile:documentfile:1.1.0'
     
 	//git
-	    implementation 'org.slf4j:slf4j-api:2.0.16'
-	    implementation 'com.blankj:utilcodex:1.31.1'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+	implementation 'com.blankj:utilcodex:1.31.1'
      
      //for CodeAssist
      implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.3.0'
      
-         // Virtual File System
+     // Virtual File System
     implementation("org.apache.commons:commons-vfs2:2.9.0") {
     exclude group: "org.apache.commons", module: "commons-lang3"
    }

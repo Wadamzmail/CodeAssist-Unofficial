@@ -45,5 +45,5 @@ ext {
     minSdkVersion = 26   
     applicationId = "dev.mutwakil.codeassist"
     versionCode = 1
-    versionName = "1.0.2"
+    versionName = "0.3.0 ALPHA"
 }

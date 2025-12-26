@@ -79,6 +79,11 @@ import com.tyron.editor.Editor;
 import com.tyron.common.SharedPreferenceKeys;
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelStoreOwner;
+import com.tyron.code.ui.main.MainFragment;
+import com.tyron.code.ui.main.MainViewModel;
+
 public class RosemoeEditorFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RosemoeEditorFacade.class);
@@ -90,6 +95,7 @@ public class RosemoeEditorFacade {
     
     //my edits
     private LogViewModel logViewModel;
+    private MainViewModel mMainViewModel;
 
     private View.OnTouchListener dragToOpenListener;
 
@@ -107,6 +113,8 @@ public class RosemoeEditorFacade {
         container.addView(editor); 
 
         logViewModel = new ViewModelProvider(MainActivity.instance).get(LogViewModel.class);
+        mMainViewModel = new ViewModelProvider(MainActivity.instance).get(MainViewModel.class);
+        
         EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
         eventManager.subscribeEvent(PerformShortcutEvent.class, (event, unsubscribe) -> {
             if (event.getEditor() == rosemoeCodeEditor) {
@@ -323,6 +331,8 @@ public class RosemoeEditorFacade {
         dataContext.putData(CommonDataKeys.FILE_EDITOR_KEY, fileEditor);
         dataContext.putData(CommonDataKeys.FILE, editor.getCurrentFile());
         dataContext.putData(CommonDataKeys.EDITOR, editor);
+        
+        dataContext.putData(CommonDataKeys.ACTIVITY, MainActivity.instance);
 
         if (currentProject != null && editor.getEditorLanguage() instanceof JavaLanguage) {
             JavaDataContextUtil.addEditorKeys(dataContext,
