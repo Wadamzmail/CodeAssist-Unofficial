@@ -34,27 +34,43 @@ public class DiagnosticWrapper implements Diagnostic<File> {
 
   public DiagnosticWrapper() {}
 
-  public DiagnosticWrapper(Diagnostic<? extends JavaFileObject> obj) {
-    try {
-      this.code = obj.getCode();
-      if (obj.getSource() != null) {
-        this.source = new File(obj.getSource().toUri());
+  public DiagnosticWrapper(Diagnostic<?> obj) {
+      if (obj == null) {
+          return;
       }
-      this.kind = obj.getKind();
 
-      this.position = obj.getPosition();
-      this.startPosition = obj.getStartPosition();
-      this.endPosition = obj.getEndPosition();
+     try {
+         this.code = obj.getCode();
+         this.kind = obj.getKind();
 
-      this.lineNumber = obj.getLineNumber();
-      this.columnNumber = obj.getColumnNumber();
+         this.position = obj.getPosition();
+         this.startPosition = obj.getStartPosition();
+         this.endPosition = obj.getEndPosition();
 
-      this.message = obj.getMessage(Locale.getDefault());
+         this.lineNumber = obj.getLineNumber();
+         this.columnNumber = obj.getColumnNumber();
 
-      this.mExtra = obj;
-    } catch (Throwable e) {
-      // ignored
-    }
+         this.message = obj.getMessage(Locale.getDefault());
+         this.mExtra = obj;
+
+         Object source = obj.getSource();
+        if(source!=null){
+         if (source instanceof JavaFileObject) {
+            this.source = new File(
+                    ((JavaFileObject) source).toUri()
+            );
+         } else if (source instanceof File) {
+             this.source = (File) source;
+         }
+        }
+
+       } catch (Throwable ignored) {
+        // intentionally ignored
+       }
+  }
+
+  public DiagnosticWrapper(Diagnostic<? extends JavaFileObject> obj) {
+    this((Diagnostic<?>) obj);
   }
 
   public void setOnClickListener(View.OnClickListener listener) {

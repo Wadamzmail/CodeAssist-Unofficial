@@ -163,17 +163,10 @@ public class RosemoeEditorFacade {
       //                (int) it.getEndPosition(),
       //                severitySupplier.apply(it.getKind())))
       //    .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
-      editor.setDiagnostics(
-         diagnostics.stream()
-               .map(d -> {
-                 if (d instanceof Diagnostic) {
-                    return new DiagnosticWrapper((Diagnostic<?>) d);
-               }
-               return null;
-         })
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList())
-      );
+      editor.setDiagnostics(diagnostics.stream()
+            .map(DiagnosticWrapper::new)
+            .collect(Collectors.toList())
+            );
     }
     
     ProgressManager.getInstance()
