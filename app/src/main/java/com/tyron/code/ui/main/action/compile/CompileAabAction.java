@@ -60,7 +60,9 @@ public class CompileAabAction extends CompileAction {
     }
 
     Module module = project.getMainModule();
+    if (module == null) return;
     List<String> plugins = module.getPlugins();
+    if (plugins == null) return;
     String pluginType = plugins.toString();
     if (!pluginType.contains("com.android.application")) {
       presentation.setVisible(false);

@@ -582,6 +582,7 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     context.putData(COMPILE_CALLBACK_KEY, mCompileCallback);
     context.putData(INDEX_CALLBACK_KEY, mIndexCallback);
     context.putData(CommonDataKeys.FILE_EDITOR_KEY, mMainViewModel.getCurrentFileEditor());
+    context.putData(CommonDataKeys.FRAGMENT,MainFragment.this);
   }
 
   public void refreshToolbar() {

@@ -225,7 +225,8 @@ public class EditorContainerFragment extends Fragment implements
 
     @Override
     public void onProjectOpen(Project project) {
-
+         ProgressManager.getInstance().runLater(() -> getParentFragmentManager()
+                        .setFragmentResult(MainFragment.REFRESH_TOOLBAR_KEY, Bundle.EMPTY), 300);
     }
 
     @Override

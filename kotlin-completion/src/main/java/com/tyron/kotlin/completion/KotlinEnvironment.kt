@@ -525,7 +525,8 @@ data class KotlinEnvironment(
                 "kotlin.coroutines.intrinsics",
                 "kotlin.coroutines.experimental.jvm.internal",
                 "kotlin.coroutines.jvm.internal",
-                "kotlin.reflect.jvm.internal"
+                "kotlin.reflect.jvm.internal",
+                "META-INF"
             )
 
         fun with(classpath: List<File>): KotlinEnvironment {

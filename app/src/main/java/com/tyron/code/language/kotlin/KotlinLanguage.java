@@ -152,8 +152,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
        }catch(Exception e){
             kotlinEnvironment.analysis = null;
-            Log.e(TAG,"Completion Canceled",e);
-            e.printStackTrace();     
+          //  Log.e(TAG,"Completion Canceled",e);
             throw new CompletionCancelledException(e.toString());
        }
        kotlinEnvironment.analysis = null;
@@ -261,12 +260,12 @@ private void destroyAnalysis(){
         try {
             if (!analysisRunning) return;
 
-        //    kotlinEnvironment.analysisOf(
-        //            kotlinEnvironment.kotlinFiles.values().stream()
-        //                    .map(it -> it.getKotlinFile())
-        //                    .toList(),
-        //            ktFile
-        //    );
+            kotlinEnvironment.analysisOf(
+                    kotlinEnvironment.kotlinFiles.values().stream()
+                            .map(it -> it.getKotlinFile())
+                            .toList(),
+                    ktFile
+            );
 
             if (!analysisRunning) return;
 
