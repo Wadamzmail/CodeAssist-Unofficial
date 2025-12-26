@@ -33,79 +33,75 @@ import org.openjdk.javax.xml.stream.events.XMLEvent;
 import org.openjdk.javax.xml.stream.util.EventReaderDelegate;
 
 /**
- *
- * @author  Neeraj Bajaj, Sun Microsystems
- *
+ * @author Neeraj Bajaj, Sun Microsystems
  */
 public class EventFilterSupport extends EventReaderDelegate {
 
-    //maintain a reference to EventFilter
-    EventFilter fEventFilter ;
-    /** Creates a new instance of EventFilterSupport */
-    public EventFilterSupport(XMLEventReader eventReader, EventFilter eventFilter) {
-        setParent(eventReader);
-        fEventFilter = eventFilter;
+  // maintain a reference to EventFilter
+  EventFilter fEventFilter;
+
+  /** Creates a new instance of EventFilterSupport */
+  public EventFilterSupport(XMLEventReader eventReader, EventFilter eventFilter) {
+    setParent(eventReader);
+    fEventFilter = eventFilter;
+  }
+
+  public Object next() {
+    try {
+      return nextEvent();
+    } catch (XMLStreamException ex) {
+      throw new NoSuchElementException();
     }
+  }
 
-    public Object next(){
-        try{
-            return nextEvent();
-        }catch(XMLStreamException ex){
-            throw new NoSuchElementException();
-        }
+  public boolean hasNext() {
+    try {
+      return peek() != null ? true : false;
+    } catch (XMLStreamException ex) {
+      return false;
     }
+  }
 
-    public boolean hasNext(){
-        try{
-            return peek() != null ? true : false ;
-        }catch(XMLStreamException ex){
-            return false;
-        }
+  public XMLEvent nextEvent() throws XMLStreamException {
+    if (super.hasNext()) {
+      // get the next event by calling XMLEventReader
+      XMLEvent event = super.nextEvent();
+
+      // if this filter accepts this event then return this event
+      if (fEventFilter.accept(event)) {
+        return event;
+      } else {
+        return nextEvent();
+      }
+    } else {
+      throw new NoSuchElementException();
     }
+  } // nextEvent()
 
-    public XMLEvent nextEvent()throws XMLStreamException{
-        if(super.hasNext()){
-            //get the next event by calling XMLEventReader
-            XMLEvent event = super.nextEvent();
+  public XMLEvent nextTag() throws XMLStreamException {
+    if (super.hasNext()) {
+      XMLEvent event = super.nextTag();
+      // if the filter accepts this event return this event.
+      if (fEventFilter.accept(event)) {
+        return event;
+      } else {
+        return nextTag();
+      }
+    } else {
+      throw new NoSuchElementException();
+    }
+  }
 
-            //if this filter accepts this event then return this event
-            if(fEventFilter.accept(event)){
-                return event;
-            }
-            else{
-                return nextEvent();
-            }
-        }else{
-            throw new NoSuchElementException();
-        }
-    }//nextEvent()
-
-     public XMLEvent nextTag() throws XMLStreamException{
-         if(super.hasNext()){
-             XMLEvent event = super.nextTag();
-             //if the filter accepts this event return this event.
-             if(fEventFilter.accept(event)){
-                return event;
-             }
-             else{
-                return nextTag();
-             }
-         }else{
-             throw new NoSuchElementException();
-         }
-     }
-
-     public XMLEvent peek() throws XMLStreamException{
-         while (true) {
-             XMLEvent event = super.peek();
-             if(event == null)return null;
-             //if the filter accepts this event return this event.
-             if(fEventFilter.accept(event)){
-                return event;
-             }
-             //call super.next(), and then peek again.
-             super.next();
-         }
-     }
-
-}//EventFilterSupport
+  public XMLEvent peek() throws XMLStreamException {
+    while (true) {
+      XMLEvent event = super.peek();
+      if (event == null) return null;
+      // if the filter accepts this event return this event.
+      if (fEventFilter.accept(event)) {
+        return event;
+      }
+      // call super.next(), and then peek again.
+      super.next();
+    }
+  }
+} // EventFilterSupport

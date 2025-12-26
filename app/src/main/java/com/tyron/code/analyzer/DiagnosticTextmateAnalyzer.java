@@ -6,26 +6,22 @@ import androidx.annotation.Nullable;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.code.language.DiagnosticSpanMapUpdater;
 import com.tyron.code.language.HighlightUtil;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.editor.Editor;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.analysis.StyleReceiver;
+import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.styling.Styles;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentReference;
-import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import io.github.rosemoe.sora.lang.brackets.BracketsProvider;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
-import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 import org.eclipse.tm4e.core.grammar.IGrammar;
-import com.tyron.code.language.textmate.EmptyTextMateLanguage;
-import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
 public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
 
@@ -47,7 +43,6 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
     mEditor = editor;
     mStyleModifier = this::modifyStyles;
   }
-
 
   protected void modifyStyles(Styles styles) {
     if (styles == null) {
@@ -158,15 +153,21 @@ public abstract class DiagnosticTextmateAnalyzer extends BaseTextmateAnalyzer {
       mReceiver = base;
       mConsumer = consumer;
     }
-    @Override 
-    public void setStyles(@NonNull AnalyzeManager sourceManager, @Nullable Styles styles, @Nullable Runnable action){}
-    @Override 
-    public void updateBracketProvider(@NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider){}
-    @Override 
-    public void setDiagnostics(@NonNull AnalyzeManager sourceManager, @Nullable DiagnosticsContainer diagnostics){
-      
-    }
- 
+
+    @Override
+    public void setStyles(
+        @NonNull AnalyzeManager sourceManager,
+        @Nullable Styles styles,
+        @Nullable Runnable action) {}
+
+    @Override
+    public void updateBracketProvider(
+        @NonNull AnalyzeManager sourceManager, @Nullable BracketsProvider provider) {}
+
+    @Override
+    public void setDiagnostics(
+        @NonNull AnalyzeManager sourceManager, @Nullable DiagnosticsContainer diagnostics) {}
+
     @Override
     public void setStyles(AnalyzeManager sourceManager, Styles styles) {
       mConsumer.accept(styles);

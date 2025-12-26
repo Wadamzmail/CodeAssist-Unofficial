@@ -205,4 +205,4 @@ public class Pom {
   public void setManagedDependencies(List<Dependency> dependencies) {
     managedDependencies = dependencies;
   }
-        }
+}

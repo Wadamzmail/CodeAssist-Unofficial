@@ -29,13 +29,13 @@ import org.openjdk.com.sun.org.apache.xerces.internal.xni.QName;
  */
 public interface XSQName {
 
-    /**
-     * @return com.sun.org.apache.xerces.internal.xni.QName class instance
-     */
-    public QName getXNIQName();
+  /**
+   * @return com.sun.org.apache.xerces.internal.xni.QName class instance
+   */
+  public QName getXNIQName();
 
-    /**
-     * @return org.openjdk.javax.xml.namespace.QName class instance
-     */
-    public org.openjdk.javax.xml.namespace.QName getJAXPQName();
+  /**
+   * @return org.openjdk.javax.xml.namespace.QName class instance
+   */
+  public org.openjdk.javax.xml.namespace.QName getJAXPQName();
 }

@@ -65,19 +65,17 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
  *
  * <PRE>Stack: ..., word2, word1 -&gt; ...</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class POP2 extends StackInstruction implements PopInstruction {
   public POP2() {
     super(Constants.POP2);
   }
 
-
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

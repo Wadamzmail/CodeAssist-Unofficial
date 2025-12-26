@@ -87,7 +87,8 @@ class ProtoConfigurationDecoder {
 
     int smallestScreenWidthDp = configMsg.getSmallestScreenWidthDp();
     if (smallestScreenWidthDp != 0) {
-      configuration.setSmallestScreenWidthQualifier(new SmallestScreenWidthQualifier(smallestScreenWidthDp));
+      configuration.setSmallestScreenWidthQualifier(
+          new SmallestScreenWidthQualifier(smallestScreenWidthDp));
     }
 
     ScreenSize screenSize = getScreenSize(configMsg.getScreenLayoutSize());
@@ -117,7 +118,8 @@ class ProtoConfigurationDecoder {
 
     ScreenOrientation screenOrientation = getScreenOrientation(configMsg.getOrientation());
     if (screenOrientation != null) {
-      configuration.setScreenOrientationQualifier(new ScreenOrientationQualifier(screenOrientation));
+      configuration.setScreenOrientationQualifier(
+          new ScreenOrientationQualifier(screenOrientation));
     }
 
     UiMode uiMode = getUiMode(configMsg.getUiModeType());
@@ -171,7 +173,8 @@ class ProtoConfigurationDecoder {
   }
 
   @Nullable
-  private static LayoutDirection getLayoutDirection(@NotNull Configuration.LayoutDirection protoValue) {
+  private static LayoutDirection getLayoutDirection(
+      @NotNull Configuration.LayoutDirection protoValue) {
     switch (protoValue) {
       case LAYOUT_DIRECTION_LTR:
         return LayoutDirection.LTR;
@@ -223,7 +226,8 @@ class ProtoConfigurationDecoder {
   }
 
   @Nullable
-  private static WideGamutColor getWideGamutColor(@NotNull Configuration.WideColorGamut protoValue) {
+  private static WideGamutColor getWideGamutColor(
+      @NotNull Configuration.WideColorGamut protoValue) {
     switch (protoValue) {
       case WIDE_COLOR_GAMUT_WIDECG:
         return WideGamutColor.WIDECG;
@@ -247,7 +251,8 @@ class ProtoConfigurationDecoder {
   }
 
   @Nullable
-  private static ScreenOrientation getScreenOrientation(@NotNull Configuration.Orientation protoValue) {
+  private static ScreenOrientation getScreenOrientation(
+      @NotNull Configuration.Orientation protoValue) {
     switch (protoValue) {
       case ORIENTATION_PORT:
         return ScreenOrientation.PORTRAIT;

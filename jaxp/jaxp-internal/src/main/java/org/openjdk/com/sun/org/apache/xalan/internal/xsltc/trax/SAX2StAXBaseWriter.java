@@ -26,11 +26,9 @@
 package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.trax;
 
 import java.util.Vector;
-
 import org.openjdk.javax.xml.stream.Location;
 import org.openjdk.javax.xml.stream.XMLReporter;
 import org.openjdk.javax.xml.stream.XMLStreamException;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -38,211 +36,190 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
+public abstract class SAX2StAXBaseWriter extends DefaultHandler implements LexicalHandler {
 
-public abstract class SAX2StAXBaseWriter extends DefaultHandler
-                implements
-                        LexicalHandler {
+  protected boolean isCDATA;
 
+  protected StringBuffer CDATABuffer;
 
-        protected boolean isCDATA;
+  protected Vector namespaces;
 
-        protected StringBuffer CDATABuffer;
+  protected Locator docLocator;
 
-        protected Vector namespaces;
+  protected XMLReporter reporter;
 
-        protected Locator docLocator;
+  public SAX2StAXBaseWriter() {}
 
-        protected XMLReporter reporter;
+  public SAX2StAXBaseWriter(XMLReporter reporter) {
+    this.reporter = reporter;
+  }
 
-        public SAX2StAXBaseWriter() {
-        }
+  public void setXMLReporter(XMLReporter reporter) {
+    this.reporter = reporter;
+  }
 
-        public SAX2StAXBaseWriter(XMLReporter reporter) {
-                this.reporter = reporter;
-        }
+  public void setDocumentLocator(Locator locator) {
+    this.docLocator = locator;
+  }
 
-        public void setXMLReporter(XMLReporter reporter) {
-                this.reporter = reporter;
-        }
+  public Location getCurrentLocation() {
+    if (docLocator != null) {
+      return new SAXLocation(docLocator);
+    } else {
+      return null;
+    }
+  }
 
-        public void setDocumentLocator(Locator locator) {
-                this.docLocator = locator;
-        }
+  public void error(SAXParseException e) throws SAXException {
+    reportException("ERROR", e);
+  }
 
+  public void fatalError(SAXParseException e) throws SAXException {
+    reportException("FATAL", e);
+  }
 
-        public Location getCurrentLocation() {
-                if (docLocator != null) {
-                        return new SAXLocation(docLocator);
-                } else {
-                        return null;
-                }
+  public void warning(SAXParseException e) throws SAXException {
+    reportException("WARNING", e);
+  }
 
-        }
+  public void startDocument() throws SAXException {
+    namespaces = new Vector(2);
+  }
 
-        public void error(SAXParseException e) throws SAXException {
-                reportException("ERROR", e);
-        }
+  public void endDocument() throws SAXException {
+    namespaces = null;
+  }
 
-        public void fatalError(SAXParseException e) throws SAXException {
-                reportException("FATAL", e);
-        }
+  public void startElement(String uri, String localName, String qName, Attributes attributes)
+      throws SAXException {
+    namespaces = null;
+  }
 
-        public void warning(SAXParseException e) throws SAXException {
-                reportException("WARNING", e);
-        }
+  public void endElement(String uri, String localName, String qName) throws SAXException {
+    namespaces = null;
+  }
 
-        public void startDocument() throws SAXException {
-                    namespaces = new Vector(2);
-        }
+  public void startPrefixMapping(String prefix, String uri) throws SAXException {
 
-        public void endDocument() throws SAXException {
-                namespaces = null;
-        }
+    if (prefix == null) {
+      prefix = "";
+    } else if (prefix.equals("xml")) {
+      return;
+    }
 
-        public void startElement(String uri, String localName, String qName,
-                        Attributes attributes) throws SAXException {
-                        namespaces = null;
-        }
+    if (namespaces == null) {
+      namespaces = new Vector(2);
+    }
+    namespaces.addElement(prefix);
+    namespaces.addElement(uri);
+  }
 
-        public void endElement(String uri, String localName, String qName)
-                        throws SAXException {
-                namespaces = null;
-        }
+  public void endPrefixMapping(String prefix) throws SAXException {}
 
-        public void startPrefixMapping(String prefix, String uri)
-                        throws SAXException {
+  public void startCDATA() throws SAXException {
+    isCDATA = true;
+    if (CDATABuffer == null) {
+      CDATABuffer = new StringBuffer();
+    } else {
+      CDATABuffer.setLength(0);
+    }
+  }
 
-                if (prefix == null) {
-                        prefix = "";
-                } else if (prefix.equals("xml")) {
-                        return;
-                }
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    if (isCDATA) {
+      CDATABuffer.append(ch, start, length);
+    }
+  }
 
-                if (namespaces == null) {
-                    namespaces = new Vector(2);
-                }
-                namespaces.addElement(prefix);
-                namespaces.addElement(uri);
-        }
+  public void endCDATA() throws SAXException {
+    isCDATA = false;
+    CDATABuffer.setLength(0);
+  }
 
+  public void comment(char[] ch, int start, int length) throws SAXException {}
 
-        public void endPrefixMapping(String prefix) throws SAXException {
-        }
+  public void endDTD() throws SAXException {}
 
-        public void startCDATA() throws SAXException {
-                isCDATA = true;
-                if (CDATABuffer == null) {
-                        CDATABuffer = new StringBuffer();
-                } else {
-                        CDATABuffer.setLength(0);
-                }
-        }
+  public void endEntity(String name) throws SAXException {}
 
-        public void characters(char[] ch, int start, int length)
-                        throws SAXException {
-                if (isCDATA) {
-                        CDATABuffer.append(ch, start, length);
-                }
-        }
+  public void startDTD(String name, String publicId, String systemId) throws SAXException {}
 
-        public void endCDATA() throws SAXException {
-                isCDATA = false;
-                CDATABuffer.setLength(0);
-        }
+  public void startEntity(String name) throws SAXException {}
 
-        public void comment(char[] ch, int start, int length) throws SAXException {
-        }
+  /**
+   * Used to report a {@link SAXException}to the {@link XMLReporter} registered with this handler.
+   */
+  protected void reportException(String type, SAXException e) throws SAXException {
 
-        public void endDTD() throws SAXException {
-        }
+    if (reporter != null) {
+      try {
+        reporter.report(e.getMessage(), type, e, getCurrentLocation());
+      } catch (XMLStreamException e1) {
+        throw new SAXException(e1);
+      }
+    }
+  }
 
-        public void endEntity(String name) throws SAXException {
-        }
+  /**
+   * Parses an XML qualified name, and places the resulting prefix and local name in the provided
+   * String array.
+   *
+   * @param qName The qualified name to parse.
+   * @param results An array where parse results will be placed. The prefix will be placed at <code>
+   *     results[0]</code>, and the local part at <code>results[1]</code>
+   */
+  public static final void parseQName(String qName, String[] results) {
 
-        public void startDTD(String name, String publicId, String systemId)
-                        throws SAXException {
-        }
+    String prefix, local;
+    int idx = qName.indexOf(':');
+    if (idx >= 0) {
+      prefix = qName.substring(0, idx);
+      local = qName.substring(idx + 1);
+    } else {
+      prefix = "";
+      local = qName;
+    }
+    results[0] = prefix;
+    results[1] = local;
+  }
 
-        public void startEntity(String name) throws SAXException {
-        }
+  /**
+   * {@Link Location}implementation used to expose details from a SAX {@link Locator}.
+   *
+   * @author christian
+   */
+  private static final class SAXLocation implements Location {
 
-        /**
-         * Used to report a {@link SAXException}to the {@link XMLReporter}
-         * registered with this handler.
-         */
-        protected void reportException(String type, SAXException e)
-                        throws SAXException {
+    private int lineNumber;
+    private int columnNumber;
+    private String publicId;
+    private String systemId;
 
-                if (reporter != null) {
-                        try {
-                                reporter.report(e.getMessage(), type, e, getCurrentLocation());
-                        } catch (XMLStreamException e1) {
-                                throw new SAXException(e1);
-                        }
-                }
-        }
+    private SAXLocation(Locator locator) {
+      lineNumber = locator.getLineNumber();
+      columnNumber = locator.getColumnNumber();
+      publicId = locator.getPublicId();
+      systemId = locator.getSystemId();
+    }
 
-        /**
-         * Parses an XML qualified name, and places the resulting prefix and local
-         * name in the provided String array.
-         *
-         * @param qName The qualified name to parse.
-         * @param results An array where parse results will be placed. The prefix
-         *            will be placed at <code>results[0]</code>, and the local
-         *            part at <code>results[1]</code>
-         */
-        public static final void parseQName(String qName, String[] results) {
+    public int getLineNumber() {
+      return lineNumber;
+    }
 
-                String prefix, local;
-                int idx = qName.indexOf(':');
-                if (idx >= 0) {
-                        prefix = qName.substring(0, idx);
-                        local = qName.substring(idx + 1);
-                } else {
-                        prefix = "";
-                        local = qName;
-                }
-                results[0] = prefix;
-                results[1] = local;
-        }
+    public int getColumnNumber() {
+      return columnNumber;
+    }
 
-        /**
-         * {@Link Location}implementation used to expose details from a SAX
-         * {@link Locator}.
-         *
-         * @author christian
-         */
-        private static final class SAXLocation implements Location {
+    public int getCharacterOffset() {
+      return -1;
+    }
 
-                private int lineNumber;
-                private int columnNumber;
-                private String publicId;
-                private String systemId;
-                private SAXLocation(Locator locator) {
-                        lineNumber = locator.getLineNumber();
-                        columnNumber = locator.getColumnNumber();
-                        publicId = locator.getPublicId();
-                        systemId = locator.getSystemId();
-                }
+    public String getPublicId() {
+      return publicId;
+    }
 
-                public int getLineNumber() {
-                        return lineNumber;
-                }
-
-                public int getColumnNumber() {
-                        return columnNumber;
-                }
-
-                public int getCharacterOffset() {
-                        return -1;
-                }
-
-                public String getPublicId() {
-                        return publicId;
-                }
-
-                public String getSystemId() {
-                        return systemId;
-                }
-        }
+    public String getSystemId() {
+      return systemId;
+    }
+  }
 }

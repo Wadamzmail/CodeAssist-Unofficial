@@ -1,10 +1,9 @@
 package com.tyron.editor.util.text;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public final class LineTokenizer {
   private int myOffset;
@@ -17,7 +16,8 @@ public final class LineTokenizer {
     return tokenize(chars, includeSeparators, true);
   }
 
-  public static String @NotNull [] tokenize(CharSequence chars, final boolean includeSeparators, final boolean skipLastEmptyLine) {
+  public static String @NotNull [] tokenize(
+      CharSequence chars, final boolean includeSeparators, final boolean skipLastEmptyLine) {
     final List<String> strings = tokenizeIntoList(chars, includeSeparators, skipLastEmptyLine);
     return strings.isEmpty() ? new String[0] : strings.toArray(new String[0]);
   }
@@ -28,33 +28,36 @@ public final class LineTokenizer {
   }
 
   @NotNull
-  public static List<String> tokenizeIntoList(CharSequence chars, final boolean includeSeparators, final boolean skipLastEmptyLine) {
-    if (chars == null || chars.length() == 0){
+  public static List<String> tokenizeIntoList(
+      CharSequence chars, final boolean includeSeparators, final boolean skipLastEmptyLine) {
+    if (chars == null || chars.length() == 0) {
       return Collections.emptyList();
     }
 
     LineTokenizer tokenizer = new LineTokenizer(chars);
     List<String> lines = new ArrayList<>();
-    while(!tokenizer.atEnd()){
+    while (!tokenizer.atEnd()) {
       int offset = tokenizer.getOffset();
       String line;
-      if (includeSeparators){
-        line = chars.subSequence(offset, offset + tokenizer.getLength() + tokenizer.getLineSeparatorLength()).toString();
-      }
-      else{
+      if (includeSeparators) {
+        line =
+            chars
+                .subSequence(
+                    offset, offset + tokenizer.getLength() + tokenizer.getLineSeparatorLength())
+                .toString();
+      } else {
         line = chars.subSequence(offset, offset + tokenizer.getLength()).toString();
       }
       lines.add(line);
       tokenizer.advance();
     }
 
-      if (!skipLastEmptyLine && stringEndsWithSeparator(tokenizer)) {
-          lines.add("");
-      }
+    if (!skipLastEmptyLine && stringEndsWithSeparator(tokenizer)) {
+      lines.add("");
+    }
 
     return lines;
   }
-
 
   public static int calcLineCount(@NotNull CharSequence chars, final boolean skipLastEmptyLine) {
     int lineCount = 0;
@@ -75,13 +78,19 @@ public final class LineTokenizer {
     return tokenize(chars, includeSeparators, true);
   }
 
-  public static String @NotNull [] tokenize(char @NotNull [] chars, boolean includeSeparators, boolean skipLastEmptyLine) {
+  public static String @NotNull [] tokenize(
+      char @NotNull [] chars, boolean includeSeparators, boolean skipLastEmptyLine) {
     return tokenize(chars, 0, chars.length, includeSeparators, skipLastEmptyLine);
   }
 
-  public static String @NotNull [] tokenize(char @NotNull [] chars, int startOffset, int endOffset, boolean includeSeparators,
-                                            boolean skipLastEmptyLine) {
-//    return tokenize(new CharArrayCharSequence(chars, startOffset, endOffset), includeSeparators, skipLastEmptyLine);
+  public static String @NotNull [] tokenize(
+      char @NotNull [] chars,
+      int startOffset,
+      int endOffset,
+      boolean includeSeparators,
+      boolean skipLastEmptyLine) {
+    //    return tokenize(new CharArrayCharSequence(chars, startOffset, endOffset),
+    // includeSeparators, skipLastEmptyLine);
     throw new UnsupportedOperationException();
   }
 
@@ -89,7 +98,8 @@ public final class LineTokenizer {
     return tokenizer.getLineSeparatorLength() > 0;
   }
 
-  public static String @NotNull [] tokenize(char @NotNull [] chars, int startOffset, int endOffset, boolean includeSeparators) {
+  public static String @NotNull [] tokenize(
+      char @NotNull [] chars, int startOffset, int endOffset, boolean includeSeparators) {
     return tokenize(chars, startOffset, endOffset, includeSeparators, true);
   }
 
@@ -122,15 +132,15 @@ public final class LineTokenizer {
   public void advance() {
     int i = myOffset + myLength + myLineSeparatorLength;
     final int textLength = myText.length();
-    if (i >= textLength){
+    if (i >= textLength) {
       atEnd = true;
       return;
     }
-    while(i < textLength){
+    while (i < textLength) {
       char c = myText.charAt(i);
-        if (c == '\r' || c == '\n') {
-            break;
-        }
+      if (c == '\r' || c == '\n') {
+        break;
+      }
       i++;
     }
 
@@ -138,9 +148,9 @@ public final class LineTokenizer {
     myLength = i - myOffset;
 
     myLineSeparatorLength = 0;
-      if (i == textLength) {
-          return;
-      }
+    if (i == textLength) {
+      return;
+    }
 
     char first = myText.charAt(i);
     if (first == '\r' || first == '\n') {
@@ -148,9 +158,9 @@ public final class LineTokenizer {
     }
 
     i++;
-      if (i == textLength) {
-          return;
-      }
+    if (i == textLength) {
+      return;
+    }
 
     char second = myText.charAt(i);
     if (first == '\r' && second == '\n') {

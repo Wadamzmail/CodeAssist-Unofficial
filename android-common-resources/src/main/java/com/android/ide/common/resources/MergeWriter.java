@@ -8,48 +8,45 @@ import org.openjdk.javax.xml.parsers.DocumentBuilderFactory;
 
 /** A {@link MergeConsumer} that writes the result on the disk. */
 public abstract class MergeWriter<I extends DataItem, U extends Serializable>
-        implements MergeConsumer<I> {
+    implements MergeConsumer<I> {
 
-    @NonNull
-    private final File mRootFolder;
-    @NonNull private final WorkerExecutorFacade mExecutor;
+  @NonNull private final File mRootFolder;
+  @NonNull private final WorkerExecutorFacade mExecutor;
 
-    public MergeWriter(
-            @NonNull File rootFolder, @NonNull WorkerExecutorFacade workerExecutorFacade) {
-        mRootFolder = rootFolder;
-        mExecutor = workerExecutorFacade;
+  public MergeWriter(@NonNull File rootFolder, @NonNull WorkerExecutorFacade workerExecutorFacade) {
+    mRootFolder = rootFolder;
+    mExecutor = workerExecutorFacade;
+  }
+
+  public void start(@NonNull DocumentBuilderFactory factory) throws ConsumerException {}
+
+  @Override
+  public void end() throws ConsumerException {
+    try {
+      postWriteAction();
+
+      getExecutor().await();
+    } catch (ConsumerException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new ConsumerException(e);
     }
+  }
 
-    public void start(@NonNull DocumentBuilderFactory factory) throws ConsumerException {
-    }
+  /**
+   * Called after all the items have been added/removed. This is called by {@link #end()}.
+   *
+   * @throws ConsumerException wrapper for any underlying exception.
+   */
+  protected void postWriteAction() throws ConsumerException {}
 
-    @Override
-    public void end() throws ConsumerException {
-        try {
-            postWriteAction();
+  @NonNull
+  protected WorkerExecutorFacade getExecutor() {
+    return mExecutor;
+  }
 
-            getExecutor().await();
-        } catch (ConsumerException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ConsumerException(e);
-        }
-    }
-
-    /**
-     * Called after all the items have been added/removed. This is called by {@link #end()}.
-     *
-     * @throws ConsumerException wrapper for any underlying exception.
-     */
-    protected void postWriteAction() throws ConsumerException {}
-
-    @NonNull
-    protected WorkerExecutorFacade getExecutor() {
-        return mExecutor;
-    }
-
-    @NonNull
-    protected File getRootFolder() {
-        return mRootFolder;
-    }
+  @NonNull
+  protected File getRootFolder() {
+    return mRootFolder;
+  }
 }

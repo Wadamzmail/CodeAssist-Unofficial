@@ -58,24 +58,21 @@ package org.openjdk.com.sun.org.apache.bcel.internal.classfile;
  * <http://www.apache.org/>.
  */
 
+import java.io.*;
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
-import  java.io.*;
-
 /**
- * This class is derived from the abstract
- * <A HREF="org.openjdk.com.sun.org.apache.bcel.internal.classfile.Constant.html">Constant</A> class
+ * This class is derived from the abstract <A
+ * HREF="org.openjdk.com.sun.org.apache.bcel.internal.classfile.Constant.html">Constant</A> class
  * and represents a reference to a (external) class.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
- * @see     Constant
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @see Constant
  */
 public final class ConstantClass extends Constant implements ConstantObject {
   private int name_index; // Identical to ConstantString except for the name
 
-  /**
-   * Initialize from another object.
-   */
+  /** Initialize from another object. */
   public ConstantClass(ConstantClass c) {
     this(c.getNameIndex());
   }
@@ -86,14 +83,12 @@ public final class ConstantClass extends Constant implements ConstantObject {
    * @param file Input stream
    * @throws IOException
    */
-  ConstantClass(DataInputStream file) throws IOException
-  {
+  ConstantClass(DataInputStream file) throws IOException {
     this(file.readUnsignedShort());
   }
 
   /**
-   * @param name_index Name index in constant pool.  Should refer to a
-   * ConstantUtf8.
+   * @param name_index Name index in constant pool. Should refer to a ConstantUtf8.
    */
   public ConstantClass(int name_index) {
     super(Constants.CONSTANT_Class);
@@ -101,9 +96,9 @@ public final class ConstantClass extends Constant implements ConstantObject {
   }
 
   /**
-   * Called by objects that are traversing the nodes of the tree implicitely
-   * defined by the contents of a Java class. I.e., the hierarchy of methods,
-   * fields, attributes, etc. spawns a tree of objects.
+   * Called by objects that are traversing the nodes of the tree implicitely defined by the contents
+   * of a Java class. I.e., the hierarchy of methods, fields, attributes, etc. spawns a tree of
+   * objects.
    *
    * @param v Visitor object
    */
@@ -117,8 +112,7 @@ public final class ConstantClass extends Constant implements ConstantObject {
    * @param file Output file stream
    * @throws IOException
    */
-  public final void dump(DataOutputStream file) throws IOException
-  {
+  public final void dump(DataOutputStream file) throws IOException {
     file.writeByte(tag);
     file.writeShort(name_index);
   }
@@ -126,7 +120,9 @@ public final class ConstantClass extends Constant implements ConstantObject {
   /**
    * @return Name index in constant pool of class name.
    */
-  public final int getNameIndex() { return name_index; }
+  public final int getNameIndex() {
+    return name_index;
+  }
 
   /**
    * @param name_index.
@@ -135,18 +131,19 @@ public final class ConstantClass extends Constant implements ConstantObject {
     this.name_index = name_index;
   }
 
-
-  /** @return String object
+  /**
+   * @return String object
    */
   public Object getConstantValue(ConstantPool cp) {
     Constant c = cp.getConstant(name_index, Constants.CONSTANT_Utf8);
-    return ((ConstantUtf8)c).getBytes();
+    return ((ConstantUtf8) c).getBytes();
   }
 
-  /** @return dereferenced string
+  /**
+   * @return dereferenced string
    */
   public String getBytes(ConstantPool cp) {
-    return (String)getConstantValue(cp);
+    return (String) getConstantValue(cp);
   }
 
   /**

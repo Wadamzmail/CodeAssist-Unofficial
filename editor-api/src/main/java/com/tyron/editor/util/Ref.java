@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class Ref<T> {
   private T myValue;
 
-  public Ref() { }
+  public Ref() {}
 
   public Ref(@Nullable T value) {
     myValue = value;

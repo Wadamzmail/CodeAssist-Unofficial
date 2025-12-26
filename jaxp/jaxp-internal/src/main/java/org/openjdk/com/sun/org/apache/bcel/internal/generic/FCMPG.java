@@ -62,28 +62,27 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
 /**
  * FCMPG - Compare floats: value1 > value2
+ *
  * <PRE>Stack: ..., value1, value2 -&gt; ..., result</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
-public class FCMPG extends Instruction
-  implements TypedInstruction, StackProducer, StackConsumer {
+public class FCMPG extends Instruction implements TypedInstruction, StackProducer, StackConsumer {
   public FCMPG() {
-    super(Constants.FCMPG, (short)1);
+    super(Constants.FCMPG, (short) 1);
   }
 
-  /** @return Type.FLOAT
+  /**
+   * @return Type.FLOAT
    */
   public Type getType(ConstantPoolGen cp) {
     return Type.FLOAT;
   }
 
-
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

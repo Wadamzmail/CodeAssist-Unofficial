@@ -81,7 +81,7 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
   @Override
   public boolean select() {
     try {
-     return super.select();
+      return super.select();
     } catch (Throwable e) {
       if (BuildConfig.DEBUG) {
         Log.e(TAG, "Failed to select item", e);
@@ -97,25 +97,26 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
     }
     super.cancelCompletion();
   }
-  
-      /**
-     * Tries to select the position in the completion list.
-     * @return whether the select has succeeded
-     */
-    public boolean trySelect() {
-        if (adapter.getCount() <= 0) {
-            return false;
-        }
 
-        if (getCurrentPosition() == -1) {
-            // select the first position
-            select(0);
-        } else {
-            select();
-        }
-
-        return true;
+  /**
+   * Tries to select the position in the completion list.
+   *
+   * @return whether the select has succeeded
+   */
+  public boolean trySelect() {
+    if (adapter.getCount() <= 0) {
+      return false;
     }
+
+    if (getCurrentPosition() == -1) {
+      // select the first position
+      select(0);
+    } else {
+      select();
+    }
+
+    return true;
+  }
 
   @Override
   public void requireCompletion() {
@@ -174,4 +175,4 @@ public class CodeAssistCompletionWindow extends EditorAutoCompletion {
       throw new RuntimeException(e);
     }
   }
-} 
+}

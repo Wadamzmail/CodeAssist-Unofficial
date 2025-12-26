@@ -28,6 +28,8 @@
 
 package org.openjdk.javax.xml.stream;
 
+import org.openjdk.javax.xml.namespace.NamespaceContext;
+import org.openjdk.javax.xml.stream.events.*;
 import org.openjdk.javax.xml.stream.events.Characters;
 import org.openjdk.javax.xml.stream.events.EndElement;
 import org.openjdk.javax.xml.stream.events.ProcessingInstruction;
@@ -35,16 +37,10 @@ import org.openjdk.javax.xml.stream.events.StartElement;
 import org.openjdk.javax.xml.stream.events.XMLEvent;
 import org.openjdk.javax.xml.stream.util.XMLEventConsumer;
 
-import org.openjdk.javax.xml.stream.events.*;
-
-import org.openjdk.javax.xml.namespace.NamespaceContext;
-
 /**
- *
  * This is the top level interface for writing XML documents.
  *
- * Instances of this interface are not required to validate the
- * form of the XML.
+ * <p>Instances of this interface are not required to validate the form of the XML.
  *
  * @version 1.0
  * @author Copyright (c) 2009 by Oracle Corporation. All Rights Reserved.
@@ -60,20 +56,22 @@ public interface XMLEventWriter extends XMLEventConsumer {
 
   /**
    * Writes any cached events to the underlying output mechanism
+   *
    * @throws XMLStreamException
    */
   public void flush() throws XMLStreamException;
 
   /**
    * Frees any resources associated with this stream
+   *
    * @throws XMLStreamException
    */
   public void close() throws XMLStreamException;
 
   /**
-   * Add an event to the output stream
-   * Adding a START_ELEMENT will open a new namespace scope that
+   * Add an event to the output stream Adding a START_ELEMENT will open a new namespace scope that
    * will be closed when the corresponding END_ELEMENT is written.
+   *
    * <table border="2" rules="all" cellpadding="4">
    *   <thead>
    *     <tr>
@@ -193,36 +191,35 @@ public interface XMLEventWriter extends XMLEventConsumer {
    *     </tr>
    *   </tbody>
    * </table>
+   *
    * @param event the event to be added
    * @throws XMLStreamException
    */
   public void add(XMLEvent event) throws XMLStreamException;
 
   /**
-   * Adds an entire stream to an output stream,
-   * calls next() on the inputStream argument until hasNext() returns false
-   * This should be treated as a convenience method that will
-   * perform the following loop over all the events in an
-   * event reader and call add on each event.
+   * Adds an entire stream to an output stream, calls next() on the inputStream argument until
+   * hasNext() returns false This should be treated as a convenience method that will perform the
+   * following loop over all the events in an event reader and call add on each event.
    *
    * @param reader the event stream to add to the output
    * @throws XMLStreamException
    */
-
   public void add(XMLEventReader reader) throws XMLStreamException;
 
   /**
    * Gets the prefix the uri is bound to
+   *
    * @param uri the uri to look up
    * @throws XMLStreamException
    */
   public String getPrefix(String uri) throws XMLStreamException;
 
   /**
-   * Sets the prefix the uri is bound to.  This prefix is bound
-   * in the scope of the current START_ELEMENT / END_ELEMENT pair.
-   * If this method is called before a START_ELEMENT has been written
-   * the prefix is bound in the root scope.
+   * Sets the prefix the uri is bound to. This prefix is bound in the scope of the current
+   * START_ELEMENT / END_ELEMENT pair. If this method is called before a START_ELEMENT has been
+   * written the prefix is bound in the root scope.
+   *
    * @param prefix the prefix to bind to the uri
    * @param uri the uri to bind to the prefix
    * @throws XMLStreamException
@@ -230,34 +227,30 @@ public interface XMLEventWriter extends XMLEventConsumer {
   public void setPrefix(String prefix, String uri) throws XMLStreamException;
 
   /**
-   * Binds a URI to the default namespace
-   * This URI is bound
-   * in the scope of the current START_ELEMENT / END_ELEMENT pair.
-   * If this method is called before a START_ELEMENT has been written
-   * the uri is bound in the root scope.
+   * Binds a URI to the default namespace This URI is bound in the scope of the current
+   * START_ELEMENT / END_ELEMENT pair. If this method is called before a START_ELEMENT has been
+   * written the uri is bound in the root scope.
+   *
    * @param uri the uri to bind to the default namespace
    * @throws XMLStreamException
    */
   public void setDefaultNamespace(String uri) throws XMLStreamException;
 
   /**
-   * Sets the current namespace context for prefix and uri bindings.
-   * This context becomes the root namespace context for writing and
-   * will replace the current root namespace context.  Subsequent calls
-   * to setPrefix and setDefaultNamespace will bind namespaces using
-   * the context passed to the method as the root context for resolving
-   * namespaces.
+   * Sets the current namespace context for prefix and uri bindings. This context becomes the root
+   * namespace context for writing and will replace the current root namespace context. Subsequent
+   * calls to setPrefix and setDefaultNamespace will bind namespaces using the context passed to the
+   * method as the root context for resolving namespaces.
+   *
    * @param context the namespace context to use for this writer
    * @throws XMLStreamException
    */
-  public void setNamespaceContext(NamespaceContext context)
-    throws XMLStreamException;
+  public void setNamespaceContext(NamespaceContext context) throws XMLStreamException;
 
   /**
    * Returns the current namespace context.
+   *
    * @return the current namespace context
    */
   public NamespaceContext getNamespaceContext();
-
-
 }

@@ -24,38 +24,30 @@ package org.openjdk.com.sun.org.apache.xpath.internal;
 
 import java.io.IOException;
 import java.util.Vector;
-
+import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTM;
+import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMWSFilter;
+import org.openjdk.com.sun.org.apache.xml.internal.utils.SystemIDResolver;
 import org.openjdk.javax.xml.transform.Source;
 import org.openjdk.javax.xml.transform.SourceLocator;
 import org.openjdk.javax.xml.transform.TransformerException;
 import org.openjdk.javax.xml.transform.URIResolver;
 import org.openjdk.javax.xml.transform.sax.SAXSource;
 import org.openjdk.javax.xml.transform.stream.StreamSource;
-
-import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTM;
-import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMWSFilter;
-import org.openjdk.com.sun.org.apache.xml.internal.utils.SystemIDResolver;
-
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- * This class bottlenecks all management of source trees.  The methods
- * in this class should allow easy garbage collection of source
- * trees (not yet!), and should centralize parsing for those source trees.
+ * This class bottlenecks all management of source trees. The methods in this class should allow
+ * easy garbage collection of source trees (not yet!), and should centralize parsing for those
+ * source trees.
  */
-public class SourceTreeManager
-{
+public class SourceTreeManager {
 
   /** Vector of SourceTree objects that this manager manages. */
   private Vector m_sourceTree = new Vector();
 
-  /**
-   * Reset the list of SourceTree objects that this manager manages.
-   *
-   */
-  public void reset()
-  {
+  /** Reset the list of SourceTree objects that this manager manages. */
+  public void reset() {
     m_sourceTree = new Vector();
   }
 
@@ -63,75 +55,62 @@ public class SourceTreeManager
   URIResolver m_uriResolver;
 
   /**
-   * Set an object that will be used to resolve URIs used in
-   * document(), etc.
-   * @param resolver An object that implements the URIResolver interface,
-   * or null.
+   * Set an object that will be used to resolve URIs used in document(), etc.
+   *
+   * @param resolver An object that implements the URIResolver interface, or null.
    */
-  public void setURIResolver(URIResolver resolver)
-  {
+  public void setURIResolver(URIResolver resolver) {
     m_uriResolver = resolver;
   }
 
   /**
-   * Get the object that will be used to resolve URIs used in
-   * document(), etc.
-   * @return An object that implements the URIResolver interface,
-   * or null.
+   * Get the object that will be used to resolve URIs used in document(), etc.
+   *
+   * @return An object that implements the URIResolver interface, or null.
    */
-  public URIResolver getURIResolver()
-  {
+  public URIResolver getURIResolver() {
     return m_uriResolver;
   }
 
   /**
    * Given a document, find the URL associated with that document.
-   * @param owner Document that was previously processed by this liaison.
    *
+   * @param owner Document that was previously processed by this liaison.
    * @return The base URI of the owner argument.
    */
-  public String findURIFromDoc(int owner)
-  {
+  public String findURIFromDoc(int owner) {
     int n = m_sourceTree.size();
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
       SourceTree sTree = (SourceTree) m_sourceTree.elementAt(i);
 
-      if (owner == sTree.m_root)
-        return sTree.m_url;
+      if (owner == sTree.m_root) return sTree.m_url;
     }
 
     return null;
   }
 
   /**
-   * This will be called by the processor when it encounters
-   * an xsl:include, xsl:import, or document() function.
+   * This will be called by the processor when it encounters an xsl:include, xsl:import, or
+   * document() function.
    *
    * @param base The base URI that should be used.
-   * @param urlString Value from an xsl:import or xsl:include's href attribute,
-   * or a URI specified in the document() function.
-   *
+   * @param urlString Value from an xsl:import or xsl:include's href attribute, or a URI specified
+   *     in the document() function.
    * @return a Source that can be used to process the resource.
-   *
    * @throws IOException
    * @throws TransformerException
    */
-  public Source resolveURI(
-          String base, String urlString, SourceLocator locator)
-            throws TransformerException, IOException
-  {
+  public Source resolveURI(String base, String urlString, SourceLocator locator)
+      throws TransformerException, IOException {
 
     Source source = null;
 
-    if (null != m_uriResolver)
-    {
+    if (null != m_uriResolver) {
       source = m_uriResolver.resolve(urlString, base);
     }
 
-    if (null == source)
-    {
+    if (null == source) {
       String uri = SystemIDResolver.getAbsoluteURI(urlString, base);
 
       source = new StreamSource(uri);
@@ -140,51 +119,43 @@ public class SourceTreeManager
     return source;
   }
 
-  /** JJK: Support  <?xalan:doc_cache_off?> kluge in ElemForEach.
-   * TODO: This function is highly dangerous. Cache management must be improved.
+  /**
+   * JJK: Support <?xalan:doc_cache_off?> kluge in ElemForEach. TODO: This function is highly
+   * dangerous. Cache management must be improved.
    *
    * @param n The node to remove.
    */
-  public void removeDocumentFromCache(int n)
-  {
-    if(DTM.NULL ==n)
-      return;
-    for(int i=m_sourceTree.size()-1;i>=0;--i)
-    {
-      SourceTree st=(SourceTree)m_sourceTree.elementAt(i);
-      if(st!=null && st.m_root==n)
-      {
+  public void removeDocumentFromCache(int n) {
+    if (DTM.NULL == n) return;
+    for (int i = m_sourceTree.size() - 1; i >= 0; --i) {
+      SourceTree st = (SourceTree) m_sourceTree.elementAt(i);
+      if (st != null && st.m_root == n) {
         m_sourceTree.removeElementAt(i);
         return;
       }
     }
   }
 
-
-
   /**
-   * Put the source tree root node in the document cache.
-   * TODO: This function needs to be a LOT more sophisticated.
+   * Put the source tree root node in the document cache. TODO: This function needs to be a LOT more
+   * sophisticated.
    *
    * @param n The node to cache.
    * @param source The Source object to cache.
    */
-  public void putDocumentInCache(int n, Source source)
-  {
+  public void putDocumentInCache(int n, Source source) {
 
     int cachedNode = getNode(source);
 
-    if (DTM.NULL != cachedNode)
-    {
+    if (DTM.NULL != cachedNode) {
       if (!(cachedNode == n))
         throw new RuntimeException(
-          "Programmer's Error!  "
-          + "putDocumentInCache found reparse of doc: "
-          + source.getSystemId());
+            "Programmer's Error!  "
+                + "putDocumentInCache found reparse of doc: "
+                + source.getSystemId());
       return;
     }
-    if (null != source.getSystemId())
-    {
+    if (null != source.getSystemId()) {
       m_sourceTree.addElement(new SourceTree(n, source.getSystemId()));
     }
   }
@@ -193,32 +164,27 @@ public class SourceTreeManager
    * Given a Source object, find the node associated with it.
    *
    * @param source The Source object to act as the key.
-   *
    * @return The node that is associated with the Source, or null if not found.
    */
-  public int getNode(Source source)
-  {
+  public int getNode(Source source) {
 
-//    if (source instanceof DOMSource)
-//      return ((DOMSource) source).getNode();
+    //    if (source instanceof DOMSource)
+    //      return ((DOMSource) source).getNode();
 
     // TODO: Not sure if the BaseID is really the same thing as the ID.
     String url = source.getSystemId();
 
-    if (null == url)
-      return DTM.NULL;
+    if (null == url) return DTM.NULL;
 
     int n = m_sourceTree.size();
 
     // System.out.println("getNode: "+n);
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
       SourceTree sTree = (SourceTree) m_sourceTree.elementAt(i);
 
       // System.out.println("getNode -         url: "+url);
       // System.out.println("getNode - sTree.m_url: "+sTree.m_url);
-      if (url.equals(sTree.m_url))
-        return sTree.m_root;
+      if (url.equals(sTree.m_url)) return sTree.m_root;
     }
 
     // System.out.println("getNode - returning: "+node);
@@ -231,34 +197,27 @@ public class SourceTreeManager
    * @param base The base URI to use if the urlString is relative.
    * @param urlString An absolute or relative URL string.
    * @param locator The location of the caller, for diagnostic purposes.
-   *
-   * @return should be a non-null reference to the node identified by the
-   * base and urlString.
-   *
+   * @return should be a non-null reference to the node identified by the base and urlString.
    * @throws TransformerException If the URL can not resolve to a node.
    */
-  public int getSourceTree(
-          String base, String urlString, SourceLocator locator, XPathContext xctxt)
-            throws TransformerException
-  {
+  public int getSourceTree(String base, String urlString, SourceLocator locator, XPathContext xctxt)
+      throws TransformerException {
 
     // System.out.println("getSourceTree");
-    try
-    {
+    try {
       Source source = this.resolveURI(base, urlString, locator);
 
-      // System.out.println("getSourceTree - base: "+base+", urlString: "+urlString+", source: "+source.getSystemId());
+      // System.out.println("getSourceTree - base: "+base+", urlString: "+urlString+", source:
+      // "+source.getSystemId());
       return getSourceTree(source, locator, xctxt);
-    }
-    catch (IOException ioe)
-    {
+    } catch (IOException ioe) {
       throw new TransformerException(ioe.getMessage(), locator, ioe);
     }
 
     /* catch (TransformerException te)
-     {
-       throw new TransformerException(te.getMessage(), locator, te);
-     }*/
+    {
+      throw new TransformerException(te.getMessage(), locator, te);
+    }*/
   }
 
   /**
@@ -266,25 +225,19 @@ public class SourceTreeManager
    *
    * @param source The Source object that should identify the desired node.
    * @param locator The location of the caller, for diagnostic purposes.
-   *
    * @return non-null reference to a node.
-   *
-   * @throws TransformerException if the Source argument can't be resolved to
-   *         a node.
+   * @throws TransformerException if the Source argument can't be resolved to a node.
    */
   public int getSourceTree(Source source, SourceLocator locator, XPathContext xctxt)
-          throws TransformerException
-  {
+      throws TransformerException {
 
     int n = getNode(source);
 
-    if (DTM.NULL != n)
-      return n;
+    if (DTM.NULL != n) return n;
 
     n = parseToNode(source, locator, xctxt);
 
-    if (DTM.NULL != n)
-      putDocumentInCache(n, source);
+    if (DTM.NULL != n) putDocumentInCache(n, source);
 
     return n;
   }
@@ -294,99 +247,72 @@ public class SourceTreeManager
    *
    * @param source The Source object that identifies the source node.
    * @param locator The location of the caller, for diagnostic purposes.
-   *
    * @return non-null reference to node identified by the source argument.
-   *
-   * @throws TransformerException if the source argument can not be resolved
-   *         to a source node.
+   * @throws TransformerException if the source argument can not be resolved to a source node.
    */
   public int parseToNode(Source source, SourceLocator locator, XPathContext xctxt)
-          throws TransformerException
-  {
+      throws TransformerException {
 
-    try
-    {
+    try {
       Object xowner = xctxt.getOwnerObject();
       DTM dtm;
-      if(null != xowner && xowner instanceof DTMWSFilter)
-      {
-        dtm = xctxt.getDTM(source, false,
-                          (DTMWSFilter)xowner, false, true);
-      }
-      else
-      {
+      if (null != xowner && xowner instanceof DTMWSFilter) {
+        dtm = xctxt.getDTM(source, false, (DTMWSFilter) xowner, false, true);
+      } else {
         dtm = xctxt.getDTM(source, false, null, false, true);
       }
       return dtm.getDocument();
-    }
-    catch (Exception e)
-    {
-      //e.printStackTrace();
+    } catch (Exception e) {
+      // e.printStackTrace();
       throw new TransformerException(e.getMessage(), locator, e);
     }
-
   }
 
   /**
-   * This method returns the SAX2 parser to use with the InputSource
-   * obtained from this URI.
-   * It may return null if any SAX2-conformant XML parser can be used,
-   * or if getInputSource() will also return null. The parser must
-   * be free for use (i.e.
-   * not currently in use for another parse().
+   * This method returns the SAX2 parser to use with the InputSource obtained from this URI. It may
+   * return null if any SAX2-conformant XML parser can be used, or if getInputSource() will also
+   * return null. The parser must be free for use (i.e. not currently in use for another parse().
    *
    * @param inputSource The value returned from the URIResolver.
    * @return a SAX2 XMLReader to use to resolve the inputSource argument.
    * @param locator The location of the original caller, for diagnostic purposes.
-   *
    * @throws TransformerException if the reader can not be created.
    */
   public static XMLReader getXMLReader(Source inputSource, SourceLocator locator)
-          throws TransformerException
-  {
+      throws TransformerException {
 
-    try
-    {
-      XMLReader reader = (inputSource instanceof SAXSource)
-                         ? ((SAXSource) inputSource).getXMLReader() : null;
+    try {
+      XMLReader reader =
+          (inputSource instanceof SAXSource) ? ((SAXSource) inputSource).getXMLReader() : null;
 
-      if (null == reader)
-      {
+      if (null == reader) {
         try {
-          org.openjdk.javax.xml.parsers.SAXParserFactory factory=
+          org.openjdk.javax.xml.parsers.SAXParserFactory factory =
               org.openjdk.javax.xml.parsers.SAXParserFactory.newInstance();
-          factory.setNamespaceAware( true );
-          org.openjdk.javax.xml.parsers.SAXParser jaxpParser=
-              factory.newSAXParser();
-          reader=jaxpParser.getXMLReader();
+          factory.setNamespaceAware(true);
+          org.openjdk.javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
+          reader = jaxpParser.getXMLReader();
 
-        } catch( org.openjdk.javax.xml.parsers.ParserConfigurationException ex ) {
-          throw new org.xml.sax.SAXException( ex );
-        } catch( org.openjdk.javax.xml.parsers.FactoryConfigurationError ex1 ) {
-            throw new org.xml.sax.SAXException( ex1.toString() );
-        } catch( NoSuchMethodError ex2 ) {
+        } catch (org.openjdk.javax.xml.parsers.ParserConfigurationException ex) {
+          throw new org.xml.sax.SAXException(ex);
+        } catch (org.openjdk.javax.xml.parsers.FactoryConfigurationError ex1) {
+          throw new org.xml.sax.SAXException(ex1.toString());
+        } catch (NoSuchMethodError ex2) {
+        } catch (AbstractMethodError ame) {
         }
-        catch (AbstractMethodError ame){}
-        if(null == reader)
-          reader = XMLReaderFactory.createXMLReader();
+        if (null == reader) reader = XMLReaderFactory.createXMLReader();
       }
 
-      try
-      {
-        reader.setFeature("http://xml.org/sax/features/namespace-prefixes",
-                          true);
-      }
-      catch (org.xml.sax.SAXException se)
-      {
+      try {
+        reader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+      } catch (org.xml.sax.SAXException se) {
 
         // What can we do?
         // TODO: User diagnostics.
       }
 
       return reader;
-    }
-    catch (org.xml.sax.SAXException se)
-    {
+    } catch (org.xml.sax.SAXException se) {
       throw new TransformerException(se.getMessage(), locator, se);
     }
   }

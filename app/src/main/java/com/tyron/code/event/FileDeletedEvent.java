@@ -4,14 +4,13 @@ import java.io.File;
 
 public class FileDeletedEvent extends Event {
 
+  private final File deletedFile;
 
-    private final File deletedFile;
+  public FileDeletedEvent(File deletedFile) {
+    this.deletedFile = deletedFile;
+  }
 
-    public FileDeletedEvent(File deletedFile) {
-        this.deletedFile = deletedFile;
-    }
-
-    public File getDeletedFile() {
-        return deletedFile;
-    }
+  public File getDeletedFile() {
+    return deletedFile;
+  }
 }

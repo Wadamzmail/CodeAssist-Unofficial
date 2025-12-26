@@ -28,97 +28,81 @@ import org.openjdk.com.sun.org.apache.xpath.internal.Expression;
 import org.openjdk.com.sun.org.apache.xpath.internal.ExpressionOwner;
 import org.openjdk.com.sun.org.apache.xpath.internal.XPathContext;
 import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitor;
+import org.openjdk.com.sun.org.apache.xpath.internal.functions.Function;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XNumber;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XObject;
-import org.openjdk.com.sun.org.apache.xpath.internal.functions.Function;
 
 /**
  * Match pattern step that contains a function.
+ *
  * @xsl.usage advanced
  */
-public class FunctionPattern extends StepPattern
-{
-    static final long serialVersionUID = -5426793413091209944L;
+public class FunctionPattern extends StepPattern {
+  static final long serialVersionUID = -5426793413091209944L;
 
   /**
-   * Construct a FunctionPattern from a
-   * {@link Function expression}.
+   * Construct a FunctionPattern from a {@link Function expression}.
    *
-   * NEEDSDOC @param expr
+   * <p>NEEDSDOC @param expr
    */
-  public FunctionPattern(Expression expr, int axis, int predaxis)
-  {
+  public FunctionPattern(Expression expr, int axis, int predaxis) {
 
     super(0, null, null, axis, predaxis);
 
     m_functionExpr = expr;
   }
 
-  /**
-   * Static calc of match score.
-   */
-  public final void calcScore()
-  {
+  /** Static calc of match score. */
+  public final void calcScore() {
 
     m_score = SCORE_OTHER;
 
-    if (null == m_targetString)
-      calcTargetString();
+    if (null == m_targetString) calcTargetString();
   }
 
   /**
    * Should be a {@link Function expression}.
-   *  @serial
+   *
+   * @serial
    */
   Expression m_functionExpr;
 
   /**
-   * This function is used to fixup variables from QNames to stack frame
-   * indexes at stylesheet build time.
-   * @param vars List of QNames that correspond to variables.  This list
-   * should be searched backwards for the first qualified name that
-   * corresponds to the variable reference qname.  The position of the
-   * QName in the vector from the start of the vector will be its position
-   * in the stack frame (but variables above the globalsTop value will need
-   * to be offset to the current stack frame).
+   * This function is used to fixup variables from QNames to stack frame indexes at stylesheet build
+   * time.
+   *
+   * @param vars List of QNames that correspond to variables. This list should be searched backwards
+   *     for the first qualified name that corresponds to the variable reference qname. The position
+   *     of the QName in the vector from the start of the vector will be its position in the stack
+   *     frame (but variables above the globalsTop value will need to be offset to the current stack
+   *     frame).
    */
-  public void fixupVariables(java.util.Vector vars, int globalsSize)
-  {
+  public void fixupVariables(java.util.Vector vars, int globalsSize) {
     super.fixupVariables(vars, globalsSize);
     m_functionExpr.fixupVariables(vars, globalsSize);
   }
-
 
   /**
    * Test a node to see if it matches the given node test.
    *
    * @param xctxt XPath runtime context.
-   *
-   * @return {@link NodeTest#SCORE_NODETEST},
-   *         {@link NodeTest#SCORE_NONE},
-   *         {@link NodeTest#SCORE_NSWILD},
-   *         {@link NodeTest#SCORE_QNAME}, or
-   *         {@link NodeTest#SCORE_OTHER}.
-   *
+   * @return {@link NodeTest#SCORE_NODETEST}, {@link NodeTest#SCORE_NONE}, {@link
+   *     NodeTest#SCORE_NSWILD}, {@link NodeTest#SCORE_QNAME}, or {@link NodeTest#SCORE_OTHER}.
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
   public XObject execute(XPathContext xctxt, int context)
-          throws org.openjdk.javax.xml.transform.TransformerException
-  {
+      throws org.openjdk.javax.xml.transform.TransformerException {
 
     DTMIterator nl = m_functionExpr.asIterator(xctxt, context);
     XNumber score = SCORE_NONE;
 
-    if (null != nl)
-    {
+    if (null != nl) {
       int n;
 
-      while (DTM.NULL != (n = nl.nextNode()))
-      {
+      while (DTM.NULL != (n = nl.nextNode())) {
         score = (n == context) ? SCORE_OTHER : SCORE_NONE;
 
-        if (score == SCORE_OTHER)
-        {
+        if (score == SCORE_OTHER) {
           context = n;
 
           break;
@@ -136,33 +120,23 @@ public class FunctionPattern extends StepPattern
    * Test a node to see if it matches the given node test.
    *
    * @param xctxt XPath runtime context.
-   *
-   * @return {@link NodeTest#SCORE_NODETEST},
-   *         {@link NodeTest#SCORE_NONE},
-   *         {@link NodeTest#SCORE_NSWILD},
-   *         {@link NodeTest#SCORE_QNAME}, or
-   *         {@link NodeTest#SCORE_OTHER}.
-   *
+   * @return {@link NodeTest#SCORE_NODETEST}, {@link NodeTest#SCORE_NONE}, {@link
+   *     NodeTest#SCORE_NSWILD}, {@link NodeTest#SCORE_QNAME}, or {@link NodeTest#SCORE_OTHER}.
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
-  public XObject execute(XPathContext xctxt, int context,
-                         DTM dtm, int expType)
-          throws org.openjdk.javax.xml.transform.TransformerException
-  {
+  public XObject execute(XPathContext xctxt, int context, DTM dtm, int expType)
+      throws org.openjdk.javax.xml.transform.TransformerException {
 
     DTMIterator nl = m_functionExpr.asIterator(xctxt, context);
     XNumber score = SCORE_NONE;
 
-    if (null != nl)
-    {
+    if (null != nl) {
       int n;
 
-      while (DTM.NULL != (n = nl.nextNode()))
-      {
+      while (DTM.NULL != (n = nl.nextNode())) {
         score = (n == context) ? SCORE_OTHER : SCORE_NONE;
 
-        if (score == SCORE_OTHER)
-        {
+        if (score == SCORE_OTHER) {
           context = n;
 
           break;
@@ -179,33 +153,24 @@ public class FunctionPattern extends StepPattern
    * Test a node to see if it matches the given node test.
    *
    * @param xctxt XPath runtime context.
-   *
-   * @return {@link NodeTest#SCORE_NODETEST},
-   *         {@link NodeTest#SCORE_NONE},
-   *         {@link NodeTest#SCORE_NSWILD},
-   *         {@link NodeTest#SCORE_QNAME}, or
-   *         {@link NodeTest#SCORE_OTHER}.
-   *
+   * @return {@link NodeTest#SCORE_NODETEST}, {@link NodeTest#SCORE_NONE}, {@link
+   *     NodeTest#SCORE_NSWILD}, {@link NodeTest#SCORE_QNAME}, or {@link NodeTest#SCORE_OTHER}.
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
   public XObject execute(XPathContext xctxt)
-          throws org.openjdk.javax.xml.transform.TransformerException
-  {
+      throws org.openjdk.javax.xml.transform.TransformerException {
 
     int context = xctxt.getCurrentNode();
     DTMIterator nl = m_functionExpr.asIterator(xctxt, context);
     XNumber score = SCORE_NONE;
 
-    if (null != nl)
-    {
+    if (null != nl) {
       int n;
 
-      while (DTM.NULL != (n = nl.nextNode()))
-      {
+      while (DTM.NULL != (n = nl.nextNode())) {
         score = (n == context) ? SCORE_OTHER : SCORE_NONE;
 
-        if (score == SCORE_OTHER)
-        {
+        if (score == SCORE_OTHER) {
           context = n;
 
           break;
@@ -218,34 +183,26 @@ public class FunctionPattern extends StepPattern
     return score;
   }
 
-  class FunctionOwner implements ExpressionOwner
-  {
+  class FunctionOwner implements ExpressionOwner {
     /**
      * @see ExpressionOwner#getExpression()
      */
-    public Expression getExpression()
-    {
+    public Expression getExpression() {
       return m_functionExpr;
     }
-
 
     /**
      * @see ExpressionOwner#setExpression(Expression)
      */
-    public void setExpression(Expression exp)
-    {
-        exp.exprSetParent(FunctionPattern.this);
-        m_functionExpr = exp;
+    public void setExpression(Expression exp) {
+      exp.exprSetParent(FunctionPattern.this);
+      m_functionExpr = exp;
     }
   }
 
-  /**
-   * Call the visitor for the function.
-   */
-  protected void callSubtreeVisitors(XPathVisitor visitor)
-  {
+  /** Call the visitor for the function. */
+  protected void callSubtreeVisitors(XPathVisitor visitor) {
     m_functionExpr.callVisitors(new FunctionOwner(), visitor);
     super.callSubtreeVisitors(visitor);
   }
-
 }

@@ -1,14 +1,20 @@
 package com.tyron.code.language.java;
 
 import android.os.Bundle;
-import android.util.Log;
 import androidx.annotation.NonNull;
-import com.tyron.code.analyzer.BaseTextmateAnalyzer;
+import androidx.annotation.Nullable;
+import com.tyron.builder.project.Project;
 import com.tyron.code.language.CompletionItemWrapper;
 import com.tyron.code.language.EditorFormatter;
-import com.tyron.completion.model.CompletionItem;
+import com.tyron.code.language.LanguageManager;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+// new
+import com.tyron.completion.CompletionParameters;
+import com.tyron.completion.java.JavaCompletionProvider;
+import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.editor.Editor;
+import com.tyron.language.api.CodeAssistLanguage;
 import io.github.rosemoe.editor.langs.java.JavaTextTokenizer;
 import io.github.rosemoe.editor.langs.java.Tokens;
 import io.github.rosemoe.sora.lang.Language;
@@ -16,109 +22,85 @@ import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.completion.CompletionCancelledException;
 import io.github.rosemoe.sora.lang.completion.CompletionHelper;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
+import io.github.rosemoe.sora.lang.format.AsyncFormatter;
+import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
+import io.github.rosemoe.sora.lang.styling.Styles;
+import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.text.CharPosition;
+import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentReference;
+import io.github.rosemoe.sora.text.TextRange;
 import io.github.rosemoe.sora.text.TextUtils;
 import io.github.rosemoe.sora.util.MyCharacter;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
-import java.io.ByteArrayInputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
-import io.github.rosemoe.sora.text.TextRange;
-import io.github.rosemoe.sora.lang.format.AsyncFormatter;
-import io.github.rosemoe.sora.lang.format.Formatter;
-import io.github.rosemoe.sora.text.Content;
-import androidx.annotation.Nullable;
-import io.github.rosemoe.sora.lang.styling.Styles;
-import io.github.rosemoe.sora.text.CharPosition;
-import io.github.rosemoe.sora.text.Content;
-//import com.google.googlejavaformat.java.Formatter;
-import com.google.googlejavaformat.java.FormatterException;
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
-import com.tyron.code.language.LanguageManager;
-import com.tyron.code.language.textmate.EmptyTextMateLanguage;
-//new
-import com.tyron.completion.CompletionParameters;
-import com.tyron.completion.java.JavaCompletionProvider;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
-import javax.tools.Diagnostic;
+import java.io.File;
+import java.util.stream.Collectors;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import com.tyron.language.api.CodeAssistLanguage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
-import com.sun.tools.javac.util.JCDiagnostic;
-import com.tyron.builder.project.Project;
-import com.tyron.completion.java.parse.CompilationInfo;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-public class JavaLanguage extends EmptyTextMateLanguage implements Language, EditorFormatter, CodeAssistLanguage {
+public class JavaLanguage extends EmptyTextMateLanguage
+    implements Language, EditorFormatter, CodeAssistLanguage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JavaLanguage.class);
-  
+
   private final Editor mEditor;
 
-  //private final BaseTextmateAnalyzer mAnalyzer;
+  // private final BaseTextmateAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
   public boolean createIdentifiers = false;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
-  private static final String SCOPENAME="source.java";
-  private final Formatter formatter = new AsyncFormatter() {
-    @Nullable
-    @Override
-    public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
-        String formatted;
-        try {
-            formatted = new com.google.googlejavaformat.java.Formatter()
-                    .formatSource(text.toString());
-        } catch (Exception e) {
+  private static final String SCOPENAME = "source.java";
+  private final Formatter formatter =
+      new AsyncFormatter() {
+        @Nullable
+        @Override
+        public TextRange formatAsync(@NonNull Content text, @NonNull TextRange cursorRange) {
+          String formatted;
+          try {
+            formatted =
+                new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+          } catch (Exception e) {
             formatted = text.toString(); // fallback
-        }
+          }
 
-        if (!text.toString().equals(formatted)) {
+          if (!text.toString().equals(formatted)) {
             int oldCursor = cursorRange.getStartIndex();
             text.delete(0, text.length());
             text.insert(0, 0, formatted);
             int newCursor = Math.min(oldCursor, formatted.length());
             CharPosition pos = text.getIndexer().getCharPosition(newCursor);
             return new TextRange(pos, pos);
+          }
+
+          return cursorRange;
         }
 
-        return cursorRange;
-    }
+        @Nullable
+        @Override
+        public TextRange formatRegionAsync(
+            @NonNull Content text,
+            @NonNull TextRange rangeToFormat,
+            @NonNull TextRange cursorRange) {
+          return null;
+        }
+      };
 
-    @Nullable
-    @Override
-    public TextRange formatRegionAsync(@NonNull Content text,
-                                       @NonNull TextRange rangeToFormat,
-                                       @NonNull TextRange cursorRange) {
-        return null;
-    }
-};
-  
-    @NonNull
-    @Override
-    public Formatter getFormatter() {
-        return formatter;
-    }
+  @NonNull
+  @Override
+  public Formatter getFormatter() {
+    return formatter;
+  }
 
   public JavaLanguage(Editor editor) {
-        this.mEditor = editor;
-        delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
-      // mAnalyzer = JavaAnalyzer.create(editor, this);
+    this.mEditor = editor;
+    delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
+    // mAnalyzer = JavaAnalyzer.create(editor, this);
   }
 
   public boolean isAutoCompleteChar(char p1) {
@@ -159,7 +141,7 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   @Override
   public AnalyzeManager getAnalyzeManager() {
     return delegate.getAnalyzeManager();
-    //return mAnalyzer;
+    // return mAnalyzer;
   }
 
   @Override
@@ -178,49 +160,51 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
     if (!isAutoCompleteChar(c)) {
       return;
     }
-    String prefix = CompletionHelper.computePrefix(content, position, MyCharacter::isJavaIdentifierPart);
-    CompletionParameters parameters = CompletionParameters.builder()
-                .setColumn(position.getColumn())
-                .setLine(position.getLine())
-                .setIndex(position.getIndex())
-                .setEditor(mEditor)
-                .setFile(mEditor.getCurrentFile())
-                .setProject(mEditor.getProject())
-                .setModule(mEditor.getProject().getMainModule())
-                .setContents(content.getReference().toString())
-                .setPrefix(prefix)
-                .build();
-        JavaCompletionProvider provider = new JavaCompletionProvider();
-        CompletionList list = provider.complete(parameters);
+    String prefix =
+        CompletionHelper.computePrefix(content, position, MyCharacter::isJavaIdentifierPart);
+    CompletionParameters parameters =
+        CompletionParameters.builder()
+            .setColumn(position.getColumn())
+            .setLine(position.getLine())
+            .setIndex(position.getIndex())
+            .setEditor(mEditor)
+            .setFile(mEditor.getCurrentFile())
+            .setProject(mEditor.getProject())
+            .setModule(mEditor.getProject().getMainModule())
+            .setContents(content.getReference().toString())
+            .setPrefix(prefix)
+            .build();
+    JavaCompletionProvider provider = new JavaCompletionProvider();
+    CompletionList list = provider.complete(parameters);
 
-        publisher.setUpdateThreshold(0);
-        publisher.addItems(list.getItems().stream().map(CompletionItemWrapper::new)
-                .collect(Collectors.toList()));
+    publisher.setUpdateThreshold(0);
+    publisher.addItems(
+        list.getItems().stream().map(CompletionItemWrapper::new).collect(Collectors.toList()));
   }
-  
+
   @Override
-    public void onContentChange(File file, CharSequence content) {
-        Project project = mEditor.getProject();
-        if (project == null) {
-            return;
-        }
-        CompilationInfo compilationInfo = CompilationInfo.get(project, mEditor.getCurrentFile());
-        if (compilationInfo == null) {
-            return;
-        }
-        JavaFileObject fileObject = new SimpleJavaFileObject(mEditor.getCurrentFile().toURI(),
-                JavaFileObject.Kind.SOURCE) {
-            @Override
-            public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                return content;
-            }
-        };
-        try {
-            compilationInfo.update(fileObject);
-        } catch (Throwable t) {
-            LOGGER.error("Failed to update compilation unit", t);
-        }
+  public void onContentChange(File file, CharSequence content) {
+    Project project = mEditor.getProject();
+    if (project == null) {
+      return;
     }
+    CompilationInfo compilationInfo = CompilationInfo.get(project, mEditor.getCurrentFile());
+    if (compilationInfo == null) {
+      return;
+    }
+    JavaFileObject fileObject =
+        new SimpleJavaFileObject(mEditor.getCurrentFile().toURI(), JavaFileObject.Kind.SOURCE) {
+          @Override
+          public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+            return content;
+          }
+        };
+    try {
+      compilationInfo.update(fileObject);
+    } catch (Throwable t) {
+      LOGGER.error("Failed to update compilation unit", t);
+    }
+  }
 
   @Override
   public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
@@ -237,7 +221,6 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
     return 4;
   }
 
-  
   public CharSequence format(CharSequence p1) {
     return format(p1, 0, p1.length());
   }
@@ -247,12 +230,12 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   public CharSequence format(@NonNull CharSequence text, int start, int end) {
 
     CharSequence formatted = null;
-    try{
-     formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-      //formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
-     }catch(Exception e){
+    try {
+      formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
+      // formatted = com.tyron.eclipse.formatter.Formatter.format(text.toString(),start,end-start);
+    } catch (Exception e) {
       formatted = text;
-    } 
+    }
 
     if (formatted == null) {
       formatted = text;
@@ -263,7 +246,7 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   @Override
   public SymbolPairMatch getSymbolPairs() {
     return delegate.getSymbolPairs();
-   // return new SymbolPairMatch.DefaultSymbolPairs();
+    // return new SymbolPairMatch.DefaultSymbolPairs();
   }
 
   private final NewlineHandler[] newLineHandlers =
@@ -279,242 +262,197 @@ public class JavaLanguage extends EmptyTextMateLanguage implements Language, Edi
   @Override
   public void destroy() {
     delegate.destroy();
-  //  mAnalyzer.destroy();
+    //  mAnalyzer.destroy();
   }
 
   class CallParenHandler implements NewlineHandler {
 
     @Override
-    public boolean matchesRequirement(@NonNull Content text,
-                                      @NonNull CharPosition position,
-                                      @Nullable Styles style) {
-        int line = position.line;
-        if (line < 0 || line >= text.getLineCount()) return false;
+    public boolean matchesRequirement(
+        @NonNull Content text, @NonNull CharPosition position, @Nullable Styles style) {
+      int line = position.line;
+      if (line < 0 || line >= text.getLineCount()) return false;
 
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+      String before = text.subContent(line, 0, line, position.column).toString();
 
+      String after =
+          text.subContent(line, position.column, line, text.getLine(line).length()).toString();
 
-        String after = text.subContent(
-        line, position.column,
-        line, text.getLine(line).length())
-        .toString();
-
-
-        return before.replace("\r", "").trim().startsWith(".") == false
-                && before.trim().endsWith(")")
-                && !after.trim().startsWith(";");
+      return before.replace("\r", "").trim().startsWith(".") == false
+          && before.trim().endsWith(")")
+          && !after.trim().startsWith(";");
     }
 
     @Override
     @NonNull
-    public NewlineHandleResult handleNewline(@NonNull Content text,
-                                             @NonNull CharPosition position,
-                                             @Nullable Styles style,
-                                             int tabSize) {
-        int line = position.line;
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+    public NewlineHandleResult handleNewline(
+        @NonNull Content text,
+        @NonNull CharPosition position,
+        @Nullable Styles style,
+        int tabSize) {
+      int line = position.line;
+      String before = text.subContent(line, 0, line, position.column).toString();
 
+      int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
+      int advance = getIndentAdvance(before) + 8; // +8 = 4*2
+      String indentStr = TextUtils.createIndent(indent + advance, tabSize, false);
 
-        int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
-        int advance = getIndentAdvance(before) + 8; // +8 = 4*2
-        String indentStr = TextUtils.createIndent(indent + advance, tabSize, false);
-
-        return new NewlineHandleResult(new StringBuilder("\n").append(indentStr), 0);
+      return new NewlineHandleResult(new StringBuilder("\n").append(indentStr), 0);
     }
-}
-  
-final class TwoIndentHandler implements NewlineHandler {
+  }
+
+  final class TwoIndentHandler implements NewlineHandler {
 
     @Override
-    public boolean matchesRequirement(@NonNull Content text,
-                                      @NonNull CharPosition position,
-                                      @Nullable Styles style) {
-        int line = position.line;
-        if (line < 0 || line >= text.getLineCount()) return false;
+    public boolean matchesRequirement(
+        @NonNull Content text, @NonNull CharPosition position, @Nullable Styles style) {
+      int line = position.line;
+      if (line < 0 || line >= text.getLineCount()) return false;
 
-        String before = text.subContent(line, 0, line, position.column).toString();
-        String after  = text.subContent(line, position.column, line,
-                                        text.getLine(line).length()).toString();
+      String before = text.subContent(line, 0, line, position.column).toString();
+      String after =
+          text.subContent(line, position.column, line, text.getLine(line).length()).toString();
 
-        return !before.replace("\r", "").trim().startsWith(".") &&
-               before.trim().endsWith(")") &&
-               !after.trim().startsWith(";");
+      return !before.replace("\r", "").trim().startsWith(".")
+          && before.trim().endsWith(")")
+          && !after.trim().startsWith(";");
     }
 
     @Override
     @NonNull
-    public NewlineHandleResult handleNewline(@NonNull Content text,
-                                             @NonNull CharPosition position,
-                                             @Nullable Styles style,
-                                             int tabSize) {
-        int line = position.line;
-        String before = text.subContent(line, 0, line, position.column).toString();
+    public NewlineHandleResult handleNewline(
+        @NonNull Content text,
+        @NonNull CharPosition position,
+        @Nullable Styles style,
+        int tabSize) {
+      int line = position.line;
+      String before = text.subContent(line, 0, line, position.column).toString();
 
-        int indent      = TextUtils.countLeadingSpaceCount(before, tabSize);
-        int extraIndent = 8;                       // 4 * 2
-        String indentStr = TextUtils.createIndent(indent + extraIndent, tabSize, false);
+      int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
+      int extraIndent = 8; // 4 * 2
+      String indentStr = TextUtils.createIndent(indent + extraIndent, tabSize, false);
 
-        return new NewlineHandleResult(new StringBuilder("\n").append(indentStr), 0);
+      return new NewlineHandleResult(new StringBuilder("\n").append(indentStr), 0);
     }
-}
+  }
 
-
-   class BraceHandler implements NewlineHandler {
+  class BraceHandler implements NewlineHandler {
 
     @Override
-    public boolean matchesRequirement(@NonNull Content text,
-                                      @NonNull CharPosition position,
-                                      @Nullable Styles style) {
-        int line = position.line;
-        if (line < 0 || line >= text.getLineCount()) return false;
+    public boolean matchesRequirement(
+        @NonNull Content text, @NonNull CharPosition position, @Nullable Styles style) {
+      int line = position.line;
+      if (line < 0 || line >= text.getLineCount()) return false;
 
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+      String before = text.subContent(line, 0, line, position.column).toString();
 
+      String after =
+          text.subContent(line, position.column, line, text.getLine(line).length()).toString();
 
-        String after = text.subContent(
-        line, position.column,
-        line, text.getLine(line).length())
-        .toString();
-
-
-        return before.trim().endsWith("{") && after.trim().startsWith("}");
+      return before.trim().endsWith("{") && after.trim().startsWith("}");
     }
 
     @Override
     @NonNull
-    public NewlineHandleResult handleNewline(@NonNull Content text,
-                                             @NonNull CharPosition position,
-                                             @Nullable Styles style,
-                                             int tabSize) {
-        int line = position.line;
+    public NewlineHandleResult handleNewline(
+        @NonNull Content text,
+        @NonNull CharPosition position,
+        @Nullable Styles style,
+        int tabSize) {
+      int line = position.line;
 
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+      String before = text.subContent(line, 0, line, position.column).toString();
 
+      String after =
+          text.subContent(line, position.column, line, text.getLine(line).length()).toString();
 
-        String after = text.subContent(
-        line, position.column,
-        line, text.getLine(line).length())
-        .toString();
+      int indentBase = TextUtils.countLeadingSpaceCount(before, tabSize);
+      int advanceBefore = getIndentAdvance(before); // or your helper
+      int advanceAfter = getIndentAdvance(after);
 
+      String indent = TextUtils.createIndent(indentBase + advanceBefore, tabSize, false);
+      String closingIndent = TextUtils.createIndent(indentBase + advanceAfter, tabSize, false);
 
-        int indentBase = TextUtils.countLeadingSpaceCount(before, tabSize);
-        int advanceBefore = getIndentAdvance(before); // or your helper
-        int advanceAfter  = getIndentAdvance(after);
+      StringBuilder sb = new StringBuilder("\n").append(indent).append('\n').append(closingIndent);
 
-        String indent = TextUtils.createIndent(indentBase + advanceBefore, tabSize, false);
-        String closingIndent = TextUtils.createIndent(indentBase + advanceAfter, tabSize, false);
-
-        StringBuilder sb = new StringBuilder("\n")
-                .append(indent)
-                .append('\n')
-                .append(closingIndent);
-
-        int cursorShiftBack = closingIndent.length() + 1;
-        return new NewlineHandleResult(sb, cursorShiftBack);
+      int cursorShiftBack = closingIndent.length() + 1;
+      return new NewlineHandleResult(sb, cursorShiftBack);
     }
-}
+  }
 
-
-   class JavaDocStartHandler implements NewlineHandler {
+  class JavaDocStartHandler implements NewlineHandler {
 
     private final boolean shouldCreateEnd = true;
 
     @Override
-    public boolean matchesRequirement(@NonNull Content text,
-                                      @NonNull CharPosition position,
-                                      @Nullable Styles style) {
-        int line = position.line;
-        if (line < 0 || line >= text.getLineCount()) return false;
+    public boolean matchesRequirement(
+        @NonNull Content text, @NonNull CharPosition position, @Nullable Styles style) {
+      int line = position.line;
+      if (line < 0 || line >= text.getLineCount()) return false;
 
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+      String before = text.subContent(line, 0, line, position.column).toString();
 
-        return before.trim().startsWith("/**");
+      return before.trim().startsWith("/**");
     }
 
     @Override
     @NonNull
-    public NewlineHandleResult handleNewline(@NonNull Content text,
-                                             @NonNull CharPosition position,
-                                             @Nullable Styles style,
-                                             int tabSize) {
-        int line = position.line;
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+    public NewlineHandleResult handleNewline(
+        @NonNull Content text,
+        @NonNull CharPosition position,
+        @Nullable Styles style,
+        int tabSize) {
+      int line = position.line;
+      String before = text.subContent(line, 0, line, position.column).toString();
 
-        int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
+      int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
 
-        StringBuilder sb = new StringBuilder("\n")
-                .append(TextUtils.createIndent(indent, tabSize, false))
-                .append(" * ");
+      StringBuilder sb =
+          new StringBuilder("\n")
+              .append(TextUtils.createIndent(indent, tabSize, false))
+              .append(" * ");
 
-        if (shouldCreateEnd) {
-            String endIndent = TextUtils.createIndent(indent, tabSize, false);
-            sb.append("\n")
-              .append(endIndent)
-              .append(" */");
-            int cursorShift = endIndent.length() + 4; // back-up to " * "
-            return new NewlineHandleResult(sb, cursorShift);
-        }
+      if (shouldCreateEnd) {
+        String endIndent = TextUtils.createIndent(indent, tabSize, false);
+        sb.append("\n").append(endIndent).append(" */");
+        int cursorShift = endIndent.length() + 4; // back-up to " * "
+        return new NewlineHandleResult(sb, cursorShift);
+      }
 
-        return new NewlineHandleResult(sb, 0);
+      return new NewlineHandleResult(sb, 0);
     }
-}
+  }
 
-
-   class JavaDocHandler implements NewlineHandler {
+  class JavaDocHandler implements NewlineHandler {
 
     @Override
-    public boolean matchesRequirement(@NonNull Content text,
-                                      @NonNull CharPosition position,
-                                      @Nullable Styles style) {
-        int line = position.line;
-        if (line < 0 || line >= text.getLineCount()) return false;
+    public boolean matchesRequirement(
+        @NonNull Content text, @NonNull CharPosition position, @Nullable Styles style) {
+      int line = position.line;
+      if (line < 0 || line >= text.getLineCount()) return false;
 
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+      String before = text.subContent(line, 0, line, position.column).toString();
 
-        String trimmed = before.trim();
-        return trimmed.startsWith("*") && !trimmed.startsWith("*/");
+      String trimmed = before.trim();
+      return trimmed.startsWith("*") && !trimmed.startsWith("*/");
     }
 
     @Override
     @NonNull
-    public NewlineHandleResult handleNewline(@NonNull Content text,
-                                             @NonNull CharPosition position,
-                                             @Nullable Styles style,
-                                             int tabSize) {
-        int line = position.line;
-        String before = text.subContent(
-        line, 0,
-        line, position.column)
-        .toString();
+    public NewlineHandleResult handleNewline(
+        @NonNull Content text,
+        @NonNull CharPosition position,
+        @Nullable Styles style,
+        int tabSize) {
+      int line = position.line;
+      String before = text.subContent(line, 0, line, position.column).toString();
 
-
-        int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
-        StringBuilder sb = new StringBuilder("\n")
-                .append(TextUtils.createIndent(indent, tabSize, false))
-                .append("* ");
-        return new NewlineHandleResult(sb, 0);
+      int indent = TextUtils.countLeadingSpaceCount(before, tabSize);
+      StringBuilder sb =
+          new StringBuilder("\n")
+              .append(TextUtils.createIndent(indent, tabSize, false))
+              .append("* ");
+      return new NewlineHandleResult(sb, 0);
     }
+  }
 }
-
-  } 

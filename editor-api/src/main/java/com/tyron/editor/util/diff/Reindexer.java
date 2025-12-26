@@ -1,21 +1,19 @@
 package com.tyron.editor.util.diff;
 
-import org.jetbrains.annotations.TestOnly;
-
-import java.util.Arrays;
-import java.util.BitSet;
-
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import java.util.Arrays;
+import java.util.BitSet;
+import org.jetbrains.annotations.TestOnly;
 
 final class Reindexer {
   private final int[][] myOldIndices = new int[2][];
-  private final int[] myOriginalLengths = new int[]{-1, -1};
-  private final int[] myDiscardedLengths = new int[]{-1, -1};
+  private final int[] myOriginalLengths = new int[] {-1, -1};
+  private final int[] myDiscardedLengths = new int[] {-1, -1};
 
   public int[][] discardUnique(int[] ints1, int[] ints2) {
     int[] discarded1 = discard(ints2, ints1, 0);
-    return new int[][]{discarded1, discard(discarded1, ints2, 1)};
+    return new int[][] {discarded1, discard(discarded1, ints2, 1)};
   }
 
   @TestOnly
@@ -65,39 +63,37 @@ final class Reindexer {
     BitSet changes1;
     BitSet changes2;
 
-    if (myDiscardedLengths[0] == myOriginalLengths[0] && myDiscardedLengths[1] == myOriginalLengths[1]) {
+    if (myDiscardedLengths[0] == myOriginalLengths[0]
+        && myDiscardedLengths[1] == myOriginalLengths[1]) {
       changes1 = discardedChanges[0];
       changes2 = discardedChanges[1];
-    }
-    else {
+    } else {
       changes1 = new BitSet(myOriginalLengths[0]);
       changes2 = new BitSet(myOriginalLengths[1]);
       int x = 0;
       int y = 0;
       while (x < myDiscardedLengths[0] || y < myDiscardedLengths[1]) {
-        if ((x < myDiscardedLengths[0] && y < myDiscardedLengths[1]) && !discardedChanges[0].get(x) && !discardedChanges[1].get(y)) {
+        if ((x < myDiscardedLengths[0] && y < myDiscardedLengths[1])
+            && !discardedChanges[0].get(x)
+            && !discardedChanges[1].get(y)) {
           x = increment(myOldIndices[0], x, changes1, myOriginalLengths[0]);
           y = increment(myOldIndices[1], y, changes2, myOriginalLengths[1]);
-        }
-        else if (discardedChanges[0].get(x)) {
+        } else if (discardedChanges[0].get(x)) {
           changes1.set(getOriginal(myOldIndices[0], x));
           x = increment(myOldIndices[0], x, changes1, myOriginalLengths[0]);
-        }
-        else if (discardedChanges[1].get(y)) {
+        } else if (discardedChanges[1].get(y)) {
           changes2.set(getOriginal(myOldIndices[1], y));
           y = increment(myOldIndices[1], y, changes2, myOriginalLengths[1]);
         }
       }
       if (myDiscardedLengths[0] == 0) {
         changes1.set(0, myOriginalLengths[0]);
-      }
-      else {
+      } else {
         changes1.set(0, myOldIndices[0][0]);
       }
       if (myDiscardedLengths[1] == 0) {
         changes2.set(0, myOriginalLengths[1]);
-      }
-      else {
+      } else {
         changes2.set(0, myOldIndices[1][0]);
       }
     }
@@ -106,13 +102,16 @@ final class Reindexer {
     int y = 0;
     while (x < myOriginalLengths[0] && y < myOriginalLengths[1]) {
       int startX = x;
-      while (x < myOriginalLengths[0] && y < myOriginalLengths[1] && !changes1.get(x) && !changes2.get(y)) {
+      while (x < myOriginalLengths[0]
+          && y < myOriginalLengths[1]
+          && !changes1.get(x)
+          && !changes2.get(y)) {
         x++;
         y++;
       }
-        if (x > startX) {
-            builder.addEqual(x - startX);
-        }
+      if (x > startX) {
+        builder.addEqual(x - startX);
+      }
       int dx = 0;
       int dy = 0;
       while (x < myOriginalLengths[0] && changes1.get(x)) {
@@ -123,13 +122,13 @@ final class Reindexer {
         dy++;
         y++;
       }
-        if (dx != 0 || dy != 0) {
-            builder.addChange(dx, dy);
-        }
-    }
-      if (x != myOriginalLengths[0] || y != myOriginalLengths[1]) {
-          builder.addChange(myOriginalLengths[0] - x, myOriginalLengths[1] - y);
+      if (dx != 0 || dy != 0) {
+        builder.addChange(dx, dy);
       }
+    }
+    if (x != myOriginalLengths[0] || y != myOriginalLengths[1]) {
+      builder.addChange(myOriginalLengths[0] - x, myOriginalLengths[1] - y);
+    }
   }
 
   private static int getOriginal(int[] indexes, int i) {
@@ -139,8 +138,7 @@ final class Reindexer {
   private static int increment(int[] indexes, int i, BitSet set, int length) {
     if (i + 1 < indexes.length) {
       set.set(indexes[i] + 1, indexes[i + 1]);
-    }
-    else {
+    } else {
       set.set(indexes[i] + 1, length);
     }
     return i + 1;

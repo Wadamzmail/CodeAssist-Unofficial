@@ -16,10 +16,9 @@ import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Resource item representing a plurals resource.
- */
-public final class BasicPluralsResourceItem extends BasicValueResourceItemBase implements PluralsResourceValue {
+/** Resource item representing a plurals resource. */
+public final class BasicPluralsResourceItem extends BasicValueResourceItemBase
+    implements PluralsResourceValue {
   @NotNull private final Arity[] myArities;
   @NotNull private final String[] myValues;
   private final int myDefaultIndex;
@@ -33,22 +32,28 @@ public final class BasicPluralsResourceItem extends BasicValueResourceItemBase i
    * @param quantityValues the values corresponding to quantities
    * @param defaultArity the default arity for the {@link #getValue()} method
    */
-  public BasicPluralsResourceItem(@NotNull String name,
-                                  @NotNull ResourceSourceFile sourceFile,
-                                  @NotNull ResourceVisibility visibility,
-                                  @NotNull Map<Arity, String> quantityValues,
-                                  @Nullable Arity defaultArity) {
-    this(name, sourceFile, visibility,
-         quantityValues.keySet().toArray(Arity.EMPTY_ARRAY), quantityValues.values().toArray(new String[0]),
-         getIndex(defaultArity, quantityValues.keySet()));
+  public BasicPluralsResourceItem(
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility,
+      @NotNull Map<Arity, String> quantityValues,
+      @Nullable Arity defaultArity) {
+    this(
+        name,
+        sourceFile,
+        visibility,
+        quantityValues.keySet().toArray(Arity.EMPTY_ARRAY),
+        quantityValues.values().toArray(new String[0]),
+        getIndex(defaultArity, quantityValues.keySet()));
   }
 
-  private BasicPluralsResourceItem(@NotNull String name,
-                                   @NotNull ResourceSourceFile sourceFile,
-                                   @NotNull ResourceVisibility visibility,
-                                   @NotNull Arity[] arities,
-                                   @NotNull String[] values,
-                                   int defaultIndex) {
+  private BasicPluralsResourceItem(
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility,
+      @NotNull Arity[] arities,
+      @NotNull String[] values,
+      int defaultIndex) {
     super(ResourceType.PLURALS, name, sourceFile, visibility);
     assert arities.length == values.length;
     myArities = arities;
@@ -108,21 +113,23 @@ public final class BasicPluralsResourceItem extends BasicValueResourceItemBase i
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicPluralsResourceItem other = (BasicPluralsResourceItem) obj;
     return Arrays.equals(myArities, other.myArities) && Arrays.equals(myValues, other.myValues);
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     int n = myArities.length;
     stream.writeInt(n);
@@ -133,15 +140,15 @@ public final class BasicPluralsResourceItem extends BasicValueResourceItemBase i
     stream.writeInt(myDefaultIndex);
   }
 
-  /**
-   * Creates a BasicPluralsResourceItem by reading its contents from the given stream.
-   */
+  /** Creates a BasicPluralsResourceItem by reading its contents from the given stream. */
   @NotNull
-  static BasicPluralsResourceItem deserialize(@NotNull Base128InputStream stream,
-                                              @NotNull String name,
-                                              @NotNull ResourceVisibility visibility,
-                                              @NotNull ResourceSourceFile sourceFile,
-                                              @NotNull ResourceNamespace.Resolver resolver) throws IOException {
+  static BasicPluralsResourceItem deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull String name,
+      @NotNull ResourceVisibility visibility,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceNamespace.Resolver resolver)
+      throws IOException {
     int n = stream.readInt();
     Arity[] arities = n == 0 ? Arity.EMPTY_ARRAY : new Arity[n];
     String[] values = n == 0 ? new String[0] : new String[n];
@@ -153,7 +160,8 @@ public final class BasicPluralsResourceItem extends BasicValueResourceItemBase i
     if (values.length != 0 && defaultIndex >= values.length) {
       throw StreamFormatException.invalidFormat();
     }
-    BasicPluralsResourceItem item = new BasicPluralsResourceItem(name, sourceFile, visibility, arities, values, defaultIndex);
+    BasicPluralsResourceItem item =
+        new BasicPluralsResourceItem(name, sourceFile, visibility, arities, values, defaultIndex);
     item.setNamespaceResolver(resolver);
     return item;
   }

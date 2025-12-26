@@ -17,7 +17,7 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.tyron.code.analyzer.semantic.SemanticToken;
-import com.tyron.code.analyzer.semantic.TokenType;
+import dev.mutwakil.javac.JavacTreesUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,8 +30,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import org.eclipse.tm4e.core.internal.grammar.ScopeStack;
-import javax.tools.JavaCompiler.CompilationTask;
-import dev.mutwakil.javac.JavacTreesUtil;
 
 public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
@@ -45,8 +43,8 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
   private List<SemanticToken> tokens;
 
   public JavaSemanticHighlighter(JavacTask task) {
-   // this.trees = Trees.instance(task);
-    this.trees = JavacTreesUtil.instance( task);
+    // this.trees = Trees.instance(task);
+    this.trees = JavacTreesUtil.instance(task);
     this.pos = trees.getSourcePositions();
     this.elements = task.getElements();
     this.tokens = new ArrayList<>();
@@ -203,7 +201,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
   }
 
   private void addAnnotation(JCTree.JCIdent identifier) {
-    ScopeStack tokenType = ScopeStack.from("token.error-token");//TokenType.UNKNOWN;
+    ScopeStack tokenType = ScopeStack.from("token.error-token"); // TokenType.UNKNOWN;
 
     Element element = trees.getElement(getCurrentPath());
     if (element != null) {

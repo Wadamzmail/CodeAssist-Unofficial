@@ -29,23 +29,20 @@
 package org.openjdk.javax.xml.stream;
 
 /**
- * The base exception for unexpected processing errors.  This Exception
- * class is used to report well-formedness errors as well as unexpected
- * processing conditions.
+ * The base exception for unexpected processing errors. This Exception class is used to report
+ * well-formedness errors as well as unexpected processing conditions.
+ *
  * @version 1.0
  * @author Copyright (c) 2009 by Oracle Corporation. All Rights Reserved.
  * @since 1.6
  */
-
 public class XMLStreamException extends Exception {
 
   protected Throwable nested;
   protected Location location;
 
-  /**
-   * Default constructor
-   */
-  public XMLStreamException(){
+  /** Default constructor */
+  public XMLStreamException() {
     super();
   }
 
@@ -64,7 +61,7 @@ public class XMLStreamException extends Exception {
    * @param th a nested exception
    */
   public XMLStreamException(Throwable th) {
-      super(th);
+    super(th);
     nested = th;
   }
 
@@ -87,9 +84,14 @@ public class XMLStreamException extends Exception {
    * @param location the location of the error
    */
   public XMLStreamException(String msg, Location location, Throwable th) {
-    super("ParseError at [row,col]:["+location.getLineNumber()+","+
-          location.getColumnNumber()+"]\n"+
-          "Message: "+msg);
+    super(
+        "ParseError at [row,col]:["
+            + location.getLineNumber()
+            + ","
+            + location.getColumnNumber()
+            + "]\n"
+            + "Message: "
+            + msg);
     nested = th;
     this.location = location;
   }
@@ -100,14 +102,17 @@ public class XMLStreamException extends Exception {
    * @param msg the message to report
    * @param location the location of the error
    */
-  public XMLStreamException(String msg,
-                            Location location) {
-    super("ParseError at [row,col]:["+location.getLineNumber()+","+
-          location.getColumnNumber()+"]\n"+
-          "Message: "+msg);
+  public XMLStreamException(String msg, Location location) {
+    super(
+        "ParseError at [row,col]:["
+            + location.getLineNumber()
+            + ","
+            + location.getColumnNumber()
+            + "]\n"
+            + "Message: "
+            + msg);
     this.location = location;
   }
-
 
   /**
    * Gets the nested exception.
@@ -126,5 +131,4 @@ public class XMLStreamException extends Exception {
   public Location getLocation() {
     return location;
   }
-
 }

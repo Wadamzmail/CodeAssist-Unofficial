@@ -655,9 +655,9 @@ public class MockAndroidModule extends MockJavaModule implements AndroidModule {
 
   @Override
   public void addInjectedClass(@NonNull File file) {}
+
   @Override
-    public String getPackageName() {
-        return packageName;
-    }
-  
+  public String getPackageName() {
+    return packageName;
+  }
 }

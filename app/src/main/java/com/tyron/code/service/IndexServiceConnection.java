@@ -10,6 +10,7 @@ import com.tyron.builder.log.ILogger;
 import com.tyron.builder.log.LogViewModel;
 import com.tyron.builder.model.ProjectSettings;
 import com.tyron.builder.project.Project;
+import com.tyron.code.ApplicationLoader;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.main.MainViewModel;
 import com.tyron.code.ui.project.ProjectManager;
@@ -20,7 +21,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import com.tyron.code.ApplicationLoader;
 
 /** Handles the communication between the Index service and the main fragment */
 public class IndexServiceConnection implements ServiceConnection {
@@ -91,7 +91,10 @@ public class IndexServiceConnection implements ServiceConnection {
         List<FileEditorSavedState> savedStates = new Gson().fromJson(openedFilesString, type);
         return savedStates.stream()
             .filter(it -> it.getFile().exists())
-            .map(state -> FileEditorManagerImpl.getInstance().openFile(ApplicationLoader.getInstance(), state))
+            .map(
+                state ->
+                    FileEditorManagerImpl.getInstance()
+                        .openFile(ApplicationLoader.getInstance(), state))
             .collect(Collectors.<FileEditor>toList());
       } catch (Throwable e) {
         // ignored, users may have edited the file manually and is corrupt

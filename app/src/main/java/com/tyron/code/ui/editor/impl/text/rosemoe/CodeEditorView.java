@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.common.collect.ImmutableSet;
 import com.tyron.actions.DataContext;
 import com.tyron.builder.model.DiagnosticWrapper;
@@ -24,19 +22,9 @@ import com.tyron.editor.CharPosition;
 import com.tyron.editor.Content;
 import com.tyron.editor.Editor;
 import com.tyron.xml.completion.util.DOMUtils;
-
-import org.eclipse.lemminx.dom.DOMDocument;
-import org.eclipse.lemminx.dom.DOMNode;
-import org.eclipse.lemminx.dom.DOMParser;
-import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
-
 import io.github.rosemoe.sora.lang.Language;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.TextUtils;
 import io.github.rosemoe.sora.widget.CodeEditor;
@@ -45,407 +33,419 @@ import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
-
+import java.io.File;
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
-
 import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
-
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+import org.eclipse.lemminx.dom.DOMDocument;
+import org.eclipse.lemminx.dom.DOMNode;
+import org.eclipse.lemminx.dom.DOMParser;
+import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
-    private final Set<Character> IGNORED_PAIR_ENDS = ImmutableSet.<Character>builder()
-            .add(')')
-            .add(']')
-            .add('"')
-            .add('>')
-            .add('\'')
-            .add(';')
-            .build();
+  private final Set<Character> IGNORED_PAIR_ENDS =
+      ImmutableSet.<Character>builder()
+          .add(')')
+          .add(']')
+          .add('"')
+          .add('>')
+          .add('\'')
+          .add(';')
+          .build();
 
-    private boolean mIsBackgroundAnalysisEnabled;
+  private boolean mIsBackgroundAnalysisEnabled;
 
-    private List<DiagnosticWrapper> mDiagnostics;
-    private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
-    private File mCurrentFile;
-    private EditorViewModel mViewModel;
+  private List<DiagnosticWrapper> mDiagnostics;
+  private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
+  private File mCurrentFile;
+  private EditorViewModel mViewModel;
 
-    private final Paint mDiagnosticPaint;
-    private CodeAssistCompletionWindow mCompletionWindow;
+  private final Paint mDiagnosticPaint;
+  private CodeAssistCompletionWindow mCompletionWindow;
 
-    public CodeEditorView(Context context) {
-        this(DataContext.wrap(context), null);
-    }
+  public CodeEditorView(Context context) {
+    this(DataContext.wrap(context), null);
+  }
 
-    public CodeEditorView(Context context, AttributeSet attrs) {
-        this(DataContext.wrap(context), attrs, 0);
-    }
+  public CodeEditorView(Context context, AttributeSet attrs) {
+    this(DataContext.wrap(context), attrs, 0);
+  }
 
-    public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(DataContext.wrap(context), attrs, defStyleAttr, 0);
-    }
+  public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr) {
+    this(DataContext.wrap(context), attrs, defStyleAttr, 0);
+  }
 
-    public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(DataContext.wrap(context), attrs, defStyleAttr, defStyleRes);
+  public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(DataContext.wrap(context), attrs, defStyleAttr, defStyleRes);
 
-        mDiagnosticPaint = new Paint();
-        mDiagnosticPaint.setStrokeWidth(getDpUnit() * 2);
+    mDiagnosticPaint = new Paint();
+    mDiagnosticPaint.setStrokeWidth(getDpUnit() * 2);
 
-        init();
-    }
+    init();
+  }
 
-    @Nullable
-    @Override
-    public Project getProject() {
-        return ProjectManager.getInstance().getCurrentProject();
-    }
+  @Nullable
+  @Override
+  public Project getProject() {
+    return ProjectManager.getInstance().getCurrentProject();
+  }
 
-    @Override
-    public void setEditorLanguage(@Nullable Language lang) {
-        super.setEditorLanguage(lang);
+  @Override
+  public void setEditorLanguage(@Nullable Language lang) {
+    super.setEditorLanguage(lang);
 
-        if (lang != null) {
-            // languages should have an option to declare their own tab width
-            try {
-                Class<? extends Language> aClass = lang.getClass();
-                Method method = ReflectionUtil.getDeclaredMethod(aClass, "getTabWidth");
-                if (method != null) {
-                    Object invoke = method.invoke(getEditorLanguage());
-                    if (invoke instanceof Integer) {
-                        setTabWidth((Integer) invoke);
-                    }
-                }
-            } catch (Throwable e) {
-                // use default
-            }
+    if (lang != null) {
+      // languages should have an option to declare their own tab width
+      try {
+        Class<? extends Language> aClass = lang.getClass();
+        Method method = ReflectionUtil.getDeclaredMethod(aClass, "getTabWidth");
+        if (method != null) {
+          Object invoke = method.invoke(getEditorLanguage());
+          if (invoke instanceof Integer) {
+            setTabWidth((Integer) invoke);
+          }
         }
+      } catch (Throwable e) {
+        // use default
+      }
+    }
+  }
+
+  private void init() {
+    setColorScheme(EditorUtil.getDefaultColorScheme(getContext()));
+    replaceComponent(EditorTextActionWindow.class, new NoOpTextActionWindow(this));
+  }
+
+  @Override
+  protected void onDetachedFromWindow() {
+    super.onDetachedFromWindow();
+
+    hideEditorWindows();
+  }
+
+  @Override
+  public void setColorScheme(@NonNull EditorColorScheme colors) {
+    super.setColorScheme(colors);
+  }
+
+  @Override
+  public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
+    mDiagnostics = diagnostics;
+    convDiagnostics(diagnostics);
+  }
+
+  public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
+    mDiagnosticsListener = listener;
+  }
+
+  @Override
+  public File getCurrentFile() {
+    return mCurrentFile;
+  }
+
+  @Override
+  public void openFile(File file) {
+    mCurrentFile = file;
+  }
+
+  @Override
+  public CharPosition getCharPosition(int index) {
+    io.github.rosemoe.sora.text.CharPosition charPosition =
+        getText().getIndexer().getCharPosition(index);
+    return new CharPosition(charPosition.line, charPosition.column);
+  }
+
+  @Override
+  public int getCharIndex(int line, int column) {
+    return getText().getCharIndex(line, column);
+  }
+
+  @Override
+  public boolean useTab() {
+    //noinspection ConstantConditions, editor language can be null
+    if (getEditorLanguage() == null) {
+      // enabled by default
+      return true;
     }
 
-    private void init() {
-        setColorScheme(EditorUtil.getDefaultColorScheme(getContext()));
-        replaceComponent(EditorTextActionWindow.class, new NoOpTextActionWindow(this));
+    return getEditorLanguage().useTab();
+  }
+
+  @Override
+  public int getTabCount() {
+    return getTabWidth();
+  }
+
+  @Override
+  public void insert(int line, int column, String string) {
+    getText().insert(line, column, string);
+  }
+
+  @Override
+  public void commitText(CharSequence text) {
+    try {
+      super.commitText(text);
+    } catch (Exception e) {
     }
+  }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        hideEditorWindows();
-    }
-
-    @Override
-    public void setColorScheme(@NonNull EditorColorScheme colors) {
-        super.setColorScheme(colors);
-    }
-
-
-    @Override
-    public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
-        mDiagnostics = diagnostics;
-        convDiagnostics(diagnostics);
-        
-    }
-
-    public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
-        mDiagnosticsListener = listener;
-    }
-
-    @Override
-    public File getCurrentFile() {
-        return mCurrentFile;
-    }
-
-    @Override
-    public void openFile(File file) {
-        mCurrentFile = file;
-    }
-
-    @Override
-    public CharPosition getCharPosition(int index) {
-        io.github.rosemoe.sora.text.CharPosition charPosition =
-                getText().getIndexer().getCharPosition(index);
-        return new CharPosition(charPosition.line, charPosition.column);
-    }
-
-    @Override
-    public int getCharIndex(int line, int column) {
-        return getText().getCharIndex(line, column);
-    }
-
-    @Override
-    public boolean useTab() {
-        //noinspection ConstantConditions, editor language can be null
-        if (getEditorLanguage() == null) {
-            // enabled by default
-            return true;
-        }
-
-        return getEditorLanguage().useTab();
-    }
-
-    @Override
-    public int getTabCount() {
-        return getTabWidth();
-    }
-
-    @Override
-    public void insert(int line, int column, String string) {
-        getText().insert(line, column, string);
-    }
-
-    @Override
-    public void commitText(CharSequence text) {
-        try{super.commitText(text);}catch(Exception e){} 
-    }
-
-    @Override
-   public void commitText(CharSequence text, boolean applyAutoIndent) {
-     try{
-    if (text.length() == 1) {
+  @Override
+  public void commitText(CharSequence text, boolean applyAutoIndent) {
+    try {
+      if (text.length() == 1) {
         int index = getCursor().getLeft();
         int length = getText().length();
 
-        
         if (index < length) {
-            char currentChar = getText().charAt(index);
-            char c = text.charAt(0);
+          char currentChar = getText().charAt(index);
+          char c = text.charAt(0);
 
-            if (IGNORED_PAIR_ENDS.contains(c) && c == currentChar) {
-                setSelection(
-                        getCursor().getLeftLine(),
-                        getCursor().getLeftColumn() + 1
-                );
-                return;
-            }
-        }
-    }
-   }catch(Exception e){}
-    super.commitText(text, applyAutoIndent);
-
-     if (text.length() == 1) {
-        handleAutoInsert(text.charAt(0));
-     }
-   
-   }
-
-    private void handleAutoInsert(char c) {
-        if (getEditorLanguage() instanceof LanguageXML) {
-            try {
-                if (c != '>' && c != '/') {
-                    return;
-                }
-                boolean full = c == '>';
-
-                DOMDocument document = DOMParser.getInstance().parse(getText().toString(), "", null);
-                DOMNode nodeAt = document.findNodeAt(getCursor().getLeft());
-                if (!DOMUtils.isClosed(nodeAt) && nodeAt.getNodeName() != null) {
-                    if (XmlUtils.getCompletionType(document, getCursor().getLeft()) ==
-                        XmlCompletionType.ATTRIBUTE_VALUE) {
-                        return;
-                    }
-                    String insertText = full ? "</" + nodeAt.getNodeName() + ">" : ">";
-                    commitText(insertText);
-                    setSelection(getCursor().getLeftLine(),
-                            getCursor().getLeftColumn() - (full ? insertText.length() : 0));
-                }
-            } catch (Exception e) {
-                // ignored, just dont auto insert
-            }
-        }
-    }
-
-      @Override
-  public void deleteText() {
-   try{
-    Cursor cursor = getCursor();
-    if (!cursor.isSelected()) {
-      io.github.rosemoe.sora.text.Content text = getText();
-      int startIndex = cursor.getLeft();
-      if (startIndex - 1 >= 0) {
-        char deleteChar = text.charAt(startIndex - 1);
-        char afterChar = text.charAt(startIndex);
-        SymbolPairMatch.SymbolPair replacement = null;
-
-        SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
-        if (pairs != null) {
-          replacement = pairs.matchBestPairBySingleChar(deleteChar);
-        }
-        if (replacement != null) {
-          if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
-            text.delete(startIndex - 1, startIndex + 1);
+          if (IGNORED_PAIR_ENDS.contains(c) && c == currentChar) {
+            setSelection(getCursor().getLeftLine(), getCursor().getLeftColumn() + 1);
             return;
           }
         }
       }
+    } catch (Exception e) {
     }
-   }catch(Exception e){}
+    super.commitText(text, applyAutoIndent);
+
+    if (text.length() == 1) {
+      handleAutoInsert(text.charAt(0));
+    }
+  }
+
+  private void handleAutoInsert(char c) {
+    if (getEditorLanguage() instanceof LanguageXML) {
+      try {
+        if (c != '>' && c != '/') {
+          return;
+        }
+        boolean full = c == '>';
+
+        DOMDocument document = DOMParser.getInstance().parse(getText().toString(), "", null);
+        DOMNode nodeAt = document.findNodeAt(getCursor().getLeft());
+        if (!DOMUtils.isClosed(nodeAt) && nodeAt.getNodeName() != null) {
+          if (XmlUtils.getCompletionType(document, getCursor().getLeft())
+              == XmlCompletionType.ATTRIBUTE_VALUE) {
+            return;
+          }
+          String insertText = full ? "</" + nodeAt.getNodeName() + ">" : ">";
+          commitText(insertText);
+          setSelection(
+              getCursor().getLeftLine(),
+              getCursor().getLeftColumn() - (full ? insertText.length() : 0));
+        }
+      } catch (Exception e) {
+        // ignored, just dont auto insert
+      }
+    }
+  }
+
+  @Override
+  public void deleteText() {
+    try {
+      Cursor cursor = getCursor();
+      if (!cursor.isSelected()) {
+        io.github.rosemoe.sora.text.Content text = getText();
+        int startIndex = cursor.getLeft();
+        if (startIndex - 1 >= 0) {
+          char deleteChar = text.charAt(startIndex - 1);
+          char afterChar = text.charAt(startIndex);
+          SymbolPairMatch.SymbolPair replacement = null;
+
+          SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
+          if (pairs != null) {
+            replacement = pairs.matchBestPairBySingleChar(deleteChar);
+          }
+          if (replacement != null) {
+            if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
+              text.delete(startIndex - 1, startIndex + 1);
+              return;
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+    }
     super.deleteText();
   }
 
-    @Override
-    public void insertMultilineString(int line, int column, String string) {
-        String currentLine = getText().getLineString(line);
+  @Override
+  public void insertMultilineString(int line, int column, String string) {
+    String currentLine = getText().getLineString(line);
 
-        String[] lines = string.split("\\n");
-        if (lines.length == 0) {
-            return;
-        }
-        int count = TextUtils.countLeadingSpaceCount(currentLine, getTabWidth());
-        for (int i = 0; i < lines.length; i++) {
-            String trimmed = lines[i].trim();
+    String[] lines = string.split("\\n");
+    if (lines.length == 0) {
+      return;
+    }
+    int count = TextUtils.countLeadingSpaceCount(currentLine, getTabWidth());
+    for (int i = 0; i < lines.length; i++) {
+      String trimmed = lines[i].trim();
 
-            int advance = EditorUtil.getFormatIndent(getEditorLanguage(), trimmed);
+      int advance = EditorUtil.getFormatIndent(getEditorLanguage(), trimmed);
 
-            if (advance < 0) {
-                count += advance;
-            }
+      if (advance < 0) {
+        count += advance;
+      }
 
-            if (i != 0) {
-                String indent = TextUtils.createIndent(count, getTabWidth(), useTab());
-                trimmed = indent + trimmed;
-            }
+      if (i != 0) {
+        String indent = TextUtils.createIndent(count, getTabWidth(), useTab());
+        trimmed = indent + trimmed;
+      }
 
-            lines[i] = trimmed;
+      lines[i] = trimmed;
 
-            if (advance > 0) {
-                count += advance;
-            }
-        }
-
-        String textToInsert = String.join("\n", lines);
-        getText().insert(line, column, textToInsert);
+      if (advance > 0) {
+        count += advance;
+      }
     }
 
-    @Override
-    public void delete(int startLine, int startColumn, int endLine, int endColumn) {
-        getText().delete(startLine, startColumn, endLine, endColumn);
-    }
+    String textToInsert = String.join("\n", lines);
+    getText().insert(line, column, textToInsert);
+  }
 
-    @Override
-    public void delete(int startIndex, int endIndex) {
-        getText().delete(startIndex, endIndex);
-    }
+  @Override
+  public void delete(int startLine, int startColumn, int endLine, int endColumn) {
+    getText().delete(startLine, startColumn, endLine, endColumn);
+  }
 
-    @Override
-    public void replace(int line, int column, int endLine, int endColumn, String string) {
-        getText().replace(line, column, endLine, endColumn, string);
-    }
+  @Override
+  public void delete(int startIndex, int endIndex) {
+    getText().delete(startIndex, endIndex);
+  }
 
-    @Override
-    public void setSelection(int line, int column) {
-        super.setSelection(line, column);
-    }
+  @Override
+  public void replace(int line, int column, int endLine, int endColumn, String string) {
+    getText().replace(line, column, endLine, endColumn, string);
+  }
 
-    @Override
-    public void setSelectionRegion(int lineLeft, int columnLeft, int lineRight, int columnRight) {
-        CodeEditorView.super.setSelectionRegion(lineLeft, columnLeft, lineRight, columnRight);
-    }
+  @Override
+  public void setSelection(int line, int column) {
+    super.setSelection(line, column);
+  }
 
-    @Override
-    public void setSelectionRegion(int startIndex, int endIndex) {
-        CharPosition start = getCharPosition(startIndex);
-        CharPosition end = getCharPosition(endIndex);
-        CodeEditorView.super.setSelectionRegion(start.getLine(),
-                start.getColumn(),
-                end.getLine(),
-                end.getColumn());
-    }
+  @Override
+  public void setSelectionRegion(int lineLeft, int columnLeft, int lineRight, int columnRight) {
+    CodeEditorView.super.setSelectionRegion(lineLeft, columnLeft, lineRight, columnRight);
+  }
 
-    @Override
-    public void beginBatchEdit() {
-        getText().beginBatchEdit();
-    }
+  @Override
+  public void setSelectionRegion(int startIndex, int endIndex) {
+    CharPosition start = getCharPosition(startIndex);
+    CharPosition end = getCharPosition(endIndex);
+    CodeEditorView.super.setSelectionRegion(
+        start.getLine(), start.getColumn(), end.getLine(), end.getColumn());
+  }
 
-    @Override
-    public void endBatchEdit() {
-        getText().endBatchEdit();
-    }
+  @Override
+  public void beginBatchEdit() {
+    getText().beginBatchEdit();
+  }
 
-    @Override
-    public synchronized boolean formatCodeAsync() {
-        return CodeEditorView.super.formatCodeAsync();
-    }
+  @Override
+  public void endBatchEdit() {
+    getText().endBatchEdit();
+  }
 
-    @Override
-    public boolean formatCodeAsync(int startIndex, int endIndex) {
-        return formatCodeAsync(getText().getIndexer().getCharPosition(startIndex),getText().getIndexer().getCharPosition(endIndex));
-    }
+  @Override
+  public synchronized boolean formatCodeAsync() {
+    return CodeEditorView.super.formatCodeAsync();
+  }
 
-    @Override
-    public Caret getCaret() {
-        return new CursorWrapper(getCursor());
-    }
+  @Override
+  public boolean formatCodeAsync(int startIndex, int endIndex) {
+    return formatCodeAsync(
+        getText().getIndexer().getCharPosition(startIndex),
+        getText().getIndexer().getCharPosition(endIndex));
+  }
 
-    @Override
-    public Content getContent() {
-        return new ContentWrapper(CodeEditorView.this.getText());
-    }
+  @Override
+  public Caret getCaret() {
+    return new CursorWrapper(getCursor());
+  }
 
-    /**
-     * Background analysis can sometimes be expensive.
-     * Set whether background analysis should be enabled for this editor.
-     */
-    public void setBackgroundAnalysisEnabled(boolean enabled) {
-        mIsBackgroundAnalysisEnabled = enabled;
-    }
+  @Override
+  public Content getContent() {
+    return new ContentWrapper(CodeEditorView.this.getText());
+  }
 
-    @Override
-    public boolean isBackgroundAnalysisEnabled() {
-        return mIsBackgroundAnalysisEnabled;
-    }
+  /**
+   * Background analysis can sometimes be expensive. Set whether background analysis should be
+   * enabled for this editor.
+   */
+  public void setBackgroundAnalysisEnabled(boolean enabled) {
+    mIsBackgroundAnalysisEnabled = enabled;
+  }
 
-    public void setAnalyzing(boolean analyzing) {
-        if (mViewModel != null) {
-            mViewModel.setAnalyzeState(analyzing);
-        }
-    }
+  @Override
+  public boolean isBackgroundAnalysisEnabled() {
+    return mIsBackgroundAnalysisEnabled;
+  }
 
-    @Override
-    public void requireCompletion() {
-        getComponent(EditorAutoCompletion.class).requireCompletion();
+  public void setAnalyzing(boolean analyzing) {
+    if (mViewModel != null) {
+      mViewModel.setAnalyzeState(analyzing);
     }
+  }
 
-    public void setViewModel(EditorViewModel editorViewModel) {
-        mViewModel = editorViewModel;
-    }
+  @Override
+  public void requireCompletion() {
+    getComponent(EditorAutoCompletion.class).requireCompletion();
+  }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-    }
-     private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
+  public void setViewModel(EditorViewModel editorViewModel) {
+    mViewModel = editorViewModel;
+  }
+
+  @Override
+  protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+  }
+
+  private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
     Objects.requireNonNull(getDiagnostics()).reset();
-    Function<Diagnostic.Kind, Short> severitySupplier = it -> {
-        switch (it) {
+    Function<Diagnostic.Kind, Short> severitySupplier =
+        it -> {
+          switch (it) {
             case ERROR:
-                return DiagnosticRegion.SEVERITY_ERROR;
+              return DiagnosticRegion.SEVERITY_ERROR;
             case MANDATORY_WARNING:
             case WARNING:
-                return DiagnosticRegion.SEVERITY_WARNING;
+              return DiagnosticRegion.SEVERITY_WARNING;
             default:
             case OTHER:
             case NOTE:
-                return DiagnosticRegion.SEVERITY_NONE;
-        }
-    };
+              return DiagnosticRegion.SEVERITY_NONE;
+          }
+        };
 
     DiagnosticsContainer container = new DiagnosticsContainer();
 
     diagnostics.stream()
-                    .map(it -> new DiagnosticRegion((int) it.getStartPosition(),
-                            (int) it.getEndPosition(),
-                            severitySupplier.apply(it.getKind())))
-                    .forEach(Objects.requireNonNull(getDiagnostics())::addDiagnostic);
-   } 
-       @Override 
- public void moveSelectionRight(){}
-  @Override 
-public  void moveSelectionUp(){} 
-  @Override 
-public  void moveSelectionDown(){}
-  @Override 
-public  void moveSelectionLeft(){}  
+        .map(
+            it ->
+                new DiagnosticRegion(
+                    (int) it.getStartPosition(),
+                    (int) it.getEndPosition(),
+                    severitySupplier.apply(it.getKind())))
+        .forEach(Objects.requireNonNull(getDiagnostics())::addDiagnostic);
+  }
+
+  @Override
+  public void moveSelectionRight() {}
+
+  @Override
+  public void moveSelectionUp() {}
+
+  @Override
+  public void moveSelectionDown() {}
+
+  @Override
+  public void moveSelectionLeft() {}
 }

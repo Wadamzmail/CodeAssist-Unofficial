@@ -15,10 +15,26 @@ class PatienceIntLCS {
   private final BitSet myChanges2;
 
   PatienceIntLCS(int[] first, int[] second) {
-    this(first, second, 0, first.length, 0, second.length, new BitSet(first.length), new BitSet(second.length));
+    this(
+        first,
+        second,
+        0,
+        first.length,
+        0,
+        second.length,
+        new BitSet(first.length),
+        new BitSet(second.length));
   }
 
-  PatienceIntLCS(int[] first, int[] second, int start1, int count1, int start2, int count2, BitSet changes1, BitSet changes2) {
+  PatienceIntLCS(
+      int[] first,
+      int[] second,
+      int start1,
+      int count1,
+      int start2,
+      int count2,
+      BitSet changes1,
+      BitSet changes2) {
     myFirst = first;
     mySecond = second;
     myStart1 = start1;
@@ -39,7 +55,8 @@ class PatienceIntLCS {
     execute(myStart1, myCount1, myStart2, myCount2, thresholdCheckCounter);
   }
 
-  private void execute(int start1, int count1, int start2, int count2, int thresholdCheckCounter) throws FilesTooBigForDiffException {
+  private void execute(int start1, int count1, int start2, int count2, int thresholdCheckCounter)
+      throws FilesTooBigForDiffException {
     if (count1 == 0 && count2 == 0) {
       return;
     }
@@ -61,24 +78,23 @@ class PatienceIntLCS {
 
     if (count1 == 0 || count2 == 0) {
       addChange(start1, count1, start2, count2);
-    }
-    else {
-        if (thresholdCheckCounter == 0) {
-            checkReduction(count1, count2);
-        }
+    } else {
+      if (thresholdCheckCounter == 0) {
+        checkReduction(count1, count2);
+      }
       thresholdCheckCounter = Math.max(-1, thresholdCheckCounter - 1);
 
       UniqueLCS uniqueLCS = new UniqueLCS(myFirst, mySecond, start1, count1, start2, count2);
       int[][] matching = uniqueLCS.execute();
 
       if (matching == null) {
-          if (thresholdCheckCounter >= 0) {
-              checkReduction(count1, count2);
-          }
-        MyersLCS intLCS = new MyersLCS(myFirst, mySecond, start1, count1, start2, count2, myChanges1, myChanges2);
+        if (thresholdCheckCounter >= 0) {
+          checkReduction(count1, count2);
+        }
+        MyersLCS intLCS =
+            new MyersLCS(myFirst, mySecond, start1, count1, start2, count2, myChanges1, myChanges2);
         intLCS.executeLinear();
-      }
-      else {
+      } else {
         int s1, s2, c1, c2;
         int matched = matching[0].length;
         assert matched > 0;
@@ -103,16 +119,14 @@ class PatienceIntLCS {
         if (matching[0][matched - 1] == count1 - 1) {
           s1 = count1 - 1;
           c1 = 0;
-        }
-        else {
+        } else {
           s1 = matching[0][matched - 1] + 1;
           c1 = count1 - s1;
         }
         if (matching[1][matched - 1] == count2 - 1) {
           s2 = count2 - 1;
           c2 = 0;
-        }
-        else {
+        } else {
           s2 = matching[1][matched - 1] + 1;
           c2 = count2 - s2;
         }
@@ -126,9 +140,9 @@ class PatienceIntLCS {
     final int size = Math.min(count1, count2);
     int idx = 0;
     for (int i = 0; i < size; i++) {
-        if (!(myFirst[start1 + i] == mySecond[start2 + i])) {
-            break;
-        }
+      if (!(myFirst[start1 + i] == mySecond[start2 + i])) {
+        break;
+      }
       ++idx;
     }
     return idx;
@@ -138,9 +152,9 @@ class PatienceIntLCS {
     final int size = Math.min(count1, count2);
     int idx = 0;
     for (int i = 1; i <= size; i++) {
-        if (!(myFirst[start1 + count1 - i] == mySecond[start2 + count2 - i])) {
-            break;
-        }
+      if (!(myFirst[start1 + count1 - i] == mySecond[start2 + count2 - i])) {
+        break;
+      }
       ++idx;
     }
     return idx;
@@ -152,16 +166,16 @@ class PatienceIntLCS {
   }
 
   public BitSet[] getChanges() {
-    return new BitSet[]{myChanges1, myChanges2};
+    return new BitSet[] {myChanges1, myChanges2};
   }
 
   private void checkReduction(int count1, int count2) throws FilesTooBigForDiffException {
-      if (count1 * 2 < myCount1) {
-          return;
-      }
-      if (count2 * 2 < myCount2) {
-          return;
-      }
+    if (count1 * 2 < myCount1) {
+      return;
+    }
+    if (count2 * 2 < myCount2) {
+      return;
+    }
     throw new FilesTooBigForDiffException();
   }
 }

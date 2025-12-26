@@ -57,19 +57,17 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.openjdk.com.sun.org.apache.bcel.internal.classfile.*;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
+import org.openjdk.com.sun.org.apache.bcel.internal.classfile.*;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantCP;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantNameAndType;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantPool;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantUtf8;
 
 /**
- * Super class for InvokeInstruction and FieldInstruction, since they have
- * some methods in common!
+ * Super class for InvokeInstruction and FieldInstruction, since they have some methods in common!
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public abstract class FieldOrMethod extends CPInstruction implements LoadClass {
   /**
@@ -85,40 +83,45 @@ public abstract class FieldOrMethod extends CPInstruction implements LoadClass {
     super(opcode, index);
   }
 
-  /** @return signature of referenced method/field.
+  /**
+   * @return signature of referenced method/field.
    */
   public String getSignature(ConstantPoolGen cpg) {
-    ConstantPool cp   = cpg.getConstantPool();
-    ConstantCP cmr  = (ConstantCP)cp.getConstant(index);
-    ConstantNameAndType cnat = (ConstantNameAndType)cp.getConstant(cmr.getNameAndTypeIndex());
+    ConstantPool cp = cpg.getConstantPool();
+    ConstantCP cmr = (ConstantCP) cp.getConstant(index);
+    ConstantNameAndType cnat = (ConstantNameAndType) cp.getConstant(cmr.getNameAndTypeIndex());
 
-    return ((ConstantUtf8)cp.getConstant(cnat.getSignatureIndex())).getBytes();
+    return ((ConstantUtf8) cp.getConstant(cnat.getSignatureIndex())).getBytes();
   }
 
-  /** @return name of referenced method/field.
+  /**
+   * @return name of referenced method/field.
    */
   public String getName(ConstantPoolGen cpg) {
-    ConstantPool        cp   = cpg.getConstantPool();
-    ConstantCP          cmr  = (ConstantCP)cp.getConstant(index);
-    ConstantNameAndType cnat = (ConstantNameAndType)cp.getConstant(cmr.getNameAndTypeIndex());
-    return ((ConstantUtf8)cp.getConstant(cnat.getNameIndex())).getBytes();
+    ConstantPool cp = cpg.getConstantPool();
+    ConstantCP cmr = (ConstantCP) cp.getConstant(index);
+    ConstantNameAndType cnat = (ConstantNameAndType) cp.getConstant(cmr.getNameAndTypeIndex());
+    return ((ConstantUtf8) cp.getConstant(cnat.getNameIndex())).getBytes();
   }
 
-  /** @return name of the referenced class/interface
+  /**
+   * @return name of the referenced class/interface
    */
   public String getClassName(ConstantPoolGen cpg) {
-    ConstantPool cp  = cpg.getConstantPool();
-    ConstantCP   cmr = (ConstantCP)cp.getConstant(index);
+    ConstantPool cp = cpg.getConstantPool();
+    ConstantCP cmr = (ConstantCP) cp.getConstant(index);
     return cp.getConstantString(cmr.getClassIndex(), Constants.CONSTANT_Class).replace('/', '.');
   }
 
-  /** @return type of the referenced class/interface
+  /**
+   * @return type of the referenced class/interface
    */
   public ObjectType getClassType(ConstantPoolGen cpg) {
     return new ObjectType(getClassName(cpg));
   }
 
-  /** @return type of the referenced class/interface
+  /**
+   * @return type of the referenced class/interface
    */
   public ObjectType getLoadClassType(ConstantPoolGen cpg) {
     return getClassType(cpg);

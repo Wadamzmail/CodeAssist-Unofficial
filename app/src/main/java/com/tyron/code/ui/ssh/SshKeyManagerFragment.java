@@ -32,6 +32,7 @@ import com.tyron.code.util.UiUtilsKt;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,7 +44,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
-import dev.mutwakil.codeassist.R;
 
 public class SshKeyManagerFragment extends Fragment {
 

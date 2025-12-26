@@ -61,7 +61,7 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
 /**
  * Super class for the IFxxx family of instructions.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public abstract class IfInstruction extends BranchInstruction implements StackConsumer {
   /**

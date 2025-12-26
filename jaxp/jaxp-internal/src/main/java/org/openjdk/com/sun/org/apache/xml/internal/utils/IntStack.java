@@ -27,21 +27,16 @@ import java.util.EmptyStackException;
 /**
  * Implement a stack of simple integers.
  *
- * %OPT%
- * This is currently based on IntVector, which permits fast acess but pays a
- * heavy recopying penalty if/when its size is increased. If we expect deep
- * stacks, we should consider a version based on ChunkedIntVector.
+ * <p>%OPT% This is currently based on IntVector, which permits fast acess but pays a heavy
+ * recopying penalty if/when its size is increased. If we expect deep stacks, we should consider a
+ * version based on ChunkedIntVector.
+ *
  * @xsl.usage internal
  */
-public class IntStack extends IntVector
-{
+public class IntStack extends IntVector {
 
-  /**
-   * Default constructor.  Note that the default
-   * block size is very small, for small lists.
-   */
-  public IntStack()
-  {
+  /** Default constructor. Note that the default block size is very small, for small lists. */
+  public IntStack() {
     super();
   }
 
@@ -50,8 +45,7 @@ public class IntStack extends IntVector
    *
    * @param blocksize Size of block to allocate
    */
-  public IntStack(int blocksize)
-  {
+  public IntStack(int blocksize) {
     super(blocksize);
   }
 
@@ -60,22 +54,19 @@ public class IntStack extends IntVector
    *
    * @param v IntStack to copy
    */
-  public IntStack (IntStack v)
-  {
-        super(v);
+  public IntStack(IntStack v) {
+    super(v);
   }
 
   /**
    * Pushes an item onto the top of this stack.
    *
-   * @param   i   the int to be pushed onto this stack.
-   * @return  the <code>item</code> argument.
+   * @param i the int to be pushed onto this stack.
+   * @return the <code>item</code> argument.
    */
-  public int push(int i)
-  {
+  public int push(int i) {
 
-    if ((m_firstFree + 1) >= m_mapSize)
-    {
+    if ((m_firstFree + 1) >= m_mapSize) {
       m_mapSize += m_blocksize;
 
       int newMap[] = new int[m_mapSize];
@@ -93,39 +84,30 @@ public class IntStack extends IntVector
   }
 
   /**
-   * Removes the object at the top of this stack and returns that
-   * object as the value of this function.
+   * Removes the object at the top of this stack and returns that object as the value of this
+   * function.
    *
-   * @return     The object at the top of this stack.
+   * @return The object at the top of this stack.
    */
-  public final int pop()
-  {
+  public final int pop() {
     return m_map[--m_firstFree];
   }
 
-  /**
-   * Quickly pops a number of items from the stack.
-   */
-
-  public final void quickPop(int n)
-  {
+  /** Quickly pops a number of items from the stack. */
+  public final void quickPop(int n) {
     m_firstFree -= n;
   }
 
   /**
-   * Looks at the object at the top of this stack without removing it
-   * from the stack.
+   * Looks at the object at the top of this stack without removing it from the stack.
    *
-   * @return     the object at the top of this stack.
-   * @throws  EmptyStackException  if this stack is empty.
+   * @return the object at the top of this stack.
+   * @throws EmptyStackException if this stack is empty.
    */
-  public final int peek()
-  {
+  public final int peek() {
     try {
       return m_map[m_firstFree - 1];
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
+    } catch (ArrayIndexOutOfBoundsException e) {
       throw new EmptyStackException();
     }
   }
@@ -134,16 +116,13 @@ public class IntStack extends IntVector
    * Looks at the object at the position the stack counting down n items.
    *
    * @param n The number of items down, indexed from zero.
-   * @return     the object at n items down.
-   * @throws  EmptyStackException  if this stack is empty.
+   * @return the object at n items down.
+   * @throws EmptyStackException if this stack is empty.
    */
-  public int peek(int n)
-  {
+  public int peek(int n) {
     try {
-      return m_map[m_firstFree-(1+n)];
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
+      return m_map[m_firstFree - (1 + n)];
+    } catch (ArrayIndexOutOfBoundsException e) {
       throw new EmptyStackException();
     }
   }
@@ -151,17 +130,13 @@ public class IntStack extends IntVector
   /**
    * Sets an object at a the top of the statck
    *
-   *
    * @param val object to set at the top
-   * @throws  EmptyStackException  if this stack is empty.
+   * @throws EmptyStackException if this stack is empty.
    */
-  public void setTop(int val)
-  {
+  public void setTop(int val) {
     try {
       m_map[m_firstFree - 1] = val;
-    }
-    catch (ArrayIndexOutOfBoundsException e)
-    {
+    } catch (ArrayIndexOutOfBoundsException e) {
       throw new EmptyStackException();
     }
   }
@@ -169,31 +144,26 @@ public class IntStack extends IntVector
   /**
    * Tests if this stack is empty.
    *
-   * @return  <code>true</code> if this stack is empty;
-   *          <code>false</code> otherwise.
-   * @since   JDK1.0
+   * @return <code>true</code> if this stack is empty; <code>false</code> otherwise.
+   * @since JDK1.0
    */
-  public boolean empty()
-  {
+  public boolean empty() {
     return m_firstFree == 0;
   }
 
   /**
    * Returns where an object is on this stack.
    *
-   * @param   o   the desired object.
-   * @return  the distance from the top of the stack where the object is]
-   *          located; the return value <code>-1</code> indicates that the
-   *          object is not on the stack.
-   * @since   JDK1.0
+   * @param o the desired object.
+   * @return the distance from the top of the stack where the object is] located; the return value
+   *     <code>-1</code> indicates that the object is not on the stack.
+   * @since JDK1.0
    */
-  public int search(int o)
-  {
+  public int search(int o) {
 
     int i = lastIndexOf(o);
 
-    if (i >= 0)
-    {
+    if (i >= 0) {
       return size() - i;
     }
 
@@ -205,9 +175,7 @@ public class IntStack extends IntVector
    *
    * @return clone of current IntStack
    */
-  public Object clone()
-    throws CloneNotSupportedException
-  {
-        return (IntStack) super.clone();
+  public Object clone() throws CloneNotSupportedException {
+    return (IntStack) super.clone();
   }
 }

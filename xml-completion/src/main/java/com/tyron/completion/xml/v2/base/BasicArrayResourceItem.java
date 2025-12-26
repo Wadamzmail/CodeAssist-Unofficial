@@ -15,10 +15,9 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Resource item representing an array resource.
- */
-public final class BasicArrayResourceItem extends BasicValueResourceItemBase implements ArrayResourceValue {
+/** Resource item representing an array resource. */
+public final class BasicArrayResourceItem extends BasicValueResourceItemBase
+    implements ArrayResourceValue {
   @NotNull private final List<String> myElements;
   private final int myDefaultIndex;
 
@@ -28,14 +27,15 @@ public final class BasicArrayResourceItem extends BasicValueResourceItemBase imp
    * @param name the name of the resource
    * @param sourceFile the source file containing definition of the resource
    * @param visibility the visibility of the resource
-   * @param elements the elements  or the array
+   * @param elements the elements or the array
    * @param defaultIndex the default index for the {@link #getValue()} method
    */
-  public BasicArrayResourceItem(@NotNull String name,
-                                @NotNull ResourceSourceFile sourceFile,
-                                @NotNull ResourceVisibility visibility,
-                                @NotNull List<String> elements,
-                                int defaultIndex) {
+  public BasicArrayResourceItem(
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility,
+      @NotNull List<String> elements,
+      int defaultIndex) {
     super(ResourceType.ARRAY, name, sourceFile, visibility);
     myElements = elements;
     assert elements.isEmpty() || defaultIndex < elements.size();
@@ -66,21 +66,23 @@ public final class BasicArrayResourceItem extends BasicValueResourceItemBase imp
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicArrayResourceItem other = (BasicArrayResourceItem) obj;
     return myElements.equals(other.myElements);
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     stream.writeInt(myElements.size());
     for (String element : myElements) {
@@ -89,15 +91,15 @@ public final class BasicArrayResourceItem extends BasicValueResourceItemBase imp
     stream.writeInt(myDefaultIndex);
   }
 
-  /**
-   * Creates a BasicArrayResourceItem by reading its contents from the given stream.
-   */
+  /** Creates a BasicArrayResourceItem by reading its contents from the given stream. */
   @NotNull
-  static BasicArrayResourceItem deserialize(@NotNull Base128InputStream stream,
-                                            @NotNull String name,
-                                            @NotNull ResourceVisibility visibility,
-                                            @NotNull ResourceSourceFile sourceFile,
-                                            @NotNull ResourceNamespace.Resolver resolver) throws IOException {
+  static BasicArrayResourceItem deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull String name,
+      @NotNull ResourceVisibility visibility,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceNamespace.Resolver resolver)
+      throws IOException {
     int n = stream.readInt();
     List<String> elements = n == 0 ? Collections.emptyList() : new ArrayList<>(n);
     for (int i = 0; i < n; i++) {
@@ -107,7 +109,8 @@ public final class BasicArrayResourceItem extends BasicValueResourceItemBase imp
     if (!elements.isEmpty() && defaultIndex >= elements.size()) {
       throw Base128InputStream.StreamFormatException.invalidFormat();
     }
-    BasicArrayResourceItem item = new BasicArrayResourceItem(name, sourceFile, visibility, elements, defaultIndex);
+    BasicArrayResourceItem item =
+        new BasicArrayResourceItem(name, sourceFile, visibility, elements, defaultIndex);
     item.setNamespaceResolver(resolver);
     return item;
   }

@@ -24,7 +24,6 @@
 package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler;
 
 import java.util.Vector;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.generic.ALOAD;
 import org.openjdk.com.sun.org.apache.bcel.internal.generic.ASTORE;
 import org.openjdk.com.sun.org.apache.bcel.internal.generic.ConstantPoolGen;
@@ -40,7 +39,6 @@ import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.MethodG
 import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
 import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
 import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
-
 import org.openjdk.com.sun.org.apache.xml.internal.serializer.ElemDesc;
 import org.openjdk.com.sun.org.apache.xml.internal.serializer.SerializationHandler;
 import org.openjdk.com.sun.org.apache.xml.internal.utils.XML11Char;
@@ -54,242 +52,216 @@ import org.openjdk.com.sun.org.apache.xml.internal.utils.XML11Char;
  */
 final class XslAttribute extends Instruction {
 
-    private String _prefix;
-    private AttributeValue _name;       // name treated as AVT (7.1.3)
-    private AttributeValueTemplate _namespace = null;
-    private boolean _ignore = false;
-    private boolean _isLiteral = false;  // specified name is not AVT
+  private String _prefix;
+  private AttributeValue _name; // name treated as AVT (7.1.3)
+  private AttributeValueTemplate _namespace = null;
+  private boolean _ignore = false;
+  private boolean _isLiteral = false; // specified name is not AVT
 
-    /**
-     * Returns the name of the attribute
-     */
-    public AttributeValue getName() {
-        return _name;
+  /** Returns the name of the attribute */
+  public AttributeValue getName() {
+    return _name;
+  }
+
+  /** Displays the contents of the attribute */
+  public void display(int indent) {
+    indent(indent);
+    Util.println("Attribute " + _name);
+    displayContents(indent + IndentIncrement);
+  }
+
+  /** Parses the attribute's contents. Special care taken for namespaces. */
+  public void parseContents(Parser parser) {
+    boolean generated = false;
+    final SymbolTable stable = parser.getSymbolTable();
+
+    String name = getAttribute("name");
+    String namespace = getAttribute("namespace");
+    QName qname = parser.getQName(name, false);
+    final String prefix = qname.getPrefix();
+
+    if (((prefix != null) && (prefix.equals(XMLNS_PREFIX))) || (name.equals(XMLNS_PREFIX))) {
+      reportError(this, parser, ErrorMsg.ILLEGAL_ATTR_NAME_ERR, name);
+      return;
     }
 
-    /**
-     * Displays the contents of the attribute
-     */
-    public void display(int indent) {
-        indent(indent);
-        Util.println("Attribute " + _name);
-        displayContents(indent + IndentIncrement);
+    _isLiteral = Util.isLiteral(name);
+    if (_isLiteral) {
+      if (!XML11Char.isXML11ValidQName(name)) {
+        reportError(this, parser, ErrorMsg.ILLEGAL_ATTR_NAME_ERR, name);
+        return;
+      }
     }
 
-    /**
-     * Parses the attribute's contents. Special care taken for namespaces.
-     */
-    public void parseContents(Parser parser) {
-        boolean generated = false;
-        final SymbolTable stable = parser.getSymbolTable();
+    // Ignore attribute if preceeded by some other type of element
+    final SyntaxTreeNode parent = getParent();
+    final Vector siblings = parent.getContents();
+    for (int i = 0; i < parent.elementCount(); i++) {
+      SyntaxTreeNode item = (SyntaxTreeNode) siblings.elementAt(i);
+      if (item == this) break;
 
-        String name = getAttribute("name");
-        String namespace = getAttribute("namespace");
-        QName qname = parser.getQName(name, false);
-        final String prefix = qname.getPrefix();
+      // These three objects result in one or more attribute output
+      if (item instanceof XslAttribute) continue;
+      if (item instanceof UseAttributeSets) continue;
+      if (item instanceof LiteralAttribute) continue;
+      if (item instanceof Text) continue;
 
-        if (((prefix != null) && (prefix.equals(XMLNS_PREFIX)))||(name.equals(XMLNS_PREFIX))) {
-            reportError(this, parser, ErrorMsg.ILLEGAL_ATTR_NAME_ERR, name);
-            return;
-        }
+      // These objects _can_ result in one or more attribute
+      // The output handler will generate an error if not (at runtime)
+      if (item instanceof If) continue;
+      if (item instanceof Choose) continue;
+      if (item instanceof CopyOf) continue;
+      if (item instanceof VariableBase) continue;
 
-        _isLiteral = Util.isLiteral(name);
-        if (_isLiteral) {
-            if (!XML11Char.isXML11ValidQName(name)) {
-                reportError(this, parser, ErrorMsg.ILLEGAL_ATTR_NAME_ERR, name);
-                return;
-            }
-        }
-
-        // Ignore attribute if preceeded by some other type of element
-        final SyntaxTreeNode parent = getParent();
-        final Vector siblings = parent.getContents();
-        for (int i = 0; i < parent.elementCount(); i++) {
-            SyntaxTreeNode item = (SyntaxTreeNode)siblings.elementAt(i);
-            if (item == this) break;
-
-            // These three objects result in one or more attribute output
-            if (item instanceof XslAttribute) continue;
-            if (item instanceof UseAttributeSets) continue;
-            if (item instanceof LiteralAttribute) continue;
-            if (item instanceof Text) continue;
-
-            // These objects _can_ result in one or more attribute
-            // The output handler will generate an error if not (at runtime)
-            if (item instanceof If) continue;
-            if (item instanceof Choose) continue;
-            if (item instanceof CopyOf) continue;
-            if (item instanceof VariableBase) continue;
-
-            // Report warning but do not ignore attribute
-            reportWarning(this, parser, ErrorMsg.STRAY_ATTRIBUTE_ERR, name);
-        }
-
-        // Get namespace from namespace attribute?
-        if (namespace != null && namespace != EMPTYSTRING) {
-            _prefix = lookupPrefix(namespace);
-            _namespace = new AttributeValueTemplate(namespace, parser, this);
-        }
-        // Get namespace from prefix in name attribute?
-        else if (prefix != null && prefix != EMPTYSTRING) {
-            _prefix = prefix;
-            namespace = lookupNamespace(prefix);
-            if (namespace != null) {
-                _namespace = new AttributeValueTemplate(namespace, parser, this);
-            }
-        }
-
-        // Common handling for namespaces:
-        if (_namespace != null) {
-            // Generate prefix if we have none
-            if (_prefix == null || _prefix == EMPTYSTRING) {
-                if (prefix != null) {
-                    _prefix = prefix;
-                }
-                else {
-                    _prefix = stable.generateNamespacePrefix();
-                    generated = true;
-                }
-            }
-            else if (prefix != null && !prefix.equals(_prefix)) {
-                _prefix = prefix;
-            }
-
-            name = _prefix + ":" + qname.getLocalPart();
-
-            /*
-             * TODO: The namespace URI must be passed to the parent
-             * element but we don't yet know what the actual URI is
-             * (as we only know it as an attribute value template).
-             */
-            if ((parent instanceof LiteralElement) && (!generated)) {
-                ((LiteralElement)parent).registerNamespace(_prefix,
-                                                           namespace,
-                                                           stable, false);
-            }
-        }
-
-        if (parent instanceof LiteralElement) {
-            ((LiteralElement)parent).addAttribute(this);
-        }
-
-        _name = AttributeValue.create(this, name, parser);
-        parseChildren(parser);
+      // Report warning but do not ignore attribute
+      reportWarning(this, parser, ErrorMsg.STRAY_ATTRIBUTE_ERR, name);
     }
 
-    public Type typeCheck(SymbolTable stable) throws TypeCheckError {
-        if (!_ignore) {
-            _name.typeCheck(stable);
-            if (_namespace != null) {
-                _namespace.typeCheck(stable);
-            }
-            typeCheckContents(stable);
-        }
-        return Type.Void;
+    // Get namespace from namespace attribute?
+    if (namespace != null && namespace != EMPTYSTRING) {
+      _prefix = lookupPrefix(namespace);
+      _namespace = new AttributeValueTemplate(namespace, parser, this);
+    }
+    // Get namespace from prefix in name attribute?
+    else if (prefix != null && prefix != EMPTYSTRING) {
+      _prefix = prefix;
+      namespace = lookupNamespace(prefix);
+      if (namespace != null) {
+        _namespace = new AttributeValueTemplate(namespace, parser, this);
+      }
     }
 
-    /**
-     *
-     */
-    public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
-        final ConstantPoolGen cpg = classGen.getConstantPool();
-        final InstructionList il = methodGen.getInstructionList();
-
-        if (_ignore) return;
-        _ignore = true;
-
-        // Compile code that emits any needed namespace declaration
-        if (_namespace != null) {
-            // public void attribute(final String name, final String value)
-            il.append(methodGen.loadHandler());
-            il.append(new PUSH(cpg,_prefix));
-            _namespace.translate(classGen,methodGen);
-            il.append(methodGen.namespace());
-        }
-
-        if (!_isLiteral) {
-            // if the qname is an AVT, then the qname has to be checked at runtime if it is a valid qname
-            LocalVariableGen nameValue =
-                    methodGen.addLocalVariable2("nameValue",
-                    Util.getJCRefType(STRING_SIG),
-                                                null);
-
-            // store the name into a variable first so _name.translate only needs to be called once
-            _name.translate(classGen, methodGen);
-            nameValue.setStart(il.append(new ASTORE(nameValue.getIndex())));
-            il.append(new ALOAD(nameValue.getIndex()));
-
-            // call checkQName if the name is an AVT
-            final int check = cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkAttribQName",
-                            "("
-                            +STRING_SIG
-                            +")V");
-            il.append(new INVOKESTATIC(check));
-
-            // Save the current handler base on the stack
-            il.append(methodGen.loadHandler());
-            il.append(DUP);     // first arg to "attributes" call
-
-            // load name value again
-            nameValue.setEnd(il.append(new ALOAD(nameValue.getIndex())));
+    // Common handling for namespaces:
+    if (_namespace != null) {
+      // Generate prefix if we have none
+      if (_prefix == null || _prefix == EMPTYSTRING) {
+        if (prefix != null) {
+          _prefix = prefix;
         } else {
-            // Save the current handler base on the stack
-            il.append(methodGen.loadHandler());
-            il.append(DUP);     // first arg to "attributes" call
-
-            // Push attribute name
-            _name.translate(classGen, methodGen);// 2nd arg
-
+          _prefix = stable.generateNamespacePrefix();
+          generated = true;
         }
+      } else if (prefix != null && !prefix.equals(_prefix)) {
+        _prefix = prefix;
+      }
 
-        // Push attribute value - shortcut for literal strings
-        if ((elementCount() == 1) && (elementAt(0) instanceof Text)) {
-            il.append(new PUSH(cpg, ((Text)elementAt(0)).getText()));
-        }
-        else {
-            il.append(classGen.loadTranslet());
-            il.append(new GETFIELD(cpg.addFieldref(TRANSLET_CLASS,
-                                                   "stringValueHandler",
-                                                   STRING_VALUE_HANDLER_SIG)));
-            il.append(DUP);
-            il.append(methodGen.storeHandler());
-            // translate contents with substituted handler
-            translateContents(classGen, methodGen);
-            // get String out of the handler
-            il.append(new INVOKEVIRTUAL(cpg.addMethodref(STRING_VALUE_HANDLER,
-                                                         "getValue",
-                                                         "()" + STRING_SIG)));
-        }
+      name = _prefix + ":" + qname.getLocalPart();
 
-        SyntaxTreeNode parent = getParent();
-        if (parent instanceof LiteralElement
-            && ((LiteralElement)parent).allAttributesUnique()) {
-            int flags = 0;
-            ElemDesc elemDesc = ((LiteralElement)parent).getElemDesc();
-
-            // Set the HTML flags
-            if (elemDesc != null && _name instanceof SimpleAttributeValue) {
-                String attrName = ((SimpleAttributeValue)_name).toString();
-                if (elemDesc.isAttrFlagSet(attrName, ElemDesc.ATTREMPTY)) {
-                    flags = flags | SerializationHandler.HTML_ATTREMPTY;
-                }
-                else if (elemDesc.isAttrFlagSet(attrName, ElemDesc.ATTRURL)) {
-                    flags = flags | SerializationHandler.HTML_ATTRURL;
-                }
-            }
-            il.append(new PUSH(cpg, flags));
-            il.append(methodGen.uniqueAttribute());
-        }
-        else {
-            // call "attribute"
-            il.append(methodGen.attribute());
-        }
-
-        // Restore old handler base from stack
-        il.append(methodGen.storeHandler());
-
-
-
+      /*
+       * TODO: The namespace URI must be passed to the parent
+       * element but we don't yet know what the actual URI is
+       * (as we only know it as an attribute value template).
+       */
+      if ((parent instanceof LiteralElement) && (!generated)) {
+        ((LiteralElement) parent).registerNamespace(_prefix, namespace, stable, false);
+      }
     }
 
+    if (parent instanceof LiteralElement) {
+      ((LiteralElement) parent).addAttribute(this);
+    }
+
+    _name = AttributeValue.create(this, name, parser);
+    parseChildren(parser);
+  }
+
+  public Type typeCheck(SymbolTable stable) throws TypeCheckError {
+    if (!_ignore) {
+      _name.typeCheck(stable);
+      if (_namespace != null) {
+        _namespace.typeCheck(stable);
+      }
+      typeCheckContents(stable);
+    }
+    return Type.Void;
+  }
+
+  /** */
+  public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
+    final ConstantPoolGen cpg = classGen.getConstantPool();
+    final InstructionList il = methodGen.getInstructionList();
+
+    if (_ignore) return;
+    _ignore = true;
+
+    // Compile code that emits any needed namespace declaration
+    if (_namespace != null) {
+      // public void attribute(final String name, final String value)
+      il.append(methodGen.loadHandler());
+      il.append(new PUSH(cpg, _prefix));
+      _namespace.translate(classGen, methodGen);
+      il.append(methodGen.namespace());
+    }
+
+    if (!_isLiteral) {
+      // if the qname is an AVT, then the qname has to be checked at runtime if it is a valid qname
+      LocalVariableGen nameValue =
+          methodGen.addLocalVariable2("nameValue", Util.getJCRefType(STRING_SIG), null);
+
+      // store the name into a variable first so _name.translate only needs to be called once
+      _name.translate(classGen, methodGen);
+      nameValue.setStart(il.append(new ASTORE(nameValue.getIndex())));
+      il.append(new ALOAD(nameValue.getIndex()));
+
+      // call checkQName if the name is an AVT
+      final int check =
+          cpg.addMethodref(BASIS_LIBRARY_CLASS, "checkAttribQName", "(" + STRING_SIG + ")V");
+      il.append(new INVOKESTATIC(check));
+
+      // Save the current handler base on the stack
+      il.append(methodGen.loadHandler());
+      il.append(DUP); // first arg to "attributes" call
+
+      // load name value again
+      nameValue.setEnd(il.append(new ALOAD(nameValue.getIndex())));
+    } else {
+      // Save the current handler base on the stack
+      il.append(methodGen.loadHandler());
+      il.append(DUP); // first arg to "attributes" call
+
+      // Push attribute name
+      _name.translate(classGen, methodGen); // 2nd arg
+    }
+
+    // Push attribute value - shortcut for literal strings
+    if ((elementCount() == 1) && (elementAt(0) instanceof Text)) {
+      il.append(new PUSH(cpg, ((Text) elementAt(0)).getText()));
+    } else {
+      il.append(classGen.loadTranslet());
+      il.append(
+          new GETFIELD(
+              cpg.addFieldref(TRANSLET_CLASS, "stringValueHandler", STRING_VALUE_HANDLER_SIG)));
+      il.append(DUP);
+      il.append(methodGen.storeHandler());
+      // translate contents with substituted handler
+      translateContents(classGen, methodGen);
+      // get String out of the handler
+      il.append(
+          new INVOKEVIRTUAL(cpg.addMethodref(STRING_VALUE_HANDLER, "getValue", "()" + STRING_SIG)));
+    }
+
+    SyntaxTreeNode parent = getParent();
+    if (parent instanceof LiteralElement && ((LiteralElement) parent).allAttributesUnique()) {
+      int flags = 0;
+      ElemDesc elemDesc = ((LiteralElement) parent).getElemDesc();
+
+      // Set the HTML flags
+      if (elemDesc != null && _name instanceof SimpleAttributeValue) {
+        String attrName = ((SimpleAttributeValue) _name).toString();
+        if (elemDesc.isAttrFlagSet(attrName, ElemDesc.ATTREMPTY)) {
+          flags = flags | SerializationHandler.HTML_ATTREMPTY;
+        } else if (elemDesc.isAttrFlagSet(attrName, ElemDesc.ATTRURL)) {
+          flags = flags | SerializationHandler.HTML_ATTRURL;
+        }
+      }
+      il.append(new PUSH(cpg, flags));
+      il.append(methodGen.uniqueAttribute());
+    } else {
+      // call "attribute"
+      il.append(methodGen.attribute());
+    }
+
+    // Restore old handler base from stack
+    il.append(methodGen.storeHandler());
+  }
 }

@@ -23,37 +23,36 @@ package org.openjdk.com.sun.org.apache.xerces.internal.dom;
 import java.io.Serializable;
 
 /**
- * This class is used, via a pool managed on CoreDocumentImpl, in ParentNode to
- * improve performance of the NodeList accessors, getLength() and item(i).
+ * This class is used, via a pool managed on CoreDocumentImpl, in ParentNode to improve performance
+ * of the NodeList accessors, getLength() and item(i).
  *
  * @xerces.internal
- *
- * @author Arnaud  Le Hors, IBM
- *
+ * @author Arnaud Le Hors, IBM
  * @version $Id: NodeListCache.java,v 1.6 2010/07/20 20:25:25 joehw Exp $
  */
 class NodeListCache implements Serializable {
 
-    /** Serialization version. */
-    private static final long serialVersionUID = -7927529254918631002L;
+  /** Serialization version. */
+  private static final long serialVersionUID = -7927529254918631002L;
 
-    /** Cached node list length. */
-    int fLength = -1;
+  /** Cached node list length. */
+  int fLength = -1;
 
-    /** Last requested node index. */
-    int fChildIndex = -1;
+  /** Last requested node index. */
+  int fChildIndex = -1;
 
-    /** Last requested node. */
-    ChildNode fChild;
+  /** Last requested node. */
+  ChildNode fChild;
 
-    /** Owner of this cache */
-    ParentNode fOwner;
+  /** Owner of this cache */
+  ParentNode fOwner;
 
-    /** Pointer to the next object on the list,
-        only meaningful when actully stored in the free list. */
-    NodeListCache next;
+  /**
+   * Pointer to the next object on the list, only meaningful when actully stored in the free list.
+   */
+  NodeListCache next;
 
-    NodeListCache(ParentNode owner) {
-        fOwner = owner;
-    }
+  NodeListCache(ParentNode owner) {
+    fOwner = owner;
+  }
 }

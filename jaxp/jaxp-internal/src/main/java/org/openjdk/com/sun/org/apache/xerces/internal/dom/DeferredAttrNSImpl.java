@@ -24,107 +24,96 @@
  * DeferredAttrImpl.java at the same time.
  */
 
-
 package org.openjdk.com.sun.org.apache.xerces.internal.dom;
 
 /**
- * DeferredAttrNSImpl is to AttrNSImpl, what DeferredAttrImpl is to
- * AttrImpl.
+ * DeferredAttrNSImpl is to AttrNSImpl, what DeferredAttrImpl is to AttrImpl.
  *
  * @xerces.internal
- *
  * @author Andy Clark, IBM
- * @author Arnaud  Le Hors, IBM
+ * @author Arnaud Le Hors, IBM
  * @see DeferredAttrImpl
  */
-public final class DeferredAttrNSImpl
-    extends AttrNSImpl
-    implements DeferredNode {
+public final class DeferredAttrNSImpl extends AttrNSImpl implements DeferredNode {
 
-    //
-    // Constants
-    //
+  //
+  // Constants
+  //
 
-    /** Serialization version. */
-    static final long serialVersionUID = 6074924934945957154L;
+  /** Serialization version. */
+  static final long serialVersionUID = 6074924934945957154L;
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** Node index. */
-    protected transient int fNodeIndex;
+  /** Node index. */
+  protected transient int fNodeIndex;
 
-    //
-    // Constructors
-    //
+  //
+  // Constructors
+  //
 
-    /**
-     * This is the deferred constructor. Only the fNodeIndex is given here.
-     * All other data, can be requested from the ownerDocument via the index.
-     */
-    DeferredAttrNSImpl(DeferredDocumentImpl ownerDocument, int nodeIndex) {
-        super(ownerDocument, null);
+  /**
+   * This is the deferred constructor. Only the fNodeIndex is given here. All other data, can be
+   * requested from the ownerDocument via the index.
+   */
+  DeferredAttrNSImpl(DeferredDocumentImpl ownerDocument, int nodeIndex) {
+    super(ownerDocument, null);
 
-        fNodeIndex = nodeIndex;
-        needsSyncData(true);
-        needsSyncChildren(true);
+    fNodeIndex = nodeIndex;
+    needsSyncData(true);
+    needsSyncChildren(true);
+  } // <init>(DeferredDocumentImpl,int)
 
-    } // <init>(DeferredDocumentImpl,int)
+  //
+  // DeferredNode methods
+  //
 
-    //
-    // DeferredNode methods
-    //
+  /** Returns the node index. */
+  public int getNodeIndex() {
+    return fNodeIndex;
+  }
 
-    /** Returns the node index. */
-    public int getNodeIndex() {
-        return fNodeIndex;
+  //
+  // Protected methods
+  //
+
+  /** Synchronizes the data (name and value) for fast nodes. */
+  protected void synchronizeData() {
+
+    // no need to sync in the future
+    needsSyncData(false);
+
+    // fluff data
+    DeferredDocumentImpl ownerDocument = (DeferredDocumentImpl) ownerDocument();
+    name = ownerDocument.getNodeName(fNodeIndex);
+
+    // extract prefix and local part from QName
+    int index = name.indexOf(':');
+    if (index < 0) {
+      localName = name;
+    } else {
+      localName = name.substring(index + 1);
     }
 
-    //
-    // Protected methods
-    //
+    int extra = ownerDocument.getNodeExtra(fNodeIndex);
+    isSpecified((extra & SPECIFIED) != 0);
+    isIdAttribute((extra & ID) != 0);
 
-    /** Synchronizes the data (name and value) for fast nodes. */
-    protected void synchronizeData() {
+    namespaceURI = ownerDocument.getNodeURI(fNodeIndex);
 
-        // no need to sync in the future
-        needsSyncData(false);
+    int extraNode = ownerDocument.getLastChild(fNodeIndex);
+    type = ownerDocument.getTypeInfo(extraNode);
+  } // synchronizeData()
 
-        // fluff data
-        DeferredDocumentImpl ownerDocument =
-            (DeferredDocumentImpl) ownerDocument();
-        name = ownerDocument.getNodeName(fNodeIndex);
-
-        // extract prefix and local part from QName
-        int index = name.indexOf(':');
-        if (index < 0) {
-            localName = name;
-        }
-        else {
-            localName = name.substring(index + 1);
-        }
-
-        int extra = ownerDocument.getNodeExtra(fNodeIndex);
-        isSpecified((extra & SPECIFIED) != 0);
-        isIdAttribute((extra & ID) != 0);
-
-        namespaceURI = ownerDocument.getNodeURI(fNodeIndex);
-
-        int extraNode = ownerDocument.getLastChild(fNodeIndex);
-        type = ownerDocument.getTypeInfo(extraNode);
-    } // synchronizeData()
-
-    /**
-     * Synchronizes the node's children with the internal structure.
-     * Fluffing the children at once solves a lot of work to keep
-     * the two structures in sync. The problem gets worse when
-     * editing the tree -- this makes it a lot easier.
-     */
-    protected void synchronizeChildren() {
-        DeferredDocumentImpl ownerDocument =
-            (DeferredDocumentImpl) ownerDocument();
-        ownerDocument.synchronizeChildren(this, fNodeIndex);
-    } // synchronizeChildren()
-
+  /**
+   * Synchronizes the node's children with the internal structure. Fluffing the children at once
+   * solves a lot of work to keep the two structures in sync. The problem gets worse when editing
+   * the tree -- this makes it a lot easier.
+   */
+  protected void synchronizeChildren() {
+    DeferredDocumentImpl ownerDocument = (DeferredDocumentImpl) ownerDocument();
+    ownerDocument.synchronizeChildren(this, fNodeIndex);
+  } // synchronizeChildren()
 } // class DeferredAttrImpl

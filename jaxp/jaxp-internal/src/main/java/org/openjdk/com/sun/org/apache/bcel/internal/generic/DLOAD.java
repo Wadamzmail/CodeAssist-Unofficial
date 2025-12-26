@@ -62,9 +62,10 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
 /**
  * DLOAD - Load double from local variable
+ *
  * <PRE>Stack ... -&gt; ..., result.word1, result.word2</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class DLOAD extends LoadInstruction {
   /**
@@ -75,7 +76,9 @@ public class DLOAD extends LoadInstruction {
     super(Constants.DLOAD, Constants.DLOAD_0);
   }
 
-  /** Load double from local variable
+  /**
+   * Load double from local variable
+   *
    * @param n index of local variable
    */
   public DLOAD(int n) {
@@ -83,10 +86,9 @@ public class DLOAD extends LoadInstruction {
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

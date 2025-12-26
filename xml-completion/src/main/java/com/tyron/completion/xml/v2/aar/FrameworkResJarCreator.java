@@ -22,8 +22,8 @@ import org.jetbrains.kotlin.com.intellij.openapi.util.io.FileUtil;
 /**
  * A command-line program for packaging framework resources into framework_res.jar. The jar file
  * created by this program contains compressed XML resource files and two binary files,
- * resources.bin and resources_light.bin. Format of these binary files is identical to format of
- * a framework resource cache file without a header. The resources.bin file contains a list of all
+ * resources.bin and resources_light.bin. Format of these binary files is identical to format of a
+ * framework resource cache file without a header. The resources.bin file contains a list of all
  * framework resources. The resources_light.bin file contains a list of resources excluding
  * locale-specific ones.
  */
@@ -39,15 +39,15 @@ public class FrameworkResJarCreator {
     Path jarFile = Paths.get(args[1]).toAbsolutePath().normalize();
     try {
       createJar(resDirectory, jarFile);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
   @VisibleForTesting
   static void createJar(@NotNull Path resDirectory, @NotNull Path jarFile) throws IOException {
-    FrameworkResourceRepository repository = FrameworkResourceRepository.create(resDirectory, null, null, false);
+    FrameworkResourceRepository repository =
+        FrameworkResourceRepository.create(resDirectory, null, null, false);
     Set<String> languages = repository.getLanguageGroups();
 
     try (ZipOutputStream zip = new ZipOutputStream(Files.newOutputStream(jarFile))) {
@@ -62,8 +62,10 @@ public class FrameworkResJarCreator {
       for (Path file : files) {
         // When running on Windows, we need to make sure that the file entries are correctly encoded
         // with the Unix path separator since the ZIP file spec only allows for that one.
-        String relativePath = FileUtil.toSystemIndependentName(parentDir.relativize(file).toString());
-        if (!relativePath.equals("res/version") && !relativePath.equals("res/BUILD")) { // Skip "version" and "BUILD" files.
+        String relativePath =
+            FileUtil.toSystemIndependentName(parentDir.relativize(file).toString());
+        if (!relativePath.equals("res/version")
+            && !relativePath.equals("res/BUILD")) { // Skip "version" and "BUILD" files.
           createZipEntry(relativePath, Files.readAllBytes(file), zip);
         }
       }
@@ -73,19 +75,23 @@ public class FrameworkResJarCreator {
   @NotNull
   private static List<Path> getContainedFiles(@NotNull Path resDirectory) throws IOException {
     List<Path> files = new ArrayList<>();
-    Files.walkFileTree(resDirectory, new SimpleFileVisitor<Path>() {
-      @Override
-      @NotNull
-      public FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
-        files.add(file);
-        return FileVisitResult.CONTINUE;
-      }
-    });
+    Files.walkFileTree(
+        resDirectory,
+        new SimpleFileVisitor<Path>() {
+          @Override
+          @NotNull
+          public FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) {
+            files.add(file);
+            return FileVisitResult.CONTINUE;
+          }
+        });
     Collections.sort(files); // Make sure that the files are in canonical order.
     return files;
   }
 
-  private static void createZipEntry(@NotNull String name, @NotNull byte[] content, @NotNull ZipOutputStream zip) throws IOException {
+  private static void createZipEntry(
+      @NotNull String name, @NotNull byte[] content, @NotNull ZipOutputStream zip)
+      throws IOException {
     ZipEntry entry = new ZipEntry(name);
     zip.putNextEntry(entry);
     zip.write(content);
@@ -93,10 +99,13 @@ public class FrameworkResJarCreator {
   }
 
   @NotNull
-  private static byte[] getEncodedResources(@NotNull FrameworkResourceRepository repository, @NotNull String language) throws IOException {
+  private static byte[] getEncodedResources(
+      @NotNull FrameworkResourceRepository repository, @NotNull String language)
+      throws IOException {
     ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
     try (Base128OutputStream stream = new Base128OutputStream(byteStream)) {
-      repository.writeToStream(stream, config -> language.equals(FrameworkResourceRepository.getLanguageGroup(config)));
+      repository.writeToStream(
+          stream, config -> language.equals(FrameworkResourceRepository.getLanguageGroup(config)));
     }
     return byteStream.toByteArray();
   }

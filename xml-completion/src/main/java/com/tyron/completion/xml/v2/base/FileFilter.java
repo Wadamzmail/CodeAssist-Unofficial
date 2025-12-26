@@ -1,9 +1,8 @@
 package com.tyron.completion.xml.v2.base;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import org.jetbrains.annotations.NotNull;
 
 /** A filter used to select files when traversing the file system. */
 interface FileFilter {

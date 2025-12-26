@@ -17,7 +17,10 @@ import org.jetbrains.annotations.Nullable;
 /** Base class for value resource items. */
 public abstract class BasicValueResourceItemBase extends BasicResourceItemBase {
   @NotNull private final ResourceSourceFile mySourceFile;
-  @NotNull private ResourceNamespace.Resolver myNamespaceResolver = ResourceNamespace.Resolver.EMPTY_RESOLVER;
+
+  @NotNull
+  private ResourceNamespace.Resolver myNamespaceResolver =
+      ResourceNamespace.Resolver.EMPTY_RESOLVER;
 
   /**
    * Initializes the resource.
@@ -27,10 +30,11 @@ public abstract class BasicValueResourceItemBase extends BasicResourceItemBase {
    * @param sourceFile the source file containing definition of the resource
    * @param visibility the visibility of the resource
    */
-  public BasicValueResourceItemBase(@NotNull ResourceType type,
-                                    @NotNull String name,
-                                    @NotNull ResourceSourceFile sourceFile,
-                                    @NotNull ResourceVisibility visibility) {
+  public BasicValueResourceItemBase(
+      @NotNull ResourceType type,
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility) {
     super(type, name, visibility);
     mySourceFile = sourceFile;
   }
@@ -82,13 +86,13 @@ public abstract class BasicValueResourceItemBase extends BasicResourceItemBase {
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
-    BasicValueResourceItemBase other = (BasicValueResourceItemBase)obj;
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
+    BasicValueResourceItemBase other = (BasicValueResourceItemBase) obj;
     return Objects.equals(mySourceFile, other.mySourceFile);
   }
 
@@ -98,10 +102,12 @@ public abstract class BasicValueResourceItemBase extends BasicResourceItemBase {
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     int index = sourceFileIndexes.getInt(mySourceFile);
     assert index >= 0;
@@ -111,17 +117,17 @@ public abstract class BasicValueResourceItemBase extends BasicResourceItemBase {
     stream.writeInt(index);
   }
 
-  /**
-   * Creates a resource item by reading its contents from the given stream.
-   */
+  /** Creates a resource item by reading its contents from the given stream. */
   @NotNull
-  static BasicValueResourceItemBase deserialize(@NotNull Base128InputStream stream,
-                                                @NotNull ResourceType resourceType,
-                                                @NotNull String name,
-                                                @NotNull ResourceVisibility visibility,
-                                                @NotNull List<RepositoryConfiguration> configurations,
-                                                @NotNull List<ResourceSourceFile> sourceFiles,
-                                                @NotNull List<ResourceNamespace.Resolver> namespaceResolvers) throws IOException {
+  static BasicValueResourceItemBase deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull ResourceType resourceType,
+      @NotNull String name,
+      @NotNull ResourceVisibility visibility,
+      @NotNull List<RepositoryConfiguration> configurations,
+      @NotNull List<ResourceSourceFile> sourceFiles,
+      @NotNull List<ResourceNamespace.Resolver> namespaceResolvers)
+      throws IOException {
     ResourceSourceFile sourceFile = sourceFiles.get(stream.readInt());
     ResourceNamespace.Resolver resolver = namespaceResolvers.get(stream.readInt());
 
@@ -136,14 +142,23 @@ public abstract class BasicValueResourceItemBase extends BasicResourceItemBase {
         return BasicPluralsResourceItem.deserialize(stream, name, visibility, sourceFile, resolver);
 
       case STYLE:
-        return BasicStyleResourceItem.deserialize(stream, name, visibility, sourceFile, resolver, namespaceResolvers);
+        return BasicStyleResourceItem.deserialize(
+            stream, name, visibility, sourceFile, resolver, namespaceResolvers);
 
       case STYLEABLE:
         return BasicStyleableResourceItem.deserialize(
-            stream, name, visibility, sourceFile, resolver, configurations, sourceFiles, namespaceResolvers);
+            stream,
+            name,
+            visibility,
+            sourceFile,
+            resolver,
+            configurations,
+            sourceFiles,
+            namespaceResolvers);
 
       default:
-        return BasicValueResourceItem.deserialize(stream, resourceType, name, visibility, sourceFile, resolver);
+        return BasicValueResourceItem.deserialize(
+            stream, resourceType, name, visibility, sourceFile, resolver);
     }
   }
 }

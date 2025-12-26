@@ -58,20 +58,21 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * <http://www.apache.org/>.
  */
 import java.io.*;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 import org.openjdk.com.sun.org.apache.bcel.internal.ExceptionConstants;
 import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
 
 /**
- * NEWARRAY -  Create new array of basic type (int, short, ...)
+ * NEWARRAY - Create new array of basic type (int, short, ...)
+ *
  * <PRE>Stack: ..., count -&gt; ..., arrayref</PRE>
+ *
  * type must be one of T_INT, T_SHORT, ...
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class NEWARRAY extends Instruction
-  implements AllocationInstruction, ExceptionThrower, StackProducer {
+    implements AllocationInstruction, ExceptionThrower, StackProducer {
   private byte type;
 
   /**
@@ -81,16 +82,17 @@ public class NEWARRAY extends Instruction
   NEWARRAY() {}
 
   public NEWARRAY(byte type) {
-    super(Constants.NEWARRAY, (short)2);
+    super(Constants.NEWARRAY, (short) 2);
     this.type = type;
   }
 
   public NEWARRAY(BasicType type) {
-      this(type.getType());
+    this(type.getType());
   }
 
   /**
    * Dump instruction as byte code to stream out.
+   *
    * @param out Output stream
    */
   public void dump(DataOutputStream out) throws IOException {
@@ -101,7 +103,9 @@ public class NEWARRAY extends Instruction
   /**
    * @return numeric code for basic element type
    */
-  public final byte getTypecode() { return type; }
+  public final byte getTypecode() {
+    return type;
+  }
 
   /**
    * @return type of constructed array
@@ -116,24 +120,21 @@ public class NEWARRAY extends Instruction
   public String toString(boolean verbose) {
     return super.toString(verbose) + " " + Constants.TYPE_NAMES[type];
   }
-  /**
-   * Read needed data (e.g. index) from file.
-   */
-  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException
-  {
-    type   = bytes.readByte();
+
+  /** Read needed data (e.g. index) from file. */
+  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException {
+    type = bytes.readByte();
     length = 2;
   }
 
   public Class[] getExceptions() {
-    return new Class[] { ExceptionConstants.NEGATIVE_ARRAY_SIZE_EXCEPTION };
+    return new Class[] {ExceptionConstants.NEGATIVE_ARRAY_SIZE_EXCEPTION};
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

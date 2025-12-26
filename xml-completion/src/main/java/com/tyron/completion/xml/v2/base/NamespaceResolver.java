@@ -62,14 +62,14 @@ public final class NamespaceResolver implements ResourceNamespace.Resolver {
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (obj == null || getClass() != obj.getClass()) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
 
-    NamespaceResolver other = (NamespaceResolver)obj;
+    NamespaceResolver other = (NamespaceResolver) obj;
     return Arrays.equals(prefixesAndUris, other.prefixesAndUris);
   }
 
@@ -78,9 +78,7 @@ public final class NamespaceResolver implements ResourceNamespace.Resolver {
     return Arrays.hashCode(prefixesAndUris);
   }
 
-  /**
-   * Serializes the namespace resolver to the given stream.
-   */
+  /** Serializes the namespace resolver to the given stream. */
   public void serialize(@NotNull Base128OutputStream stream) throws IOException {
     stream.writeInt(getNamespaceCount());
     for (String str : prefixesAndUris) {
@@ -90,10 +88,12 @@ public final class NamespaceResolver implements ResourceNamespace.Resolver {
 
   /**
    * Creates a namespace resolver by reading its contents from the given stream.
+   *
    * @see #serialize(Base128OutputStream)
    */
   @NotNull
-  public static NamespaceResolver deserialize(@NotNull Base128InputStream stream) throws IOException {
+  public static NamespaceResolver deserialize(@NotNull Base128InputStream stream)
+      throws IOException {
     int n = stream.readInt() * 2;
     String[] prefixesAndUris = new String[n];
     for (int i = 0; i < n; i++) {

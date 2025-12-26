@@ -1,10 +1,10 @@
 package com.tyron.code.ui.editor.impl.cls;
 
+import android.content.Context;
 import androidx.annotation.NonNull;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorProvider;
 import java.io.File;
-import android.content.Context;
 
 public class ClsEditorProvider implements FileEditorProvider {
 
@@ -25,7 +25,7 @@ public class ClsEditorProvider implements FileEditorProvider {
 
   @NonNull
   @Override
-  public FileEditor createEditor(@NonNull Context ctx,@NonNull File file) {
+  public FileEditor createEditor(@NonNull Context ctx, @NonNull File file) {
     return new ClsEditor(file, this);
   }
 

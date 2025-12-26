@@ -20,43 +20,33 @@
 
 package org.openjdk.com.sun.org.apache.xerces.internal.util;
 
-import org.openjdk.com.sun.org.apache.xerces.internal.impl.XMLErrorReporter;
-
 import java.util.Locale;
 import java.util.MissingResourceException;
+import org.openjdk.com.sun.org.apache.xerces.internal.impl.XMLErrorReporter;
 
 /**
- * This interface provides a generic message formatting mechanism and
- * is useful for producing messages that must be localed and/or formatted
- * with replacement text.
+ * This interface provides a generic message formatting mechanism and is useful for producing
+ * messages that must be localed and/or formatted with replacement text.
  *
  * @see XMLErrorReporter
- *
  * @author Andy Clark
- *
  */
 public interface MessageFormatter {
 
-    //
-    // MessageFormatter methods
-    //
+  //
+  // MessageFormatter methods
+  //
 
-    /**
-     * Formats a message with the specified arguments using the given
-     * locale information.
-     *
-     * @param locale    The locale of the message.
-     * @param key       The message key.
-     * @param arguments The message replacement text arguments. The order
-     *                  of the arguments must match that of the placeholders
-     *                  in the actual message.
-     *
-     * @return Returns the formatted message.
-     *
-     * @throws MissingResourceException Thrown if the message with the
-     *                                  specified key cannot be found.
-     */
-    public String formatMessage(Locale locale, String key, Object[] arguments)
-        throws MissingResourceException;
-
+  /**
+   * Formats a message with the specified arguments using the given locale information.
+   *
+   * @param locale The locale of the message.
+   * @param key The message key.
+   * @param arguments The message replacement text arguments. The order of the arguments must match
+   *     that of the placeholders in the actual message.
+   * @return Returns the formatted message.
+   * @throws MissingResourceException Thrown if the message with the specified key cannot be found.
+   */
+  public String formatMessage(Locale locale, String key, Object[] arguments)
+      throws MissingResourceException;
 } // interface MessageFormatter

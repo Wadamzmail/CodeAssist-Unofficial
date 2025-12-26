@@ -1,33 +1,30 @@
 package com.tyron.code;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.KeyEvent;
-import android.content.pm.PackageManager;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
-
 import com.tyron.code.ui.main.HomeFragment;
 import dev.mutwakil.codeassist.R;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-   public static MainActivity instance;
+  public static MainActivity instance;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +34,17 @@ public class MainActivity extends AppCompatActivity {
     WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
         != PackageManager.PERMISSION_GRANTED) {
-    ActivityCompat.requestPermissions(this,
-            new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+      ActivityCompat.requestPermissions(
+          this, new String[] {Manifest.permission.POST_NOTIFICATIONS}, 101);
     }
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34+
-    if (ContextCompat.checkSelfPermission(this,
-            Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC)
-        != PackageManager.PERMISSION_GRANTED) {
+    if (android.os.Build.VERSION.SDK_INT
+        >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) { // SDK 34+
+      if (ContextCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC)
+          != PackageManager.PERMISSION_GRANTED) {
 
-        ActivityCompat.requestPermissions(this,
-            new String[]{Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC},
-            1001);
-    }
+        ActivityCompat.requestPermissions(
+            this, new String[] {Manifest.permission.FOREGROUND_SERVICE_DATA_SYNC}, 1001);
+      }
     }
     HomeFragment homeFragment = new HomeFragment();
     if (getSupportFragmentManager().findFragmentByTag(HomeFragment.TAG) == null) {
@@ -115,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
       }
     }
   }
-  
+
   public static void toast(String message) {
     if (Looper.myLooper() == Looper.getMainLooper()) {
 

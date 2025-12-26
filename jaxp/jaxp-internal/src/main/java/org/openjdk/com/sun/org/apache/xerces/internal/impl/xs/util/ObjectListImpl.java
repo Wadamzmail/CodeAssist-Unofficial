@@ -23,97 +23,90 @@ package org.openjdk.com.sun.org.apache.xerces.internal.impl.xs.util;
 
 import java.lang.reflect.Array;
 import java.util.AbstractList;
-
 import org.openjdk.com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 
 /**
  * Contains a list of Objects.
  *
  * @xerces.internal
- *
  * @version $Id: ObjectListImpl.java,v 1.2 2010-10-26 23:01:04 joehw Exp $
  */
 public final class ObjectListImpl extends AbstractList implements ObjectList {
 
-    /**
-     * An immutable empty list.
-     */
-    public static final ObjectListImpl EMPTY_LIST = new ObjectListImpl(new Object[0], 0);
+  /** An immutable empty list. */
+  public static final ObjectListImpl EMPTY_LIST = new ObjectListImpl(new Object[0], 0);
 
-    // The array to hold all data
-    private final Object[] fArray;
+  // The array to hold all data
+  private final Object[] fArray;
 
-    // Number of elements in this list
-    private final int fLength;
+  // Number of elements in this list
+  private final int fLength;
 
-    public ObjectListImpl(Object[] array, int length) {
-        fArray = array;
-        fLength = length;
+  public ObjectListImpl(Object[] array, int length) {
+    fArray = array;
+    fLength = length;
+  }
+
+  public int getLength() {
+    return fLength;
+  }
+
+  public boolean contains(Object item) {
+    if (item == null) {
+      for (int i = 0; i < fLength; i++) {
+        if (fArray[i] == null) return true;
+      }
+    } else {
+      for (int i = 0; i < fLength; i++) {
+        if (item.equals(fArray[i])) return true;
+      }
     }
+    return false;
+  }
 
-    public int getLength() {
-        return fLength;
+  public Object item(int index) {
+    if (index < 0 || index >= fLength) {
+      return null;
     }
+    return fArray[index];
+  }
 
-    public boolean contains(Object item) {
-        if (item == null) {
-            for (int i = 0; i < fLength; i++) {
-                if (fArray[i] == null)
-                    return true;
-            }
-        }
-        else {
-            for (int i = 0; i < fLength; i++) {
-                if (item.equals(fArray[i]))
-                    return true;
-            }
-        }
-        return false;
+  /*
+   * List methods
+   */
+  public Object get(int index) {
+    if (index >= 0 && index < fLength) {
+      return fArray[index];
     }
+    throw new IndexOutOfBoundsException("Index: " + index);
+  }
 
-    public Object item(int index) {
-        if (index < 0 || index >= fLength) {
-            return null;
-        }
-        return fArray[index];
-    }
+  public int size() {
+    return getLength();
+  }
 
-    /*
-     * List methods
-     */
-    public Object get(int index) {
-        if (index >= 0 && index < fLength) {
-            return fArray[index];
-        }
-        throw new IndexOutOfBoundsException("Index: " + index);
-    }
+  public Object[] toArray() {
+    Object[] a = new Object[fLength];
+    toArray0(a);
+    return a;
+  }
 
-    public int size() {
-        return getLength();
+  public Object[] toArray(Object[] a) {
+    if (a.length < fLength) {
+      Class arrayClass = a.getClass();
+      Class componentType = arrayClass.getComponentType();
+      a = (Object[]) Array.newInstance(componentType, fLength);
     }
+    toArray0(a);
+    if (a.length > fLength) {
+      a[fLength] = null;
+    }
+    return a;
+  }
 
-    public Object[] toArray() {
-        Object[] a = new Object[fLength];
-        toArray0(a);
-        return a;
+  private void toArray0(Object[] a) {
+    if (fLength > 0) {
+      System.arraycopy(fArray, 0, a, 0, fLength);
     }
-
-    public Object[] toArray(Object[] a) {
-        if (a.length < fLength) {
-            Class arrayClass = a.getClass();
-            Class componentType = arrayClass.getComponentType();
-            a = (Object[]) Array.newInstance(componentType, fLength);
-        }
-        toArray0(a);
-        if (a.length > fLength) {
-            a[fLength] = null;
-        }
-        return a;
-    }
-
-    private void toArray0(Object[] a) {
-        if (fLength > 0) {
-            System.arraycopy(fArray, 0, a, 0, fLength);
-        }
-    }
+  }
 }

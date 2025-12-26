@@ -1,9 +1,8 @@
 package com.tyron.editor.util.diff;
 
-import java.util.Arrays;
-
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import java.util.Arrays;
 
 final class UniqueLCS {
   private final int[] myFirst;
@@ -37,13 +36,12 @@ final class UniqueLCS {
       int index = myStart1 + i;
       int val = map.get(myFirst[index]);
 
-        if (val == -1) {
-            continue;
-        }
+      if (val == -1) {
+        continue;
+      }
       if (val == 0) {
         map.put(myFirst[index], i + 1);
-      }
-      else {
+      } else {
         map.put(myFirst[index], -1);
       }
     }
@@ -53,14 +51,13 @@ final class UniqueLCS {
       int index = myStart2 + i;
       int val = map.get(mySecond[index]);
 
-        if (val == 0 || val == -1) {
-            continue;
-        }
+      if (val == 0 || val == -1) {
+        continue;
+      }
       if (match[val - 1] == 0) {
         match[val - 1] = i + 1;
         count++;
-      }
-      else {
+      } else {
         match[val - 1] = 0;
         map.put(mySecond[index], -1);
         count--;
@@ -78,9 +75,9 @@ final class UniqueLCS {
 
     int length = 0;
     for (int i = 0; i < myCount1; i++) {
-        if (match[i] == 0) {
-            continue;
-        }
+      if (match[i] == 0) {
+        continue;
+      }
 
       int j = binarySearch(sequence, match[i], length);
       if (j == length || match[i] < sequence[j]) {
@@ -93,7 +90,7 @@ final class UniqueLCS {
       }
     }
 
-    int[][] ret = new int[][]{new int[length], new int[length]};
+    int[][] ret = new int[][] {new int[length], new int[length]};
 
     int i = length - 1;
     int curr = lastElement[length - 1];

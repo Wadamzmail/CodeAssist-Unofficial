@@ -41,7 +41,7 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation;
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
-//import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
+// import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
 import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONObject;
 
@@ -205,11 +205,11 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         K2JVMCompiler compiler = new K2JVMCompiler();
         K2JVMCompilerArguments args = new K2JVMCompilerArguments();
         compiler.parseArguments(arguments.toArray(new String[0]), args);
-        
-        //new
-        args.setReportPerf(false); 
+
+        // new
+        args.setReportPerf(false);
         args.setReportOutputFiles(false);
-        args.setDumpPerf(null); 
+        args.setDumpPerf(null);
 
         args.setUseJavac(false);
         args.setCompileJava(false);
@@ -253,18 +253,17 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
             args,
             mCollector,
             new ICReporterBase() {
-             @Override
-                        public void reportCompileIteration(boolean b,
-                                                           @NotNull Collection<? extends File> collection,
-                                                           @NotNull ExitCode exitCode) {
+              @Override
+              public void reportCompileIteration(
+                  boolean b,
+                  @NotNull Collection<? extends File> collection,
+                  @NotNull ExitCode exitCode) {}
 
-                        }
-
-                        @Override
-                        public void report(@NotNull Function0<String> function0,
-                                           @NotNull ReportSeverity reportSeverity) {
-                          function0.invoke();
-                        }
+              @Override
+              public void report(
+                  @NotNull Function0<String> function0, @NotNull ReportSeverity reportSeverity) {
+                function0.invoke();
+              }
             });
         if (mCollector.hasErrors()) {
           throw new CompilationFailedException("Compilation failed, see logs for more details");
@@ -455,11 +454,10 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.add("-cp");
         args.add(BuildModule.getKotlinc().getAbsolutePath());
         args.add("org.jetbrains.kotlin.cli.jvm.K2JVMCompiler");
-        
-        //new 
+
+        // new
         args.add("-language-version 2.3");
         args.add("-Xuse-fast-jar-file-system");
-        
 
         args.add("-no-jdk");
         args.add("-no-stdlib");

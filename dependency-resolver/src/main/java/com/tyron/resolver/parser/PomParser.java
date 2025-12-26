@@ -246,4 +246,4 @@ public class PomParser {
     }
     return dependencies;
   }
-      }
+}

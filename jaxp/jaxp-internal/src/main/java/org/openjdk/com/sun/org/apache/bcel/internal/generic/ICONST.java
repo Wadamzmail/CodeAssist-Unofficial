@@ -65,10 +65,9 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
  *
  * <PRE>Stack: ... -&gt; ..., </PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
-public class ICONST extends Instruction
-  implements ConstantPushInstruction, TypedInstruction {
+public class ICONST extends Instruction implements ConstantPushInstruction, TypedInstruction {
   private int value;
 
   /**
@@ -78,29 +77,28 @@ public class ICONST extends Instruction
   ICONST() {}
 
   public ICONST(int i) {
-    super(Constants.ICONST_0, (short)1);
+    super(Constants.ICONST_0, (short) 1);
 
-    if((i >= -1) && (i <= 5))
-      opcode = (short)(Constants.ICONST_0 + i); // Even works for i == -1
-    else
-      throw new ClassGenException("ICONST can be used only for value between -1 and 5: " +
-                                  i);
+    if ((i >= -1) && (i <= 5)) opcode = (short) (Constants.ICONST_0 + i); // Even works for i == -1
+    else throw new ClassGenException("ICONST can be used only for value between -1 and 5: " + i);
     value = i;
   }
 
-  public Number getValue() { return new Integer(value); }
+  public Number getValue() {
+    return new Integer(value);
+  }
 
-  /** @return Type.INT
+  /**
+   * @return Type.INT
    */
   public Type getType(ConstantPoolGen cp) {
     return Type.INT;
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

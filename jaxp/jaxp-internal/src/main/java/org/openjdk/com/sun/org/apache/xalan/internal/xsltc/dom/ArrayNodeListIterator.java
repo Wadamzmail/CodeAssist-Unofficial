@@ -25,67 +25,65 @@ package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.dom;
 
 import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 
-public class ArrayNodeListIterator implements DTMAxisIterator  {
+public class ArrayNodeListIterator implements DTMAxisIterator {
 
-    private int _pos = 0;
+  private int _pos = 0;
 
-    private int _mark = 0;
+  private int _mark = 0;
 
-    private int _nodes[];
+  private int _nodes[];
 
-    private static final int[] EMPTY = { };
+  private static final int[] EMPTY = {};
 
-    public ArrayNodeListIterator(int[] nodes) {
-        _nodes = nodes;
-    }
+  public ArrayNodeListIterator(int[] nodes) {
+    _nodes = nodes;
+  }
 
-    public int next() {
-        return _pos < _nodes.length ? _nodes[_pos++] : END;
-    }
+  public int next() {
+    return _pos < _nodes.length ? _nodes[_pos++] : END;
+  }
 
-    public DTMAxisIterator reset() {
-        _pos = 0;
-        return this;
-    }
+  public DTMAxisIterator reset() {
+    _pos = 0;
+    return this;
+  }
 
-    public int getLast() {
-        return _nodes.length;
-    }
+  public int getLast() {
+    return _nodes.length;
+  }
 
-    public int getPosition() {
-        return _pos;
-    }
+  public int getPosition() {
+    return _pos;
+  }
 
-    public void setMark() {
-        _mark = _pos;
-    }
+  public void setMark() {
+    _mark = _pos;
+  }
 
-    public void gotoMark() {
-        _pos = _mark;
-    }
+  public void gotoMark() {
+    _pos = _mark;
+  }
 
-    public DTMAxisIterator setStartNode(int node) {
-        if (node == END) _nodes = EMPTY;
-        return this;
-    }
+  public DTMAxisIterator setStartNode(int node) {
+    if (node == END) _nodes = EMPTY;
+    return this;
+  }
 
-    public int getStartNode() {
-        return END;
-    }
+  public int getStartNode() {
+    return END;
+  }
 
-    public boolean isReverse() {
-        return false;
-    }
+  public boolean isReverse() {
+    return false;
+  }
 
-    public DTMAxisIterator cloneIterator() {
-        return new ArrayNodeListIterator(_nodes);
-    }
+  public DTMAxisIterator cloneIterator() {
+    return new ArrayNodeListIterator(_nodes);
+  }
 
-    public void setRestartable(boolean isRestartable) {
-    }
+  public void setRestartable(boolean isRestartable) {}
 
-    public int getNodeByPosition(int position) {
-        return _nodes[position - 1];
-    }
-
+  public int getNodeByPosition(int position) {
+    return _nodes[position - 1];
+  }
 }

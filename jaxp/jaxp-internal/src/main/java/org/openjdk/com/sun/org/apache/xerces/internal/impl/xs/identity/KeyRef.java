@@ -26,47 +26,42 @@ import org.openjdk.com.sun.org.apache.xerces.internal.xs.XSIDCDefinition;
  * Schema key reference identity constraint.
  *
  * @xerces.internal
- *
  * @author Andy Clark, IBM
  */
-public class KeyRef
-    extends IdentityConstraint {
+public class KeyRef extends IdentityConstraint {
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** The key (or unique) being referred to. */
-    protected UniqueOrKey fKey;
+  /** The key (or unique) being referred to. */
+  protected UniqueOrKey fKey;
 
-    //
-    // Constructors
-    //
+  //
+  // Constructors
+  //
 
-    /** Constructs a keyref with the specified name. */
-    public KeyRef(String namespace, String identityConstraintName,
-                  String elemName, UniqueOrKey key) {
-        super(namespace, identityConstraintName, elemName);
-        fKey = key;
-        type = IC_KEYREF;
-    } // <init>(String,String,String)
+  /** Constructs a keyref with the specified name. */
+  public KeyRef(String namespace, String identityConstraintName, String elemName, UniqueOrKey key) {
+    super(namespace, identityConstraintName, elemName);
+    fKey = key;
+    type = IC_KEYREF;
+  } // <init>(String,String,String)
 
-    //
-    // Public methods
-    //
+  //
+  // Public methods
+  //
 
-    /** Returns the key being referred to.  */
-    public UniqueOrKey getKey() {
-        return fKey;
-    } // getKey(): int
+  /** Returns the key being referred to. */
+  public UniqueOrKey getKey() {
+    return fKey;
+  } // getKey(): int
 
-    /**
-     * {referenced key} Required if {identity-constraint category} is keyref,
-     * forbidden otherwise. An identity-constraint definition with
-     * {identity-constraint category} equal to key or unique.
-     */
-    public XSIDCDefinition getRefKey() {
-        return fKey;
-    }
-
+  /**
+   * {referenced key} Required if {identity-constraint category} is keyref, forbidden otherwise. An
+   * identity-constraint definition with {identity-constraint category} equal to key or unique.
+   */
+  public XSIDCDefinition getRefKey() {
+    return fKey;
+  }
 } // class KeyRef

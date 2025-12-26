@@ -25,49 +25,47 @@ import org.openjdk.com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarDes
 import org.openjdk.com.sun.org.apache.xerces.internal.xni.grammars.XMLGrammarPool;
 
 /**
- * <p>Implementation of Schema for W3C XML Schemas
- * which contains no schema components.</p>
+ * Implementation of Schema for W3C XML Schemas which contains no schema components.
  *
  * @author Michael Glavassevich, IBM
  * @version $Id: EmptyXMLSchema.java,v 1.6 2010-11-01 04:40:08 joehw Exp $
  */
 final class EmptyXMLSchema extends AbstractXMLSchema implements XMLGrammarPool {
 
-    /** Zero length grammar array. */
-    private static final Grammar [] ZERO_LENGTH_GRAMMAR_ARRAY = new Grammar [0];
+  /** Zero length grammar array. */
+  private static final Grammar[] ZERO_LENGTH_GRAMMAR_ARRAY = new Grammar[0];
 
-    public EmptyXMLSchema() {}
+  public EmptyXMLSchema() {}
 
-    /*
-     * XMLGrammarPool methods
-     */
+  /*
+   * XMLGrammarPool methods
+   */
 
-    public Grammar[] retrieveInitialGrammarSet(String grammarType) {
-        return ZERO_LENGTH_GRAMMAR_ARRAY;
-    }
+  public Grammar[] retrieveInitialGrammarSet(String grammarType) {
+    return ZERO_LENGTH_GRAMMAR_ARRAY;
+  }
 
-    public void cacheGrammars(String grammarType, Grammar[] grammars) {}
+  public void cacheGrammars(String grammarType, Grammar[] grammars) {}
 
-    public Grammar retrieveGrammar(XMLGrammarDescription desc) {
-        return null;
-    }
+  public Grammar retrieveGrammar(XMLGrammarDescription desc) {
+    return null;
+  }
 
-    public void lockPool() {}
+  public void lockPool() {}
 
-    public void unlockPool() {}
+  public void unlockPool() {}
 
-    public void clear() {}
+  public void clear() {}
 
-    /*
-     * XSGrammarPoolContainer methods
-     */
+  /*
+   * XSGrammarPoolContainer methods
+   */
 
-    public XMLGrammarPool getGrammarPool() {
-        return this;
-    }
+  public XMLGrammarPool getGrammarPool() {
+    return this;
+  }
 
-    public boolean isFullyComposed() {
-        return true;
-    }
-
+  public boolean isFullyComposed() {
+    return true;
+  }
 } // EmptyXMLSchema

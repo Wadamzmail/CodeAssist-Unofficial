@@ -10,9 +10,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Resource item representing a density-specific file resource inside an AAR, e.g. a drawable or a layout.
+ * Resource item representing a density-specific file resource inside an AAR, e.g. a drawable or a
+ * layout.
  */
-public final class BasicDensityBasedFileResourceItem extends BasicFileResourceItem implements DensityBasedResourceValue {
+public final class BasicDensityBasedFileResourceItem extends BasicFileResourceItem
+    implements DensityBasedResourceValue {
   @NotNull private final Density myDensity;
 
   /**
@@ -22,15 +24,17 @@ public final class BasicDensityBasedFileResourceItem extends BasicFileResourceIt
    * @param name the name of the resource
    * @param configuration the configuration the resource belongs to
    * @param visibility the visibility of the resource
-   * @param relativePath defines location of the resource. Exact semantics of the path may vary depending on the resource repository
+   * @param relativePath defines location of the resource. Exact semantics of the path may vary
+   *     depending on the resource repository
    * @param density the screen density this resource is associated with
    */
-  public BasicDensityBasedFileResourceItem(@NotNull ResourceType type,
-                                           @NotNull String name,
-                                           @NotNull RepositoryConfiguration configuration,
-                                           @NotNull ResourceVisibility visibility,
-                                           @NotNull String relativePath,
-                                           @NotNull Density density) {
+  public BasicDensityBasedFileResourceItem(
+      @NotNull ResourceType type,
+      @NotNull String name,
+      @NotNull RepositoryConfiguration configuration,
+      @NotNull ResourceVisibility visibility,
+      @NotNull String relativePath,
+      @NotNull Density density) {
     super(type, name, configuration, visibility, relativePath);
     myDensity = density;
   }
@@ -43,12 +47,12 @@ public final class BasicDensityBasedFileResourceItem extends BasicFileResourceIt
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicDensityBasedFileResourceItem other = (BasicDensityBasedFileResourceItem) obj;
     return myDensity == other.myDensity;
   }
@@ -67,11 +71,11 @@ public final class BasicDensityBasedFileResourceItem extends BasicFileResourceIt
   @NotNull
   public String toString() {
     return MoreObjects.toStringHelper(this)
-                      .add("name", getName())
-                      .add("namespace", getNamespace())
-                      .add("type", getResourceType())
-                      .add("source", getSource())
-                      .add("density", getResourceDensity())
-                      .toString();
+        .add("name", getName())
+        .add("namespace", getNamespace())
+        .add("type", getResourceType())
+        .add("source", getSource())
+        .add("density", getResourceDensity())
+        .toString();
   }
 }

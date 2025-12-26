@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
@@ -26,8 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import org.jetbrains.kotlin.com.intellij.openapi.util.KeyWithDefaultValue;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-//import com.intellij.util.concurrency.AtomicFieldUpdater;
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+// import com.intellij.util.concurrency.AtomicFieldUpdater;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -336,15 +336,11 @@ public class ModuleImpl implements Module {
     return mRoot.equals(project.mRoot);
   }
 
- // private static final AtomicFieldUpdater<ModuleImpl, KeyFMap> updater =
+  // private static final AtomicFieldUpdater<ModuleImpl, KeyFMap> updater =
   //    AtomicFieldUpdater.forFieldOfType(ModuleImpl.class, KeyFMap.class);
-      
+
   private static final AtomicReferenceFieldUpdater<ModuleImpl, KeyFMap> updater =
-     AtomicReferenceFieldUpdater.newUpdater(
-          ModuleImpl.class,
-          KeyFMap.class,
-          "myUserMap"
-      );  
+      AtomicReferenceFieldUpdater.newUpdater(ModuleImpl.class, KeyFMap.class, "myUserMap");
 
   private final Map<CacheKey<?, ?>, Cache<?, ?>> mCacheMap = new HashMap<>();
 

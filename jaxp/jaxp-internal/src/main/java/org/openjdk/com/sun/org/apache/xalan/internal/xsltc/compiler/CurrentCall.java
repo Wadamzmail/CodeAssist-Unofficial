@@ -31,11 +31,11 @@ import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.MethodG
  * @author Santiago Pericas-Geertsen
  */
 final class CurrentCall extends FunctionCall {
-    public CurrentCall(QName fname) {
-        super(fname);
-    }
+  public CurrentCall(QName fname) {
+    super(fname);
+  }
 
-    public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
-        methodGen.getInstructionList().append(methodGen.loadCurrentNode());
-    }
+  public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
+    methodGen.getInstructionList().append(methodGen.loadCurrentNode());
+  }
 }

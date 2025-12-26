@@ -2,17 +2,18 @@ package com.tyron.completion.xml.v2.aar;
 
 import com.android.aapt.Resources;
 import com.android.utils.XmlUtils;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Static methods for converting {@link Resources.StyledString} proto message back to the original XML string.
+ * Static methods for converting {@link Resources.StyledString} proto message back to the original
+ * XML string.
  */
 class ProtoStyledStringDecoder {
   /**
-   * Decodes the given {@link Resources.StyledString} proto message to obtain the original XML string.
+   * Decodes the given {@link Resources.StyledString} proto message to obtain the original XML
+   * string.
    *
    * @param styledStringMsg the proto message to decode
    * @return the original XML string

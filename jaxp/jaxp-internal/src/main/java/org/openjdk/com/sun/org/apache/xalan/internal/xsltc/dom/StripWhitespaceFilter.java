@@ -30,5 +30,5 @@ import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.DOM;
  * @author Santiago Pericas-Geertsen
  */
 public interface StripWhitespaceFilter {
-    public boolean stripSpace(DOM dom, int node, int type);
+  public boolean stripSpace(DOM dom, int node, int type);
 }

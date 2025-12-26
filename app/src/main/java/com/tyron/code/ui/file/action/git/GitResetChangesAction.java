@@ -12,8 +12,8 @@ import com.tyron.code.ui.file.tree.TreeFileManagerFragment;
 import com.tyron.code.ui.file.tree.model.TreeFile;
 import com.tyron.ui.treeview.TreeNode;
 import com.tyron.ui.treeview.TreeView;
-import java.io.File;
 import dev.mutwakil.codeassist.R;
+import java.io.File;
 
 public class GitResetChangesAction extends FileAction {
   public static final String ID = "fileManagerGitResetChangesAction";

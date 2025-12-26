@@ -65,30 +65,26 @@ import org.openjdk.com.sun.org.apache.bcel.internal.classfile.JavaClass;
 /**
  * Super class for object and array types.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public abstract class ReferenceType extends Type {
   protected ReferenceType(byte t, String s) {
     super(t, s);
   }
 
-  /** Class is non-abstract but not instantiable from the outside
-   */
+  /** Class is non-abstract but not instantiable from the outside */
   ReferenceType() {
     super(Constants.T_OBJECT, "<null object>");
   }
 
   /**
-   * Return true iff this type is castable to another type t as defined in
-   * the JVM specification.  The case where this is Type.NULL is not
-   * defined (see the CHECKCAST definition in the JVM specification).
-   * However, because e.g. CHECKCAST doesn't throw a
-   * ClassCastException when casting a null reference to any Object,
-   * true is returned in this case.
+   * Return true iff this type is castable to another type t as defined in the JVM specification.
+   * The case where this is Type.NULL is not defined (see the CHECKCAST definition in the JVM
+   * specification). However, because e.g. CHECKCAST doesn't throw a ClassCastException when casting
+   * a null reference to any Object, true is returned in this case.
    */
   public boolean isCastableTo(Type t) {
-    if (this.equals(Type.NULL))
-      return true;              // If this is ever changed in isAssignmentCompatible()
+    if (this.equals(Type.NULL)) return true; // If this is ever changed in isAssignmentCompatible()
 
     return isAssignmentCompatibleWith(t);
     /* Yes, it's true: It's the same definition.
@@ -97,18 +93,15 @@ public abstract class ReferenceType extends Type {
   }
 
   /**
-   * Return true iff this is assignment compatible with another type t
-   * as defined in the JVM specification; see the AASTORE definition
-   * there.
+   * Return true iff this is assignment compatible with another type t as defined in the JVM
+   * specification; see the AASTORE definition there.
    */
   public boolean isAssignmentCompatibleWith(Type t) {
-    if (!(t instanceof ReferenceType))
-      return false;
+    if (!(t instanceof ReferenceType)) return false;
 
     ReferenceType T = (ReferenceType) t;
 
-    if (this.equals(Type.NULL))
-      return true; // This is not explicitely stated, but clear. Isn't it?
+    if (this.equals(Type.NULL)) return true; // This is not explicitely stated, but clear. Isn't it?
 
     /* If this is a class type then
      */
@@ -117,20 +110,17 @@ public abstract class ReferenceType extends Type {
          or this must be a subclass of T;
       */
       if ((T instanceof ObjectType) && (((ObjectType) T).referencesClass())) {
-        if (this.equals(T))
-          return true;
+        if (this.equals(T)) return true;
 
-        if (Repository.instanceOf(((ObjectType) this).getClassName(),
-                                  ((ObjectType) T).getClassName()))
-          return true;
+        if (Repository.instanceOf(
+            ((ObjectType) this).getClassName(), ((ObjectType) T).getClassName())) return true;
       }
 
       /* If T is an interface type, this must implement interface T.
        */
       if ((T instanceof ObjectType) && (((ObjectType) T).referencesInterface())) {
-        if (Repository.implementationOf(((ObjectType) this).getClassName(),
-                                        ((ObjectType) T).getClassName()))
-          return true;
+        if (Repository.implementationOf(
+            ((ObjectType) this).getClassName(), ((ObjectType) T).getClassName())) return true;
       }
     }
 
@@ -148,9 +138,8 @@ public abstract class ReferenceType extends Type {
        */
       if ((T instanceof ObjectType) && (((ObjectType) T).referencesInterface())) {
         if (this.equals(T)) return true;
-        if (Repository.implementationOf(((ObjectType) this).getClassName(),
-                                        ((ObjectType) T).getClassName()))
-          return true;
+        if (Repository.implementationOf(
+            ((ObjectType) this).getClassName(), ((ObjectType) T).getClassName())) return true;
       }
     }
 
@@ -173,15 +162,14 @@ public abstract class ReferenceType extends Type {
         Type sc = ((ArrayType) this).getElementType();
         Type tc = ((ArrayType) this).getElementType();
 
-        if (sc instanceof BasicType && tc instanceof BasicType && sc.equals(tc))
-          return true;
+        if (sc instanceof BasicType && tc instanceof BasicType && sc.equals(tc)) return true;
 
         /* TC and SC are reference types (2.4.6), and type SC is
          * assignable to TC by these runtime rules.
          */
-        if (tc instanceof ReferenceType && sc instanceof ReferenceType &&
-            ((ReferenceType) sc).isAssignmentCompatibleWith((ReferenceType) tc))
-          return true;
+        if (tc instanceof ReferenceType
+            && sc instanceof ReferenceType
+            && ((ReferenceType) sc).isAssignmentCompatibleWith((ReferenceType) tc)) return true;
       }
 
       /* If T is an interface type, T must be one of the interfaces implemented by arrays (2.15). */
@@ -201,18 +189,14 @@ public abstract class ReferenceType extends Type {
 
   /**
    * This commutative operation returns the first common superclass (narrowest ReferenceType
-   * referencing a class, not an interface).
-   * If one of the types is a superclass of the other, the former is returned.
-   * If "this" is Type.NULL, then t is returned.
-   * If t is Type.NULL, then "this" is returned.
-   * If "this" equals t ['this.equals(t)'] "this" is returned.
-   * If "this" or t is an ArrayType, then Type.OBJECT is returned;
-   * unless their dimensions match. Then an ArrayType of the same
-   * number of dimensions is returned, with its basic type being the
-   * first common super class of the basic types of "this" and t.
-   * If "this" or t is a ReferenceType referencing an interface, then Type.OBJECT is returned.
-   * If not all of the two classes' superclasses cannot be found, "null" is returned.
-   * See the JVM specification edition 2, "4.9.2 The Bytecode Verifier".
+   * referencing a class, not an interface). If one of the types is a superclass of the other, the
+   * former is returned. If "this" is Type.NULL, then t is returned. If t is Type.NULL, then "this"
+   * is returned. If "this" equals t ['this.equals(t)'] "this" is returned. If "this" or t is an
+   * ArrayType, then Type.OBJECT is returned; unless their dimensions match. Then an ArrayType of
+   * the same number of dimensions is returned, with its basic type being the first common super
+   * class of the basic types of "this" and t. If "this" or t is a ReferenceType referencing an
+   * interface, then Type.OBJECT is returned. If not all of the two classes' superclasses cannot be
+   * found, "null" is returned. See the JVM specification edition 2, "4.9.2 The Bytecode Verifier".
    */
   public ReferenceType getFirstCommonSuperclass(ReferenceType t) {
     if (this.equals(Type.NULL)) return t;
@@ -231,29 +215,25 @@ public abstract class ReferenceType extends Type {
     if ((this instanceof ArrayType) && (t instanceof ArrayType)) {
       ArrayType arrType1 = (ArrayType) this;
       ArrayType arrType2 = (ArrayType) t;
-      if (
-          (arrType1.getDimensions() == arrType2.getDimensions()) &&
-          arrType1.getBasicType() instanceof ObjectType &&
-          arrType2.getBasicType() instanceof ObjectType) {
+      if ((arrType1.getDimensions() == arrType2.getDimensions())
+          && arrType1.getBasicType() instanceof ObjectType
+          && arrType2.getBasicType() instanceof ObjectType) {
         return new ArrayType(
-                             ((ObjectType) arrType1.getBasicType()).getFirstCommonSuperclass((ObjectType) arrType2.getBasicType()),
-                             arrType1.getDimensions()
-                             );
-
+            ((ObjectType) arrType1.getBasicType())
+                .getFirstCommonSuperclass((ObjectType) arrType2.getBasicType()),
+            arrType1.getDimensions());
       }
     }
 
-    if ((this instanceof ArrayType) || (t instanceof ArrayType))
-      return Type.OBJECT;
+    if ((this instanceof ArrayType) || (t instanceof ArrayType)) return Type.OBJECT;
     // TODO: Is there a proof of OBJECT being the direct ancestor of every ArrayType?
 
-    if (((this instanceof ObjectType) && ((ObjectType) this).referencesInterface()) ||
-        ((t instanceof ObjectType) && ((ObjectType) t).referencesInterface()))
+    if (((this instanceof ObjectType) && ((ObjectType) this).referencesInterface())
+        || ((t instanceof ObjectType) && ((ObjectType) t).referencesInterface()))
       return Type.OBJECT;
     // TODO: The above line is correct comparing to the vmspec2. But one could
     // make class file verification a bit stronger here by using the notion of
     // superinterfaces or even castability or assignment compatibility.
-
 
     // this and t are ObjectTypes, see above.
     ObjectType thiz = (ObjectType) this;
@@ -285,18 +265,14 @@ public abstract class ReferenceType extends Type {
 
   /**
    * This commutative operation returns the first common superclass (narrowest ReferenceType
-   * referencing a class, not an interface).
-   * If one of the types is a superclass of the other, the former is returned.
-   * If "this" is Type.NULL, then t is returned.
-   * If t is Type.NULL, then "this" is returned.
-   * If "this" equals t ['this.equals(t)'] "this" is returned.
-   * If "this" or t is an ArrayType, then Type.OBJECT is returned.
-   * If "this" or t is a ReferenceType referencing an interface, then Type.OBJECT is returned.
-   * If not all of the two classes' superclasses cannot be found, "null" is returned.
-   * See the JVM specification edition 2, "4.9.2 The Bytecode Verifier".
+   * referencing a class, not an interface). If one of the types is a superclass of the other, the
+   * former is returned. If "this" is Type.NULL, then t is returned. If t is Type.NULL, then "this"
+   * is returned. If "this" equals t ['this.equals(t)'] "this" is returned. If "this" or t is an
+   * ArrayType, then Type.OBJECT is returned. If "this" or t is a ReferenceType referencing an
+   * interface, then Type.OBJECT is returned. If not all of the two classes' superclasses cannot be
+   * found, "null" is returned. See the JVM specification edition 2, "4.9.2 The Bytecode Verifier".
    *
-   * @deprecated use getFirstCommonSuperclass(ReferenceType t) which has
-   *             slightly changed semantics.
+   * @deprecated use getFirstCommonSuperclass(ReferenceType t) which has slightly changed semantics.
    */
   public ReferenceType firstCommonSuperclass(ReferenceType t) {
     if (this.equals(Type.NULL)) return t;
@@ -310,17 +286,15 @@ public abstract class ReferenceType extends Type {
      * "null" is not referring to an instance of java.lang.Object :)
      */
 
-    if ((this instanceof ArrayType) || (t instanceof ArrayType))
-      return Type.OBJECT;
+    if ((this instanceof ArrayType) || (t instanceof ArrayType)) return Type.OBJECT;
     // TODO: Is there a proof of OBJECT being the direct ancestor of every ArrayType?
 
-    if (((this instanceof ObjectType) && ((ObjectType) this).referencesInterface()) ||
-        ((t instanceof ObjectType) && ((ObjectType) t).referencesInterface()))
+    if (((this instanceof ObjectType) && ((ObjectType) this).referencesInterface())
+        || ((t instanceof ObjectType) && ((ObjectType) t).referencesInterface()))
       return Type.OBJECT;
     // TODO: The above line is correct comparing to the vmspec2. But one could
     // make class file verification a bit stronger here by using the notion of
     // superinterfaces or even castability or assignment compatibility.
-
 
     // this and t are ObjectTypes, see above.
     ObjectType thiz = (ObjectType) this;

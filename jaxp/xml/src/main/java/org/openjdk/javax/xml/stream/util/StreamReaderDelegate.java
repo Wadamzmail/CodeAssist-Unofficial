@@ -28,19 +28,17 @@
 
 package org.openjdk.javax.xml.stream.util;
 
-import org.openjdk.javax.xml.namespace.QName;
 import org.openjdk.javax.xml.namespace.NamespaceContext;
-import org.openjdk.javax.xml.stream.XMLStreamReader;
+import org.openjdk.javax.xml.namespace.QName;
 import org.openjdk.javax.xml.stream.Location;
 import org.openjdk.javax.xml.stream.XMLStreamException;
+import org.openjdk.javax.xml.stream.XMLStreamReader;
 
 /**
  * This is the base class for deriving an XMLStreamReader filter
  *
- * This class is designed to sit between an XMLStreamReader and an
- * application's XMLStreamReader.   By default each method
- * does nothing but call the corresponding method on the
- * parent interface.
+ * <p>This class is designed to sit between an XMLStreamReader and an application's XMLStreamReader.
+ * By default each method does nothing but call the corresponding method on the parent interface.
  *
  * @version 1.0
  * @author Copyright (c) 2009 by Oracle Corporation. All Rights Reserved.
@@ -48,17 +46,15 @@ import org.openjdk.javax.xml.stream.XMLStreamException;
  * @see EventReaderDelegate
  * @since 1.6
  */
-
 public class StreamReaderDelegate implements XMLStreamReader {
   private XMLStreamReader reader;
 
-  /**
-   * Construct an empty filter with no parent.
-   */
-  public StreamReaderDelegate(){}
+  /** Construct an empty filter with no parent. */
+  public StreamReaderDelegate() {}
 
   /**
    * Construct an filter with the specified parent.
+   *
    * @param reader the parent
    */
   public StreamReaderDelegate(XMLStreamReader reader) {
@@ -67,6 +63,7 @@ public class StreamReaderDelegate implements XMLStreamReader {
 
   /**
    * Set the parent of this instance.
+   *
    * @param reader the new parent
    */
   public void setParent(XMLStreamReader reader) {
@@ -75,50 +72,38 @@ public class StreamReaderDelegate implements XMLStreamReader {
 
   /**
    * Get the parent of this instance.
+   *
    * @return the parent or null if none is set
    */
   public XMLStreamReader getParent() {
     return reader;
   }
 
-  public int next()
-    throws XMLStreamException
-  {
+  public int next() throws XMLStreamException {
     return reader.next();
   }
 
-  public int nextTag()
-    throws XMLStreamException
-  {
+  public int nextTag() throws XMLStreamException {
     return reader.nextTag();
   }
 
-  public String getElementText()
-    throws XMLStreamException
-  {
+  public String getElementText() throws XMLStreamException {
     return reader.getElementText();
   }
 
-  public void require(int type, String namespaceURI, String localName)
-    throws XMLStreamException
-  {
-    reader.require(type,namespaceURI,localName);
+  public void require(int type, String namespaceURI, String localName) throws XMLStreamException {
+    reader.require(type, namespaceURI, localName);
   }
 
-  public boolean hasNext()
-    throws XMLStreamException
-  {
+  public boolean hasNext() throws XMLStreamException {
     return reader.hasNext();
   }
 
-  public void close()
-    throws XMLStreamException
-  {
+  public void close() throws XMLStreamException {
     reader.close();
   }
 
-  public String getNamespaceURI(String prefix)
-  {
+  public String getNamespaceURI(String prefix) {
     return reader.getNamespaceURI(prefix);
   }
 
@@ -142,10 +127,8 @@ public class StreamReaderDelegate implements XMLStreamReader {
     return reader.isWhiteSpace();
   }
 
-  public String getAttributeValue(String namespaceUri,
-                                  String localName)
-  {
-    return reader.getAttributeValue(namespaceUri,localName);
+  public String getAttributeValue(String namespaceUri, String localName) {
+    return reader.getAttributeValue(namespaceUri, localName);
   }
 
   public int getAttributeCount() {
@@ -200,17 +183,10 @@ public class StreamReaderDelegate implements XMLStreamReader {
     return reader.getText();
   }
 
-  public int getTextCharacters(int sourceStart,
-                               char[] target,
-                               int targetStart,
-                               int length)
-    throws XMLStreamException {
-    return reader.getTextCharacters(sourceStart,
-                                    target,
-                                    targetStart,
-                                    length);
+  public int getTextCharacters(int sourceStart, char[] target, int targetStart, int length)
+      throws XMLStreamException {
+    return reader.getTextCharacters(sourceStart, target, targetStart, length);
   }
-
 
   public char[] getTextCharacters() {
     return reader.getTextCharacters();

@@ -1,7 +1,6 @@
 package com.tyron.code.language.java;
 
 import com.sun.tools.javac.code.Symbol;
-import com.tyron.code.analyzer.semantic.TokenType;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;

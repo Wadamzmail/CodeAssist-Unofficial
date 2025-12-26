@@ -25,33 +25,25 @@ package org.openjdk.com.sun.org.apache.xml.internal.serializer;
 import org.xml.sax.Attributes;
 
 /**
- * This interface defines a set of integer constants that identify trace event
- * types.
+ * This interface defines a set of integer constants that identify trace event types.
  *
  * @xsl.usage internal
  */
-
 public interface SerializerTrace {
 
-  /**
-   * Event type generated when a document begins.
-   *
-   */
+  /** Event type generated when a document begins. */
   public static final int EVENTTYPE_STARTDOCUMENT = 1;
 
-  /**
-   * Event type generated when a document ends.
-   */
+  /** Event type generated when a document ends. */
   public static final int EVENTTYPE_ENDDOCUMENT = 2;
 
   /**
-   * Event type generated when an element begins (after the attributes have been processed but before the children have been added).
+   * Event type generated when an element begins (after the attributes have been processed but
+   * before the children have been added).
    */
   public static final int EVENTTYPE_STARTELEMENT = 3;
 
-  /**
-   * Event type generated when an element ends, after it's children have been added.
-   */
+  /** Event type generated when an element ends, after it's children have been added. */
   public static final int EVENTTYPE_ENDELEMENT = 4;
 
   /**
@@ -64,42 +56,29 @@ public interface SerializerTrace {
    */
   public static final int EVENTTYPE_IGNORABLEWHITESPACE = 6;
 
-  /**
-   * Event type generated for processing instructions.
-   */
+  /** Event type generated for processing instructions. */
   public static final int EVENTTYPE_PI = 7;
 
-  /**
-   * Event type generated after a comment has been added.
-   */
+  /** Event type generated after a comment has been added. */
   public static final int EVENTTYPE_COMMENT = 8;
 
-  /**
-   * Event type generate after an entity ref is created.
-   */
+  /** Event type generate after an entity ref is created. */
   public static final int EVENTTYPE_ENTITYREF = 9;
 
-  /**
-   * Event type generated after CDATA is generated.
-   */
+  /** Event type generated after CDATA is generated. */
   public static final int EVENTTYPE_CDATA = 10;
 
   /**
-   * Event type generated when characters might be written to an output stream,
-   *  but  these characters never are. They will ultimately be written out via
-   * EVENTTYPE_OUTPUT_CHARACTERS. This type is used as attributes are collected.
-   * Whenever the attributes change this event type is fired. At the very end
-   * however, when the attributes do not change anymore and are going to be
-   * ouput to the document the real characters will be written out using the
-   * EVENTTYPE_OUTPUT_CHARACTERS.
+   * Event type generated when characters might be written to an output stream, but these characters
+   * never are. They will ultimately be written out via EVENTTYPE_OUTPUT_CHARACTERS. This type is
+   * used as attributes are collected. Whenever the attributes change this event type is fired. At
+   * the very end however, when the attributes do not change anymore and are going to be ouput to
+   * the document the real characters will be written out using the EVENTTYPE_OUTPUT_CHARACTERS.
    */
   public static final int EVENTTYPE_OUTPUT_PSEUDO_CHARACTERS = 11;
 
-  /**
-   * Event type generated when characters are written to an output stream.
-   */
+  /** Event type generated when characters are written to an output stream. */
   public static final int EVENTTYPE_OUTPUT_CHARACTERS = 12;
-
 
   /**
    * Tell if trace listeners are present.
@@ -143,7 +122,6 @@ public interface SerializerTrace {
    */
   public void fireGenerateEvent(int eventType, String name, String data);
 
-
   /**
    * Fire comment and entity ref events.
    *
@@ -151,5 +129,4 @@ public interface SerializerTrace {
    * @param data The comment or entity ref data.
    */
   public void fireGenerateEvent(int eventType, String data);
-
 }

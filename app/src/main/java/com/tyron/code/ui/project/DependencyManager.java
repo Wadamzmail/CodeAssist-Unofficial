@@ -282,7 +282,8 @@ public class DependencyManager {
     if (!declaredImplementationDependencies.isEmpty()) {
       resolvedImplementationPoms =
           mResolver.resolveDependencies(declaredImplementationDependencies);
-      List<CodeAssistLibrary> implementationLibraries = getFiles(resolvedImplementationPoms, logger);
+      List<CodeAssistLibrary> implementationLibraries =
+          getFiles(resolvedImplementationPoms, logger);
       checkDependencies(
           project,
           root,
@@ -317,7 +318,8 @@ public class DependencyManager {
     if (!declaredCompileOnlyApiDependencies.isEmpty()) {
       resolvedCompileOnlyApiPoms =
           mResolver.resolveDependencies(declaredCompileOnlyApiDependencies);
-      List<CodeAssistLibrary> compileOnlyApiLibraries = getFiles(resolvedCompileOnlyApiPoms, logger);
+      List<CodeAssistLibrary> compileOnlyApiLibraries =
+          getFiles(resolvedCompileOnlyApiPoms, logger);
       checkDependencies(
           project,
           root,
@@ -352,7 +354,8 @@ public class DependencyManager {
     if (!declaredRuntimeOnlyApiDependencies.isEmpty()) {
       resolvedRuntimeOnlyApiPoms =
           mResolver.resolveDependencies(declaredRuntimeOnlyApiDependencies);
-      List<CodeAssistLibrary> runtimeOnlyApiLibraries = getFiles(resolvedRuntimeOnlyApiPoms, logger);
+      List<CodeAssistLibrary> runtimeOnlyApiLibraries =
+          getFiles(resolvedRuntimeOnlyApiPoms, logger);
       checkDependencies(
           project,
           root,
@@ -518,7 +521,11 @@ public class DependencyManager {
   }
 
   public Map<String, CodeAssistLibrary> checkDirLibraries(
-      Map<String, CodeAssistLibrary> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
+      Map<String, CodeAssistLibrary> fileLibsHashes,
+      ILogger logger,
+      File dir,
+      String include,
+      String scope) {
     try {
       ZipFile zipFile = new ZipFile(new File(dir, include));
       CodeAssistLibrary library = new CodeAssistLibrary();
@@ -556,12 +563,14 @@ public class DependencyManager {
     return fileLibsHashes;
   }
 
-  public Set<CodeAssistLibrary> parseLibraries(Set<CodeAssistLibrary> libraries, File file, String scope) {
+  public Set<CodeAssistLibrary> parseLibraries(
+      Set<CodeAssistLibrary> libraries, File file, String scope) {
     ModuleSettings myModuleSettings = new ModuleSettings(file);
     String librariesString = myModuleSettings.getString(scope + "_libraries", "[]");
     try {
       List<CodeAssistLibrary> parsedLibraries =
-          new Gson().fromJson(librariesString, new TypeToken<List<CodeAssistLibrary>>() {}.getType());
+          new Gson()
+              .fromJson(librariesString, new TypeToken<List<CodeAssistLibrary>>() {}.getType());
       if (parsedLibraries != null) {
         for (CodeAssistLibrary parsedLibrary : parsedLibraries) {
           if (!libraries.contains(parsedLibrary)) {

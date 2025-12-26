@@ -61,7 +61,7 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
 /**
  * Super class for stack operations like DUP and POP.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public abstract class StackInstruction extends Instruction {
   /**
@@ -74,10 +74,11 @@ public abstract class StackInstruction extends Instruction {
    * @param opcode instruction opcode
    */
   protected StackInstruction(short opcode) {
-    super(opcode, (short)1);
+    super(opcode, (short) 1);
   }
 
-  /** @return Type.UNKNOWN
+  /**
+   * @return Type.UNKNOWN
    */
   public Type getType(ConstantPoolGen cp) {
     return Type.UNKNOWN;

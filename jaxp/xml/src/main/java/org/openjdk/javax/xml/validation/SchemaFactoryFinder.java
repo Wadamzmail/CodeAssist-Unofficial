@@ -43,406 +43,388 @@ import java.util.ServiceLoader;
  * @version $Revision: 1.8 $, $Date: 2010-11-01 04:36:13 $
  * @since 1.5
  */
-class SchemaFactoryFinder  {
+class SchemaFactoryFinder {
 
-    /** debug support code. */
-    private static boolean debug = false;
-    /**
-     *<p> Take care of restrictions imposed by java security model </p>
-     */
-    private static final SecuritySupport ss = new SecuritySupport();
-    private static final String DEFAULT_PACKAGE = "com.sun.org.apache.xerces.internal";
-    /**
-     * <p>Cache properties for performance.</p>
-     */
-    private static final Properties cacheProps = new Properties();
+  /** debug support code. */
+  private static boolean debug = false;
 
-    /**
-     * <p>First time requires initialization overhead.</p>
-     */
-    private static volatile boolean firstTime = true;
+  /** Take care of restrictions imposed by java security model */
+  private static final SecuritySupport ss = new SecuritySupport();
 
-    static {
-        // Use try/catch block to support applets
-        try {
-            debug = ss.getSystemProperty("jaxp.debug") != null;
-        } catch (Exception unused) {
-            debug = false;
-        }
+  private static final String DEFAULT_PACKAGE = "com.sun.org.apache.xerces.internal";
+
+  /** Cache properties for performance. */
+  private static final Properties cacheProps = new Properties();
+
+  /** First time requires initialization overhead. */
+  private static volatile boolean firstTime = true;
+
+  static {
+    // Use try/catch block to support applets
+    try {
+      debug = ss.getSystemProperty("jaxp.debug") != null;
+    } catch (Exception unused) {
+      debug = false;
+    }
+  }
+
+  /**
+   * Conditional debug printing.
+   *
+   * @param msg to print
+   */
+  private static void debugPrintln(String msg) {
+    if (debug) {
+      System.err.println("JAXP: " + msg);
+    }
+  }
+
+  /** <code>ClassLoader</code> to use to find <code>SchemaFactory</code>. */
+  private final ClassLoader classLoader;
+
+  /**
+   * Constructor that specifies <code>ClassLoader</code> to use to find <code>SchemaFactory</code>.
+   *
+   * @param loader to be used to load resource, {@link
+   *     org.openjdk.javax.xml.validation.SchemaFactory}, and {@link SchemaFactoryLoader}
+   *     implementations during the resolution process. If this parameter is null, the default
+   *     system class loader will be used.
+   */
+  public SchemaFactoryFinder(ClassLoader loader) {
+    this.classLoader = loader;
+    if (debug) {
+      debugDisplayClassLoader();
+    }
+  }
+
+  private void debugDisplayClassLoader() {
+    try {
+      if (classLoader == ss.getContextClassLoader()) {
+        debugPrintln("using thread context class loader (" + classLoader + ") for search");
+        return;
+      }
+    } catch (Throwable unused) {
+      // getContextClassLoader() undefined in JDK1.1
     }
 
-    /**
-     * <p>Conditional debug printing.</p>
-     *
-     * @param msg to print
-     */
-    private static void debugPrintln(String msg) {
-        if (debug) {
-            System.err.println("JAXP: " + msg);
-        }
+    if (classLoader == ClassLoader.getSystemClassLoader()) {
+      debugPrintln("using system class loader (" + classLoader + ") for search");
+      return;
     }
 
-    /**
-     * <p><code>ClassLoader</code> to use to find <code>SchemaFactory</code>.</p>
-     */
-    private final ClassLoader classLoader;
+    debugPrintln("using class loader (" + classLoader + ") for search");
+  }
 
-    /**
-     * <p>Constructor that specifies <code>ClassLoader</code> to use
-     * to find <code>SchemaFactory</code>.</p>
-     *
-     * @param loader
-     *      to be used to load resource, {@link org.openjdk.javax.xml.validation.SchemaFactory}, and
-     *      {@link SchemaFactoryLoader} implementations during
-     *      the resolution process.
-     *      If this parameter is null, the default system class loader
-     *      will be used.
-     */
-    public SchemaFactoryFinder(ClassLoader loader) {
-        this.classLoader = loader;
-        if( debug ) {
-            debugDisplayClassLoader();
-        }
+  /**
+   * Creates a new {@link org.openjdk.javax.xml.validation.SchemaFactory} object for the specified
+   * schema language.
+   *
+   * @param schemaLanguage See {@link org.openjdk.javax.xml.validation.SchemaFactory Schema
+   *     Language} table in <code>SchemaFactory</code> for the list of available schema languages.
+   * @return <code>null</code> if the callee fails to create one.
+   * @throws NullPointerException If the <code>schemaLanguage</code> parameter is null.
+   * @throws SchemaFactoryConfigurationError If a configuration error is encountered.
+   */
+  public org.openjdk.javax.xml.validation.SchemaFactory newFactory(String schemaLanguage) {
+    if (schemaLanguage == null) {
+      throw new NullPointerException();
+    }
+    org.openjdk.javax.xml.validation.SchemaFactory f = _newFactory(schemaLanguage);
+    if (f != null) {
+      debugPrintln("factory '" + f.getClass().getName() + "' was found for " + schemaLanguage);
+    } else {
+      debugPrintln("unable to find a factory for " + schemaLanguage);
+    }
+    return f;
+  }
+
+  /**
+   * Lookup a <code>SchemaFactory</code> for the given <code>schemaLanguage</code>.
+   *
+   * @param schemaLanguage Schema language to lookup <code>SchemaFactory</code> for.
+   * @return <code>SchemaFactory</code> for the given <code>schemaLanguage</code>.
+   */
+  private org.openjdk.javax.xml.validation.SchemaFactory _newFactory(String schemaLanguage) {
+    org.openjdk.javax.xml.validation.SchemaFactory sf;
+
+    String propertyName = SERVICE_CLASS.getName() + ":" + schemaLanguage;
+
+    // system property look up
+    try {
+      debugPrintln("Looking up system property '" + propertyName + "'");
+      String r = ss.getSystemProperty(propertyName);
+      if (r != null) {
+        debugPrintln("The value is '" + r + "'");
+        sf = createInstance(r, true);
+        if (sf != null) return sf;
+      } else debugPrintln("The property is undefined.");
+    } catch (Throwable t) {
+      if (debug) {
+        debugPrintln("failed to look up system property '" + propertyName + "'");
+        t.printStackTrace();
+      }
     }
 
-    private void debugDisplayClassLoader() {
-        try {
-            if( classLoader == ss.getContextClassLoader() ) {
-                debugPrintln("using thread context class loader ("+classLoader+") for search");
-                return;
+    String javah = ss.getSystemProperty("java.home");
+    String configFile = javah + File.separator + "lib" + File.separator + "jaxp.properties";
+
+    // try to read from $java.home/lib/jaxp.properties
+    try {
+      if (firstTime) {
+        synchronized (cacheProps) {
+          if (firstTime) {
+            File f = new File(configFile);
+            firstTime = false;
+            if (ss.doesFileExist(f)) {
+              debugPrintln("Read properties file " + f);
+              cacheProps.load(ss.getFileInputStream(f));
             }
-        } catch( Throwable unused ) {
-            // getContextClassLoader() undefined in JDK1.1
+          }
         }
+      }
+      final String factoryClassName = cacheProps.getProperty(propertyName);
+      debugPrintln("found " + factoryClassName + " in $java.home/jaxp.properties");
 
-        if( classLoader==ClassLoader.getSystemClassLoader() ) {
-            debugPrintln("using system class loader ("+classLoader+") for search");
-            return;
+      if (factoryClassName != null) {
+        sf = createInstance(factoryClassName, true);
+        if (sf != null) {
+          return sf;
         }
-
-        debugPrintln("using class loader ("+classLoader+") for search");
+      }
+    } catch (Exception ex) {
+      if (debug) {
+        ex.printStackTrace();
+      }
     }
 
-    /**
-     * <p>Creates a new {@link org.openjdk.javax.xml.validation.SchemaFactory} object for the specified
-     * schema language.</p>
-     *
-     * @param schemaLanguage
-     *      See {@link org.openjdk.javax.xml.validation.SchemaFactory Schema Language} table in <code>SchemaFactory</code>
-     *      for the list of available schema languages.
-     *
-     * @return <code>null</code> if the callee fails to create one.
-     *
-     * @throws NullPointerException
-     *      If the <code>schemaLanguage</code> parameter is null.
-     * @throws SchemaFactoryConfigurationError
-     *      If a configuration error is encountered.
-     */
-    public org.openjdk.javax.xml.validation.SchemaFactory newFactory(String schemaLanguage) {
-        if(schemaLanguage==null) {
-            throw new NullPointerException();
-        }
-        org.openjdk.javax.xml.validation.SchemaFactory f = _newFactory(schemaLanguage);
-        if (f != null) {
-            debugPrintln("factory '" + f.getClass().getName() + "' was found for " + schemaLanguage);
-        } else {
-            debugPrintln("unable to find a factory for " + schemaLanguage);
-        }
-        return f;
+    // Try with ServiceLoader
+    final org.openjdk.javax.xml.validation.SchemaFactory factoryImpl =
+        findServiceProvider(schemaLanguage);
+
+    // The following assertion should always be true.
+    // Uncomment it, recompile, and run with -ea in case of doubts:
+    // assert factoryImpl == null || factoryImpl.isSchemaLanguageSupported(schemaLanguage);
+
+    if (factoryImpl != null) {
+      return factoryImpl;
     }
 
-    /**
-     * <p>Lookup a <code>SchemaFactory</code> for the given <code>schemaLanguage</code>.</p>
-     *
-     * @param schemaLanguage Schema language to lookup <code>SchemaFactory</code> for.
-     *
-     * @return <code>SchemaFactory</code> for the given <code>schemaLanguage</code>.
-     */
-    private org.openjdk.javax.xml.validation.SchemaFactory _newFactory(String schemaLanguage) {
-        org.openjdk.javax.xml.validation.SchemaFactory sf;
+    // platform default
+    if (schemaLanguage.equals("http://www.w3.org/2001/XMLSchema")) {
+      debugPrintln("attempting to use the platform default XML Schema validator");
+      return createInstance(
+          "com.sun.org.apache.xerces.internal.jaxp.validation.XMLSchemaFactory", true);
+    }
 
-        String propertyName = SERVICE_CLASS.getName() + ":" + schemaLanguage;
+    debugPrintln("all things were tried, but none was found. bailing out.");
+    return null;
+  }
 
-        // system property look up
-        try {
-            debugPrintln("Looking up system property '"+propertyName+"'" );
-            String r = ss.getSystemProperty(propertyName);
-            if(r!=null) {
-                debugPrintln("The value is '"+r+"'");
-                sf = createInstance(r, true);
-                if(sf!=null)    return sf;
-            } else
-                debugPrintln("The property is undefined.");
-        } catch( Throwable t ) {
-            if( debug ) {
-                debugPrintln("failed to look up system property '"+propertyName+"'" );
-                t.printStackTrace();
-            }
-        }
+  /**
+   * Create class using appropriate ClassLoader.
+   *
+   * @param className Name of class to create.
+   * @return Created class or <code>null</code>.
+   */
+  private Class<?> createClass(String className) {
+    Class<?> clazz;
+    // make sure we have access to restricted packages
+    boolean internal = false;
+    if (System.getSecurityManager() != null) {
+      if (className != null && className.startsWith(DEFAULT_PACKAGE)) {
+        internal = true;
+      }
+    }
 
-        String javah = ss.getSystemProperty( "java.home" );
-        String configFile = javah + File.separator +
-        "lib" + File.separator + "jaxp.properties";
+    try {
+      if (classLoader != null && !internal) {
+        clazz = Class.forName(className, false, classLoader);
+      } else {
+        clazz = Class.forName(className);
+      }
+    } catch (Throwable t) {
+      if (debug) {
+        t.printStackTrace();
+      }
+      return null;
+    }
 
+    return clazz;
+  }
 
-        // try to read from $java.home/lib/jaxp.properties
-        try {
-            if(firstTime){
-                synchronized(cacheProps){
-                    if(firstTime){
-                        File f=new File( configFile );
-                        firstTime = false;
-                        if(ss.doesFileExist(f)){
-                            debugPrintln("Read properties file " + f);
-                            cacheProps.load(ss.getFileInputStream(f));
-                        }
-                    }
-                }
-            }
-            final String factoryClassName = cacheProps.getProperty(propertyName);
-            debugPrintln("found " + factoryClassName + " in $java.home/jaxp.properties");
+  /**
+   * Creates an instance of the specified and returns it.
+   *
+   * @param className fully qualified class name to be instantiated.
+   * @return null if it fails. Error messages will be printed by this method.
+   */
+  org.openjdk.javax.xml.validation.SchemaFactory createInstance(String className) {
+    return createInstance(className, false);
+  }
 
-            if (factoryClassName != null) {
-                sf = createInstance(factoryClassName, true);
-                if(sf != null){
-                    return sf;
-                }
-            }
-        } catch (Exception ex) {
-            if (debug) {
-                ex.printStackTrace();
-            }
-        }
+  org.openjdk.javax.xml.validation.SchemaFactory createInstance(
+      String className, boolean useServicesMechanism) {
+    org.openjdk.javax.xml.validation.SchemaFactory schemaFactory = null;
 
-        // Try with ServiceLoader
-        final org.openjdk.javax.xml.validation.SchemaFactory factoryImpl = findServiceProvider(schemaLanguage);
+    debugPrintln("createInstance(" + className + ")");
 
-        // The following assertion should always be true.
-        // Uncomment it, recompile, and run with -ea in case of doubts:
-        // assert factoryImpl == null || factoryImpl.isSchemaLanguageSupported(schemaLanguage);
+    // get Class from className
+    Class<?> clazz = createClass(className);
+    if (clazz == null) {
+      debugPrintln("failed to getClass(" + className + ")");
+      return null;
+    }
+    debugPrintln("loaded " + className + " from " + which(clazz));
 
-        if (factoryImpl != null) {
-            return factoryImpl;
-        }
+    // instantiate Class as a SchemaFactory
+    try {
+      if (!org.openjdk.javax.xml.validation.SchemaFactory.class.isAssignableFrom(clazz)) {
+        throw new ClassCastException(
+            clazz.getName()
+                + " cannot be cast to "
+                + org.openjdk.javax.xml.validation.SchemaFactory.class);
+      }
+      if (!useServicesMechanism) {
+        schemaFactory = newInstanceNoServiceLoader(clazz);
+      }
+      if (schemaFactory == null) {
+        schemaFactory = (org.openjdk.javax.xml.validation.SchemaFactory) clazz.newInstance();
+      }
+    } catch (ClassCastException classCastException) {
+      debugPrintln("could not instantiate " + clazz.getName());
+      if (debug) {
+        classCastException.printStackTrace();
+      }
+      return null;
+    } catch (IllegalAccessException illegalAccessException) {
+      debugPrintln("could not instantiate " + clazz.getName());
+      if (debug) {
+        illegalAccessException.printStackTrace();
+      }
+      return null;
+    } catch (InstantiationException instantiationException) {
+      debugPrintln("could not instantiate " + clazz.getName());
+      if (debug) {
+        instantiationException.printStackTrace();
+      }
+      return null;
+    }
 
-        // platform default
-        if(schemaLanguage.equals("http://www.w3.org/2001/XMLSchema")) {
-            debugPrintln("attempting to use the platform default XML Schema validator");
-            return createInstance("com.sun.org.apache.xerces.internal.jaxp.validation.XMLSchemaFactory", true);
-        }
+    return schemaFactory;
+  }
 
-        debugPrintln("all things were tried, but none was found. bailing out.");
+  /** Try to construct using newXMLSchemaFactoryNoServiceLoader method if available. */
+  private static org.openjdk.javax.xml.validation.SchemaFactory newInstanceNoServiceLoader(
+      Class<?> providerClass) {
+    // Retain maximum compatibility if no security manager.
+    if (System.getSecurityManager() == null) {
+      return null;
+    }
+    try {
+      final Method creationMethod =
+          providerClass.getDeclaredMethod("newXMLSchemaFactoryNoServiceLoader");
+      final int modifiers = creationMethod.getModifiers();
+
+      // Do not call the method if it's not public static.
+      if (!Modifier.isStatic(modifiers) || !Modifier.isPublic(modifiers)) {
         return null;
-    }
+      }
 
-    /** <p>Create class using appropriate ClassLoader.</p>
-     *
-     * @param className Name of class to create.
-     * @return Created class or <code>null</code>.
-     */
-    private Class<?> createClass(String className) {
-        Class<?> clazz;
-        // make sure we have access to restricted packages
-        boolean internal = false;
-        if (System.getSecurityManager() != null) {
-            if (className != null && className.startsWith(DEFAULT_PACKAGE)) {
-                internal = true;
+      // Only calls "newXMLSchemaFactoryNoServiceLoader" if it's
+      // declared to return an instance of SchemaFactory.
+      final Class<?> returnType = creationMethod.getReturnType();
+      if (SERVICE_CLASS.isAssignableFrom(returnType)) {
+        return SERVICE_CLASS.cast(creationMethod.invoke(null, (Object[]) null));
+      } else {
+        // Should not happen since
+        // XMLSchemaFactory.newXMLSchemaFactoryNoServiceLoader is
+        // declared to return XMLSchemaFactory.
+        throw new ClassCastException(returnType + " cannot be cast to " + SERVICE_CLASS);
+      }
+    } catch (ClassCastException e) {
+      throw new SchemaFactoryConfigurationError(e.getMessage(), e);
+    } catch (NoSuchMethodException exc) {
+      return null;
+    } catch (Exception exc) {
+      return null;
+    }
+  }
+
+  // Call isSchemaLanguageSupported with initial context.
+  private boolean isSchemaLanguageSupportedBy(
+      final org.openjdk.javax.xml.validation.SchemaFactory factory,
+      final String schemaLanguage,
+      AccessControlContext acc) {
+    return AccessController.doPrivileged(
+        new PrivilegedAction<Boolean>() {
+          public Boolean run() {
+            return factory.isSchemaLanguageSupported(schemaLanguage);
+          }
+        },
+        acc);
+  }
+
+  /**
+   * Finds a service provider subclass of SchemaFactory that supports the given schema language
+   * using the ServiceLoader.
+   *
+   * @param schemaLanguage The schema language for which we seek a factory.
+   * @return A SchemaFactory supporting the specified schema language, or null if none is found.
+   * @throws SchemaFactoryConfigurationError if a configuration error is found.
+   */
+  private org.openjdk.javax.xml.validation.SchemaFactory findServiceProvider(
+      final String schemaLanguage) {
+    assert schemaLanguage != null;
+    // store current context.
+    final AccessControlContext acc = AccessController.getContext();
+    try {
+      return AccessController.doPrivileged(
+          new PrivilegedAction<org.openjdk.javax.xml.validation.SchemaFactory>() {
+            public org.openjdk.javax.xml.validation.SchemaFactory run() {
+              final ServiceLoader<org.openjdk.javax.xml.validation.SchemaFactory> loader =
+                  ServiceLoader.load(SERVICE_CLASS);
+              for (org.openjdk.javax.xml.validation.SchemaFactory factory : loader) {
+                // restore initial context to call
+                // factory.isSchemaLanguageSupported
+                if (isSchemaLanguageSupportedBy(factory, schemaLanguage, acc)) {
+                  return factory;
+                }
+              }
+              return null; // no factory found.
             }
-        }
-
-        try {
-            if (classLoader != null && !internal) {
-                clazz = Class.forName(className, false, classLoader);
-            } else {
-                clazz = Class.forName(className);
-            }
-        } catch (Throwable t) {
-            if(debug)  {
-                t.printStackTrace();
-            }
-            return null;
-        }
-
-        return clazz;
+          });
+    } catch (ServiceConfigurationError error) {
+      throw new SchemaFactoryConfigurationError(
+          "Provider for " + SERVICE_CLASS + " cannot be created", error);
     }
+  }
 
-    /**
-     * <p>Creates an instance of the specified and returns it.</p>
-     *
-     * @param className
-     *      fully qualified class name to be instantiated.
-     *
-     * @return null
-     *      if it fails. Error messages will be printed by this method.
-     */
-    org.openjdk.javax.xml.validation.SchemaFactory createInstance(String className ) {
-        return createInstance( className, false );
+  private static final Class<org.openjdk.javax.xml.validation.SchemaFactory> SERVICE_CLASS =
+      SchemaFactory.class;
+
+  private static String which(Class<?> clazz) {
+    return which(clazz.getName(), clazz.getClassLoader());
+  }
+
+  /**
+   * Search the specified classloader for the given classname.
+   *
+   * @param classname the fully qualified name of the class to search for
+   * @param loader the classloader to search
+   * @return the source location of the resource, or null if it wasn't found
+   */
+  private static String which(String classname, ClassLoader loader) {
+
+    String classnameAsResource = classname.replace('.', '/') + ".class";
+
+    if (loader == null) loader = ClassLoader.getSystemClassLoader();
+
+    // URL it = loader.getResource(classnameAsResource);
+    URL it = ss.getResourceAsURL(loader, classnameAsResource);
+    if (it != null) {
+      return it.toString();
+    } else {
+      return null;
     }
-
-    org.openjdk.javax.xml.validation.SchemaFactory createInstance(String className, boolean useServicesMechanism ) {
-        org.openjdk.javax.xml.validation.SchemaFactory schemaFactory = null;
-
-        debugPrintln("createInstance(" + className + ")");
-
-        // get Class from className
-        Class<?> clazz = createClass(className);
-        if (clazz == null) {
-                debugPrintln("failed to getClass(" + className + ")");
-                return null;
-        }
-        debugPrintln("loaded " + className + " from " + which(clazz));
-
-        // instantiate Class as a SchemaFactory
-        try {
-                if (!org.openjdk.javax.xml.validation.SchemaFactory.class.isAssignableFrom(clazz)) {
-                    throw new ClassCastException(clazz.getName()
-                                + " cannot be cast to " + org.openjdk.javax.xml.validation.SchemaFactory.class);
-                }
-                if (!useServicesMechanism) {
-                    schemaFactory = newInstanceNoServiceLoader(clazz);
-                }
-                if (schemaFactory == null) {
-                    schemaFactory = (org.openjdk.javax.xml.validation.SchemaFactory) clazz.newInstance();
-                }
-        } catch (ClassCastException classCastException) {
-                debugPrintln("could not instantiate " + clazz.getName());
-                if (debug) {
-                        classCastException.printStackTrace();
-                }
-                return null;
-        } catch (IllegalAccessException illegalAccessException) {
-                debugPrintln("could not instantiate " + clazz.getName());
-                if (debug) {
-                        illegalAccessException.printStackTrace();
-                }
-                return null;
-        } catch (InstantiationException instantiationException) {
-                debugPrintln("could not instantiate " + clazz.getName());
-                if (debug) {
-                        instantiationException.printStackTrace();
-                }
-                return null;
-        }
-
-        return schemaFactory;
-    }
-
-    /**
-     * Try to construct using newXMLSchemaFactoryNoServiceLoader
-     *   method if available.
-     */
-    private static org.openjdk.javax.xml.validation.SchemaFactory newInstanceNoServiceLoader(
-         Class<?> providerClass
-    ) {
-        // Retain maximum compatibility if no security manager.
-        if (System.getSecurityManager() == null) {
-            return null;
-        }
-        try {
-            final Method creationMethod =
-                providerClass.getDeclaredMethod(
-                    "newXMLSchemaFactoryNoServiceLoader"
-                );
-            final int modifiers = creationMethod.getModifiers();
-
-            // Do not call the method if it's not public static.
-            if (!Modifier.isStatic(modifiers) || !Modifier.isPublic(modifiers)) {
-                return null;
-            }
-
-            // Only calls "newXMLSchemaFactoryNoServiceLoader" if it's
-            // declared to return an instance of SchemaFactory.
-            final Class<?> returnType = creationMethod.getReturnType();
-            if (SERVICE_CLASS.isAssignableFrom(returnType)) {
-                return SERVICE_CLASS.cast(creationMethod.invoke(null, (Object[])null));
-            } else {
-                // Should not happen since
-                // XMLSchemaFactory.newXMLSchemaFactoryNoServiceLoader is
-                // declared to return XMLSchemaFactory.
-                throw new ClassCastException(returnType
-                            + " cannot be cast to " + SERVICE_CLASS);
-            }
-        } catch(ClassCastException e) {
-            throw new SchemaFactoryConfigurationError(e.getMessage(), e);
-        } catch (NoSuchMethodException exc) {
-            return null;
-        } catch (Exception exc) {
-            return null;
-        }
-    }
-
-    // Call isSchemaLanguageSupported with initial context.
-    private boolean isSchemaLanguageSupportedBy(final org.openjdk.javax.xml.validation.SchemaFactory factory,
-            final String schemaLanguage,
-            AccessControlContext acc) {
-        return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
-            public Boolean run() {
-                return factory.isSchemaLanguageSupported(schemaLanguage);
-            }
-        }, acc);
-    }
-
-    /**
-     * Finds a service provider subclass of SchemaFactory that supports the
-     * given schema language using the ServiceLoader.
-     *
-     * @param schemaLanguage The schema language for which we seek a factory.
-     * @return A SchemaFactory supporting the specified schema language, or null
-     *         if none is found.
-     * @throws SchemaFactoryConfigurationError if a configuration error is found.
-     */
-    private org.openjdk.javax.xml.validation.SchemaFactory findServiceProvider(final String schemaLanguage) {
-        assert schemaLanguage != null;
-        // store current context.
-        final AccessControlContext acc = AccessController.getContext();
-        try {
-            return AccessController.doPrivileged(new PrivilegedAction<org.openjdk.javax.xml.validation.SchemaFactory>() {
-                public org.openjdk.javax.xml.validation.SchemaFactory run() {
-                    final ServiceLoader<org.openjdk.javax.xml.validation.SchemaFactory> loader =
-                            ServiceLoader.load(SERVICE_CLASS);
-                    for (org.openjdk.javax.xml.validation.SchemaFactory factory : loader) {
-                        // restore initial context to call
-                        // factory.isSchemaLanguageSupported
-                        if (isSchemaLanguageSupportedBy(factory, schemaLanguage, acc)) {
-                            return factory;
-                        }
-                    }
-                    return null; // no factory found.
-                }
-            });
-        } catch (ServiceConfigurationError error) {
-            throw new SchemaFactoryConfigurationError(
-                    "Provider for " + SERVICE_CLASS + " cannot be created", error);
-        }
-    }
-
-    private static final Class<org.openjdk.javax.xml.validation.SchemaFactory> SERVICE_CLASS = SchemaFactory.class;
-
-
-    private static String which( Class<?> clazz ) {
-        return which( clazz.getName(), clazz.getClassLoader() );
-    }
-
-    /**
-     * <p>Search the specified classloader for the given classname.</p>
-     *
-     * @param classname the fully qualified name of the class to search for
-     * @param loader the classloader to search
-     *
-     * @return the source location of the resource, or null if it wasn't found
-     */
-    private static String which(String classname, ClassLoader loader) {
-
-        String classnameAsResource = classname.replace('.', '/') + ".class";
-
-        if( loader==null )  loader = ClassLoader.getSystemClassLoader();
-
-        //URL it = loader.getResource(classnameAsResource);
-        URL it = ss.getResourceAsURL(loader, classnameAsResource);
-        if (it != null) {
-            return it.toString();
-        } else {
-            return null;
-        }
-    }
+  }
 }

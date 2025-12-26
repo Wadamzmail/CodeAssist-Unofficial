@@ -68,10 +68,9 @@ import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantLong;
  *
  * <PRE>Stack: ... -&gt; ..., item.word1, item.word2</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
-public class LDC2_W extends CPInstruction
-  implements PushInstruction, TypedInstruction {
+public class LDC2_W extends CPInstruction implements PushInstruction, TypedInstruction {
   /**
    * Empty constructor needed for the Class.newInstance() statement in
    * Instruction.readInstruction(). Not to be used otherwise.
@@ -83,34 +82,35 @@ public class LDC2_W extends CPInstruction
   }
 
   public Type getType(ConstantPoolGen cpg) {
-    switch(cpg.getConstantPool().getConstant(index).getTag()) {
-    case Constants.CONSTANT_Long:   return Type.LONG;
-    case Constants.CONSTANT_Double: return Type.DOUBLE;
-    default: // Never reached
-      throw new RuntimeException("Unknown constant type " + opcode);
+    switch (cpg.getConstantPool().getConstant(index).getTag()) {
+      case Constants.CONSTANT_Long:
+        return Type.LONG;
+      case Constants.CONSTANT_Double:
+        return Type.DOUBLE;
+      default: // Never reached
+        throw new RuntimeException("Unknown constant type " + opcode);
     }
   }
 
   public Number getValue(ConstantPoolGen cpg) {
     Constant c = cpg.getConstantPool().getConstant(index);
 
-    switch(c.getTag()) {
-    case Constants.CONSTANT_Long:
-        return new Long(((ConstantLong)c).getBytes());
+    switch (c.getTag()) {
+      case Constants.CONSTANT_Long:
+        return new Long(((ConstantLong) c).getBytes());
 
-    case Constants.CONSTANT_Double:
-        return new Double(((ConstantDouble)c).getBytes());
+      case Constants.CONSTANT_Double:
+        return new Double(((ConstantDouble) c).getBytes());
 
-    default: // Never reached
-      throw new RuntimeException("Unknown or invalid constant type at " + index);
-      }
+      default: // Never reached
+        throw new RuntimeException("Unknown or invalid constant type at " + index);
+    }
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

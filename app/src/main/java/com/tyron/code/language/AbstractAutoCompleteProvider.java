@@ -4,7 +4,6 @@ import com.tyron.completion.model.CompletionList;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
 import java.util.List;
 import java.util.stream.Collectors;
-import androidx.annotation.Nullable;
 
 /** An auto complete provider that supports cancellation as the user types */
 public abstract class AbstractAutoCompleteProvider {
@@ -19,5 +18,5 @@ public abstract class AbstractAutoCompleteProvider {
   }
 
   public abstract CompletionList getCompletionList(String prefix, int line, int column);
-  //public abstract String getPrefix( Editor editor, int line, int column);
+  // public abstract String getPrefix( Editor editor, int line, int column);
 }

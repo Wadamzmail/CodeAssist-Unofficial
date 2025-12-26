@@ -65,12 +65,23 @@ import org.openjdk.com.sun.org.apache.bcel.internal.classfile.JavaClass;
  *
  * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  * @see Stack
-*/
+ */
 public class ClassStack implements java.io.Serializable {
   private Stack stack = new Stack();
 
-  public void      push(JavaClass clazz) { stack.push(clazz); }
-  public JavaClass pop()                 { return (JavaClass)stack.pop(); }
-  public JavaClass top()                 { return (JavaClass)stack.peek(); }
-  public boolean   empty()               { return stack.empty(); }
+  public void push(JavaClass clazz) {
+    stack.push(clazz);
+  }
+
+  public JavaClass pop() {
+    return (JavaClass) stack.pop();
+  }
+
+  public JavaClass top() {
+    return (JavaClass) stack.peek();
+  }
+
+  public boolean empty() {
+    return stack.empty();
+  }
 }

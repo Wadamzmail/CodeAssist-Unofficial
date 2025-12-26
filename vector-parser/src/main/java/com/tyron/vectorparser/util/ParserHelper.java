@@ -95,7 +95,7 @@ class ParserHelper {
     switch (current) {
       case '-':
         mantPos = false;
-        // fallthrough
+      // fallthrough
       case '+':
         current = read();
     }

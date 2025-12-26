@@ -23,8 +23,8 @@
 
 package org.openjdk.com.sun.org.apache.xml.internal.resolver.readers;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Vector;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.Catalog;
@@ -34,42 +34,36 @@ import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogException;
 /**
  * Parses OASIS Open Catalog files.
  *
- * <p>This class reads OASIS Open Catalog files, returning a stream
- * of tokens.</p>
+ * <p>This class reads OASIS Open Catalog files, returning a stream of tokens.
  *
- * <p>This code interrogates the following non-standard system properties:</p>
+ * <p>This code interrogates the following non-standard system properties:
  *
  * <dl>
- * <dt><b>xml.catalog.debug</b></dt>
- * <dd><p>Sets the debug level. A value of 0 is assumed if the
- * property is not set or is not a number.</p></dd>
+ *   <dt><b>xml.catalog.debug</b>
+ *   <dd>
+ *       <p>Sets the debug level. A value of 0 is assumed if the property is not set or is not a
+ *       number.
  * </dl>
  *
  * @see Catalog
- *
- * @author Norman Walsh
- * <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
- *
+ * @author Norman Walsh <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
  */
 public class TR9401CatalogReader extends TextCatalogReader {
 
   /**
-   * Start parsing an OASIS TR9401 Open Catalog file. The file is
-   * actually read and parsed
-   * as needed by <code>nextEntry</code>.
+   * Start parsing an OASIS TR9401 Open Catalog file. The file is actually read and parsed as needed
+   * by <code>nextEntry</code>.
    *
-   * <p>In a TR9401 Catalog the 'DELEGATE' entry delegates public
-   * identifiers. There is no delegate entry for system identifiers
-   * or URIs.</p>
+   * <p>In a TR9401 Catalog the 'DELEGATE' entry delegates public identifiers. There is no delegate
+   * entry for system identifiers or URIs.
    *
    * @param catalog The Catalog to populate
    * @param is The input stream from which to read the TR9401 Catalog
-   *
    * @throws MalformedURLException Improper fileUrl
    * @throws IOException Error reading catalog file
    */
   public void readCatalog(Catalog catalog, InputStream is)
-    throws MalformedURLException, IOException {
+      throws MalformedURLException, IOException {
 
     catfile = is;
 
@@ -138,6 +132,5 @@ public class TR9401CatalogReader extends TextCatalogReader {
         catalog.getCatalogManager().debug.message(1, cex2.getMessage());
       }
     }
-
   }
 }

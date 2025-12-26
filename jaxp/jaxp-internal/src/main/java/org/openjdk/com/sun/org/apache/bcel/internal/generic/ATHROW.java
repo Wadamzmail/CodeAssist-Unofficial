@@ -62,31 +62,29 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 import org.openjdk.com.sun.org.apache.bcel.internal.ExceptionConstants;
 
 /**
- * ATHROW -  Throw exception
+ * ATHROW - Throw exception
+ *
  * <PRE>Stack: ..., objectref -&gt; objectref</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class ATHROW extends Instruction implements UnconditionalBranch, ExceptionThrower {
-  /**
-   *  Throw exception
-   */
+  /** Throw exception */
   public ATHROW() {
-    super(Constants.ATHROW, (short)1);
+    super(Constants.ATHROW, (short) 1);
   }
 
-  /** @return exceptions this instruction may cause
+  /**
+   * @return exceptions this instruction may cause
    */
   public Class[] getExceptions() {
-    return new Class[] { ExceptionConstants.THROWABLE };
+    return new Class[] {ExceptionConstants.THROWABLE};
   }
 
-
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

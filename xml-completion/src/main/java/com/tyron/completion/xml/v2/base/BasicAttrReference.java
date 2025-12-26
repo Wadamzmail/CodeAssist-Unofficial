@@ -17,10 +17,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Resource value representing a reference to an attr resource, but potentially with its own description
- * and group name. Unlike {@link BasicAttrResourceItem}, does not contain formats and enum or flag information.
+ * Resource value representing a reference to an attr resource, but potentially with its own
+ * description and group name. Unlike {@link BasicAttrResourceItem}, does not contain formats and
+ * enum or flag information.
  */
-public final class BasicAttrReference extends BasicValueResourceItemBase implements AttrResourceValue {
+public final class BasicAttrReference extends BasicValueResourceItemBase
+    implements AttrResourceValue {
   @NotNull private final ResourceNamespace myNamespace;
   @Nullable private final String myDescription;
   @Nullable private final String myGroupName;
@@ -34,12 +36,13 @@ public final class BasicAttrReference extends BasicValueResourceItemBase impleme
    * @param description the description of the attr resource, if available
    * @param groupName the name of the attr group, if available
    */
-  public BasicAttrReference(@NotNull ResourceNamespace namespace,
-                            @NotNull String name,
-                            @NotNull ResourceSourceFile sourceFile,
-                            @NotNull ResourceVisibility visibility,
-                            @Nullable String description,
-                            @Nullable String groupName) {
+  public BasicAttrReference(
+      @NotNull ResourceNamespace namespace,
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility,
+      @Nullable String description,
+      @Nullable String groupName) {
     super(ResourceType.ATTR, name, sourceFile, visibility);
     myNamespace = namespace;
     myDescription = description;
@@ -84,29 +87,32 @@ public final class BasicAttrReference extends BasicValueResourceItemBase impleme
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicAttrReference other = (BasicAttrReference) obj;
-    return myNamespace.equals(other.myNamespace) &&
-        Objects.equals(myDescription, other.myDescription) &&
-        Objects.equals(myGroupName, other.myGroupName);
+    return myNamespace.equals(other.myNamespace)
+        && Objects.equals(myDescription, other.myDescription)
+        && Objects.equals(myGroupName, other.myGroupName);
   }
 
   @Override
   public int hashCode() {
-    // myGroupName is not included in hash code intentionally since it doesn't improve quality of hashing.
+    // myGroupName is not included in hash code intentionally since it doesn't improve quality of
+    // hashing.
     return HashCodes.mix(super.hashCode(), myNamespace.hashCode(), Objects.hashCode(myDescription));
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     BasicAttrResourceItem.serializeAttrValue(this, getRepository().getNamespace(), stream);
   }

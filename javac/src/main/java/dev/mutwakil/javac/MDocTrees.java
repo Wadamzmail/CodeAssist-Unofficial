@@ -6,9 +6,9 @@ import javax.tools.JavaCompiler.CompilationTask;
 
 public final class MDocTrees {
 
-    private MDocTrees() {}
-    
-    public static DocTrees instance(CompilationTask task) {
-        return (DocTrees) Trees.instance(task);
-    }
+  private MDocTrees() {}
+
+  public static DocTrees instance(CompilationTask task) {
+    return (DocTrees) Trees.instance(task);
+  }
 }

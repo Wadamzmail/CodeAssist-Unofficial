@@ -26,95 +26,85 @@ package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.dom;
 import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.DOM;
 import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.Translet;
 import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
-import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 import org.openjdk.com.sun.org.apache.xml.internal.dtm.Axis;
+import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 
 /**
  * @author Jacek Ambroziak
  * @author Santiago Pericas-Geertsen
  */
 public abstract class MultipleNodeCounter extends NodeCounter {
-    private DTMAxisIterator _precSiblings = null;
+  private DTMAxisIterator _precSiblings = null;
 
-    public MultipleNodeCounter(Translet translet,
-                               DOM document, DTMAxisIterator iterator) {
-        super(translet, document, iterator);
-    }
+  public MultipleNodeCounter(Translet translet, DOM document, DTMAxisIterator iterator) {
+    super(translet, document, iterator);
+  }
 
-    public MultipleNodeCounter(Translet translet,
-                               DOM document,
-                               DTMAxisIterator iterator,
-                               boolean hasFrom) {
-        super(translet, document, iterator, hasFrom);
-    }
+  public MultipleNodeCounter(
+      Translet translet, DOM document, DTMAxisIterator iterator, boolean hasFrom) {
+    super(translet, document, iterator, hasFrom);
+  }
 
-    public NodeCounter setStartNode(int node) {
-        _node = node;
-        _nodeType = _document.getExpandedTypeID(node);
+  public NodeCounter setStartNode(int node) {
+    _node = node;
+    _nodeType = _document.getExpandedTypeID(node);
     _precSiblings = _document.getAxisIterator(Axis.PRECEDINGSIBLING);
-        return this;
+    return this;
+  }
+
+  public String getCounter() {
+    if (_value != Integer.MIN_VALUE) {
+      // See Errata E24
+      if (_value == 0) return "0";
+      else if (Double.isNaN(_value)) return "NaN";
+      else if (_value < 0 && Double.isInfinite(_value)) return "-Infinity";
+      else if (Double.isInfinite(_value)) return "Infinity";
+      else return formatNumbers((int) _value);
     }
 
-    public String getCounter() {
-        if (_value != Integer.MIN_VALUE) {
-            //See Errata E24
-            if (_value == 0) return "0";
-            else if (Double.isNaN(_value)) return "NaN";
-            else if (_value < 0 && Double.isInfinite(_value)) return "-Infinity";
-            else if (Double.isInfinite(_value)) return "Infinity";
-            else return formatNumbers((int)_value);
-        }
+    IntegerArray ancestors = new IntegerArray();
 
-        IntegerArray ancestors = new IntegerArray();
-
-        // Gather all ancestors that do not match from pattern
-        int next = _node;
-        ancestors.add(next);            // include self
-        while ((next = _document.getParent(next)) > END &&
-               !matchesFrom(next)) {
-            ancestors.add(next);
-        }
-
-        // Create an array of counters
-        final int nAncestors = ancestors.cardinality();
-        final int[] counters = new int[nAncestors];
-        for (int i = 0; i < nAncestors; i++) {
-            counters[i] = Integer.MIN_VALUE;
-        }
-
-        // Increment array of counters according to semantics
-        for (int j = 0, i = nAncestors - 1; i >= 0 ; i--, j++) {
-            final int counter = counters[j];
-            final int ancestor = ancestors.at(i);
-
-            if (matchesCount(ancestor)) {
-                _precSiblings.setStartNode(ancestor);
-                while ((next = _precSiblings.next()) != END) {
-                    if (matchesCount(next)) {
-                        counters[j] = (counters[j] == Integer.MIN_VALUE) ? 1
-                            : counters[j] + 1;
-                    }
-                }
-                // Count the node itself
-                counters[j] = counters[j] == Integer.MIN_VALUE
-                    ? 1
-                    : counters[j] + 1;
-            }
-        }
-        return formatNumbers(counters);
+    // Gather all ancestors that do not match from pattern
+    int next = _node;
+    ancestors.add(next); // include self
+    while ((next = _document.getParent(next)) > END && !matchesFrom(next)) {
+      ancestors.add(next);
     }
 
-    public static NodeCounter getDefaultNodeCounter(Translet translet,
-                                                    DOM document,
-                                                    DTMAxisIterator iterator) {
-        return new DefaultMultipleNodeCounter(translet, document, iterator);
+    // Create an array of counters
+    final int nAncestors = ancestors.cardinality();
+    final int[] counters = new int[nAncestors];
+    for (int i = 0; i < nAncestors; i++) {
+      counters[i] = Integer.MIN_VALUE;
     }
 
-    static class DefaultMultipleNodeCounter extends MultipleNodeCounter {
-        public DefaultMultipleNodeCounter(Translet translet,
-                                          DOM document,
-                                          DTMAxisIterator iterator) {
-            super(translet, document, iterator);
+    // Increment array of counters according to semantics
+    for (int j = 0, i = nAncestors - 1; i >= 0; i--, j++) {
+      final int counter = counters[j];
+      final int ancestor = ancestors.at(i);
+
+      if (matchesCount(ancestor)) {
+        _precSiblings.setStartNode(ancestor);
+        while ((next = _precSiblings.next()) != END) {
+          if (matchesCount(next)) {
+            counters[j] = (counters[j] == Integer.MIN_VALUE) ? 1 : counters[j] + 1;
+          }
         }
+        // Count the node itself
+        counters[j] = counters[j] == Integer.MIN_VALUE ? 1 : counters[j] + 1;
+      }
     }
+    return formatNumbers(counters);
+  }
+
+  public static NodeCounter getDefaultNodeCounter(
+      Translet translet, DOM document, DTMAxisIterator iterator) {
+    return new DefaultMultipleNodeCounter(translet, document, iterator);
+  }
+
+  static class DefaultMultipleNodeCounter extends MultipleNodeCounter {
+    public DefaultMultipleNodeCounter(Translet translet, DOM document, DTMAxisIterator iterator) {
+      super(translet, document, iterator);
+    }
+  }
 }

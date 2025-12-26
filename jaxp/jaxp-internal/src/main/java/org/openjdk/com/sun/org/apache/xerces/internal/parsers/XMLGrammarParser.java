@@ -27,28 +27,27 @@ import org.openjdk.com.sun.org.apache.xerces.internal.util.SymbolTable;
 /**
  * @version $Id: XMLGrammarParser.java,v 1.6 2010-11-01 04:40:10 joehw Exp $
  */
-public abstract class XMLGrammarParser
-    extends XMLParser {
+public abstract class XMLGrammarParser extends XMLParser {
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** fDatatypeValidatorFactory */
-    protected DTDDVFactory fDatatypeValidatorFactory;
+  /** fDatatypeValidatorFactory */
+  protected DTDDVFactory fDatatypeValidatorFactory;
 
-    //
-    // Constructors
-    //
+  //
+  // Constructors
+  //
 
-    /**
-     * Construct an XMLGrammarParser with the specified symbol table
-     *
-     * @param symbolTable
-     */
-    protected XMLGrammarParser(SymbolTable symbolTable) {
-        super(new XIncludeAwareParserConfiguration());
-        fConfiguration.setProperty(Constants.XERCES_PROPERTY_PREFIX+Constants.SYMBOL_TABLE_PROPERTY, symbolTable);
-    }
-
+  /**
+   * Construct an XMLGrammarParser with the specified symbol table
+   *
+   * @param symbolTable
+   */
+  protected XMLGrammarParser(SymbolTable symbolTable) {
+    super(new XIncludeAwareParserConfiguration());
+    fConfiguration.setProperty(
+        Constants.XERCES_PROPERTY_PREFIX + Constants.SYMBOL_TABLE_PROPERTY, symbolTable);
+  }
 } // class XMLGrammarParser

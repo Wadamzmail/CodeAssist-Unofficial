@@ -29,8 +29,8 @@
 package org.openjdk.javax.xml.stream;
 
 /**
- * This interface declares a simple filter interface that one can
- * create to filter XMLStreamReaders
+ * This interface declares a simple filter interface that one can create to filter XMLStreamReaders
+ *
  * @version 1.0
  * @author Copyright (c) 2009 by Oracle Corporation. All Rights Reserved.
  * @since 1.6
@@ -38,11 +38,10 @@ package org.openjdk.javax.xml.stream;
 public interface StreamFilter {
 
   /**
-   * Tests whether the current state is part of this stream.  This method
-   * will return true if this filter accepts this event and false otherwise.
+   * Tests whether the current state is part of this stream. This method will return true if this
+   * filter accepts this event and false otherwise.
    *
-   * The method should not change the state of the reader when accepting
-   * a state.
+   * <p>The method should not change the state of the reader when accepting a state.
    *
    * @param reader the event to test
    * @return true if this filter accepts this event, false otherwise

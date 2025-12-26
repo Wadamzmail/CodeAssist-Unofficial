@@ -58,7 +58,6 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * <http://www.apache.org/>.
  */
 import java.io.IOException;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
 
@@ -67,7 +66,7 @@ import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
  *
  * <PRE>Stack: ... -&gt; ..., item.word1, item.word2</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class LDC_W extends LDC {
   /**
@@ -80,12 +79,8 @@ public class LDC_W extends LDC {
     super(index);
   }
 
-  /**
-   * Read needed data (i.e., index) from file.
-   */
-  protected void initFromFile(ByteSequence bytes, boolean wide)
-       throws IOException
-  {
+  /** Read needed data (i.e., index) from file. */
+  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException {
     setIndex(bytes.readUnsignedShort());
     // Override just in case it has been changed
     opcode = Constants.LDC_W;

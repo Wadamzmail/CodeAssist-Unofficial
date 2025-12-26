@@ -29,29 +29,29 @@ import org.openjdk.javax.xml.parsers.DocumentBuilderFactory;
 import org.openjdk.javax.xml.parsers.SAXParserFactory;
 
 /**
- *
  * @author huizhe wang
  */
 public class FactoryImpl {
 
-    static final String DBF = "org.openjdk.com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl";
-    static final String SF = "org.openjdk.com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl";
+  static final String DBF =
+      "org.openjdk.com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl";
+  static final String SF =
+      "org.openjdk.com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl";
 
-    static public DocumentBuilderFactory getDOMFactory(boolean useServicesMechanism) {
-        DocumentBuilderFactory dbf =
-            useServicesMechanism ?
-            DocumentBuilderFactory.newInstance() :
-            DocumentBuilderFactory.newInstance( DBF,
-                FactoryImpl.class.getClassLoader());
+  public static DocumentBuilderFactory getDOMFactory(boolean useServicesMechanism) {
+    DocumentBuilderFactory dbf =
+        useServicesMechanism
+            ? DocumentBuilderFactory.newInstance()
+            : DocumentBuilderFactory.newInstance(DBF, FactoryImpl.class.getClassLoader());
 
-        return dbf;
-    }
-    static public SAXParserFactory getSAXFactory(boolean useServicesMechanism) {
-                SAXParserFactory factory =
-                    useServicesMechanism ?
-                    SAXParserFactory.newInstance() :
-                    SAXParserFactory.newInstance(SF,
-                        FactoryImpl.class.getClassLoader());
-                return factory;
-    }
+    return dbf;
+  }
+
+  public static SAXParserFactory getSAXFactory(boolean useServicesMechanism) {
+    SAXParserFactory factory =
+        useServicesMechanism
+            ? SAXParserFactory.newInstance()
+            : SAXParserFactory.newInstance(SF, FactoryImpl.class.getClassLoader());
+    return factory;
+  }
 }

@@ -22,29 +22,24 @@
  */
 package org.openjdk.com.sun.org.apache.xml.internal.utils;
 
-
 /**
  * Simple stack for boolean values.
+ *
  * @xsl.usage internal
  */
-public final class BoolStack implements Cloneable
-{
+public final class BoolStack implements Cloneable {
 
-  /** Array of boolean values          */
+  /** Array of boolean values */
   private boolean m_values[];
 
-  /** Array size allocated           */
+  /** Array size allocated */
   private int m_allocatedSize;
 
-  /** Index into the array of booleans          */
+  /** Index into the array of booleans */
   private int m_index;
 
-  /**
-   * Default constructor.  Note that the default
-   * block size is very small, for small lists.
-   */
-  public BoolStack()
-  {
+  /** Default constructor. Note that the default block size is very small, for small lists. */
+  public BoolStack() {
     this(32);
   }
 
@@ -53,8 +48,7 @@ public final class BoolStack implements Cloneable
    *
    * @param size array size to allocate
    */
-  public BoolStack(int size)
-  {
+  public BoolStack(int size) {
 
     m_allocatedSize = size;
     m_values = new boolean[size];
@@ -66,57 +60,46 @@ public final class BoolStack implements Cloneable
    *
    * @return Current length of the list
    */
-  public final int size()
-  {
+  public final int size() {
     return m_index + 1;
   }
 
-  /**
-   * Clears the stack.
-   *
-   */
-  public final void clear()
-  {
-        m_index = -1;
+  /** Clears the stack. */
+  public final void clear() {
+    m_index = -1;
   }
 
   /**
    * Pushes an item onto the top of this stack.
    *
-   *
    * @param val the boolean to be pushed onto this stack.
-   * @return  the <code>item</code> argument.
+   * @return the <code>item</code> argument.
    */
-  public final boolean push(boolean val)
-  {
+  public final boolean push(boolean val) {
 
-    if (m_index == m_allocatedSize - 1)
-      grow();
+    if (m_index == m_allocatedSize - 1) grow();
 
     return (m_values[++m_index] = val);
   }
 
   /**
-   * Removes the object at the top of this stack and returns that
-   * object as the value of this function.
+   * Removes the object at the top of this stack and returns that object as the value of this
+   * function.
    *
-   * @return     The object at the top of this stack.
-   * @throws  EmptyStackException  if this stack is empty.
+   * @return The object at the top of this stack.
+   * @throws EmptyStackException if this stack is empty.
    */
-  public final boolean pop()
-  {
+  public final boolean pop() {
     return m_values[m_index--];
   }
 
   /**
-   * Removes the object at the top of this stack and returns the
-   * next object at the top as the value of this function.
-   *
+   * Removes the object at the top of this stack and returns the next object at the top as the value
+   * of this function.
    *
    * @return Next object to the top or false if none there
    */
-  public final boolean popAndTop()
-  {
+  public final boolean popAndTop() {
 
     m_index--;
 
@@ -126,65 +109,53 @@ public final class BoolStack implements Cloneable
   /**
    * Set the item at the top of this stack
    *
-   *
    * @param b Object to set at the top of this stack
    */
-  public final void setTop(boolean b)
-  {
+  public final void setTop(boolean b) {
     m_values[m_index] = b;
   }
 
   /**
-   * Looks at the object at the top of this stack without removing it
-   * from the stack.
+   * Looks at the object at the top of this stack without removing it from the stack.
    *
-   * @return     the object at the top of this stack.
-   * @throws  EmptyStackException  if this stack is empty.
+   * @return the object at the top of this stack.
+   * @throws EmptyStackException if this stack is empty.
    */
-  public final boolean peek()
-  {
+  public final boolean peek() {
     return m_values[m_index];
   }
 
   /**
-   * Looks at the object at the top of this stack without removing it
-   * from the stack.  If the stack is empty, it returns false.
+   * Looks at the object at the top of this stack without removing it from the stack. If the stack
+   * is empty, it returns false.
    *
-   * @return     the object at the top of this stack.
+   * @return the object at the top of this stack.
    */
-  public final boolean peekOrFalse()
-  {
+  public final boolean peekOrFalse() {
     return (m_index > -1) ? m_values[m_index] : false;
   }
 
   /**
-   * Looks at the object at the top of this stack without removing it
-   * from the stack.  If the stack is empty, it returns true.
+   * Looks at the object at the top of this stack without removing it from the stack. If the stack
+   * is empty, it returns true.
    *
-   * @return     the object at the top of this stack.
+   * @return the object at the top of this stack.
    */
-  public final boolean peekOrTrue()
-  {
+  public final boolean peekOrTrue() {
     return (m_index > -1) ? m_values[m_index] : true;
   }
 
   /**
    * Tests if this stack is empty.
    *
-   * @return  <code>true</code> if this stack is empty;
-   *          <code>false</code> otherwise.
+   * @return <code>true</code> if this stack is empty; <code>false</code> otherwise.
    */
-  public boolean isEmpty()
-  {
+  public boolean isEmpty() {
     return (m_index == -1);
   }
 
-  /**
-   * Grows the size of the stack
-   *
-   */
-  private void grow()
-  {
+  /** Grows the size of the stack */
+  private void grow() {
 
     m_allocatedSize *= 2;
 
@@ -195,10 +166,7 @@ public final class BoolStack implements Cloneable
     m_values = newVector;
   }
 
-  public Object clone()
-    throws CloneNotSupportedException
-  {
+  public Object clone() throws CloneNotSupportedException {
     return super.clone();
   }
-
 }

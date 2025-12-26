@@ -28,8 +28,9 @@ package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler;
  * @author Santiago Pericas-Geertsen
  */
 class IllegalCharException extends Exception {
-    static final long serialVersionUID = -667236676706226266L;
-    public IllegalCharException(String s) {
-        super(s);
-    }
+  static final long serialVersionUID = -667236676706226266L;
+
+  public IllegalCharException(String s) {
+    super(s);
+  }
 }

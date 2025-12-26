@@ -25,509 +25,461 @@
 
 package org.openjdk.com.sun.org.apache.xerces.internal.impl;
 
-import org.openjdk.javax.xml.XMLConstants;
-import org.openjdk.javax.xml.stream.Location;
-import org.openjdk.javax.xml.stream.XMLStreamReader;
+import org.openjdk.javax.xml.namespace.QName;
 import org.openjdk.javax.xml.stream.StreamFilter;
 import org.openjdk.javax.xml.stream.XMLStreamException;
-import org.openjdk.javax.xml.namespace.QName;
+import org.openjdk.javax.xml.stream.XMLStreamReader;
 import org.openjdk.javax.xml.stream.events.XMLEvent;
 
-
 /**
- *
- * @author Joe Wang:
- * This is a rewrite of the original class. The focus is on removing caching, and make the filtered
- * stream reader more compatible with those in other implementations. Note however, that this version
- * will not solve all the issues related to the undefined condition in the spec. The priority is
- * to pass the TCK. Issues arising due to the requirement, that is, (1) should it initiate at BEGIN_DOCUMENT
- * or an accepted event; (2) should hasNext() advance the underlining stream in order to find an acceptable
- * event, would have to wait until 1.1 of StAX in which the filtered stream reader would be defined more clearly.
+ * @author Joe Wang: This is a rewrite of the original class. The focus is on removing caching, and
+ *     make the filtered stream reader more compatible with those in other implementations. Note
+ *     however, that this version will not solve all the issues related to the undefined condition
+ *     in the spec. The priority is to pass the TCK. Issues arising due to the requirement, that is,
+ *     (1) should it initiate at BEGIN_DOCUMENT or an accepted event; (2) should hasNext() advance
+ *     the underlining stream in order to find an acceptable event, would have to wait until 1.1 of
+ *     StAX in which the filtered stream reader would be defined more clearly.
  */
-
 public class XMLStreamFilterImpl implements org.openjdk.javax.xml.stream.XMLStreamReader {
 
-    private StreamFilter fStreamFilter = null;
-    private XMLStreamReader fStreamReader = null;
-    private int fCurrentEvent;
-    private boolean fEventAccepted = false;
+  private StreamFilter fStreamFilter = null;
+  private XMLStreamReader fStreamReader = null;
+  private int fCurrentEvent;
+  private boolean fEventAccepted = false;
 
-    /**the very issue around a long discussion. but since we must pass the TCK, we have to allow
-     * hasNext() to advance the underlining stream in order to find the next acceptable event
-     */
-    private boolean fStreamAdvancedByHasNext = false;
-    /** Creates a new instance of XMLStreamFilterImpl */
+  /**
+   * the very issue around a long discussion. but since we must pass the TCK, we have to allow
+   * hasNext() to advance the underlining stream in order to find the next acceptable event
+   */
+  private boolean fStreamAdvancedByHasNext = false;
 
-    public XMLStreamFilterImpl(XMLStreamReader reader,StreamFilter filter){
-        fStreamReader = reader;
-        this.fStreamFilter = filter;
+  /** Creates a new instance of XMLStreamFilterImpl */
+  public XMLStreamFilterImpl(XMLStreamReader reader, StreamFilter filter) {
+    fStreamReader = reader;
+    this.fStreamFilter = filter;
 
-        //this is debatable to initiate at an acceptable event,
-        //but it's neccessary in order to pass the TCK and yet avoid skipping element
-        try {
-            if (fStreamFilter.accept(fStreamReader)) {
-                fEventAccepted = true;
-            } else {
-                findNextEvent();
-            }
-        }catch(XMLStreamException xs){
-            System.err.println("Error while creating a stream Filter"+xs);
+    // this is debatable to initiate at an acceptable event,
+    // but it's neccessary in order to pass the TCK and yet avoid skipping element
+    try {
+      if (fStreamFilter.accept(fStreamReader)) {
+        fEventAccepted = true;
+      } else {
+        findNextEvent();
+      }
+    } catch (XMLStreamException xs) {
+      System.err.println("Error while creating a stream Filter" + xs);
+    }
+  }
+
+  /**
+   * @param sf
+   */
+  protected void setStreamFilter(StreamFilter sf) {
+    this.fStreamFilter = sf;
+  }
+
+  /**
+   * @return
+   * @throws XMLStreamException
+   */
+  public int next() throws XMLStreamException {
+    if (fStreamAdvancedByHasNext && fEventAccepted) {
+      fStreamAdvancedByHasNext = false;
+      return fCurrentEvent;
+    }
+    int event = findNextEvent();
+    if (event != -1) {
+      return event;
+    }
+
+    throw new IllegalStateException(
+        "The stream reader has reached the end of the document, or there are no more "
+            + " items to return");
+  }
+
+  /**
+   * @throws XMLStreamException
+   * @return
+   */
+  public int nextTag() throws XMLStreamException {
+    if (fStreamAdvancedByHasNext
+        && fEventAccepted
+        && (fCurrentEvent == XMLEvent.START_ELEMENT || fCurrentEvent == XMLEvent.START_ELEMENT)) {
+      fStreamAdvancedByHasNext = false;
+      return fCurrentEvent;
+    }
+
+    int event = findNextTag();
+    if (event != -1) {
+      return event;
+    }
+    throw new IllegalStateException(
+        "The stream reader has reached the end of the document, or there are no more "
+            + " items to return");
+  }
+
+  /**
+   * @throws XMLStreamException
+   * @return
+   */
+  public boolean hasNext() throws XMLStreamException {
+    if (fStreamReader.hasNext()) {
+      if (!fEventAccepted) {
+        if ((fCurrentEvent = findNextEvent()) == -1) {
+          return false;
+        } else {
+          fStreamAdvancedByHasNext = true;
         }
+      }
+      return true;
     }
+    return false;
+  }
 
-    /**
-     *
-     * @param sf
-     */
-    protected void setStreamFilter(StreamFilter sf){
-        this.fStreamFilter = sf;
+  private int findNextEvent() throws XMLStreamException {
+    fStreamAdvancedByHasNext = false;
+    while (fStreamReader.hasNext()) {
+      fCurrentEvent = fStreamReader.next();
+      if (fStreamFilter.accept(fStreamReader)) {
+        fEventAccepted = true;
+        return fCurrentEvent;
+      }
     }
+    // although it seems that IllegalStateException should be thrown when next() is called
+    // on a stream that has no more items, we have to assume END_DOCUMENT is always accepted
+    // in order to pass the TCK
+    if (fCurrentEvent == XMLEvent.END_DOCUMENT) return fCurrentEvent;
+    else return -1;
+  }
 
-    /**
-     *
-     * @return
-     * @throws XMLStreamException
-     */
-    public int next() throws XMLStreamException {
-        if (fStreamAdvancedByHasNext && fEventAccepted) {
-            fStreamAdvancedByHasNext = false;
-            return fCurrentEvent;
-        }
-        int event = findNextEvent();
-        if (event != -1) {
-            return event;
-        }
+  private int findNextTag() throws XMLStreamException {
+    fStreamAdvancedByHasNext = false;
+    while (fStreamReader.hasNext()) {
+      fCurrentEvent = fStreamReader.nextTag();
+      if (fStreamFilter.accept(fStreamReader)) {
+        fEventAccepted = true;
+        return fCurrentEvent;
+      }
+    }
+    if (fCurrentEvent == XMLEvent.END_DOCUMENT) return fCurrentEvent;
+    else return -1;
+  }
 
-        throw new IllegalStateException("The stream reader has reached the end of the document, or there are no more "+
-                                    " items to return");
-    }
-    /**
-     *
-     * @throws XMLStreamException
-     * @return
-     */
-    public int nextTag() throws XMLStreamException {
-        if (fStreamAdvancedByHasNext && fEventAccepted &&
-                (fCurrentEvent == XMLEvent.START_ELEMENT || fCurrentEvent == XMLEvent.START_ELEMENT)) {
-            fStreamAdvancedByHasNext = false;
-            return fCurrentEvent;
-        }
+  /**
+   * @throws XMLStreamException
+   */
+  public void close() throws XMLStreamException {
+    fStreamReader.close();
+  }
 
-        int event = findNextTag();
-        if (event != -1) {
-            return event;
-        }
-        throw new IllegalStateException("The stream reader has reached the end of the document, or there are no more "+
-                                    " items to return");
-    }
+  /**
+   * @return
+   */
+  public int getAttributeCount() {
+    return fStreamReader.getAttributeCount();
+  }
 
-    /**
-     *
-     * @throws XMLStreamException
-     * @return
-     */
-    public boolean hasNext() throws XMLStreamException {
-        if (fStreamReader.hasNext()) {
-            if (!fEventAccepted) {
-                if ((fCurrentEvent = findNextEvent()) == -1) {
-                    return false;
-                } else {
-                    fStreamAdvancedByHasNext = true;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public QName getAttributeName(int index) {
+    return fStreamReader.getAttributeName(index);
+  }
 
-    private int findNextEvent() throws XMLStreamException {
-        fStreamAdvancedByHasNext = false;
-        while(fStreamReader.hasNext()){
-            fCurrentEvent = fStreamReader.next();
-            if(fStreamFilter.accept(fStreamReader)){
-                fEventAccepted = true;
-                return fCurrentEvent;
-            }
-        }
-        //although it seems that IllegalStateException should be thrown when next() is called
-        //on a stream that has no more items, we have to assume END_DOCUMENT is always accepted
-        //in order to pass the TCK
-        if (fCurrentEvent == XMLEvent.END_DOCUMENT)
-            return fCurrentEvent;
-        else
-            return -1;
-    }
-    private int findNextTag() throws XMLStreamException {
-        fStreamAdvancedByHasNext = false;
-        while(fStreamReader.hasNext()){
-            fCurrentEvent = fStreamReader.nextTag();
-            if(fStreamFilter.accept(fStreamReader)){
-                fEventAccepted = true;
-                return fCurrentEvent;
-            }
-        }
-        if (fCurrentEvent == XMLEvent.END_DOCUMENT)
-            return fCurrentEvent;
-        else
-            return -1;
-    }
-    /**
-     *
-     * @throws XMLStreamException
-     */
-    public void close() throws XMLStreamException {
-        fStreamReader.close();
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getAttributeNamespace(int index) {
+    return fStreamReader.getAttributeNamespace(index);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public int getAttributeCount() {
-        return fStreamReader.getAttributeCount();
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getAttributePrefix(int index) {
+    return fStreamReader.getAttributePrefix(index);
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public QName getAttributeName(int index) {
-        return fStreamReader.getAttributeName(index);
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getAttributeType(int index) {
+    return fStreamReader.getAttributeType(index);
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getAttributeNamespace(int index) {
-        return fStreamReader.getAttributeNamespace(index);
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getAttributeValue(int index) {
+    return fStreamReader.getAttributeValue(index);
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getAttributePrefix(int index) {
-        return fStreamReader.getAttributePrefix(index);
-    }
+  /**
+   * @param namespaceURI
+   * @param localName
+   * @return
+   */
+  public String getAttributeValue(String namespaceURI, String localName) {
+    return fStreamReader.getAttributeValue(namespaceURI, localName);
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getAttributeType(int index) {
-        return fStreamReader.getAttributeType(index);
-    }
+  /**
+   * @return
+   */
+  public String getCharacterEncodingScheme() {
+    return fStreamReader.getCharacterEncodingScheme();
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getAttributeValue(int index) {
-        return fStreamReader.getAttributeValue(index);
-    }
+  /**
+   * @throws XMLStreamException
+   * @return
+   */
+  public String getElementText() throws XMLStreamException {
+    return fStreamReader.getElementText();
+  }
 
-    /**
-     *
-     * @param namespaceURI
-     * @param localName
-     * @return
-     */
-    public String getAttributeValue(String namespaceURI, String localName) {
-        return fStreamReader.getAttributeValue(namespaceURI,localName);
-    }
+  /**
+   * @return
+   */
+  public String getEncoding() {
+    return fStreamReader.getEncoding();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getCharacterEncodingScheme() {
-        return fStreamReader.getCharacterEncodingScheme();
-    }
+  /**
+   * @return
+   */
+  public int getEventType() {
+    return fStreamReader.getEventType();
+  }
 
-    /**
-     *
-     * @throws XMLStreamException
-     * @return
-     */
-    public String getElementText() throws XMLStreamException {
-        return fStreamReader.getElementText();
-    }
+  /**
+   * @return
+   */
+  public String getLocalName() {
+    return fStreamReader.getLocalName();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getEncoding() {
-        return fStreamReader.getEncoding();
-    }
+  /**
+   * @return
+   */
+  public org.openjdk.javax.xml.stream.Location getLocation() {
+    return fStreamReader.getLocation();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public int getEventType() {
-        return fStreamReader.getEventType();
-    }
+  /**
+   * @return
+   */
+  public org.openjdk.javax.xml.namespace.QName getName() {
+    return fStreamReader.getName();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getLocalName() {
-        return fStreamReader.getLocalName();
-    }
+  /**
+   * @return
+   */
+  public org.openjdk.javax.xml.namespace.NamespaceContext getNamespaceContext() {
+    return fStreamReader.getNamespaceContext();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public org.openjdk.javax.xml.stream.Location getLocation() {
-        return fStreamReader.getLocation();
-    }
+  /**
+   * @return
+   */
+  public int getNamespaceCount() {
+    return fStreamReader.getNamespaceCount();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public org.openjdk.javax.xml.namespace.QName getName() {
-        return fStreamReader.getName();
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getNamespacePrefix(int index) {
+    return fStreamReader.getNamespacePrefix(index);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public org.openjdk.javax.xml.namespace.NamespaceContext getNamespaceContext() {
-        return fStreamReader.getNamespaceContext();
-    }
+  /**
+   * @return
+   */
+  public String getNamespaceURI() {
+    return fStreamReader.getNamespaceURI();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public int getNamespaceCount() {
-        return fStreamReader.getNamespaceCount();
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getNamespaceURI(int index) {
+    return fStreamReader.getNamespaceURI(index);
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getNamespacePrefix(int index) {
-        return fStreamReader.getNamespacePrefix(index);
-    }
+  /**
+   * @param prefix
+   * @return
+   */
+  public String getNamespaceURI(String prefix) {
+    return fStreamReader.getNamespaceURI(prefix);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getNamespaceURI() {
-        return fStreamReader.getNamespaceURI();
-    }
+  /**
+   * @return
+   */
+  public String getPIData() {
+    return fStreamReader.getPIData();
+  }
 
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getNamespaceURI(int index) {
-        return fStreamReader.getNamespaceURI(index);
-    }
+  /**
+   * @return
+   */
+  public String getPITarget() {
+    return fStreamReader.getPITarget();
+  }
 
-    /**
-     *
-     * @param prefix
-     * @return
-     */
-    public String getNamespaceURI(String prefix) {
-        return fStreamReader.getNamespaceURI(prefix);
-    }
+  /**
+   * @return
+   */
+  public String getPrefix() {
+    return fStreamReader.getPrefix();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getPIData() {
-        return fStreamReader.getPIData();
-    }
+  /**
+   * @param name
+   * @throws IllegalArgumentException
+   * @return
+   */
+  public Object getProperty(java.lang.String name) throws java.lang.IllegalArgumentException {
+    return fStreamReader.getProperty(name);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getPITarget() {
-        return fStreamReader.getPITarget();
-    }
+  /**
+   * @return
+   */
+  public String getText() {
+    return fStreamReader.getText();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getPrefix() {
-        return fStreamReader.getPrefix();
-    }
+  /**
+   * @return
+   */
+  public char[] getTextCharacters() {
+    return fStreamReader.getTextCharacters();
+  }
 
-    /**
-     *
-     * @param name
-     * @throws IllegalArgumentException
-     * @return
-     */
-    public Object getProperty(java.lang.String name) throws java.lang.IllegalArgumentException {
-        return fStreamReader.getProperty(name);
-    }
+  /**
+   * @param sourceStart
+   * @param target
+   * @param targetStart
+   * @param length
+   * @throws XMLStreamException
+   * @return
+   */
+  public int getTextCharacters(int sourceStart, char[] target, int targetStart, int length)
+      throws XMLStreamException {
+    return fStreamReader.getTextCharacters(sourceStart, target, targetStart, length);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getText() {
-        return fStreamReader.getText();
-    }
+  /**
+   * @return
+   */
+  public int getTextLength() {
+    return fStreamReader.getTextLength();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public char[] getTextCharacters() {
-        return fStreamReader.getTextCharacters();
-    }
+  /**
+   * @return
+   */
+  public int getTextStart() {
+    return fStreamReader.getTextStart();
+  }
 
-    /**
-     *
-     * @param sourceStart
-     * @param target
-     * @param targetStart
-     * @param length
-     * @throws XMLStreamException
-     * @return
-     */
-    public int getTextCharacters(int sourceStart, char[] target, int targetStart, int length) throws XMLStreamException {
-        return fStreamReader.getTextCharacters(sourceStart, target,targetStart,length);
-    }
+  /**
+   * @return
+   */
+  public String getVersion() {
+    return fStreamReader.getVersion();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public int getTextLength() {
-        return fStreamReader.getTextLength();
-    }
+  /**
+   * @return
+   */
+  public boolean hasName() {
+    return fStreamReader.hasName();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public int getTextStart() {
-        return fStreamReader.getTextStart();
-    }
+  /**
+   * @return
+   */
+  public boolean hasText() {
+    return fStreamReader.hasText();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getVersion() {
-        return fStreamReader.getVersion();
-    }
+  /**
+   * @return
+   * @param index
+   */
+  public boolean isAttributeSpecified(int index) {
+    return fStreamReader.isAttributeSpecified(index);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean hasName() {
-        return fStreamReader.hasName();
-    }
+  /**
+   * @return
+   */
+  public boolean isCharacters() {
+    return fStreamReader.isCharacters();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean hasText() {
-        return fStreamReader.hasText();
-    }
+  /**
+   * @return
+   */
+  public boolean isEndElement() {
+    return fStreamReader.isEndElement();
+  }
 
-    /**
-     *
-     * @return
-     * @param index
-     */
-    public boolean isAttributeSpecified(int index) {
-        return fStreamReader.isAttributeSpecified(index);
-    }
+  /**
+   * @return
+   */
+  public boolean isStandalone() {
+    return fStreamReader.isStandalone();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isCharacters() {
-        return fStreamReader.isCharacters();
-    }
+  /**
+   * @return
+   */
+  public boolean isStartElement() {
+    return fStreamReader.isStartElement();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isEndElement() {
-        return fStreamReader.isEndElement();
-    }
+  /**
+   * @return
+   */
+  public boolean isWhiteSpace() {
+    return fStreamReader.isWhiteSpace();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isStandalone() {
-        return fStreamReader.isStandalone();
-    }
+  /**
+   * @param type
+   * @param namespaceURI
+   * @param localName
+   * @throws XMLStreamException
+   */
+  public void require(int type, String namespaceURI, String localName) throws XMLStreamException {
+    fStreamReader.require(type, namespaceURI, localName);
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isStartElement() {
-        return fStreamReader.isStartElement();
-    }
+  /**
+   * @return
+   */
+  public boolean standaloneSet() {
+    return fStreamReader.standaloneSet();
+  }
 
-    /**
-     *
-     * @return
-     */
-    public boolean isWhiteSpace() {
-        return fStreamReader.isWhiteSpace();
-    }
-
-
-    /**
-     *
-     * @param type
-     * @param namespaceURI
-     * @param localName
-     * @throws XMLStreamException
-     */
-    public void require(int type, String namespaceURI, String localName) throws XMLStreamException {
-        fStreamReader.require(type,namespaceURI,localName);
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean standaloneSet() {
-        return fStreamReader.standaloneSet();
-    }
-
-    /**
-     *
-     * @param index
-     * @return
-     */
-    public String getAttributeLocalName(int index){
-        return fStreamReader.getAttributeLocalName(index);
-    }
+  /**
+   * @param index
+   * @return
+   */
+  public String getAttributeLocalName(int index) {
+    return fStreamReader.getAttributeLocalName(index);
+  }
 }

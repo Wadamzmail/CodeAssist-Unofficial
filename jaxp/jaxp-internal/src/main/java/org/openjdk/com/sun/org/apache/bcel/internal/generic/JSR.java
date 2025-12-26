@@ -57,14 +57,13 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
-
 import java.io.*;
+import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
 /**
  * JSR - Jump to subroutine
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class JSR extends JsrInstruction implements VariableLengthInstruction {
   /**
@@ -79,12 +78,12 @@ public class JSR extends JsrInstruction implements VariableLengthInstruction {
 
   /**
    * Dump instruction as byte code to stream out.
+   *
    * @param out Output stream
    */
   public void dump(DataOutputStream out) throws IOException {
     index = getTargetOffset();
-    if(opcode == Constants.JSR)
-      super.dump(out);
+    if (opcode == Constants.JSR) super.dump(out);
     else { // JSR_W
       index = getTargetOffset();
       out.writeByte(opcode);
@@ -97,8 +96,8 @@ public class JSR extends JsrInstruction implements VariableLengthInstruction {
 
     position += offset; // Position may be shifted by preceding expansions
 
-    if(Math.abs(i) >= (32767 - max_offset)) { // to large for short (estimate)
-      opcode  = Constants.JSR_W;
+    if (Math.abs(i) >= (32767 - max_offset)) { // to large for short (estimate)
+      opcode = Constants.JSR_W;
       length = 5;
       return 2; // 5 - 3
     }
@@ -107,10 +106,9 @@ public class JSR extends JsrInstruction implements VariableLengthInstruction {
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

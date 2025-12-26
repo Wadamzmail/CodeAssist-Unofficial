@@ -23,14 +23,14 @@
 
 package org.openjdk.com.sun.org.apache.xml.internal.resolver.readers;
 
-import java.io.InputStream;
-import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.MalformedURLException;
-import java.util.Vector;
 import java.util.Stack;
+import java.util.Vector;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.Catalog;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogEntry;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogException;
@@ -38,27 +38,24 @@ import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogException;
 /**
  * Parses plain text Catalog files.
  *
- * <p>This class reads plain text Open Catalog files.</p>
+ * <p>This class reads plain text Open Catalog files.
  *
  * @see Catalog
- *
- * @author Norman Walsh
- * <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
- *
+ * @author Norman Walsh <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
  */
 public class TextCatalogReader implements CatalogReader {
   /** The input stream used to read the catalog */
   protected InputStream catfile = null;
 
   /**
-   * Character lookahead stack. Reading a catalog sometimes requires
-   * up to two characters of lookahead.
+   * Character lookahead stack. Reading a catalog sometimes requires up to two characters of
+   * lookahead.
    */
   protected int[] stack = new int[3];
 
   /**
-   * Token stack. Recognizing an unexpected catalog entry requires
-   * the ability to "push back" a token.
+   * Token stack. Recognizing an unexpected catalog entry requires the ability to "push back" a
+   * token.
    */
   protected Stack tokenStack = new Stack();
 
@@ -68,10 +65,8 @@ public class TextCatalogReader implements CatalogReader {
   /** Are keywords in the catalog case sensitive? */
   protected boolean caseSensitive = false;
 
-  /**
-   * Construct a CatalogReader object.
-   */
-  public TextCatalogReader() { }
+  /** Construct a CatalogReader object. */
+  public TextCatalogReader() {}
 
   public void setCaseSensitive(boolean isCaseSensitive) {
     caseSensitive = isCaseSensitive;
@@ -82,17 +77,15 @@ public class TextCatalogReader implements CatalogReader {
   }
 
   /**
-   * Start parsing a text catalog file. The file is
-   * actually read and parsed
-   * as needed by <code>nextEntry</code>.</p>
+   * Start parsing a text catalog file. The file is actually read and parsed as needed by <code>
+   * nextEntry</code>.
    *
-   * @param fileUrl  The URL or filename of the catalog file to process
-   *
+   * @param fileUrl The URL or filename of the catalog file to process
    * @throws MalformedURLException Improper fileUrl
    * @throws IOException Error reading catalog file
    */
   public void readCatalog(Catalog catalog, String fileUrl)
-    throws MalformedURLException, IOException {
+      throws MalformedURLException, IOException {
     URL catURL = null;
 
     try {
@@ -105,13 +98,15 @@ public class TextCatalogReader implements CatalogReader {
     try {
       readCatalog(catalog, urlCon.getInputStream());
     } catch (FileNotFoundException e) {
-      catalog.getCatalogManager().debug.message(1, "Failed to load catalog, file not found",
-                                                catURL.toString());
+      catalog
+          .getCatalogManager()
+          .debug
+          .message(1, "Failed to load catalog, file not found", catURL.toString());
     }
   }
 
   public void readCatalog(Catalog catalog, InputStream is)
-    throws MalformedURLException, IOException {
+      throws MalformedURLException, IOException {
 
     catfile = is;
 
@@ -179,10 +174,10 @@ public class TextCatalogReader implements CatalogReader {
   }
 
   /**
-     * The destructor.
-     *
-     * <p>Makes sure the catalog file is closed.</p>
-     */
+   * The destructor.
+   *
+   * <p>Makes sure the catalog file is closed.
+   */
   protected void finalize() {
     if (catfile != null) {
       try {
@@ -196,15 +191,14 @@ public class TextCatalogReader implements CatalogReader {
 
   // -----------------------------------------------------------------
 
-    /**
-     * Return the next token in the catalog file.
-     *
-     * <p>FYI: This code does not throw any sort of exception for
-     * a file that contains an n
-     *
-     * @return The Catalog file token from the input stream.
-     * @throws IOException If an error occurs reading from the stream.
-     */
+  /**
+   * Return the next token in the catalog file.
+   *
+   * <p>FYI: This code does not throw any sort of exception for a file that contains an n
+   *
+   * @return The Catalog file token from the input stream.
+   * @throws IOException If an error occurs reading from the stream.
+   */
   protected String nextToken() throws IOException, CatalogException {
     String token = "";
     int ch, nextch;
@@ -217,7 +211,7 @@ public class TextCatalogReader implements CatalogReader {
     while (true) {
       // skip leading whitespace
       ch = catfile.read();
-      while (ch <= ' ') {      // all ctrls are whitespace
+      while (ch <= ' ') { // all ctrls are whitespace
         ch = catfile.read();
         if (ch < 0) {
           return null;
@@ -240,8 +234,9 @@ public class TextCatalogReader implements CatalogReader {
         }
 
         if (nextch < 0) {
-          throw new CatalogException(CatalogException.UNENDED_COMMENT,
-                                     "Unterminated comment in catalog file; EOF treated as end-of-comment.");
+          throw new CatalogException(
+              CatalogException.UNENDED_COMMENT,
+              "Unterminated comment in catalog file; EOF treated as end-of-comment.");
         }
 
         // Ok, we've found the end of the comment,
@@ -285,13 +280,12 @@ public class TextCatalogReader implements CatalogReader {
   }
 
   /**
-     * Return the next logical character from the input stream.
-     *
-     * @return The next (logical) character from the input stream. The
-     * character may be buffered from a previous lookahead.
-     *
-     * @throws IOException If an error occurs reading from the stream.
-     */
+   * Return the next logical character from the input stream.
+   *
+   * @return The next (logical) character from the input stream. The character may be buffered from
+   *     a previous lookahead.
+   * @throws IOException If an error occurs reading from the stream.
+   */
   protected int nextChar() throws IOException {
     if (top < 0) {
       return catfile.read();

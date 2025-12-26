@@ -1,7 +1,6 @@
 package com.tyron.completion.xml.v2.project;
 
 import androidx.annotation.GuardedBy;
-
 import com.android.ide.common.rendering.api.ResourceNamespace;
 import com.android.ide.common.resources.AbstractResourceRepository;
 import com.android.ide.common.resources.ResourceItem;
@@ -53,9 +52,10 @@ public abstract class AbstractResourceRepositoryWithLocking extends AbstractReso
 
   @Override
   @NotNull
-  public List<ResourceItem> getResources(@NotNull ResourceNamespace namespace,
-                                         @NotNull ResourceType resourceType,
-                                         @NotNull String resourceName) {
+  public List<ResourceItem> getResources(
+      @NotNull ResourceNamespace namespace,
+      @NotNull ResourceType resourceType,
+      @NotNull String resourceName) {
     synchronized (ITEM_MAP_LOCK) {
       return super.getResources(namespace, resourceType, resourceName);
     }
@@ -63,9 +63,10 @@ public abstract class AbstractResourceRepositoryWithLocking extends AbstractReso
 
   @Override
   @NotNull
-  public List<ResourceItem> getResources(@NotNull ResourceNamespace namespace,
-                                         @NotNull ResourceType resourceType,
-                                         @NotNull Predicate<ResourceItem> filter) {
+  public List<ResourceItem> getResources(
+      @NotNull ResourceNamespace namespace,
+      @NotNull ResourceType resourceType,
+      @NotNull Predicate<ResourceItem> filter) {
     synchronized (ITEM_MAP_LOCK) {
       return super.getResources(namespace, resourceType, filter);
     }
@@ -73,7 +74,8 @@ public abstract class AbstractResourceRepositoryWithLocking extends AbstractReso
 
   @Override
   @NotNull
-  public ListMultimap<String, ResourceItem> getResources(@NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
+  public ListMultimap<String, ResourceItem> getResources(
+      @NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
     synchronized (ITEM_MAP_LOCK) {
       return super.getResources(namespace, resourceType);
     }
@@ -81,7 +83,8 @@ public abstract class AbstractResourceRepositoryWithLocking extends AbstractReso
 
   @Override
   @NotNull
-  public Set<String> getResourceNames(@NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
+  public Set<String> getResourceNames(
+      @NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
     synchronized (ITEM_MAP_LOCK) {
       ListMultimap<String, ResourceItem> map = getMap(namespace, resourceType);
       return map == null ? ImmutableSet.of() : ImmutableSet.copyOf(map.keySet());
@@ -89,14 +92,18 @@ public abstract class AbstractResourceRepositoryWithLocking extends AbstractReso
   }
 
   @Override
-  public boolean hasResources(@NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType, @NotNull String resourceName) {
+  public boolean hasResources(
+      @NotNull ResourceNamespace namespace,
+      @NotNull ResourceType resourceType,
+      @NotNull String resourceName) {
     synchronized (ITEM_MAP_LOCK) {
       return super.hasResources(namespace, resourceType, resourceName);
     }
   }
 
   @Override
-  public boolean hasResources(@NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
+  public boolean hasResources(
+      @NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
     synchronized (ITEM_MAP_LOCK) {
       return super.hasResources(namespace, resourceType);
     }

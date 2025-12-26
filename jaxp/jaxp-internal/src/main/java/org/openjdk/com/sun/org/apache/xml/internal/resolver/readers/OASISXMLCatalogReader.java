@@ -23,30 +23,23 @@
 
 package org.openjdk.com.sun.org.apache.xml.internal.resolver.readers;
 
+import java.util.Enumeration;
 import java.util.Stack;
 import java.util.Vector;
-import java.util.Enumeration;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.Catalog;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogEntry;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogException;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
-
 import org.xml.sax.*;
 
 /**
- * Parse OASIS Entity Resolution Technical Committee
- * XML Catalog files.
+ * Parse OASIS Entity Resolution Technical Committee XML Catalog files.
  *
  * @see Catalog
- *
- * @author Norman Walsh
- * <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
- *
+ * @author Norman Walsh <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
  */
 public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalogParser {
-  /** The catalog object needs to be stored by the object so that
-   * SAX callbacks can use it.
-   */
+  /** The catalog object needs to be stored by the object so that SAX callbacks can use it. */
   protected Catalog catalog = null;
 
   /** The namespace name of OASIS ERTC catalogs */
@@ -60,21 +53,20 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
   protected Stack namespaceStack = new Stack();
 
   /** Set the current catalog. */
-  public void setCatalog (Catalog catalog) {
+  public void setCatalog(Catalog catalog) {
     this.catalog = catalog;
     debug = catalog.getCatalogManager().debug;
   }
 
   /** Get the current catalog. */
-  public Catalog getCatalog () {
+  public Catalog getCatalog() {
     return catalog;
   }
 
   /**
    * Are we in an extension namespace?
    *
-   * @return true if the current stack of open namespaces includes
-   *               an extension namespace.
+   * @return true if the current stack of open namespaces includes an extension namespace.
    */
   protected boolean inExtensionNamespace() {
     boolean inExtension = false;
@@ -85,8 +77,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
       if (ns == null) {
         inExtension = true;
       } else {
-        inExtension = (!ns.equals(tr9401NamespaceName)
-                       && !ns.equals(namespaceName));
+        inExtension = (!ns.equals(tr9401NamespaceName) && !ns.equals(namespaceName));
       }
     }
 
@@ -97,41 +88,34 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
   // Implement the SAX ContentHandler interface
 
   /** The SAX <code>setDocumentLocator</code> method does nothing. */
-  public void setDocumentLocator (Locator locator) {
+  public void setDocumentLocator(Locator locator) {
     return;
   }
 
   /** The SAX <code>startDocument</code> method does nothing. */
-  public void startDocument ()
-    throws SAXException {
+  public void startDocument() throws SAXException {
     baseURIStack.push(catalog.getCurrentBase());
     overrideStack.push(catalog.getDefaultOverride());
     return;
   }
 
   /** The SAX <code>endDocument</code> method does nothing. */
-  public void endDocument ()
-    throws SAXException {
+  public void endDocument() throws SAXException {
     return;
   }
 
   /**
-   * The SAX <code>startElement</code> method recognizes elements
-   * from the plain catalog format and instantiates CatalogEntry
-   * objects for them.
+   * The SAX <code>startElement</code> method recognizes elements from the plain catalog format and
+   * instantiates CatalogEntry objects for them.
    *
    * @param namespaceURI The namespace name of the element.
    * @param localName The local name of the element.
    * @param qName The QName of the element.
    * @param atts The list of attributes on the element.
-   *
    * @see CatalogEntry
    */
-  public void startElement (String namespaceURI,
-                            String localName,
-                            String qName,
-                            Attributes atts)
-    throws SAXException {
+  public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
+      throws SAXException {
 
     int entryType = -1;
     Vector entryArgs = new Vector();
@@ -140,8 +124,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
 
     boolean inExtension = inExtensionNamespace();
 
-    if (namespaceURI != null && namespaceName.equals(namespaceURI)
-        && !inExtension) {
+    if (namespaceURI != null && namespaceName.equals(namespaceURI) && !inExtension) {
       // This is an XML Catalog entry
 
       if (atts.getValue("xml:base") != null) {
@@ -179,9 +162,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
         } else if (override.equals("system")) {
           override = "no";
         } else {
-          debug.message(1,
-                        "Invalid prefer: must be 'system' or 'public'",
-                        localName);
+          debug.message(1, "Invalid prefer: must be 'system' or 'public'", localName);
           override = catalog.getDefaultOverride();
         }
 
@@ -215,9 +196,11 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("publicIdStartString"));
           entryArgs.add(atts.getValue("catalog"));
 
-          debug.message(4, "delegatePublic",
-                        PublicId.normalize(atts.getValue("publicIdStartString")),
-                        atts.getValue("catalog"));
+          debug.message(
+              4,
+              "delegatePublic",
+              PublicId.normalize(atts.getValue("publicIdStartString")),
+              atts.getValue("catalog"));
         }
       } else if (localName.equals("delegateSystem")) {
         if (checkAttributes(atts, "systemIdStartString", "catalog")) {
@@ -225,9 +208,8 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("systemIdStartString"));
           entryArgs.add(atts.getValue("catalog"));
 
-          debug.message(4, "delegateSystem",
-                        atts.getValue("systemIdStartString"),
-                        atts.getValue("catalog"));
+          debug.message(
+              4, "delegateSystem", atts.getValue("systemIdStartString"), atts.getValue("catalog"));
         }
       } else if (localName.equals("delegateURI")) {
         if (checkAttributes(atts, "uriStartString", "catalog")) {
@@ -235,9 +217,8 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("uriStartString"));
           entryArgs.add(atts.getValue("catalog"));
 
-          debug.message(4, "delegateURI",
-                        atts.getValue("uriStartString"),
-                        atts.getValue("catalog"));
+          debug.message(
+              4, "delegateURI", atts.getValue("uriStartString"), atts.getValue("catalog"));
         }
       } else if (localName.equals("rewriteSystem")) {
         if (checkAttributes(atts, "systemIdStartString", "rewritePrefix")) {
@@ -245,9 +226,11 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("systemIdStartString"));
           entryArgs.add(atts.getValue("rewritePrefix"));
 
-          debug.message(4, "rewriteSystem",
-                        atts.getValue("systemIdStartString"),
-                        atts.getValue("rewritePrefix"));
+          debug.message(
+              4,
+              "rewriteSystem",
+              atts.getValue("systemIdStartString"),
+              atts.getValue("rewritePrefix"));
         }
       } else if (localName.equals("systemSuffix")) {
         if (checkAttributes(atts, "systemIdSuffix", "uri")) {
@@ -255,9 +238,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("systemIdSuffix"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "systemSuffix",
-                        atts.getValue("systemIdSuffix"),
-                        atts.getValue("uri"));
+          debug.message(4, "systemSuffix", atts.getValue("systemIdSuffix"), atts.getValue("uri"));
         }
       } else if (localName.equals("rewriteURI")) {
         if (checkAttributes(atts, "uriStartString", "rewritePrefix")) {
@@ -265,9 +246,8 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("uriStartString"));
           entryArgs.add(atts.getValue("rewritePrefix"));
 
-          debug.message(4, "rewriteURI",
-                        atts.getValue("uriStartString"),
-                        atts.getValue("rewritePrefix"));
+          debug.message(
+              4, "rewriteURI", atts.getValue("uriStartString"), atts.getValue("rewritePrefix"));
         }
       } else if (localName.equals("uriSuffix")) {
         if (checkAttributes(atts, "uriSuffix", "uri")) {
@@ -275,9 +255,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("uriSuffix"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "uriSuffix",
-                        atts.getValue("uriSuffix"),
-                        atts.getValue("uri"));
+          debug.message(4, "uriSuffix", atts.getValue("uriSuffix"), atts.getValue("uri"));
         }
       } else if (localName.equals("nextCatalog")) {
         if (checkAttributes(atts, "catalog")) {
@@ -292,9 +270,8 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("publicId"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "public",
-                        PublicId.normalize(atts.getValue("publicId")),
-                        atts.getValue("uri"));
+          debug.message(
+              4, "public", PublicId.normalize(atts.getValue("publicId")), atts.getValue("uri"));
         }
       } else if (localName.equals("system")) {
         if (checkAttributes(atts, "systemId", "uri")) {
@@ -302,9 +279,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("systemId"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "system",
-                        atts.getValue("systemId"),
-                        atts.getValue("uri"));
+          debug.message(4, "system", atts.getValue("systemId"), atts.getValue("uri"));
         }
       } else if (localName.equals("uri")) {
         if (checkAttributes(atts, "name", "uri")) {
@@ -312,9 +287,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
           entryArgs.add(atts.getValue("name"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "uri",
-                        atts.getValue("name"),
-                        atts.getValue("uri"));
+          debug.message(4, "uri", atts.getValue("name"), atts.getValue("uri"));
         }
       } else if (localName.equals("catalog")) {
         // nop, start of catalog
@@ -339,8 +312,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
       }
     }
 
-    if (namespaceURI != null && tr9401NamespaceName.equals(namespaceURI)
-        && !inExtension) {
+    if (namespaceURI != null && tr9401NamespaceName.equals(namespaceURI) && !inExtension) {
       // This is a TR9401 Catalog entry
 
       if (atts.getValue("xml:base") != null) {
@@ -415,7 +387,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
     }
   }
 
-  public boolean checkAttributes (Attributes atts, String attName) {
+  public boolean checkAttributes(Attributes atts, String attName) {
     if (atts.getValue(attName) == null) {
       debug.message(1, "Error: required attribute " + attName + " missing.");
       return false;
@@ -424,18 +396,12 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
     }
   }
 
-  public boolean checkAttributes (Attributes atts,
-                                  String attName1,
-                                  String attName2) {
-    return checkAttributes(atts, attName1)
-      && checkAttributes(atts, attName2);
+  public boolean checkAttributes(Attributes atts, String attName1, String attName2) {
+    return checkAttributes(atts, attName1) && checkAttributes(atts, attName2);
   }
 
   /** The SAX <code>endElement</code> method does nothing. */
-  public void endElement (String namespaceURI,
-                          String localName,
-                          String qName)
-    throws SAXException {
+  public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 
     int entryType = -1;
     Vector entryArgs = new Vector();
@@ -444,8 +410,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
 
     if (namespaceURI != null
         && !inExtension
-        && (namespaceName.equals(namespaceURI)
-            || tr9401NamespaceName.equals(namespaceURI))) {
+        && (namespaceName.equals(namespaceURI) || tr9401NamespaceName.equals(namespaceURI))) {
 
       String popURI = (String) baseURIStack.pop();
       String baseURI = (String) baseURIStack.peek();
@@ -469,8 +434,7 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
       }
     }
 
-    if (namespaceURI != null && namespaceName.equals(namespaceURI)
-        && !inExtension) {
+    if (namespaceURI != null && namespaceName.equals(namespaceURI) && !inExtension) {
       if (localName.equals("catalog") || localName.equals("group")) {
         String popOverride = (String) overrideStack.pop();
         String override = (String) overrideStack.peek();
@@ -502,39 +466,32 @@ public class OASISXMLCatalogReader extends SAXCatalogReader implements SAXCatalo
   }
 
   /** The SAX <code>characters</code> method does nothing. */
-  public void characters (char ch[], int start, int length)
-    throws SAXException {
+  public void characters(char ch[], int start, int length) throws SAXException {
     return;
   }
 
   /** The SAX <code>ignorableWhitespace</code> method does nothing. */
-  public void ignorableWhitespace (char ch[], int start, int length)
-    throws SAXException {
+  public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
     return;
   }
 
   /** The SAX <code>processingInstruction</code> method does nothing. */
-  public void processingInstruction (String target, String data)
-    throws SAXException {
+  public void processingInstruction(String target, String data) throws SAXException {
     return;
   }
 
   /** The SAX <code>skippedEntity</code> method does nothing. */
-  public void skippedEntity (String name)
-    throws SAXException {
+  public void skippedEntity(String name) throws SAXException {
     return;
   }
 
   /** The SAX <code>startPrefixMapping</code> method does nothing. */
-  public void startPrefixMapping(String prefix, String uri)
-    throws SAXException {
+  public void startPrefixMapping(String prefix, String uri) throws SAXException {
     return;
   }
 
   /** The SAX <code>endPrefixMapping</code> method does nothing. */
-  public void endPrefixMapping(String prefix)
-    throws SAXException {
+  public void endPrefixMapping(String prefix) throws SAXException {
     return;
   }
-
 }

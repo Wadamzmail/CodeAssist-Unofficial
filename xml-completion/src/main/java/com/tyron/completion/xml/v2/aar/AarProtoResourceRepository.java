@@ -1,5 +1,9 @@
 package com.tyron.completion.xml.v2.aar;
 
+import static com.android.SdkConstants.DOT_XML;
+import static com.android.utils.DecimalUtils.trimInsignificantZeros;
+import static com.tyron.completion.xml.v2.base.RepositoryLoader.portableFileName;
+
 import com.android.aapt.ConfigurationOuterClass.Configuration;
 import com.android.aapt.Resources;
 import com.android.ide.common.rendering.api.AttrResourceValue;
@@ -41,12 +45,6 @@ import com.tyron.completion.xml.v2.base.RepositoryLoader;
 import com.tyron.completion.xml.v2.base.ResourceSourceFile;
 import com.tyron.completion.xml.v2.base.ResourceSourceFileImpl;
 import com.tyron.completion.xml.v2.base.ResourceUrlParser;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.com.intellij.openapi.diagnostic.Logger;
-import org.jetbrains.kotlin.com.intellij.util.BitUtil;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,24 +62,26 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import static com.android.SdkConstants.DOT_XML;
-import static com.android.utils.DecimalUtils.trimInsignificantZeros;
-import static com.tyron.completion.xml.v2.base.RepositoryLoader.portableFileName;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.kotlin.com.intellij.openapi.diagnostic.Logger;
+import org.jetbrains.kotlin.com.intellij.util.BitUtil;
 
 /**
- * Repository of resources defined in an AAR file where resources are stored in protocol buffer format.
- * See https://developer.android.com/studio/projects/android-library.html.
- * See https://android.googlesource.com/platform/frameworks/base/+/master/tools/aapt2/Resources.proto
+ * Repository of resources defined in an AAR file where resources are stored in protocol buffer
+ * format. See https://developer.android.com/studio/projects/android-library.html. See
+ * https://android.googlesource.com/platform/frameworks/base/+/master/tools/aapt2/Resources.proto
  */
 public class AarProtoResourceRepository extends AbstractAarResourceRepository {
   /** Configuration filter that accepts all configurations. */
   protected static final Predicate<Configuration> TRIVIAL_CONFIG_FILTER = config -> true;
+
   /** Resource type filter that accepts all resource types. */
   protected static final Predicate<ResourceType> TRIVIAL_RESOURCE_TYPE_FILTER = type -> true;
 
   /** Protocol for accessing contents of .apk files. */
   @NotNull private static final String APK_PROTOCOL = "apk";
+
   /** The name of the res.apk ZIP entry containing value resources. */
   private static final String RESOURCE_TABLE_ENTRY = "resources.pb";
 
@@ -94,37 +94,45 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
   private static final String[] FRACTION_SUFFIXES = {"%", "%p"};
   private static final int COMPLEX_RADIX_SHIFT = 4;
   private static final int COMPLEX_RADIX_MASK = 0x3;
+
   /** Multiplication factors for 4 possible radixes. */
   private static final double[] RADIX_FACTORS = {1., 1. / (1 << 7), 1. / (1 << 15), 1. / (1 << 23)};
+
   // The signed mantissa is stored in the higher 24 bits of the value.
   private static final int COMPLEX_MANTISSA_SHIFT = 8;
 
   @NotNull protected final Path myResApkFile;
+
   /**
-   * Common prefix of paths of all file resources. Used to compose resource paths returned by
-   * the {@link BasicFileResourceItem#getSource()} method.
+   * Common prefix of paths of all file resources. Used to compose resource paths returned by the
+   * {@link BasicFileResourceItem#getSource()} method.
    */
   @NotNull private final String myResourcePathPrefix;
+
   /**
-   * Common prefix of URLs of all file resources. Used to compose resource URLs returned by
-   * the {@link BasicFileResourceItem#getValue()} method.
+   * Common prefix of URLs of all file resources. Used to compose resource URLs returned by the
+   * {@link BasicFileResourceItem#getValue()} method.
    */
   @NotNull private final String myResourceUrlPrefix;
+
   /**
-   * Common prefix of source attachments. Used to compose file paths returned by
-   * the {@link BasicResourceItem#getOriginalSource()} method.
+   * Common prefix of source attachments. Used to compose file paths returned by the {@link
+   * BasicResourceItem#getOriginalSource()} method.
    */
   @Nullable private final String mySourceAttachmentPrefix;
 
-  protected AarProtoResourceRepository(@NotNull Loader loader, @Nullable String libraryName, @Nullable Path sourceJar) {
+  protected AarProtoResourceRepository(
+      @NotNull Loader loader, @Nullable String libraryName, @Nullable Path sourceJar) {
     super(loader.myNamespace, libraryName);
     myResApkFile = loader.myResApkFile;
 
     myResourcePathPrefix = myResApkFile.toString() + "!/";
     myResourceUrlPrefix = APK_PROTOCOL + "://" + portableFileName(myResApkFile.toString()) + "!/";
 
-    mySourceAttachmentPrefix = sourceJar != null && loader.myPackageName != null ?
-        sourceJar.toString() + "!/" + getPackageNamePrefix(loader.myPackageName) : null;
+    mySourceAttachmentPrefix =
+        sourceJar != null && loader.myPackageName != null
+            ? sourceJar.toString() + "!/" + getPackageNamePrefix(loader.myPackageName)
+            : null;
   }
 
   @Override
@@ -147,7 +155,8 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
    * @return the created resource repository
    */
   @NotNull
-  public static AarProtoResourceRepository create(@NotNull Path resApkFile, @NotNull String libraryName) {
+  public static AarProtoResourceRepository create(
+      @NotNull Path resApkFile, @NotNull String libraryName) {
     Loader loader = new Loader(resApkFile, TRIVIAL_CONFIG_FILTER, TRIVIAL_RESOURCE_TYPE_FILTER);
     try {
       loader.readApkFile();
@@ -157,21 +166,22 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
       return new AarProtoResourceRepository(loader, libraryName, null);
     }
 
-    // TODO: Make the source jar a parameter of this method and stop relying on a name convention here.
+    // TODO: Make the source jar a parameter of this method and stop relying on a name convention
+    // here.
     Path sourceJar = getSourceJarPath(resApkFile);
     if (!Files.exists(sourceJar)) {
       sourceJar = null;
     }
 
-
-    AarProtoResourceRepository repository = new AarProtoResourceRepository(loader, libraryName, sourceJar);
+    AarProtoResourceRepository repository =
+        new AarProtoResourceRepository(loader, libraryName, sourceJar);
     loader.loadRepositoryContents(repository);
     return repository;
   }
 
   /**
-   * Returns the path of the source JAR file given the path of res.apk. The name of the source jar is obtained
-   * by replacing the ".apk" file name suffix with "-src.jar".
+   * Returns the path of the source JAR file given the path of res.apk. The name of the source jar
+   * is obtained by replacing the ".apk" file name suffix with "-src.jar".
    */
   private static Path getSourceJarPath(@NotNull Path resApkFile) {
     String filename = resApkFile.getFileName().toString();
@@ -191,28 +201,35 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
 
   @Override
   @NotNull
-  public final PathString getSourceFile(@NotNull String relativeResourcePath, boolean forFileResource) {
-    return new PathString(APK_PROTOCOL, expandRelativeResourcePath(myResourcePathPrefix, relativeResourcePath, forFileResource));
+  public final PathString getSourceFile(
+      @NotNull String relativeResourcePath, boolean forFileResource) {
+    return new PathString(
+        APK_PROTOCOL,
+        expandRelativeResourcePath(myResourcePathPrefix, relativeResourcePath, forFileResource));
   }
 
   /**
-   * Converts a relative resource path to an absolute path or URL pointing inside res.apk by prepending a given
-   * {@code prefix} to the path. If {@code relativeResourcePath} is a path inside res.apk, the prefix is simply
-   * prepended to it. If {@code relativeResourcePath} is a path inside a source attachment JAR without a package
-   * prefix, it is first converted to a path inside res.apk by removing the first, overlay number, segment. Then
-   * the prefix is prepended to the converted path. Whether the path points inside res.apk or the source
-   * attachment JAR is determined by result returned by the {@link #hasOverlaySegment(String, boolean)}.
+   * Converts a relative resource path to an absolute path or URL pointing inside res.apk by
+   * prepending a given {@code prefix} to the path. If {@code relativeResourcePath} is a path inside
+   * res.apk, the prefix is simply prepended to it. If {@code relativeResourcePath} is a path inside
+   * a source attachment JAR without a package prefix, it is first converted to a path inside
+   * res.apk by removing the first, overlay number, segment. Then the prefix is prepended to the
+   * converted path. Whether the path points inside res.apk or the source attachment JAR is
+   * determined by result returned by the {@link #hasOverlaySegment(String, boolean)}.
    *
    * @param prefix the prefix to prepend
-   * @param relativeResourcePath the relative path of a resource that may or may not start with an overlay number segment
+   * @param relativeResourcePath the relative path of a resource that may or may not start with an
+   *     overlay number segment
    * @param forFileResource true is the resource is a file resource, false if it is a value resource
    * @return the converted path
    */
-  private String expandRelativeResourcePath(@NotNull String prefix, @NotNull String relativeResourcePath, boolean forFileResource) {
+  private String expandRelativeResourcePath(
+      @NotNull String prefix, @NotNull String relativeResourcePath, boolean forFileResource) {
     int offset = 0;
     if (hasOverlaySegment(relativeResourcePath, forFileResource)) {
       assert Character.isDigit(relativeResourcePath.charAt(0));
-      // relativeResourcePath is the path of the original source that includes an overlay number as the first segment.
+      // relativeResourcePath is the path of the original source that includes an overlay number as
+      // the first segment.
       // Skip the first segment to convert the source path to the path of proto XML.
       offset = relativeResourcePath.indexOf('/') + 1;
     }
@@ -226,9 +243,11 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
 
   /**
    * Checks if the given relative resource path is expected to contain an overlay segment or not.
-   * The check is based on how resource items are created by the {@link Loader#createResourceItem} methods.
+   * The check is based on how resource items are created by the {@link Loader#createResourceItem}
+   * methods.
    *
-   * @param relativeResourcePath the relative path of a resource that may or may not start with an overlay number segment
+   * @param relativeResourcePath the relative path of a resource that may or may not start with an
+   *     overlay number segment
    * @param forFileResource true is the resource is a file resource, false if it is a value resource
    * @return true if the resource path is expected to contain an overlay segment
    */
@@ -238,7 +257,8 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
 
   @Override
   @Nullable
-  public final PathString getOriginalSourceFile(@NotNull String relativeResourcePath, boolean forFileResource) {
+  public final PathString getOriginalSourceFile(
+      @NotNull String relativeResourcePath, boolean forFileResource) {
     if (isXml(relativeResourcePath)) {
       if (mySourceAttachmentPrefix == null) {
         return null;
@@ -261,7 +281,11 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
   // For debugging only.
   @Override
   public String toString() {
-    return getClass().getSimpleName() + '@' + Integer.toHexString(System.identityHashCode(this)) + " for " + myResApkFile;
+    return getClass().getSimpleName()
+        + '@'
+        + Integer.toHexString(System.identityHashCode(this))
+        + " for "
+        + myResApkFile;
   }
 
   protected static class Loader {
@@ -269,17 +293,26 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     @NotNull private final Predicate<Configuration> myConfigFilter;
     @NotNull private final Predicate<ResourceType> myResourceTypeFilter;
     @NotNull private final ResourceUrlParser myUrlParser = new ResourceUrlParser();
-    @NotNull private final ListMultimap<String, BasicStyleableResourceItem> myStyleables = ArrayListMultimap.create();
-    @NotNull private final Table<String, Configuration, ResourceSourceFile> mySourceFileCache = HashBasedTable.create();
+
+    @NotNull
+    private final ListMultimap<String, BasicStyleableResourceItem> myStyleables =
+        ArrayListMultimap.create();
+
+    @NotNull
+    private final Table<String, Configuration, ResourceSourceFile> mySourceFileCache =
+        HashBasedTable.create();
+
     @Nullable private Resources.ResourceTable myResourceTableMsg;
     @Nullable private String myPackageName;
     private ResourceNamespace myNamespace;
 
-    Loader(@NotNull Path resApkFile, @NotNull Predicate<Configuration> configFilter, @NotNull Predicate<ResourceType> resourceTypeFilter) {
+    Loader(
+        @NotNull Path resApkFile,
+        @NotNull Predicate<Configuration> configFilter,
+        @NotNull Predicate<ResourceType> resourceTypeFilter) {
       myResApkFile = resApkFile;
       myConfigFilter = configFilter;
       myResourceTypeFilter = resourceTypeFilter;
-
     }
 
     void readApkFile() throws IOException {
@@ -287,7 +320,10 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
         myResourceTableMsg = readResourceTableFromResApk(zipFile);
         myPackageName = AndroidManifestPackageNameUtils.getPackageNameFromResApk(zipFile);
       } finally {
-        myNamespace = myPackageName == null ? ResourceNamespace.RES_AUTO : ResourceNamespace.fromPackageName(myPackageName);
+        myNamespace =
+            myPackageName == null
+                ? ResourceNamespace.RES_AUTO
+                : ResourceNamespace.fromPackageName(myPackageName);
       }
     }
 
@@ -297,22 +333,26 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
       }
     }
 
-    private void loadFromResourceTable(@NotNull AarProtoResourceRepository repository, @NotNull Resources.ResourceTable resourceTableMsg) {
+    private void loadFromResourceTable(
+        @NotNull AarProtoResourceRepository repository,
+        @NotNull Resources.ResourceTable resourceTableMsg) {
       // String pool is only needed if there is a source attachment.
-      StringPool stringPool = repository.mySourceAttachmentPrefix == null ?
-                              null : new StringPool(resourceTableMsg.getSourcePool(), myNamespace.getPackageName());
+      StringPool stringPool =
+          repository.mySourceAttachmentPrefix == null
+              ? null
+              : new StringPool(resourceTableMsg.getSourcePool(), myNamespace.getPackageName());
 
       for (Resources.Package packageMsg : resourceTableMsg.getPackageList()) {
         for (Resources.Type typeMsg : packageMsg.getTypeList()) {
           String typeName = typeMsg.getName();
           ResourceType resourceType = ResourceType.fromClassName(typeName);
           if (resourceType == null) {
-            // AAPT2 emits "^attr-private" type for all non-public "attr" resources. For reference see http://b/122572805 and
+            // AAPT2 emits "^attr-private" type for all non-public "attr" resources. For reference
+            // see http://b/122572805 and
             // https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/tools/aapt2/link/Linkers.h#65.
             if (typeName.equals("^attr-private")) {
               resourceType = ResourceType.ATTR;
-            }
-            else {
+            } else {
               LOG.warn("Unexpected resource type: " + typeName);
               continue;
             }
@@ -325,14 +365,17 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
               for (Resources.ConfigValue configValueMsg : entryMsg.getConfigValueList()) {
                 Resources.Value valueMsg = configValueMsg.getValue();
                 Resources.Source sourceMsg = valueMsg.getSource();
-                String sourcePath = stringPool == null ? null : stringPool.getString(sourceMsg.getPathIdx());
+                String sourcePath =
+                    stringPool == null ? null : stringPool.getString(sourceMsg.getPathIdx());
                 if (sourcePath != null && sourcePath.isEmpty()) {
                   sourcePath = null;
                 }
                 Configuration configMsg = configValueMsg.getConfig();
                 if (myConfigFilter.test(configMsg)) {
                   ResourceSourceFile sourceFile = getSourceFile(repository, sourcePath, configMsg);
-                  ResourceItem item = createResourceItem(valueMsg, resourceType, resourceName, sourceFile, visibility);
+                  ResourceItem item =
+                      createResourceItem(
+                          valueMsg, resourceType, resourceName, sourceFile, visibility);
                   if (item != null) {
                     addResourceItem(repository, item);
                   }
@@ -351,29 +394,34 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
       repository.freezeResources();
     }
 
-    private void addResourceItem(@NotNull AarProtoResourceRepository repository, @NotNull ResourceItem item) {
+    private void addResourceItem(
+        @NotNull AarProtoResourceRepository repository, @NotNull ResourceItem item) {
       if (item.getType() == ResourceType.STYLEABLE) {
-        myStyleables.put(item.getName(), (BasicStyleableResourceItem)item);
-      }
-      else {
+        myStyleables.put(item.getName(), (BasicStyleableResourceItem) item);
+      } else {
         repository.addResourceItem(item);
       }
     }
 
     @Nullable
-    private BasicResourceItem createResourceItem(@NotNull Resources.Value valueMsg, @NotNull ResourceType resourceType,
-                                                 @NotNull String resourceName, @NotNull ResourceSourceFile sourceFile,
-                                                 @NotNull ResourceVisibility visibility) {
+    private BasicResourceItem createResourceItem(
+        @NotNull Resources.Value valueMsg,
+        @NotNull ResourceType resourceType,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility) {
       switch (valueMsg.getValueCase()) {
         case ITEM:
-          return createResourceItem(valueMsg.getItem(), resourceType, resourceName, sourceFile, visibility);
+          return createResourceItem(
+              valueMsg.getItem(), resourceType, resourceName, sourceFile, visibility);
 
         case COMPOUND_VALUE:
           String description = valueMsg.getComment();
           if (CharMatcher.whitespace().matchesAllOf(description)) {
             description = null;
           }
-          return createResourceItem(valueMsg.getCompoundValue(), resourceName, sourceFile, visibility, description);
+          return createResourceItem(
+              valueMsg.getCompoundValue(), resourceName, sourceFile, visibility, description);
 
         case VALUE_NOT_SET:
         default:
@@ -384,64 +432,80 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     @Nullable
-    private BasicResourceItem createResourceItem(@NotNull Resources.Item itemMsg, @NotNull ResourceType resourceType,
-                                                 @NotNull String resourceName, @NotNull ResourceSourceFile sourceFile,
-                                                 @NotNull ResourceVisibility visibility) {
+    private BasicResourceItem createResourceItem(
+        @NotNull Resources.Item itemMsg,
+        @NotNull ResourceType resourceType,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility) {
       switch (itemMsg.getValueCase()) {
-        case FILE: {
-          // For XML files, which contain proto XML that is not human-readable, use the source attachment path when available.
-          // For other resources use the path inside res.apk.
-          String path = sourceFile.getRelativePath();
-          if (path == null || !isXml(path)) {
-            path = itemMsg.getFile().getPath();
-          }
-          RepositoryConfiguration configuration = sourceFile.getConfiguration();
-          if (DensityBasedResourceValue.isDensityBasedResourceType(resourceType)) {
-            FolderConfiguration folderConfiguration = configuration.getFolderConfiguration();
-            DensityQualifier densityQualifier = folderConfiguration.getDensityQualifier();
-            if (densityQualifier != null) {
-              Density densityValue = densityQualifier.getValue();
-              if (densityValue != null) {
-                return new BasicDensityBasedFileResourceItem(resourceType, resourceName, configuration, visibility, path, densityValue);
+        case FILE:
+          {
+            // For XML files, which contain proto XML that is not human-readable, use the source
+            // attachment path when available.
+            // For other resources use the path inside res.apk.
+            String path = sourceFile.getRelativePath();
+            if (path == null || !isXml(path)) {
+              path = itemMsg.getFile().getPath();
+            }
+            RepositoryConfiguration configuration = sourceFile.getConfiguration();
+            if (DensityBasedResourceValue.isDensityBasedResourceType(resourceType)) {
+              FolderConfiguration folderConfiguration = configuration.getFolderConfiguration();
+              DensityQualifier densityQualifier = folderConfiguration.getDensityQualifier();
+              if (densityQualifier != null) {
+                Density densityValue = densityQualifier.getValue();
+                if (densityValue != null) {
+                  return new BasicDensityBasedFileResourceItem(
+                      resourceType, resourceName, configuration, visibility, path, densityValue);
+                }
               }
             }
+            return new BasicFileResourceItem(
+                resourceType, resourceName, configuration, visibility, path);
           }
-          return new BasicFileResourceItem(resourceType, resourceName, configuration, visibility, path);
-        }
 
-        case REF: {
-          String ref = decode(itemMsg.getRef());
-          return createResourceItem(resourceType, resourceName, sourceFile, visibility, ref);
-        }
-
-        case STR: {
-          String textValue = itemMsg.getStr().getValue();
-          return new BasicValueResourceItem(resourceType, resourceName, sourceFile, visibility, textValue);
-        }
-
-        case RAW_STR: {
-          String str = itemMsg.getRawStr().getValue();
-          return createResourceItem(resourceType, resourceName, sourceFile, visibility, str);
-        }
-
-        case PRIM: {
-          String str = decode(itemMsg.getPrim());
-          return createResourceItem(resourceType, resourceName, sourceFile, visibility, str);
-        }
-
-        case STYLED_STR: {
-          Resources.StyledString styledStrMsg = itemMsg.getStyledStr();
-          String textValue = styledStrMsg.getValue();
-          String rawXmlValue = ProtoStyledStringDecoder.getRawXmlValue(styledStrMsg);
-          if (rawXmlValue.equals(textValue)) {
-            return new BasicValueResourceItem(resourceType, resourceName, sourceFile, visibility, textValue);
+        case REF:
+          {
+            String ref = decode(itemMsg.getRef());
+            return createResourceItem(resourceType, resourceName, sourceFile, visibility, ref);
           }
-          return new BasicTextValueResourceItem(resourceType, resourceName, sourceFile, visibility, textValue, rawXmlValue);
-        }
 
-        case ID: {
-          return createResourceItem(resourceType, resourceName, sourceFile, visibility, null);
-        }
+        case STR:
+          {
+            String textValue = itemMsg.getStr().getValue();
+            return new BasicValueResourceItem(
+                resourceType, resourceName, sourceFile, visibility, textValue);
+          }
+
+        case RAW_STR:
+          {
+            String str = itemMsg.getRawStr().getValue();
+            return createResourceItem(resourceType, resourceName, sourceFile, visibility, str);
+          }
+
+        case PRIM:
+          {
+            String str = decode(itemMsg.getPrim());
+            return createResourceItem(resourceType, resourceName, sourceFile, visibility, str);
+          }
+
+        case STYLED_STR:
+          {
+            Resources.StyledString styledStrMsg = itemMsg.getStyledStr();
+            String textValue = styledStrMsg.getValue();
+            String rawXmlValue = ProtoStyledStringDecoder.getRawXmlValue(styledStrMsg);
+            if (rawXmlValue.equals(textValue)) {
+              return new BasicValueResourceItem(
+                  resourceType, resourceName, sourceFile, visibility, textValue);
+            }
+            return new BasicTextValueResourceItem(
+                resourceType, resourceName, sourceFile, visibility, textValue, rawXmlValue);
+          }
+
+        case ID:
+          {
+            return createResourceItem(resourceType, resourceName, sourceFile, visibility, null);
+          }
 
         case VALUE_NOT_SET:
         default:
@@ -452,25 +516,33 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     @NotNull
-    private static BasicResourceItem createResourceItem(@NotNull ResourceType resourceType, @NotNull String resourceName,
-                                                        @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility,
-                                                        @Nullable String value) {
+    private static BasicResourceItem createResourceItem(
+        @NotNull ResourceType resourceType,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility,
+        @Nullable String value) {
       return new BasicValueResourceItem(resourceType, resourceName, sourceFile, visibility, value);
     }
 
     @Nullable
-    private BasicResourceItem createResourceItem(@NotNull Resources.CompoundValue compoundValueMsg, @NotNull String resourceName,
-                                                 @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility,
-                                                 @Nullable String description) {
+    private BasicResourceItem createResourceItem(
+        @NotNull Resources.CompoundValue compoundValueMsg,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility,
+        @Nullable String description) {
       switch (compoundValueMsg.getValueCase()) {
         case ATTR:
-          return createAttr(compoundValueMsg.getAttr(), resourceName, sourceFile, visibility, description);
+          return createAttr(
+              compoundValueMsg.getAttr(), resourceName, sourceFile, visibility, description);
 
         case STYLE:
           return createStyle(compoundValueMsg.getStyle(), resourceName, sourceFile, visibility);
 
         case STYLEABLE:
-          return createStyleable(compoundValueMsg.getStyleable(), resourceName, sourceFile, visibility);
+          return createStyleable(
+              compoundValueMsg.getStyleable(), resourceName, sourceFile, visibility);
 
         case ARRAY:
           return createArray(compoundValueMsg.getArray(), resourceName, sourceFile, visibility);
@@ -486,9 +558,12 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     @NotNull
-    private static BasicAttrResourceItem createAttr(@NotNull Resources.Attribute attributeMsg, @NotNull String resourceName,
-                                                    @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility,
-                                                    @Nullable String description) {
+    private static BasicAttrResourceItem createAttr(
+        @NotNull Resources.Attribute attributeMsg,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility,
+        @Nullable String description) {
       Set<AttributeFormat> formats = decodeFormatFlags(attributeMsg.getFormatFlags());
 
       List<Resources.Attribute.Symbol> symbolList = attributeMsg.getSymbolList();
@@ -517,18 +592,31 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
         }
       }
 
-      String groupName = null; // Attribute group name is not available in a proto resource repository.
-      return new BasicAttrResourceItem(resourceName, sourceFile, visibility, description, groupName, formats, valueMap, valueDescriptionMap);
+      String groupName =
+          null; // Attribute group name is not available in a proto resource repository.
+      return new BasicAttrResourceItem(
+          resourceName,
+          sourceFile,
+          visibility,
+          description,
+          groupName,
+          formats,
+          valueMap,
+          valueDescriptionMap);
     }
 
     @NotNull
-    private BasicStyleResourceItem createStyle(@NotNull Resources.Style styleMsg, @NotNull String resourceName,
-                                               @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility) {
+    private BasicStyleResourceItem createStyle(
+        @NotNull Resources.Style styleMsg,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility) {
       String libraryName = sourceFile.getRepository().getLibraryName();
       myUrlParser.parseResourceUrl(styleMsg.getParent().getName());
       String parentStyle = myUrlParser.getQualifiedName();
       if (StyleResourceValue.isDefaultParentStyleName(parentStyle, resourceName)) {
-        parentStyle = null; // Don't store a parent style name that can be derived from the name of the style.
+        parentStyle =
+            null; // Don't store a parent style name that can be derived from the name of the style.
       }
       List<StyleItemResourceValue> styleItems = new ArrayList<>(styleMsg.getEntryCount());
       for (Resources.Style.Entry entryMsg : styleMsg.getEntryList()) {
@@ -536,33 +624,48 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
         myUrlParser.parseResourceUrl(url);
         String name = myUrlParser.getQualifiedName();
         String value = decode(entryMsg.getItem());
-        StyleItemResourceValueImpl itemValue = new StyleItemResourceValueImpl(myNamespace, name, value, libraryName);
+        StyleItemResourceValueImpl itemValue =
+            new StyleItemResourceValueImpl(myNamespace, name, value, libraryName);
         styleItems.add(itemValue);
       }
 
-      return new BasicStyleResourceItem(resourceName, sourceFile, visibility, parentStyle, styleItems);
+      return new BasicStyleResourceItem(
+          resourceName, sourceFile, visibility, parentStyle, styleItems);
     }
 
     @NotNull
-    private BasicStyleableResourceItem createStyleable(@NotNull Resources.Styleable styleableMsg, @NotNull String resourceName,
-                                                       @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility) {
+    private BasicStyleableResourceItem createStyleable(
+        @NotNull Resources.Styleable styleableMsg,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility) {
       List<AttrResourceValue> attrs = new ArrayList<>(styleableMsg.getEntryCount());
       for (Resources.Styleable.Entry entryMsg : styleableMsg.getEntryList()) {
         String url = entryMsg.getAttr().getName();
         myUrlParser.parseResourceUrl(url);
         String packageName = myUrlParser.getNamespacePrefix();
-        ResourceNamespace attrNamespace = packageName == null ? myNamespace : ResourceNamespace.fromPackageName(packageName);
+        ResourceNamespace attrNamespace =
+            packageName == null ? myNamespace : ResourceNamespace.fromPackageName(packageName);
         String comment = entryMsg.getComment();
         BasicAttrReference attr =
-            new BasicAttrReference(attrNamespace, myUrlParser.getName(), sourceFile, visibility, comment.isEmpty() ? null : comment, null);
+            new BasicAttrReference(
+                attrNamespace,
+                myUrlParser.getName(),
+                sourceFile,
+                visibility,
+                comment.isEmpty() ? null : comment,
+                null);
         attrs.add(attr);
       }
       return new BasicStyleableResourceItem(resourceName, sourceFile, visibility, attrs);
     }
 
     @NotNull
-    private BasicArrayResourceItem createArray(@NotNull Resources.Array arrayMsg, @NotNull String resourceName,
-                                               @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility) {
+    private BasicArrayResourceItem createArray(
+        @NotNull Resources.Array arrayMsg,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility) {
       List<String> elements = new ArrayList<>(arrayMsg.getElementCount());
       for (Resources.Array.Element elementMsg : arrayMsg.getElementList()) {
         String text = decode(elementMsg.getItem());
@@ -574,8 +677,11 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     @NotNull
-    private BasicPluralsResourceItem createPlurals(@NotNull Resources.Plural pluralMsg, @NotNull String resourceName,
-                                                   @NotNull ResourceSourceFile sourceFile, @NotNull ResourceVisibility visibility) {
+    private BasicPluralsResourceItem createPlurals(
+        @NotNull Resources.Plural pluralMsg,
+        @NotNull String resourceName,
+        @NotNull ResourceSourceFile sourceFile,
+        @NotNull ResourceVisibility visibility) {
       EnumMap<Arity, String> values = new EnumMap<>(Arity.class);
       for (Resources.Plural.Entry entryMsg : pluralMsg.getEntryList()) {
         values.put(decodeArity(entryMsg.getArity()), decode(entryMsg.getItem()));
@@ -584,8 +690,10 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     @NotNull
-    private ResourceSourceFile getSourceFile(@NotNull AarProtoResourceRepository repository, @Nullable String sourcePath,
-                                             @NotNull Configuration configMsg) {
+    private ResourceSourceFile getSourceFile(
+        @NotNull AarProtoResourceRepository repository,
+        @Nullable String sourcePath,
+        @NotNull Configuration configMsg) {
       String sourcePathKey = sourcePath == null ? "" : sourcePath;
       ResourceSourceFile sourceFile = mySourceFileCache.get(sourcePathKey, configMsg);
       if (sourceFile != null) {
@@ -595,7 +703,9 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
       FolderConfiguration configuration = ProtoConfigurationDecoder.getConfiguration(configMsg);
       configuration.normalizeByRemovingRedundantVersionQualifier();
 
-      sourceFile = new ResourceSourceFileImpl(sourcePath, new RepositoryConfiguration(repository, configuration));
+      sourceFile =
+          new ResourceSourceFileImpl(
+              sourcePath, new RepositoryConfiguration(repository, configuration));
       mySourceFileCache.put(sourcePathKey, configMsg, sourceFile);
       return sourceFile;
     }
@@ -656,7 +766,8 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
           return decodeComplexDimensionValue(primitiveMsg.getDimensionValue(), 1., DIMEN_SUFFIXES);
 
         case FRACTION_VALUE:
-          return decodeComplexDimensionValue(primitiveMsg.getFractionValue(), 100., FRACTION_SUFFIXES);
+          return decodeComplexDimensionValue(
+              primitiveMsg.getFractionValue(), 100., FRACTION_SUFFIXES);
 
         case INT_DECIMAL_VALUE:
           return Integer.toString(primitiveMsg.getIntDecimalValue());
@@ -675,7 +786,9 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
 
         case COLOR_ARGB4_VALUE:
           int argb = primitiveMsg.getColorArgb4Value();
-          return String.format("#%X%X%X%X", (argb >>> 24) & 0xF, (argb >>> 16) & 0xF, (argb >>> 8) & 0xF, argb & 0xF);
+          return String.format(
+              "#%X%X%X%X",
+              (argb >>> 24) & 0xF, (argb >>> 16) & 0xF, (argb >>> 8) & 0xF, argb & 0xF);
 
         case COLOR_RGB4_VALUE:
           int rgb = primitiveMsg.getColorRgb4Value();
@@ -690,18 +803,23 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     /**
-     * Decodes a dimension value in the Android binary XML encoding and returns a string suitable for regular XML.
+     * Decodes a dimension value in the Android binary XML encoding and returns a string suitable
+     * for regular XML.
      *
      * @param bits the encoded value
      * @param scaleFactor the scale factor to apply to the result
-     * @param unitSuffixes the unit suffixes, either {@link #DIMEN_SUFFIXES} or {@link #FRACTION_SUFFIXES}
+     * @param unitSuffixes the unit suffixes, either {@link #DIMEN_SUFFIXES} or {@link
+     *     #FRACTION_SUFFIXES}
      * @return the decoded value as a string, e.g. "-6.5dp", or "60%"
-     * @see <a href="https://android.googlesource.com/platform/frameworks/base/+/master/libs/androidfw/include/androidfw/ResourceTypes.h">
+     * @see <a
+     *     href="https://android.googlesource.com/platform/frameworks/base/+/master/libs/androidfw/include/androidfw/ResourceTypes.h">
      *     ResourceTypes.h</a>
      */
-    private static String decodeComplexDimensionValue(int bits, double scaleFactor, @NotNull String[] unitSuffixes) {
+    private static String decodeComplexDimensionValue(
+        int bits, double scaleFactor, @NotNull String[] unitSuffixes) {
       int unitCode = bits & COMPLEX_UNIT_MASK;
-      String unit = unitCode < unitSuffixes.length ? unitSuffixes[unitCode] : " unknown unit: " + unitCode;
+      String unit =
+          unitCode < unitSuffixes.length ? unitSuffixes[unitCode] : " unknown unit: " + unitCode;
       int radix = (bits >> COMPLEX_RADIX_SHIFT) & COMPLEX_RADIX_MASK;
       int mantissa = bits >> COMPLEX_MANTISSA_SHIFT;
       double value = mantissa * RADIX_FACTORS[radix] * scaleFactor;
@@ -764,7 +882,8 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     @NotNull
-    private static ResourceVisibility decodeVisibility(@NotNull Resources.Visibility visibilityMsg) {
+    private static ResourceVisibility decodeVisibility(
+        @NotNull Resources.Visibility visibilityMsg) {
       switch (visibilityMsg.getLevel()) {
         case UNKNOWN:
           return ResourceVisibility.PRIVATE_XML_ONLY;
@@ -784,7 +903,8 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
      * @return the resource table proto message
      */
     @NotNull
-    private static Resources.ResourceTable readResourceTableFromResApk(@NotNull ZipFile resApk) throws IOException {
+    private static Resources.ResourceTable readResourceTableFromResApk(@NotNull ZipFile resApk)
+        throws IOException {
       ZipEntry zipEntry = resApk.getEntry(RESOURCE_TABLE_ENTRY);
       if (zipEntry == null) {
         throw new IOException("\"" + RESOURCE_TABLE_ENTRY + "\" not found in " + resApk.getName());
@@ -796,9 +916,7 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
   }
 
-  /**
-   * Extracts strings encoded inside a {@link Resources.StringPool} proto message.
-   */
+  /** Extracts strings encoded inside a {@link Resources.StringPool} proto message. */
   private static class StringPool {
     // See definition of the ResStringPool_header structure at
     // https://android.googlesource.com/platform/frameworks/base/+/tools_r22.2/include/androidfw/ResourceTypes.h
@@ -824,7 +942,8 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
         int byteCount = getByteEncodedLength(bytes);
         int endOffset = currentOffset + byteCount;
         strings[i] = bytes.substring(currentOffset, endOffset).toStringUtf8();
-        currentOffset = endOffset + 1; // Skip the bytes of the string including the 0x00 terminator.
+        currentOffset =
+            endOffset + 1; // Skip the bytes of the string including the 0x00 terminator.
       }
       normalizePaths(packageName);
     }
@@ -834,10 +953,10 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     private static int getInt32(@NotNull ByteString bytes, int offset) {
-      return getByte(bytes, offset) |
-             (getByte(bytes, offset + 1) << 8) |
-             (getByte(bytes, offset + 2) << 16) |
-             (getByte(bytes, offset + 3) << 24);
+      return getByte(bytes, offset)
+          | (getByte(bytes, offset + 1) << 8)
+          | (getByte(bytes, offset + 2) << 16)
+          | (getByte(bytes, offset + 3) << 24);
     }
 
     /**
@@ -853,9 +972,9 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
     }
 
     /**
-     * Source paths in AARv2 are supposed to be relative, but currently AAPT2 inserts absolute paths.
-     * This method works around this AAPT2 limitation by converting source paths to the form they are
-     * supposed to have.
+     * Source paths in AARv2 are supposed to be relative, but currently AAPT2 inserts absolute
+     * paths. This method works around this AAPT2 limitation by converting source paths to the form
+     * they are supposed to have.
      */
     private void normalizePaths(@Nullable String packageName) {
       String packagePrefix = packageName == null ? null : getPackageNamePrefix(packageName);
@@ -887,8 +1006,7 @@ public class AarProtoResourceRepository extends AbstractAarResourceRepository {
             if (prefix != null && str.startsWith(prefix)) {
               str = REPLACEMENT_PREFIX + str.substring(prefix.length());
             }
-          }
-          else if (packagePrefix != null && str.startsWith(packagePrefix)) {
+          } else if (packagePrefix != null && str.startsWith(packagePrefix)) {
             // The string represents a relative path. Remove the package prefix if present.
             str = str.substring(packagePrefix.length());
           }

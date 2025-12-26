@@ -23,26 +23,21 @@
 package org.openjdk.com.sun.org.apache.xpath.internal.axes;
 
 import java.util.ArrayList;
-
 import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMIterator;
 import org.openjdk.com.sun.org.apache.xml.internal.utils.WrappedRuntimeException;
 
 /**
  * Pool of object of a given type to pick from to help memory usage
+ *
  * @xsl.usage internal
  */
-public final class IteratorPool implements java.io.Serializable
-{
-    static final long serialVersionUID = -460927331149566998L;
+public final class IteratorPool implements java.io.Serializable {
+  static final long serialVersionUID = -460927331149566998L;
 
-  /**
-   * Type of objects in this pool.
-   */
+  /** Type of objects in this pool. */
   private final DTMIterator m_orig;
 
-  /**
-   * Stack of given objects this points to.
-   */
+  /** Stack of given objects this points to. */
   private final ArrayList m_freeStack;
 
   /**
@@ -50,8 +45,7 @@ public final class IteratorPool implements java.io.Serializable
    *
    * @param original The original iterator from which all others will be cloned.
    */
-  public IteratorPool(DTMIterator original)
-  {
+  public IteratorPool(DTMIterator original) {
     m_orig = original;
     m_freeStack = new ArrayList();
   }
@@ -61,20 +55,15 @@ public final class IteratorPool implements java.io.Serializable
    *
    * @return An instance of the given object
    */
-  public synchronized DTMIterator getInstanceOrThrow()
-    throws CloneNotSupportedException
-  {
+  public synchronized DTMIterator getInstanceOrThrow() throws CloneNotSupportedException {
     // Check if the pool is empty.
-    if (m_freeStack.isEmpty())
-    {
+    if (m_freeStack.isEmpty()) {
 
       // Create a new object if so.
-      return (DTMIterator)m_orig.clone();
-    }
-    else
-    {
+      return (DTMIterator) m_orig.clone();
+    } else {
       // Remove object from end of free pool.
-      DTMIterator result = (DTMIterator)m_freeStack.remove(m_freeStack.size() - 1);
+      DTMIterator result = (DTMIterator) m_freeStack.remove(m_freeStack.size() - 1);
       return result;
     }
   }
@@ -84,26 +73,19 @@ public final class IteratorPool implements java.io.Serializable
    *
    * @return An instance of the given object
    */
-  public synchronized DTMIterator getInstance()
-  {
+  public synchronized DTMIterator getInstance() {
     // Check if the pool is empty.
-    if (m_freeStack.isEmpty())
-    {
+    if (m_freeStack.isEmpty()) {
 
       // Create a new object if so.
-      try
-      {
-        return (DTMIterator)m_orig.clone();
-      }
-      catch (Exception ex)
-      {
+      try {
+        return (DTMIterator) m_orig.clone();
+      } catch (Exception ex) {
         throw new WrappedRuntimeException(ex);
       }
-    }
-    else
-    {
+    } else {
       // Remove object from end of free pool.
-      DTMIterator result = (DTMIterator)m_freeStack.remove(m_freeStack.size() - 1);
+      DTMIterator result = (DTMIterator) m_freeStack.remove(m_freeStack.size() - 1);
       return result;
     }
   }
@@ -111,11 +93,9 @@ public final class IteratorPool implements java.io.Serializable
   /**
    * Add an instance of the given object to the pool
    *
-   *
    * @param obj Object to add.
    */
-  public synchronized void freeInstance(DTMIterator obj)
-  {
+  public synchronized void freeInstance(DTMIterator obj) {
     m_freeStack.add(obj);
   }
 }

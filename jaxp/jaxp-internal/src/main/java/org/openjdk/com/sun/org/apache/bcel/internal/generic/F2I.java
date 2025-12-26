@@ -62,23 +62,21 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
 /**
  * F2I - Convert float to int
+ *
  * <PRE>Stack: ..., value -&gt; ..., result</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class F2I extends ConversionInstruction {
-  /** Convert float to int
-   */
+  /** Convert float to int */
   public F2I() {
     super(Constants.F2I);
   }
 
-
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

@@ -58,35 +58,32 @@ package org.openjdk.com.sun.org.apache.bcel.internal.classfile;
  * <http://www.apache.org/>.
  */
 
+import java.io.*;
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
-import  java.io.*;
-
 /**
- * This class represents the type of a local variable or item on stack
- * used in the StackMap entries.
+ * This class represents the type of a local variable or item on stack used in the StackMap entries.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
- * @see     StackMapEntry
- * @see     StackMap
- * @see     Constants
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @see StackMapEntry
+ * @see StackMap
+ * @see Constants
  */
 public final class StackMapType implements Cloneable {
-  private byte         type;
-  private int          index = -1; // Index to CONSTANT_Class or offset
+  private byte type;
+  private int index = -1; // Index to CONSTANT_Class or offset
   private ConstantPool constant_pool;
 
   /**
    * Construct object from file stream.
+   *
    * @param file Input stream
    * @throws IOException
    */
-  StackMapType(DataInputStream file, ConstantPool constant_pool) throws IOException
-  {
+  StackMapType(DataInputStream file, ConstantPool constant_pool) throws IOException {
     this(file.readByte(), -1, constant_pool);
 
-    if(hasIndex())
-      setIndex(file.readShort());
+    if (hasIndex()) setIndex(file.readShort());
 
     setConstantPool(constant_pool);
   }
@@ -102,18 +99,26 @@ public final class StackMapType implements Cloneable {
   }
 
   public void setType(byte t) {
-    if((t < Constants.ITEM_Bogus) || (t > Constants.ITEM_NewObject))
+    if ((t < Constants.ITEM_Bogus) || (t > Constants.ITEM_NewObject))
       throw new RuntimeException("Illegal type for StackMapType: " + t);
     type = t;
   }
 
-  public byte getType()       { return type; }
-  public void setIndex(int t) { index = t; }
+  public byte getType() {
+    return type;
+  }
 
-  /** @return index to constant pool if type == ITEM_Object, or offset
-   * in byte code, if type == ITEM_NewObject, and -1 otherwise
+  public void setIndex(int t) {
+    index = t;
+  }
+
+  /**
+   * @return index to constant pool if type == ITEM_Object, or offset in byte code, if type ==
+   *     ITEM_NewObject, and -1 otherwise
    */
-  public int  getIndex()      { return index; }
+  public int getIndex() {
+    return index;
+  }
 
   /**
    * Dump type entries to file.
@@ -121,27 +126,23 @@ public final class StackMapType implements Cloneable {
    * @param file Output file stream
    * @throws IOException
    */
-  public final void dump(DataOutputStream file) throws IOException
-  {
+  public final void dump(DataOutputStream file) throws IOException {
     file.writeByte(type);
-    if(hasIndex())
-      file.writeShort(getIndex());
+    if (hasIndex()) file.writeShort(getIndex());
   }
 
-  /** @return true, if type is either ITEM_Object or ITEM_NewObject
+  /**
+   * @return true, if type is either ITEM_Object or ITEM_NewObject
    */
   public final boolean hasIndex() {
-    return ((type == Constants.ITEM_Object) ||
-            (type == Constants.ITEM_NewObject));
+    return ((type == Constants.ITEM_Object) || (type == Constants.ITEM_NewObject));
   }
 
   private String printIndex() {
-    if(type == Constants.ITEM_Object)
+    if (type == Constants.ITEM_Object)
       return ", class=" + constant_pool.constantToString(index, Constants.CONSTANT_Class);
-    else if(type == Constants.ITEM_NewObject)
-      return ", offset=" + index;
-    else
-      return "";
+    else if (type == Constants.ITEM_NewObject) return ", offset=" + index;
+    else return "";
   }
 
   /**
@@ -156,8 +157,9 @@ public final class StackMapType implements Cloneable {
    */
   public StackMapType copy() {
     try {
-      return (StackMapType)clone();
-    } catch(CloneNotSupportedException e) {}
+      return (StackMapType) clone();
+    } catch (CloneNotSupportedException e) {
+    }
 
     return null;
   }
@@ -165,7 +167,9 @@ public final class StackMapType implements Cloneable {
   /**
    * @return Constant pool used by this object.
    */
-  public final ConstantPool getConstantPool() { return constant_pool; }
+  public final ConstantPool getConstantPool() {
+    return constant_pool;
+  }
 
   /**
    * @param constant_pool Constant pool to be used for this object.

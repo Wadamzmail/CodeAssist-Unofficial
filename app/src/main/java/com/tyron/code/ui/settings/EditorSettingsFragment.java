@@ -23,22 +23,15 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
+import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
-import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
-import org.eclipse.tm4e.core.registry.IThemeSource;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
-
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.Objects;
-import org.apache.commons.io.FileUtils;
-import dev.mutwakil.codeassist.R;
-import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
-import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
-import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
- 
- 
+import org.eclipse.tm4e.core.registry.IThemeSource;
 
 public class EditorSettingsFragment extends PreferenceFragmentCompat {
 
@@ -143,29 +136,32 @@ public class EditorSettingsFragment extends PreferenceFragmentCompat {
         .computeNonCancelableAsync(
             () -> {
 
-            // SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-           // String selectedTheme = preferences.getString("theme", "default");
-             
-               String path = file.getAbsolutePath();
-            
-            ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
-            String name = path; // name of theme
-            String themeAssetsPath = path;
-           ThemeModel model = new ThemeModel(
-               IThemeSource.fromInputStream(
-              FileProviderRegistry.getInstance().tryGetInputStream(themeAssetsPath), themeAssetsPath, null
-             ), 
-             name
-           );
-// If the theme is dark
-// model.setDark(selectedTheme.equals("dark"));
- model.setDark(true);           
-try{             
-model.load();
-ThemeRegistry.getInstance().loadTheme(model);
-}catch(Exception e){}
-             
-              return Futures.immediateFuture(EditorUtil.createTheme(/*themeModel*/));
+              // SharedPreferences preferences =
+              // PreferenceManager.getDefaultSharedPreferences(requireContext());
+              // String selectedTheme = preferences.getString("theme", "default");
+
+              String path = file.getAbsolutePath();
+
+              ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
+              String name = path; // name of theme
+              String themeAssetsPath = path;
+              ThemeModel model =
+                  new ThemeModel(
+                      IThemeSource.fromInputStream(
+                          FileProviderRegistry.getInstance().tryGetInputStream(themeAssetsPath),
+                          themeAssetsPath,
+                          null),
+                      name);
+              // If the theme is dark
+              // model.setDark(selectedTheme.equals("dark"));
+              model.setDark(true);
+              try {
+                model.load();
+                ThemeRegistry.getInstance().loadTheme(model);
+              } catch (Exception e) {
+              }
+
+              return Futures.immediateFuture(EditorUtil.createTheme(/*themeModel*/ ));
             });
   }
 }

@@ -24,10 +24,11 @@ public abstract class BasicResourceItemBase implements BasicResourceItem, Resour
   private final byte myTypeOrdinal;
   private final byte myVisibilityOrdinal;
 
-  BasicResourceItemBase(@NotNull ResourceType type, @NotNull String name, @NotNull ResourceVisibility visibility) {
+  BasicResourceItemBase(
+      @NotNull ResourceType type, @NotNull String name, @NotNull ResourceVisibility visibility) {
     myName = name;
-    myTypeOrdinal = (byte)type.ordinal();
-    myVisibilityOrdinal = (byte)visibility.ordinal();
+    myTypeOrdinal = (byte) type.ordinal();
+    myVisibilityOrdinal = (byte) visibility.ordinal();
   }
 
   @Override
@@ -96,8 +97,9 @@ public abstract class BasicResourceItemBase implements BasicResourceItem, Resour
 
   /**
    * Returns the repository this resource belongs to.
-   * <p>
-   * Framework resource items may move between repositories with the same origin.
+   *
+   * <p>Framework resource items may move between repositories with the same origin.
+   *
    * @see RepositoryConfiguration#transferOwnershipTo(LoadableResourceRepository)
    */
   @Override
@@ -115,7 +117,7 @@ public abstract class BasicResourceItemBase implements BasicResourceItem, Resour
   @NotNull
   public abstract RepositoryConfiguration getRepositoryConfiguration();
 
-    @Override
+  @Override
   @NotNull
   public final String getKey() {
     String qualifiers = getConfiguration().getQualifierString();
@@ -147,7 +149,8 @@ public abstract class BasicResourceItemBase implements BasicResourceItem, Resour
 
   @Override
   public int hashCode() {
-    // The myVisibilityOrdinal field is intentionally not included in hash code because having two resource items
+    // The myVisibilityOrdinal field is intentionally not included in hash code because having two
+    // resource items
     // differing only by visibility in the same hash table is extremely unlikely.
     return HashCodes.mix(myTypeOrdinal, myName.hashCode());
   }
@@ -156,33 +159,33 @@ public abstract class BasicResourceItemBase implements BasicResourceItem, Resour
   @NotNull
   public String toString() {
     return MoreObjects.toStringHelper(this)
-                      .add("namespace", getNamespace())
-                      .add("type", getResourceType())
-                      .add("name", getName())
-                      .add("value", getValue())
-                      .toString();
+        .add("namespace", getNamespace())
+        .add("type", getResourceType())
+        .add("name", getName())
+        .add("value", getValue())
+        .toString();
   }
 
-  /**
-   * Serializes the resource item to the given stream.
-   */
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  /** Serializes the resource item to the given stream. */
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     stream.writeInt((myTypeOrdinal << 1) + (isFileBased() ? 1 : 0));
     stream.writeString(myName);
     stream.writeInt(myVisibilityOrdinal);
   }
 
-  /**
-   * Creates a resource item by reading its contents from the given stream.
-   */
+  /** Creates a resource item by reading its contents from the given stream. */
   @NotNull
-  public static BasicResourceItemBase deserialize(@NotNull Base128InputStream stream,
-                                                  @NotNull List<RepositoryConfiguration> configurations,
-                                                  @NotNull List<ResourceSourceFile> sourceFiles,
-                                                  @NotNull List<ResourceNamespace.Resolver> namespaceResolvers) throws IOException {
+  public static BasicResourceItemBase deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull List<RepositoryConfiguration> configurations,
+      @NotNull List<ResourceSourceFile> sourceFiles,
+      @NotNull List<ResourceNamespace.Resolver> namespaceResolvers)
+      throws IOException {
     assert !configurations.isEmpty();
     int encodedType = stream.readInt();
     boolean isFileBased = (encodedType & 0x1) != 0;
@@ -195,9 +198,11 @@ public abstract class BasicResourceItemBase implements BasicResourceItem, Resour
 
     if (isFileBased) {
       LoadableResourceRepository repository = configurations.get(0).getRepository();
-      return repository.deserializeFileResourceItem(stream, resourceType, name, visibility, configurations);
+      return repository.deserializeFileResourceItem(
+          stream, resourceType, name, visibility, configurations);
     }
 
-    return BasicValueResourceItemBase.deserialize(stream, resourceType, name, visibility, configurations, sourceFiles, namespaceResolvers);
+    return BasicValueResourceItemBase.deserialize(
+        stream, resourceType, name, visibility, configurations, sourceFiles, namespaceResolvers);
   }
 }

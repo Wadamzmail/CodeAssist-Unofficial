@@ -58,25 +58,24 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * <http://www.apache.org/>.
  */
 import java.io.*;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 import org.openjdk.com.sun.org.apache.bcel.internal.ExceptionConstants;
-import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.Constant;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantFloat;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantInteger;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantString;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantUtf8;
+import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
 
 /**
  * LDC - Push item from constant pool.
  *
  * <PRE>Stack: ... -&gt; ..., item</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class LDC extends CPInstruction
-  implements PushInstruction, ExceptionThrower, TypedInstruction {
+    implements PushInstruction, ExceptionThrower, TypedInstruction {
   /**
    * Empty constructor needed for the Class.newInstance() statement in
    * Instruction.readInstruction(). Not to be used otherwise.
@@ -90,7 +89,7 @@ public class LDC extends CPInstruction
 
   // Adjust to proper size
   protected final void setSize() {
-    if(index <= Constants.MAX_BYTE) { // Fits in one byte?
+    if (index <= Constants.MAX_BYTE) { // Fits in one byte?
       opcode = Constants.LDC;
       length = 2;
     } else {
@@ -101,62 +100,59 @@ public class LDC extends CPInstruction
 
   /**
    * Dump instruction as byte code to stream out.
+   *
    * @param out Output stream
    */
   public void dump(DataOutputStream out) throws IOException {
     out.writeByte(opcode);
 
-    if(length == 2)
-      out.writeByte(index);
+    if (length == 2) out.writeByte(index);
     else // Applies for LDC_W
-      out.writeShort(index);
+    out.writeShort(index);
   }
 
-  /**
-   * Set the index to constant pool and adjust size.
-   */
+  /** Set the index to constant pool and adjust size. */
   public final void setIndex(int index) {
     super.setIndex(index);
     setSize();
   }
 
-  /**
-   * Read needed data (e.g. index) from file.
-   */
-  protected void initFromFile(ByteSequence bytes, boolean wide)
-       throws IOException
-  {
+  /** Read needed data (e.g. index) from file. */
+  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException {
     length = 2;
-    index  = bytes.readUnsignedByte();
+    index = bytes.readUnsignedByte();
   }
 
   public Object getValue(ConstantPoolGen cpg) {
     Constant c = cpg.getConstantPool().getConstant(index);
 
-    switch(c.getTag()) {
+    switch (c.getTag()) {
       case Constants.CONSTANT_String:
-        int i = ((ConstantString)c).getStringIndex();
+        int i = ((ConstantString) c).getStringIndex();
         c = cpg.getConstantPool().getConstant(i);
-        return ((ConstantUtf8)c).getBytes();
+        return ((ConstantUtf8) c).getBytes();
 
-    case Constants.CONSTANT_Float:
-        return new Float(((ConstantFloat)c).getBytes());
+      case Constants.CONSTANT_Float:
+        return new Float(((ConstantFloat) c).getBytes());
 
-    case Constants.CONSTANT_Integer:
-        return new Integer(((ConstantInteger)c).getBytes());
+      case Constants.CONSTANT_Integer:
+        return new Integer(((ConstantInteger) c).getBytes());
 
-    default: // Never reached
-      throw new RuntimeException("Unknown or invalid constant type at " + index);
-      }
+      default: // Never reached
+        throw new RuntimeException("Unknown or invalid constant type at " + index);
+    }
   }
 
   public Type getType(ConstantPoolGen cpg) {
-    switch(cpg.getConstantPool().getConstant(index).getTag()) {
-    case Constants.CONSTANT_String:  return Type.STRING;
-    case Constants.CONSTANT_Float:   return Type.FLOAT;
-    case Constants.CONSTANT_Integer: return Type.INT;
-    default: // Never reached
-      throw new RuntimeException("Unknown or invalid constant type at " + index);
+    switch (cpg.getConstantPool().getConstant(index).getTag()) {
+      case Constants.CONSTANT_String:
+        return Type.STRING;
+      case Constants.CONSTANT_Float:
+        return Type.FLOAT;
+      case Constants.CONSTANT_Integer:
+        return Type.INT;
+      default: // Never reached
+        throw new RuntimeException("Unknown or invalid constant type at " + index);
     }
   }
 
@@ -165,10 +161,9 @@ public class LDC extends CPInstruction
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

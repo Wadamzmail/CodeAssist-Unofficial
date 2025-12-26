@@ -60,19 +60,19 @@ package org.openjdk.com.sun.org.apache.bcel.internal.classfile;
 import java.util.Stack;
 
 /**
- * Traverses a JavaClass with another Visitor object 'piggy-backed'
- * that is applied to all components of a JavaClass object. I.e. this
- * class supplies the traversal strategy, other classes can make use
- * of it.
+ * Traverses a JavaClass with another Visitor object 'piggy-backed' that is applied to all
+ * components of a JavaClass object. I.e. this class supplies the traversal strategy, other classes
+ * can make use of it.
  *
  * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class DescendingVisitor implements Visitor {
   private JavaClass clazz;
-  private Visitor   visitor;
-  private Stack     stack = new Stack();
+  private Visitor visitor;
+  private Stack stack = new Stack();
 
-  /** @return container of current entitity, i.e., predecessor during traversal
+  /**
+   * @return container of current entitity, i.e., predecessor during traversal
    */
   public Object predecessor() {
     return predecessor(0);
@@ -85,13 +85,12 @@ public class DescendingVisitor implements Visitor {
   public Object predecessor(int level) {
     int size = stack.size();
 
-    if((size < 2) || (level < 0))
-      return null;
-    else
-      return stack.elementAt(size - (level + 2)); // size - 1 == current
+    if ((size < 2) || (level < 0)) return null;
+    else return stack.elementAt(size - (level + 2)); // size - 1 == current
   }
 
-  /** @return current object
+  /**
+   * @return current object
    */
   public Object current() {
     return stack.peek();
@@ -102,30 +101,27 @@ public class DescendingVisitor implements Visitor {
    * @param visitor visitor object to apply to all components
    */
   public DescendingVisitor(JavaClass clazz, Visitor visitor) {
-    this.clazz   = clazz;
+    this.clazz = clazz;
     this.visitor = visitor;
   }
 
-  /**
-   * Start traversal.
-   */
-  public void visit() { clazz.accept(this); }
+  /** Start traversal. */
+  public void visit() {
+    clazz.accept(this);
+  }
 
   public void visitJavaClass(JavaClass clazz) {
     stack.push(clazz);
     clazz.accept(visitor);
 
     Field[] fields = clazz.getFields();
-    for(int i=0; i < fields.length; i++)
-      fields[i].accept(this);
+    for (int i = 0; i < fields.length; i++) fields[i].accept(this);
 
     Method[] methods = clazz.getMethods();
-    for(int i=0; i < methods.length; i++)
-      methods[i].accept(this);
+    for (int i = 0; i < methods.length; i++) methods[i].accept(this);
 
     Attribute[] attributes = clazz.getAttributes();
-    for(int i=0; i < attributes.length; i++)
-      attributes[i].accept(this);
+    for (int i = 0; i < attributes.length; i++) attributes[i].accept(this);
 
     clazz.getConstantPool().accept(this);
     stack.pop();
@@ -136,8 +132,7 @@ public class DescendingVisitor implements Visitor {
     field.accept(visitor);
 
     Attribute[] attributes = field.getAttributes();
-    for(int i=0; i < attributes.length; i++)
-      attributes[i].accept(this);
+    for (int i = 0; i < attributes.length; i++) attributes[i].accept(this);
     stack.pop();
   }
 
@@ -152,8 +147,7 @@ public class DescendingVisitor implements Visitor {
     method.accept(visitor);
 
     Attribute[] attributes = method.getAttributes();
-    for(int i=0; i < attributes.length; i++)
-      attributes[i].accept(this);
+    for (int i = 0; i < attributes.length; i++) attributes[i].accept(this);
 
     stack.pop();
   }
@@ -169,12 +163,10 @@ public class DescendingVisitor implements Visitor {
     code.accept(visitor);
 
     CodeException[] table = code.getExceptionTable();
-    for(int i=0; i < table.length; i++)
-      table[i].accept(this);
+    for (int i = 0; i < table.length; i++) table[i].accept(this);
 
     Attribute[] attributes = code.getAttributes();
-    for(int i=0; i < attributes.length; i++)
-      attributes[i].accept(this);
+    for (int i = 0; i < attributes.length; i++) attributes[i].accept(this);
     stack.pop();
   }
 
@@ -189,8 +181,7 @@ public class DescendingVisitor implements Visitor {
     table.accept(visitor);
 
     LineNumber[] numbers = table.getLineNumberTable();
-    for(int i=0; i < numbers.length; i++)
-      numbers[i].accept(this);
+    for (int i = 0; i < numbers.length; i++) numbers[i].accept(this);
     stack.pop();
   }
 
@@ -205,8 +196,7 @@ public class DescendingVisitor implements Visitor {
     table.accept(visitor);
 
     LocalVariable[] vars = table.getLocalVariableTable();
-    for(int i=0; i < vars.length; i++)
-      vars[i].accept(this);
+    for (int i = 0; i < vars.length; i++) vars[i].accept(this);
     stack.pop();
   }
 
@@ -222,8 +212,7 @@ public class DescendingVisitor implements Visitor {
 
     StackMapEntry[] vars = table.getStackMap();
 
-    for(int i=0; i < vars.length; i++)
-      vars[i].accept(this);
+    for (int i = 0; i < vars.length; i++) vars[i].accept(this);
     stack.pop();
   }
 
@@ -244,9 +233,8 @@ public class DescendingVisitor implements Visitor {
     cp.accept(visitor);
 
     Constant[] constants = cp.getConstantPool();
-    for(int i=1; i < constants.length; i++) {
-      if(constants[i] != null)
-        constants[i].accept(this);
+    for (int i = 1; i < constants.length; i++) {
+      if (constants[i] != null) constants[i].accept(this);
     }
 
     stack.pop();
@@ -274,7 +262,7 @@ public class DescendingVisitor implements Visitor {
     stack.push(constant);
     constant.accept(visitor);
     stack.pop();
- }
+  }
 
   public void visitConstantInteger(ConstantInteger constant) {
     stack.push(constant);
@@ -323,8 +311,7 @@ public class DescendingVisitor implements Visitor {
     ic.accept(visitor);
 
     InnerClass[] ics = ic.getInnerClasses();
-    for(int i=0; i < ics.length; i++)
-      ics[i].accept(this);
+    for (int i = 0; i < ics.length; i++) ics[i].accept(this);
     stack.pop();
   }
 
@@ -362,5 +349,5 @@ public class DescendingVisitor implements Visitor {
     stack.push(attribute);
     attribute.accept(visitor);
     stack.pop();
- }
+  }
 }

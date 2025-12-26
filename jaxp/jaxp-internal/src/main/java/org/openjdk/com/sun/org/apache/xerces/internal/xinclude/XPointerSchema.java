@@ -1,45 +1,32 @@
 package org.openjdk.com.sun.org.apache.xerces.internal.xinclude;
+
 import org.openjdk.com.sun.org.apache.xerces.internal.xni.parser.XMLComponent;
 import org.openjdk.com.sun.org.apache.xerces.internal.xni.parser.XMLDocumentFilter;
 
+public interface XPointerSchema extends XMLComponent, XMLDocumentFilter {
 
+  /** set the Schema Name eg element , xpointer */
+  public void setXPointerSchemaName(String schemaName);
 
-public interface XPointerSchema extends XMLComponent, XMLDocumentFilter{
+  /** Return Schema Name eg element , xpointer */
+  public String getXpointerSchemaName();
 
-    /**
-     * set the Schema Name  eg element , xpointer
-     */
-    public void setXPointerSchemaName(String schemaName);
+  /**
+   * Parent Contenhandler for the this contenthandler. // not sure about the parameter type. It can
+   * be Contenthandler instead of Object type.
+   */
+  public void setParent(Object parent);
 
-    /**
-     * Return  Schema Name  eg element , xpointer
-     *
-     */
-    public String getXpointerSchemaName();
+  /** return the Parent Contenthandler */
+  public Object getParent();
 
-    /**
-     * Parent Contenhandler for the this contenthandler.
-     * // not sure about the parameter type. It can be Contenthandler instead of Object type.
-     */
-    public void setParent(Object parent);
+  /** Content of the XPointer Schema. Xpath to be resolved. */
+  public void setXPointerSchemaPointer(String content);
 
-    /**
-     * return the Parent Contenthandler
-     */
-    public Object getParent();
+  /** Return the XPointer Schema. */
+  public String getXPointerSchemaPointer();
 
-    /**
-     * Content of the XPointer Schema. Xpath to be resolved.
-     */
-    public void setXPointerSchemaPointer(String content);
+  public boolean isSubResourceIndentified();
 
-    /**
-     * Return the XPointer Schema.
-     */
-    public String getXPointerSchemaPointer();
-
-    public boolean isSubResourceIndentified();
-
-    public void reset();
-
+  public void reset();
 }

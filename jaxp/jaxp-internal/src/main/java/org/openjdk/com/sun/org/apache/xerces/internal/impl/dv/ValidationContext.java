@@ -23,45 +23,45 @@ package org.openjdk.com.sun.org.apache.xerces.internal.impl.dv;
 import java.util.Locale;
 
 /**
- * ValidationContext has all the information required for the
- * validation of: id, idref, entity, notation, qname
+ * ValidationContext has all the information required for the validation of: id, idref, entity,
+ * notation, qname
  *
  * @xerces.internal
- *
  * @author Sandy Gao, IBM
  * @version $Id: ValidationContext.java,v 1.6 2010/07/23 02:09:29 joehw Exp $
  */
 public interface ValidationContext {
-    // whether to validate against facets
-    public boolean needFacetChecking();
+  // whether to validate against facets
+  public boolean needFacetChecking();
 
-    // whether to do extra id/idref/entity checking
-    public boolean needExtraChecking();
+  // whether to do extra id/idref/entity checking
+  public boolean needExtraChecking();
 
-    // whether we need to normalize the value that is passed!
-    public boolean needToNormalize();
+  // whether we need to normalize the value that is passed!
+  public boolean needToNormalize();
 
-    // are namespaces relevant in this context?
-    public boolean useNamespaces();
+  // are namespaces relevant in this context?
+  public boolean useNamespaces();
 
-    // entity
-    public boolean isEntityDeclared (String name);
-    public boolean isEntityUnparsed (String name);
+  // entity
+  public boolean isEntityDeclared(String name);
 
-    // id
-    public boolean isIdDeclared (String name);
-    public void    addId(String name);
+  public boolean isEntityUnparsed(String name);
 
-    // idref
-    public void addIdRef(String name);
+  // id
+  public boolean isIdDeclared(String name);
 
-    // get symbol from symbol table
-    public String getSymbol (String symbol);
+  public void addId(String name);
 
-    // qname
-    public String getURI(String prefix);
+  // idref
+  public void addIdRef(String name);
 
-    // Locale
-    public Locale getLocale();
+  // get symbol from symbol table
+  public String getSymbol(String symbol);
 
+  // qname
+  public String getURI(String prefix);
+
+  // Locale
+  public Locale getLocale();
 }

@@ -12,26 +12,34 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Common superclass for {@link AarSourceResourceRepository} and {@link AarProtoResourceRepository}.
  */
-public abstract class AbstractAarResourceRepository extends AbstractResourceRepository implements AarResourceRepository {
+public abstract class AbstractAarResourceRepository extends AbstractResourceRepository
+    implements AarResourceRepository {
   @NotNull protected final ResourceNamespace myNamespace;
-  @NotNull protected final Map<ResourceType, ListMultimap<String, ResourceItem>> myResources = new EnumMap<>(ResourceType.class);
-  @NotNull private final Map<ResourceType, Set<ResourceItem>> myPublicResources = new EnumMap<>(ResourceType.class);
+
+  @NotNull
+  protected final Map<ResourceType, ListMultimap<String, ResourceItem>> myResources =
+      new EnumMap<>(ResourceType.class);
+
+  @NotNull
+  private final Map<ResourceType, Set<ResourceItem>> myPublicResources =
+      new EnumMap<>(ResourceType.class);
+
   @Nullable protected final String myLibraryName;
 
-  AbstractAarResourceRepository(@NotNull ResourceNamespace namespace, @Nullable String libraryName) {
+  AbstractAarResourceRepository(
+      @NotNull ResourceNamespace namespace, @Nullable String libraryName) {
     myNamespace = namespace;
     myLibraryName = libraryName;
   }
@@ -39,7 +47,7 @@ public abstract class AbstractAarResourceRepository extends AbstractResourceRepo
   @Override
   @NotNull
   protected final ListMultimap<String, ResourceItem> getResourcesInternal(
-    @NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
+      @NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
     if (!namespace.equals(myNamespace)) {
       return ImmutableListMultimap.of();
     }
@@ -57,28 +65,29 @@ public abstract class AbstractAarResourceRepository extends AbstractResourceRepo
   }
 
   /**
-   * Populates the {@link #myPublicResources} map. Has to be called after {@link #myResources} has been populated.
+   * Populates the {@link #myPublicResources} map. Has to be called after {@link #myResources} has
+   * been populated.
    */
   protected final void populatePublicResourcesMap() {
-    for (Map.Entry<ResourceType, ListMultimap<String, ResourceItem>> entry : myResources.entrySet()) {
+    for (Map.Entry<ResourceType, ListMultimap<String, ResourceItem>> entry :
+        myResources.entrySet()) {
       ResourceType resourceType = entry.getKey();
       ImmutableSet.Builder<ResourceItem> setBuilder = null;
       ListMultimap<String, ResourceItem> items = entry.getValue();
       for (ResourceItem item : items.values()) {
-        if (((ResourceItemWithVisibility)item).getVisibility() == ResourceVisibility.PUBLIC) {
+        if (((ResourceItemWithVisibility) item).getVisibility() == ResourceVisibility.PUBLIC) {
           if (setBuilder == null) {
             setBuilder = ImmutableSet.builder();
           }
           setBuilder.add(item);
         }
       }
-      myPublicResources.put(resourceType, setBuilder == null ? ImmutableSet.of() : setBuilder.build());
+      myPublicResources.put(
+          resourceType, setBuilder == null ? ImmutableSet.of() : setBuilder.build());
     }
   }
 
-  /**
-   * Makes resource maps immutable.
-   */
+  /** Makes resource maps immutable. */
   protected void freezeResources() {
     myResources.replaceAll((k, v) -> ImmutableListMultimap.copyOf(v));
   }
@@ -87,19 +96,21 @@ public abstract class AbstractAarResourceRepository extends AbstractResourceRepo
   @NotNull
   public ResourceVisitor.VisitResult accept(@NotNull ResourceVisitor visitor) {
     if (visitor.shouldVisitNamespace(myNamespace)) {
-      if (AbstractResourceRepository.acceptByResources(myResources, visitor) == ResourceVisitor.VisitResult.ABORT) {
+      if (AbstractResourceRepository.acceptByResources(myResources, visitor)
+          == ResourceVisitor.VisitResult.ABORT) {
         return ResourceVisitor.VisitResult.ABORT;
       }
     }
 
     return ResourceVisitor.VisitResult.CONTINUE;
-
   }
 
   @Override
   @NotNull
-  public List<ResourceItem> getResources(@NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType,
-                                         @NotNull String resourceName) {
+  public List<ResourceItem> getResources(
+      @NotNull ResourceNamespace namespace,
+      @NotNull ResourceType resourceType,
+      @NotNull String resourceName) {
     ListMultimap<String, ResourceItem> map = getResourcesInternal(namespace, resourceType);
     List<ResourceItem> items = map.get(resourceName);
     return items == null ? ImmutableList.of() : items;
@@ -107,13 +118,15 @@ public abstract class AbstractAarResourceRepository extends AbstractResourceRepo
 
   @Override
   @NotNull
-  public ListMultimap<String, ResourceItem> getResources(@NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
+  public ListMultimap<String, ResourceItem> getResources(
+      @NotNull ResourceNamespace namespace, @NotNull ResourceType resourceType) {
     return getResourcesInternal(namespace, resourceType);
   }
 
   @Override
   @NotNull
-  public Collection<ResourceItem> getPublicResources(@NotNull ResourceNamespace namespace, @NotNull ResourceType type) {
+  public Collection<ResourceItem> getPublicResources(
+      @NotNull ResourceNamespace namespace, @NotNull ResourceType type) {
     if (!namespace.equals(myNamespace)) {
       return Collections.emptySet();
     }

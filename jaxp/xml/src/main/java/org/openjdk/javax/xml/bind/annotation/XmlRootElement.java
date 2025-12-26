@@ -1,37 +1,34 @@
 package org.openjdk.javax.xml.bind.annotation;
 
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static java.lang.annotation.ElementType.TYPE;
 
 /**
  * Maps a class or an enum type to an XML element.
  *
- * <p> <b>Usage</b> </p>
- * <p>
- * The &#64;XmlRootElement annotation can be used with the following program
- * elements: 
- * <ul> 
- *   <li> a top level class </li>
- *   <li> an enum type </li>
+ * <p><b>Usage</b>
+ *
+ * <p>The &#64;XmlRootElement annotation can be used with the following program elements:
+ *
+ * <ul>
+ *   <li>a top level class
+ *   <li>an enum type
  * </ul>
  *
- * <p>See "Package Specification" in javax.xml.bind.package javadoc for
- * additional common information.</p>
- * 
- * <p>
- * When a top level class or an enum type is annotated with the 
- * &#64;XmlRootElement annotation, then its value is represented 
- * as XML element in an XML document.
+ * <p>See "Package Specification" in javax.xml.bind.package javadoc for additional common
+ * information.
  *
- * <p> This annotation can be used with the following annotations:
- * {@link XmlType}, {@link XmlEnum}, {@link XmlAccessorType}, 
- * {@link XmlAccessorOrder}.
- * </p>
- * <p>
- * <b>Example 1: </b> Associate an element with XML Schema type
+ * <p>When a top level class or an enum type is annotated with the &#64;XmlRootElement annotation,
+ * then its value is represented as XML element in an XML document.
+ *
+ * <p>This annotation can be used with the following annotations: {@link XmlType}, {@link XmlEnum},
+ * {@link XmlAccessorType}, {@link XmlAccessorOrder}.
+ *
+ * <p><b>Example 1: </b> Associate an element with XML Schema type
+ *
  * <pre>
  *     // Example: Code fragment
  *     &#64;XmlRootElement
@@ -48,37 +45,32 @@ import static java.lang.annotation.ElementType.TYPE;
  * </pre>
  *
  * <pre>{@code
- * 
- *     <!-- Example: XML output -->
- *     <point>
- *       <x> 3 </x>
- *       <y> 5 </y>
- *     </point>
+ * <!-- Example: XML output -->
+ * <point>
+ *   <x> 3 </x>
+ *   <y> 5 </y>
+ * </point>
  * }</pre>
  *
- * The annotation causes an global element declaration to be produced
- * in the schema. The global element declaration is associated with
- * the XML schema type to which the class is mapped.
+ * The annotation causes an global element declaration to be produced in the schema. The global
+ * element declaration is associated with the XML schema type to which the class is mapped.
  *
  * <pre>{@code
- * 
- *     <!-- Example: XML schema definition -->
- *     <xs:element name="point" type="point"/>
- *     <xs:complexType name="point">
- *       <xs:sequence>
- *         <xs:element name="x" type="xs:int"/>
- *         <xs:element name="y" type="xs:int"/>
- *       </xs:sequence>
- *     </xs:complexType>
+ * <!-- Example: XML schema definition -->
+ * <xs:element name="point" type="point"/>
+ * <xs:complexType name="point">
+ *   <xs:sequence>
+ *     <xs:element name="x" type="xs:int"/>
+ *     <xs:element name="y" type="xs:int"/>
+ *   </xs:sequence>
+ * </xs:complexType>
  * }</pre>
  *
- * <p>
+ * <p><b>Example 2: Orthogonality to type inheritance </b>
  *
- * <b>Example 2: Orthogonality to type inheritance </b>
- * 
- * <p>
- * An element declaration annotated on a type is not inherited by its
- * derived types. The following example shows this.
+ * <p>An element declaration annotated on a type is not inherited by its derived types. The
+ * following example shows this.
+ *
  * <pre>
  *     // Example: Code fragment
  *     &#64;XmlRootElement
@@ -87,10 +79,10 @@ import static java.lang.annotation.ElementType.TYPE;
  *         Point3D(int _x,int _y,int _z) {super(_x,_y);z=_z;}
  *     }
  *
- *     //Example: Code fragment corresponding to XML output * 
+ *     //Example: Code fragment corresponding to XML output *
  *     marshal( new Point3D(3,5,0), System.out );
  * {@code
- * 
+ *
  *     <!-- Example: XML output -->
  *     <!-- The element name is point3D not point -->
  *     <point3D>
@@ -112,8 +104,8 @@ import static java.lang.annotation.ElementType.TYPE;
  *     </xs:complexType>
  * }</pre>
  *
- * <b>Example 3: </b> Associate a global element with XML Schema type
- * to which the class is mapped.
+ * <b>Example 3: </b> Associate a global element with XML Schema type to which the class is mapped.
+ *
  * <pre>
  *     //Example: Code fragment
  *     &#64;XmlRootElement(name="PriceElement")
@@ -122,7 +114,7 @@ import static java.lang.annotation.ElementType.TYPE;
  *         public java.math.BigDecimal price;
  *     }
  * {@code
- * 
+ *
  *     <!-- Example: XML schema definition -->
  *     <xs:element name="PriceElement" type="USPrice"/>
  *     <xs:complexType name="USPrice">
@@ -138,23 +130,19 @@ import static java.lang.annotation.ElementType.TYPE;
 @Retention(RUNTIME)
 @Target({TYPE})
 public @interface XmlRootElement {
-    /**
-     * namespace name of the XML element.
-     * <p>
-     * If the value is "##default", then the XML namespace name is derived
-     * from the package of the class ( {@link XmlSchema} ). If the
-     * package is unnamed, then the XML namespace is the default empty
-     * namespace.
-     */
-    String namespace() default "##default";
+  /**
+   * namespace name of the XML element.
+   *
+   * <p>If the value is "##default", then the XML namespace name is derived from the package of the
+   * class ( {@link XmlSchema} ). If the package is unnamed, then the XML namespace is the default
+   * empty namespace.
+   */
+  String namespace() default "##default";
 
-    /**
-     * local name of the XML element.
-     * <p>
-     * If the value is "##default", then the name is derived from the
-     * class name. 
-     *
-     */
-    String name() default "##default";
-
+  /**
+   * local name of the XML element.
+   *
+   * <p>If the value is "##default", then the name is derived from the class name.
+   */
+  String name() default "##default";
 }

@@ -2,163 +2,139 @@ package com.tyron.editor;
 
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
-
-import org.jetbrains.annotations.Nullable;
-
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 public class EmptyEditor implements Editor {
 
-     
-    private final File emptyFile = new File("");
+  private final File emptyFile = new File("");
 
-    // ---------- BASIC ---------- //
+  // ---------- BASIC ---------- //
 
-    @Override
-    @Nullable
-    public Project getProject() {
-        return null; 
-    }
+  @Override
+  @Nullable
+  public Project getProject() {
+    return null;
+  }
 
-    @Override
-    public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
-    }
+  @Override
+  public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {}
 
-    @Override
-    public boolean isBackgroundAnalysisEnabled() {
-        return false;
-    }
+  @Override
+  public boolean isBackgroundAnalysisEnabled() {
+    return false;
+  }
 
-    @Override
-    public File getCurrentFile() {
-        return emptyFile;
-    }
+  @Override
+  public File getCurrentFile() {
+    return emptyFile;
+  }
 
-    @Override
-    public void openFile(File file) {
-    }
+  @Override
+  public void openFile(File file) {}
 
-    // ---------- POSITION ---------- //
+  // ---------- POSITION ---------- //
 
-    @Override
-    public CharPosition getCharPosition(int index) {
-        return new CharPosition(0, 0);
-    }
+  @Override
+  public CharPosition getCharPosition(int index) {
+    return new CharPosition(0, 0);
+  }
 
-    @Override
-    public int getCharIndex(int line, int column) {
-        return 0;
-    }
+  @Override
+  public int getCharIndex(int line, int column) {
+    return 0;
+  }
 
-    // ---------- SETTINGS ---------- //
+  // ---------- SETTINGS ---------- //
 
-    @Override
-    public boolean useTab() {
-        return false;
-    }
+  @Override
+  public boolean useTab() {
+    return false;
+  }
 
-    @Override
-    public int getTabCount() {
-        return 0;
-    }
+  @Override
+  public int getTabCount() {
+    return 0;
+  }
 
-    // ---------- TEXT OPS ---------- //
+  // ---------- TEXT OPS ---------- //
 
-    @Override
-    public void insert(int line, int column, String string) {
-    }
+  @Override
+  public void insert(int line, int column, String string) {}
 
-    @Override
-    public void insertMultilineString(int line, int column, String string) {
-    }
+  @Override
+  public void insertMultilineString(int line, int column, String string) {}
 
-    @Override
-    public void delete(int startLine, int startColumn, int endLine, int endColumn) {
-    }
+  @Override
+  public void delete(int startLine, int startColumn, int endLine, int endColumn) {}
 
-    @Override
-    public void delete(int startIndex, int endIndex) {
-    }
+  @Override
+  public void delete(int startIndex, int endIndex) {}
 
-    @Override
-    public void replace(int line, int column, int endLine, int endColumn, String string) {
-    }
+  @Override
+  public void replace(int line, int column, int endLine, int endColumn, String string) {}
 
-    // ---------- FORMAT ---------- //
+  // ---------- FORMAT ---------- //
 
-    @Override
-    public boolean formatCodeAsync() {
-        return false;
-    }
+  @Override
+  public boolean formatCodeAsync() {
+    return false;
+  }
 
-    @Override
-    public boolean formatCodeAsync(int startIndex, int endIndex) {
-        return false;
-    }
+  @Override
+  public boolean formatCodeAsync(int startIndex, int endIndex) {
+    return false;
+  }
 
-    // ---------- BATCH ---------- //
+  // ---------- BATCH ---------- //
 
-    @Override
-    public void beginBatchEdit() {
-    }
+  @Override
+  public void beginBatchEdit() {}
 
-    @Override
-    public void endBatchEdit() {
-    }
+  @Override
+  public void endBatchEdit() {}
 
-    // ---------- CARET / CONTENT ---------- //
+  // ---------- CARET / CONTENT ---------- //
 
-    @Override
-    public Caret getCaret() {
-        return null;
-    }
+  @Override
+  public Caret getCaret() {
+    return null;
+  }
 
-    @Override
-    public Content getContent() {
-        return null;
-    }
+  @Override
+  public Content getContent() {
+    return null;
+  }
 
-    // ---------- SELECTION ---------- //
+  // ---------- SELECTION ---------- //
 
-    @Override
-    public void setSelection(int line, int column) {
-    }
+  @Override
+  public void setSelection(int line, int column) {}
 
-    @Override
-    public void setSelectionRegion(int line, int column, int endLine, int endColumn) {
-    }
+  @Override
+  public void setSelectionRegion(int line, int column, int endLine, int endColumn) {}
 
-    @Override
-    public void setSelectionRegion(int startIndex, int endIndex) {
-    }
+  @Override
+  public void setSelectionRegion(int startIndex, int endIndex) {}
 
-    @Override
-    public void moveSelectionUp() {
-    }
+  @Override
+  public void moveSelectionUp() {}
 
-    @Override
-    public void moveSelectionDown() {
-    }
+  @Override
+  public void moveSelectionDown() {}
 
-    @Override
-    public void moveSelectionLeft() {
-    }
+  @Override
+  public void moveSelectionLeft() {}
 
-    @Override
-    public void moveSelectionRight() {
-    }
+  @Override
+  public void moveSelectionRight() {}
 
-    // ---------- STATE ---------- //
+  // ---------- STATE ---------- //
 
-    @Override
-    public void setAnalyzing(boolean analyzing) {
-    }
+  @Override
+  public void setAnalyzing(boolean analyzing) {}
 
-    @Override
-    public void requireCompletion() {
-    }
-
- 
+  @Override
+  public void requireCompletion() {}
 }

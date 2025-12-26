@@ -1,9 +1,9 @@
 package com.tyron.code.language.groovy;
 
 import com.tyron.code.language.Language;
+import com.tyron.code.language.LanguageManager;
 import com.tyron.editor.Editor;
 import java.io.File;
-import com.tyron.code.language.LanguageManager;
 
 public class Groovy implements Language {
   @Override
@@ -13,7 +13,7 @@ public class Groovy implements Language {
 
   @Override
   public io.github.rosemoe.sora.lang.Language get(Editor editor) {
-   // return new GroovyLanguage(editor);
-    return LanguageManager.createTextMateLanguage("source.groovy",true);
+    // return new GroovyLanguage(editor);
+    return LanguageManager.createTextMateLanguage("source.groovy", true);
   }
 }

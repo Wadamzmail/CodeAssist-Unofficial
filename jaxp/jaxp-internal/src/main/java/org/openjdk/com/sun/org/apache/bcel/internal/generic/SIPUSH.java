@@ -58,7 +58,6 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * <http://www.apache.org/>.
  */
 import java.io.*;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
 
@@ -67,7 +66,7 @@ import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
  *
  * <PRE>Stack: ... -&gt; ..., value</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class SIPUSH extends Instruction implements ConstantPushInstruction {
   private short b;
@@ -79,13 +78,11 @@ public class SIPUSH extends Instruction implements ConstantPushInstruction {
   SIPUSH() {}
 
   public SIPUSH(short b) {
-    super(Constants.SIPUSH, (short)3);
+    super(Constants.SIPUSH, (short) 3);
     this.b = b;
   }
 
-  /**
-   * Dump instruction as short code to stream out.
-   */
+  /** Dump instruction as short code to stream out. */
   public void dump(DataOutputStream out) throws IOException {
     super.dump(out);
     out.writeShort(b);
@@ -98,28 +95,27 @@ public class SIPUSH extends Instruction implements ConstantPushInstruction {
     return super.toString(verbose) + " " + b;
   }
 
-  /**
-   * Read needed data (e.g. index) from file.
-   */
-  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException
-  {
+  /** Read needed data (e.g. index) from file. */
+  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException {
     length = 3;
-    b      = bytes.readShort();
+    b = bytes.readShort();
   }
 
-  public Number getValue() { return new Integer(b); }
+  public Number getValue() {
+    return new Integer(b);
+  }
 
-  /** @return Type.SHORT
+  /**
+   * @return Type.SHORT
    */
   public Type getType(ConstantPoolGen cp) {
     return Type.SHORT;
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

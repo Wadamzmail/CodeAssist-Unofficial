@@ -30,20 +30,18 @@ import org.openjdk.com.sun.org.apache.xpath.internal.objects.XString;
 /**
  * @xsl.usage advanced
  */
-public class FuncUnparsedEntityURI extends FunctionOneArg
-{
-    static final long serialVersionUID = 845309759097448178L;
+public class FuncUnparsedEntityURI extends FunctionOneArg {
+  static final long serialVersionUID = 845309759097448178L;
 
   /**
-   * Execute the function.  The function must return
-   * a valid object.
+   * Execute the function. The function must return a valid object.
+   *
    * @param xctxt The current execution context.
    * @return A valid XObject.
-   *
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
-  public XObject execute(XPathContext xctxt) throws org.openjdk.javax.xml.transform.TransformerException
-  {
+  public XObject execute(XPathContext xctxt)
+      throws org.openjdk.javax.xml.transform.TransformerException {
 
     String name = m_arg0.execute(xctxt).str();
     int context = xctxt.getCurrentNode();

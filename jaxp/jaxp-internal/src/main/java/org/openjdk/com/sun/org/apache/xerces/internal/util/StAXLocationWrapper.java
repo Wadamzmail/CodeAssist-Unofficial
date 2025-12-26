@@ -21,86 +21,82 @@
 
 package org.openjdk.com.sun.org.apache.xerces.internal.util;
 
-
+import org.openjdk.com.sun.org.apache.xerces.internal.xni.XMLLocator;
 import org.openjdk.javax.xml.stream.Location;
 
-import org.openjdk.com.sun.org.apache.xerces.internal.xni.XMLLocator;
-
 /**
- * <p>A light wrapper around a StAX location. This is useful
- * when bridging between StAX and XNI components.</p>
+ * A light wrapper around a StAX location. This is useful when bridging between StAX and XNI
+ * components.
  *
  * @author Michael Glavassevich, IBM
- *
  * @version $Id: StAXLocationWrapper.java,v 1.2 2010-10-26 23:01:13 joehw Exp $
  */
 public final class StAXLocationWrapper implements XMLLocator {
 
-    private Location fLocation = null;
+  private Location fLocation = null;
 
-    public StAXLocationWrapper() {}
+  public StAXLocationWrapper() {}
 
-    public void setLocation(Location location) {
-        fLocation = location;
+  public void setLocation(Location location) {
+    fLocation = location;
+  }
+
+  public Location getLocation() {
+    return fLocation;
+  }
+
+  /*
+   * XMLLocator methods
+   */
+
+  public String getPublicId() {
+    if (fLocation != null) {
+      return fLocation.getPublicId();
     }
+    return null;
+  }
 
-    public Location getLocation() {
-        return fLocation;
+  public String getLiteralSystemId() {
+    if (fLocation != null) {
+      return fLocation.getSystemId();
     }
+    return null;
+  }
 
-    /*
-     * XMLLocator methods
-     */
+  public String getBaseSystemId() {
+    return null;
+  }
 
-    public String getPublicId() {
-        if (fLocation != null) {
-            return fLocation.getPublicId();
-        }
-        return null;
+  public String getExpandedSystemId() {
+    return getLiteralSystemId();
+  }
+
+  public int getLineNumber() {
+    if (fLocation != null) {
+      return fLocation.getLineNumber();
     }
+    return -1;
+  }
 
-    public String getLiteralSystemId() {
-        if (fLocation != null) {
-            return fLocation.getSystemId();
-        }
-        return null;
+  public int getColumnNumber() {
+    if (fLocation != null) {
+      return fLocation.getColumnNumber();
     }
+    return -1;
+  }
 
-    public String getBaseSystemId() {
-        return null;
+  public int getCharacterOffset() {
+    if (fLocation != null) {
+      return fLocation.getCharacterOffset();
     }
+    return -1;
+  }
 
-    public String getExpandedSystemId() {
-        return getLiteralSystemId();
-    }
+  public String getEncoding() {
+    return null;
+  }
 
-    public int getLineNumber() {
-        if (fLocation != null) {
-            return fLocation.getLineNumber();
-        }
-        return -1;
-    }
-
-    public int getColumnNumber() {
-        if (fLocation != null) {
-            return fLocation.getColumnNumber();
-        }
-        return -1;
-    }
-
-    public int getCharacterOffset() {
-        if (fLocation != null) {
-            return fLocation.getCharacterOffset();
-        }
-        return -1;
-    }
-
-    public String getEncoding() {
-        return null;
-    }
-
-    public String getXMLVersion() {
-        return null;
-    }
-
+  public String getXMLVersion() {
+    return null;
+  }
 } // StAXLocationWrapper

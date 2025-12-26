@@ -28,57 +28,57 @@ package org.openjdk.com.sun.xml.internal.stream.events;
 import org.openjdk.javax.xml.stream.Location;
 
 /**
- *Implementation of Location interface to be used by
- *event readers.
- *@author Neeraj.bajaj@sun.com,k.venugopal@sun.com
+ * Implementation of Location interface to be used by event readers.
+ *
+ * @author Neeraj.bajaj@sun.com,k.venugopal@sun.com
  */
-public class LocationImpl implements Location{
-    String systemId;
-    String publicId;
-    int colNo;
-    int lineNo;
-    int charOffset;
-    LocationImpl(Location loc){
-        systemId = loc.getSystemId();
-        publicId = loc.getPublicId();
-        lineNo = loc.getLineNumber();
-        colNo = loc.getColumnNumber();
-        charOffset = loc.getCharacterOffset();
-    }
+public class LocationImpl implements Location {
+  String systemId;
+  String publicId;
+  int colNo;
+  int lineNo;
+  int charOffset;
 
-    public int getCharacterOffset(){
-        return charOffset;
-    }
+  LocationImpl(Location loc) {
+    systemId = loc.getSystemId();
+    publicId = loc.getPublicId();
+    lineNo = loc.getLineNumber();
+    colNo = loc.getColumnNumber();
+    charOffset = loc.getCharacterOffset();
+  }
 
-    public int getColumnNumber() {
-        return colNo;
-    }
+  public int getCharacterOffset() {
+    return charOffset;
+  }
 
-    public int getLineNumber(){
-        return lineNo;
-    }
+  public int getColumnNumber() {
+    return colNo;
+  }
 
-    public String getPublicId(){
-        return publicId;
-    }
+  public int getLineNumber() {
+    return lineNo;
+  }
 
-    public String getSystemId(){
-        return systemId;
-    }
+  public String getPublicId() {
+    return publicId;
+  }
 
-    public String toString(){
-        StringBuffer sbuffer = new StringBuffer() ;
-        sbuffer.append("Line number = " + getLineNumber());
-        sbuffer.append("\n") ;
-        sbuffer.append("Column number = " + getColumnNumber());
-        sbuffer.append("\n") ;
-        sbuffer.append("System Id = " + getSystemId());
-        sbuffer.append("\n") ;
-        sbuffer.append("Public Id = " + getPublicId());
-        sbuffer.append("\n") ;
-        sbuffer.append("CharacterOffset = " + getCharacterOffset());
-        sbuffer.append("\n") ;
-        return sbuffer.toString();
-    }
+  public String getSystemId() {
+    return systemId;
+  }
 
+  public String toString() {
+    StringBuffer sbuffer = new StringBuffer();
+    sbuffer.append("Line number = " + getLineNumber());
+    sbuffer.append("\n");
+    sbuffer.append("Column number = " + getColumnNumber());
+    sbuffer.append("\n");
+    sbuffer.append("System Id = " + getSystemId());
+    sbuffer.append("\n");
+    sbuffer.append("Public Id = " + getPublicId());
+    sbuffer.append("\n");
+    sbuffer.append("CharacterOffset = " + getCharacterOffset());
+    sbuffer.append("\n");
+    return sbuffer.toString();
+  }
 }

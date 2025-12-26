@@ -12,7 +12,6 @@ import com.android.utils.Base128OutputStream;
 import com.google.common.collect.ListMultimap;
 import com.tyron.common.logging.IdeLog;
 import com.tyron.completion.progress.ProgressManager;
-
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMaps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -30,13 +29,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.openapi.util.io.FileUtilRt;
 
 /**
- * Static methods for serialization and deserialization of resources implementing {@link BasicResourceItem} interface.
+ * Static methods for serialization and deserialization of resources implementing {@link
+ * BasicResourceItem} interface.
  */
 public class ResourceSerializationUtil {
   private static final Logger LOG = IdeLog.getCurrentLogger(ResourceSerializationUtil.class);
@@ -44,53 +43,59 @@ public class ResourceSerializationUtil {
   /**
    * Writes contents of a resource repository to a cache file on disk.
    *
-   * The data is stored as follows:
+   * <p>The data is stored as follows:
+   *
    * <ol>
-   *   <li>The header provided by the caller (sequence of bytes)</li>
-   *   <li>Number of folder configurations (int)</li>
-   *   <li>Qualifier strings of folder configurations (strings)</li>
-   *   <li>Number of value resource files (int)</li>
-   *   <li>Value resource files (see {@link ResourceSourceFile#serialize})</li>
-   *   <li>Number of namespace resolvers (int)</li>
-   *   <li>Serialized namespace resolvers (see {@link NamespaceResolver#serialize})</li>
-   *   <li>Number of resource items (int)</li>
-   *   <li>Serialized resource items (see {@link BasicResourceItemBase#serialize})</li>
+   *   <li>The header provided by the caller (sequence of bytes)
+   *   <li>Number of folder configurations (int)
+   *   <li>Qualifier strings of folder configurations (strings)
+   *   <li>Number of value resource files (int)
+   *   <li>Value resource files (see {@link ResourceSourceFile#serialize})
+   *   <li>Number of namespace resolvers (int)
+   *   <li>Serialized namespace resolvers (see {@link NamespaceResolver#serialize})
+   *   <li>Number of resource items (int)
+   *   <li>Serialized resource items (see {@link BasicResourceItemBase#serialize})
    * </ol>
    */
-  public static void createPersistentCache(@NotNull Path cacheFile, @NotNull byte[] fileHeader,
-                                           @NotNull Base128StreamWriter contentWriter) {
+  public static void createPersistentCache(
+      @NotNull Path cacheFile,
+      @NotNull byte[] fileHeader,
+      @NotNull Base128StreamWriter contentWriter) {
     // Try to delete the old cache file.
     try {
       Files.deleteIfExists(cacheFile);
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       LOG.warning("Unable to delete " + cacheFile + " " + e);
     }
 
     // Write to a temporary file first, then rename it to the final name.
     Path tempFile;
     try {
-      tempFile = FileUtilRt.createTempFile(cacheFile.getParent().toFile(), cacheFile.getFileName().toString(), ".tmp").toPath();
-    }
-    catch (IOException e) {
-      LOG.severe("Unable to create a temporary file in " + cacheFile.getParent().toString() + "\n" + e);
+      tempFile =
+          FileUtilRt.createTempFile(
+                  cacheFile.getParent().toFile(), cacheFile.getFileName().toString(), ".tmp")
+              .toPath();
+    } catch (IOException e) {
+      LOG.severe(
+          "Unable to create a temporary file in " + cacheFile.getParent().toString() + "\n" + e);
       return;
     }
 
     try (Base128OutputStream stream = new Base128OutputStream(tempFile)) {
       stream.write(fileHeader);
       contentWriter.write(stream);
-    }
-    catch (Throwable e) {
+    } catch (Throwable e) {
       LOG.severe("Unable to create cache file " + tempFile + " " + e);
       deleteIgnoringErrors(tempFile);
       return;
     }
 
     try {
-      Files.move(tempFile, cacheFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+      Files.move(
+          tempFile, cacheFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     } catch (NoSuchFileException e) {
-      // Ignore. This may happen in tests if the "caches" directory was cleaned up by a test tear down.
+      // Ignore. This may happen in tests if the "caches" directory was cleaned up by a test tear
+      // down.
     } catch (IOException e) {
       LOG.severe("Unable to create cache file " + cacheFile + " " + e);
       deleteIgnoringErrors(tempFile);
@@ -102,16 +107,20 @@ public class ResourceSerializationUtil {
    *
    * @param resources the resources to write
    * @param stream the stream to write to
-   * @param configFilter only resources belonging to configurations satisfying this filter are written to the stream
+   * @param configFilter only resources belonging to configurations satisfying this filter are
+   *     written to the stream
    */
-  public static void writeResourcesToStream(@NotNull Map<ResourceType, ListMultimap<String, ResourceItem>> resources,
-                                            @NotNull Base128OutputStream stream,
-                                            @NotNull Predicate<FolderConfiguration> configFilter) throws IOException {
+  public static void writeResourcesToStream(
+      @NotNull Map<ResourceType, ListMultimap<String, ResourceItem>> resources,
+      @NotNull Base128OutputStream stream,
+      @NotNull Predicate<FolderConfiguration> configFilter)
+      throws IOException {
     Object2IntMap<String> qualifierStringIndexes = new Object2IntOpenHashMap<>();
     qualifierStringIndexes.defaultReturnValue(-1);
     Object2IntMap<ResourceSourceFile> sourceFileIndexes = new Object2IntOpenHashMap<>();
     sourceFileIndexes.defaultReturnValue(-1);
-    Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes = new Object2IntOpenHashMap<>();
+    Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes =
+        new Object2IntOpenHashMap<>();
     namespaceResolverIndexes.defaultReturnValue(-1);
     int itemCount = 0;
     Collection<ListMultimap<String, ResourceItem>> resourceMaps = resources.values();
@@ -125,21 +134,23 @@ public class ResourceSerializationUtil {
             qualifierStringIndexes.put(qualifier, qualifierStringIndexes.size());
           }
           if (item instanceof BasicValueResourceItemBase) {
-            ResourceSourceFile sourceFile = ((BasicValueResourceItemBase)item).getSourceFile();
+            ResourceSourceFile sourceFile = ((BasicValueResourceItemBase) item).getSourceFile();
             if (!sourceFileIndexes.containsKey(sourceFile)) {
               sourceFileIndexes.put(sourceFile, sourceFileIndexes.size());
             }
           }
           if (item instanceof ResourceValue) {
-            addToNamespaceResolverIndexes(((ResourceValue)item).getNamespaceResolver(), namespaceResolverIndexes);
+            addToNamespaceResolverIndexes(
+                ((ResourceValue) item).getNamespaceResolver(), namespaceResolverIndexes);
           }
           if (item instanceof BasicStyleResourceItem) {
-            for (StyleItemResourceValue styleItem : ((BasicStyleResourceItem)item).getDefinedItems()) {
-              addToNamespaceResolverIndexes(styleItem.getNamespaceResolver(), namespaceResolverIndexes);
+            for (StyleItemResourceValue styleItem :
+                ((BasicStyleResourceItem) item).getDefinedItems()) {
+              addToNamespaceResolverIndexes(
+                  styleItem.getNamespaceResolver(), namespaceResolverIndexes);
             }
-          }
-          else if (item instanceof BasicStyleableResourceItem) {
-            for (AttrResourceValue attr : ((BasicStyleableResourceItem)item).getAllAttributes()) {
+          } else if (item instanceof BasicStyleableResourceItem) {
+            for (AttrResourceValue attr : ((BasicStyleableResourceItem) item).getAllAttributes()) {
               addToNamespaceResolverIndexes(attr.getNamespaceResolver(), namespaceResolverIndexes);
             }
           }
@@ -158,14 +169,17 @@ public class ResourceSerializationUtil {
       for (ResourceItem item : resourceMap.values()) {
         FolderConfiguration configuration = item.getConfiguration();
         if (configFilter.test(configuration)) {
-          ((BasicResourceItemBase)item).serialize(stream, qualifierStringIndexes, sourceFileIndexes, namespaceResolverIndexes);
+          ((BasicResourceItemBase) item)
+              .serialize(
+                  stream, qualifierStringIndexes, sourceFileIndexes, namespaceResolverIndexes);
         }
       }
     }
   }
 
-  private static void addToNamespaceResolverIndexes(@NotNull ResourceNamespace.Resolver resolver,
-                                                    @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) {
+  private static void addToNamespaceResolverIndexes(
+      @NotNull ResourceNamespace.Resolver resolver,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) {
     if (!namespaceResolverIndexes.containsKey(resolver)) {
       namespaceResolverIndexes.put(resolver, namespaceResolverIndexes.size());
     }
@@ -173,14 +187,18 @@ public class ResourceSerializationUtil {
 
   /**
    * Loads resources from the given input stream and passes then to the given consumer.
+   *
    * @see #writeResourcesToStream
    */
-  public static void readResourcesFromStream(@NotNull Base128InputStream stream,
-                                             @NotNull Map<String, String> stringCache,
-                                             @Nullable Map<NamespaceResolver, NamespaceResolver> namespaceResolverCache,
-                                             @NotNull LoadableResourceRepository repository,
-                                             @NotNull Consumer<BasicResourceItem> resourceConsumer) throws IOException {
-    stream.setStringCache(stringCache); // Enable string instance sharing to minimize memory consumption.
+  public static void readResourcesFromStream(
+      @NotNull Base128InputStream stream,
+      @NotNull Map<String, String> stringCache,
+      @Nullable Map<NamespaceResolver, NamespaceResolver> namespaceResolverCache,
+      @NotNull LoadableResourceRepository repository,
+      @NotNull Consumer<BasicResourceItem> resourceConsumer)
+      throws IOException {
+    stream.setStringCache(
+        stringCache); // Enable string instance sharing to minimize memory consumption.
 
     int n = stream.readInt();
     if (n == 0) {
@@ -192,7 +210,8 @@ public class ResourceSerializationUtil {
       if (configQualifier == null) {
         throw Base128InputStream.StreamFormatException.invalidFormat();
       }
-      FolderConfiguration folderConfig = FolderConfiguration.getConfigForQualifierString(configQualifier);
+      FolderConfiguration folderConfig =
+          FolderConfiguration.getConfigForQualifierString(configQualifier);
       if (folderConfig == null) {
         throw Base128InputStream.StreamFormatException.invalidFormat();
       }
@@ -202,7 +221,8 @@ public class ResourceSerializationUtil {
     n = stream.readInt();
     List<ResourceSourceFile> newSourceFiles = new ArrayList<>(n);
     for (int i = 0; i < n; i++) {
-      ResourceSourceFile sourceFile = repository.deserializeResourceSourceFile(stream, configurations);
+      ResourceSourceFile sourceFile =
+          repository.deserializeResourceSourceFile(stream, configurations);
       newSourceFiles.add(sourceFile);
     }
 
@@ -211,18 +231,23 @@ public class ResourceSerializationUtil {
     for (int i = 0; i < n; i++) {
       NamespaceResolver namespaceResolver = NamespaceResolver.deserialize(stream);
       if (namespaceResolverCache != null) {
-        namespaceResolver = namespaceResolverCache.computeIfAbsent(namespaceResolver, Function.identity());
+        namespaceResolver =
+            namespaceResolverCache.computeIfAbsent(namespaceResolver, Function.identity());
       }
       newNamespaceResolvers.add(namespaceResolver);
     }
 
     n = stream.readInt();
-    int cancellationCheckInterval = 500; // For framework repository without locale-specific resources cancellation check happens 32 times.
+    int cancellationCheckInterval =
+        500; // For framework repository without locale-specific resources cancellation check
+    // happens 32 times.
     for (int i = 0; i < n; i++) {
       if (i % cancellationCheckInterval == 0) {
         ProgressManager.checkCanceled();
       }
-      BasicResourceItemBase item = BasicResourceItemBase.deserialize(stream, configurations, newSourceFiles, newNamespaceResolvers);
+      BasicResourceItemBase item =
+          BasicResourceItemBase.deserialize(
+              stream, configurations, newSourceFiles, newNamespaceResolvers);
       resourceConsumer.accept(item);
     }
   }
@@ -237,12 +262,13 @@ public class ResourceSerializationUtil {
     ByteArrayOutputStream header = new ByteArrayOutputStream();
     try (Base128OutputStream stream = new Base128OutputStream(header)) {
       headerWriter.write(stream);
-    }
-    catch (IOException e) {
-      throw new Error("Internal error", e); // An IOException in the try block above indicates a bug.
+    } catch (IOException e) {
+      throw new Error(
+          "Internal error", e); // An IOException in the try block above indicates a bug.
     }
     return header.toByteArray();
   }
+
   private static void deleteIgnoringErrors(@NotNull Path file) {
     try {
       Files.deleteIfExists(file);
@@ -250,7 +276,8 @@ public class ResourceSerializationUtil {
     }
   }
 
-  private static void writeStrings(@NotNull Object2IntMap<String> qualifierStringIndexes, @NotNull Base128OutputStream stream)
+  private static void writeStrings(
+      @NotNull Object2IntMap<String> qualifierStringIndexes, @NotNull Base128OutputStream stream)
       throws IOException {
     String[] strings = new String[qualifierStringIndexes.size()];
     for (Object2IntMap.Entry<String> entry : Object2IntMaps.fastIterable(qualifierStringIndexes)) {
@@ -262,11 +289,14 @@ public class ResourceSerializationUtil {
     }
   }
 
-  private static void writeSourceFiles(@NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                                       @NotNull Base128OutputStream stream,
-                                       @NotNull Object2IntMap<String> qualifierStringIndexes) throws IOException {
+  private static void writeSourceFiles(
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> qualifierStringIndexes)
+      throws IOException {
     ResourceSourceFile[] sourceFiles = new ResourceSourceFile[sourceFileIndexes.size()];
-    for (Object2IntMap.Entry<ResourceSourceFile> entry : Object2IntMaps.fastIterable(sourceFileIndexes)) {
+    for (Object2IntMap.Entry<ResourceSourceFile> entry :
+        Object2IntMaps.fastIterable(sourceFileIndexes)) {
       sourceFiles[entry.getIntValue()] = entry.getKey();
     }
     stream.writeInt(sourceFiles.length);
@@ -275,16 +305,22 @@ public class ResourceSerializationUtil {
     }
   }
 
-  private static void writeNamespaceResolvers(@NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes,
-                                              @NotNull Base128OutputStream stream) throws IOException {
-    ResourceNamespace.Resolver[] resolvers = new ResourceNamespace.Resolver[namespaceResolverIndexes.size()];
-    for (Object2IntMap.Entry<ResourceNamespace.Resolver> entry : Object2IntMaps.fastIterable(namespaceResolverIndexes)) {
+  private static void writeNamespaceResolvers(
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes,
+      @NotNull Base128OutputStream stream)
+      throws IOException {
+    ResourceNamespace.Resolver[] resolvers =
+        new ResourceNamespace.Resolver[namespaceResolverIndexes.size()];
+    for (Object2IntMap.Entry<ResourceNamespace.Resolver> entry :
+        Object2IntMaps.fastIterable(namespaceResolverIndexes)) {
       resolvers[entry.getIntValue()] = entry.getKey();
     }
     stream.writeInt(resolvers.length);
     for (ResourceNamespace.Resolver resolver : resolvers) {
       NamespaceResolver serializableResolver =
-          resolver == ResourceNamespace.Resolver.EMPTY_RESOLVER ? NamespaceResolver.EMPTY : (NamespaceResolver)resolver;
+          resolver == ResourceNamespace.Resolver.EMPTY_RESOLVER
+              ? NamespaceResolver.EMPTY
+              : (NamespaceResolver) resolver;
       serializableResolver.serialize(stream);
     }
   }

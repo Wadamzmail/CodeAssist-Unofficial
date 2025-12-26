@@ -20,12 +20,13 @@ public class CompletionItemWrapper extends CompletionItem {
   public void performCompletion(CodeEditor editor, Content text, int line, int column) {
     if (!(editor instanceof Editor)) {
       throw new IllegalArgumentException(
-          "Cannot use CompletionItemWrapper on an editor that does not implement com.tyron.editor.Editor");
+          "Cannot use CompletionItemWrapper on an editor that does not implement"
+              + " com.tyron.editor.Editor");
     }
 
     Editor rawEditor = ((Editor) editor);
-    if(rawEditor==null){
-     throw new RuntimeException("Editor is null, cannot handle insert");
+    if (rawEditor == null) {
+      throw new RuntimeException("Editor is null, cannot handle insert");
     }
     item.handleInsert(rawEditor);
   }

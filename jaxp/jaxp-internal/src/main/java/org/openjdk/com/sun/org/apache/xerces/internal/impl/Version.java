@@ -68,35 +68,34 @@ package org.openjdk.com.sun.org.apache.xerces.internal.impl;
  */
 public class Version {
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** Version string.
-     * @deprecated  getVersion() should be used instead.  */
-    public static final String fVersion = getVersion();
+  /**
+   * Version string.
+   *
+   * @deprecated getVersion() should be used instead.
+   */
+  public static final String fVersion = getVersion();
 
-    private static final String fImmutableVersion = "Xerces-J 2.7.1";
+  private static final String fImmutableVersion = "Xerces-J 2.7.1";
 
-    // public methods
+  // public methods
 
-    /* Print out the version information.
-     * @return the version of the parser.
-     */
-    public static String getVersion() {
-        return fImmutableVersion;
-    } // getVersion():  String
+  /* Print out the version information.
+   * @return the version of the parser.
+   */
+  public static String getVersion() {
+    return fImmutableVersion;
+  } // getVersion():  String
 
-    //
-    // MAIN
-    //
+  //
+  // MAIN
+  //
 
-    /**
-     * Prints out the version number to System.out. This is needed
-     * for the build system.
-     */
-    public static void main(String argv[]) {
-        System.out.println(fVersion);
-    }
-
+  /** Prints out the version number to System.out. This is needed for the build system. */
+  public static void main(String argv[]) {
+    System.out.println(fVersion);
+  }
 } // class Version

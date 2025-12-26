@@ -26,28 +26,20 @@ import org.openjdk.com.sun.org.apache.xpath.internal.XPathContext;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XNumber;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XObject;
 
-/**
- * The binary '-' operation expression executer.
- */
-public class Minus extends Operation
-{
-    static final long serialVersionUID = -5297672838170871043L;
+/** The binary '-' operation expression executer. */
+public class Minus extends Operation {
+  static final long serialVersionUID = -5297672838170871043L;
 
   /**
    * Apply the operation to two operands, and return the result.
    *
-   *
    * @param left non-null reference to the evaluated left operand.
    * @param right non-null reference to the evaluated right operand.
-   *
-   * @return non-null reference to the XObject that represents the
-   *         result of the operation.
-   *
+   * @return non-null reference to the XObject that represents the result of the operation.
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
   public XObject operate(XObject left, XObject right)
-          throws org.openjdk.javax.xml.transform.TransformerException
-  {
+      throws org.openjdk.javax.xml.transform.TransformerException {
     return new XNumber(left.num() - right.num());
   }
 
@@ -55,16 +47,12 @@ public class Minus extends Operation
    * Evaluate this operation directly to a double.
    *
    * @param xctxt The runtime execution context.
-   *
    * @return The result of the operation as a double.
-   *
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
   public double num(XPathContext xctxt)
-          throws org.openjdk.javax.xml.transform.TransformerException
-  {
+      throws org.openjdk.javax.xml.transform.TransformerException {
 
     return (m_left.num(xctxt) - m_right.num(xctxt));
   }
-
 }

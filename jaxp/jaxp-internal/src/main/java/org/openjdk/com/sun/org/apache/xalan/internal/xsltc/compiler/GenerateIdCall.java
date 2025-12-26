@@ -24,7 +24,6 @@
 package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler;
 
 import java.util.Vector;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.generic.ConstantPoolGen;
 import org.openjdk.com.sun.org.apache.bcel.internal.generic.INVOKESTATIC;
 import org.openjdk.com.sun.org.apache.bcel.internal.generic.InstructionList;
@@ -36,22 +35,24 @@ import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.MethodG
  * @author Santiago Pericas-Geertsen
  */
 final class GenerateIdCall extends FunctionCall {
-    public GenerateIdCall(QName fname, Vector arguments) {
-        super(fname, arguments);
-    }
+  public GenerateIdCall(QName fname, Vector arguments) {
+    super(fname, arguments);
+  }
 
-    public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
-        final InstructionList il = methodGen.getInstructionList();
-        if (argumentCount() == 0) {
-           il.append(methodGen.loadContextNode());
-        }
-        else {                  // one argument
-            argument().translate(classGen, methodGen);
-        }
-        final ConstantPoolGen cpg = classGen.getConstantPool();
-        il.append(new INVOKESTATIC(cpg.addMethodref(BASIS_LIBRARY_CLASS,
-                                                    "generate_idF",
-                                                    // reuse signature
-                                                    GET_NODE_NAME_SIG)));
+  public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
+    final InstructionList il = methodGen.getInstructionList();
+    if (argumentCount() == 0) {
+      il.append(methodGen.loadContextNode());
+    } else { // one argument
+      argument().translate(classGen, methodGen);
     }
+    final ConstantPoolGen cpg = classGen.getConstantPool();
+    il.append(
+        new INVOKESTATIC(
+            cpg.addMethodref(
+                BASIS_LIBRARY_CLASS,
+                "generate_idF",
+                // reuse signature
+                GET_NODE_NAME_SIG)));
+  }
 }

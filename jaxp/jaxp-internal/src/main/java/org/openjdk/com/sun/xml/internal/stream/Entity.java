@@ -20,13 +20,12 @@
 
 package org.openjdk.com.sun.xml.internal.stream;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.IOException;
-
+import org.openjdk.com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
 import org.openjdk.com.sun.xml.internal.stream.util.BufferAllocator;
 import org.openjdk.com.sun.xml.internal.stream.util.ThreadLocalBufferAllocator;
-import org.openjdk.com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
 
 /**
  * Entity information.
@@ -35,437 +34,442 @@ import org.openjdk.com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
  */
 public abstract class Entity {
 
+  //
+  // Data
+  //
+
+  // xxx why dont we declare the type of entities, like assign integer for external/ internal etc..
+
+  /** Entity name. */
+  public String name;
+
+  // whether this entity's declaration was found in the internal
+  // or external subset
+  public boolean inExternalSubset;
+
+  //
+  // Constructors
+  //
+
+  /** Default constructor. */
+  public Entity() {
+    clear();
+  } // <init>()
+
+  /** Constructs an entity. */
+  public Entity(String name, boolean inExternalSubset) {
+    this.name = name;
+    this.inExternalSubset = inExternalSubset;
+  } // <init>(String)
+
+  //
+  // Public methods
+  //
+
+  /** Returns true if this entity was declared in the external subset. */
+  public boolean isEntityDeclInExternalSubset() {
+    return inExternalSubset;
+  }
+
+  /** Returns true if this is an external entity. */
+  public abstract boolean isExternal();
+
+  /** Returns true if this is an unparsed entity. */
+  public abstract boolean isUnparsed();
+
+  /** Clears the entity. */
+  public void clear() {
+    name = null;
+    inExternalSubset = false;
+  } // clear()
+
+  /** Sets the values of the entity. */
+  public void setValues(Entity entity) {
+    name = entity.name;
+    inExternalSubset = entity.inExternalSubset;
+  } // setValues(Entity)
+
+  /**
+   * Internal entity.
+   *
+   * @author nb131165
+   */
+  public static class InternalEntity extends Entity {
+
     //
     // Data
     //
 
-    //xxx why dont we declare the type of entities, like assign integer for external/ internal etc..
-
-    /** Entity name. */
-    public String name;
-
-    // whether this entity's declaration was found in the internal
-    // or external subset
-    public boolean inExternalSubset;
+    /** Text value of entity. */
+    public String text;
 
     //
     // Constructors
     //
 
     /** Default constructor. */
-    public Entity() {
-        clear();
+    public InternalEntity() {
+      clear();
     } // <init>()
 
-    /** Constructs an entity. */
-    public Entity(String name, boolean inExternalSubset) {
-        this.name = name;
-        this.inExternalSubset = inExternalSubset;
-    } // <init>(String)
+    /** Constructs an internal entity. */
+    public InternalEntity(String name, String text, boolean inExternalSubset) {
+      super(name, inExternalSubset);
+      this.text = text;
+    } // <init>(String,String)
 
     //
-    // Public methods
+    // Entity methods
     //
-
-    /** Returns true if this entity was declared in the external subset. */
-    public boolean isEntityDeclInExternalSubset() {
-        return inExternalSubset;
-    }
 
     /** Returns true if this is an external entity. */
-    public abstract boolean isExternal();
+    public final boolean isExternal() {
+      return false;
+    } // isExternal():boolean
 
     /** Returns true if this is an unparsed entity. */
-    public abstract boolean isUnparsed();
+    public final boolean isUnparsed() {
+      return false;
+    } // isUnparsed():boolean
 
     /** Clears the entity. */
     public void clear() {
-        name = null;
-        inExternalSubset = false;
+      super.clear();
+      text = null;
     } // clear()
 
     /** Sets the values of the entity. */
     public void setValues(Entity entity) {
-        name = entity.name;
-        inExternalSubset = entity.inExternalSubset;
+      super.setValues(entity);
+      text = null;
     } // setValues(Entity)
 
+    /** Sets the values of the entity. */
+    public void setValues(InternalEntity entity) {
+      super.setValues(entity);
+      text = entity.text;
+    } // setValues(InternalEntity)
+  } // class InternalEntity
+
+  /**
+   * External entity.
+   *
+   * @author nb131165
+   */
+  public static class ExternalEntity extends Entity {
+
+    //
+    // Data
+    //
+
+    /** container for all relevant entity location information. */
+    public XMLResourceIdentifier entityLocation;
+
+    /** Notation name for unparsed entity. */
+    public String notation;
+
+    //
+    // Constructors
+    //
+
+    /** Default constructor. */
+    public ExternalEntity() {
+      clear();
+    } // <init>()
+
+    /** Constructs an internal entity. */
+    public ExternalEntity(
+        String name,
+        XMLResourceIdentifier entityLocation,
+        String notation,
+        boolean inExternalSubset) {
+      super(name, inExternalSubset);
+      this.entityLocation = entityLocation;
+      this.notation = notation;
+    } // <init>(String,XMLResourceIdentifier, String)
+
+    //
+    // Entity methods
+    //
+
+    /** Returns true if this is an external entity. */
+    public final boolean isExternal() {
+      return true;
+    } // isExternal():boolean
+
+    /** Returns true if this is an unparsed entity. */
+    public final boolean isUnparsed() {
+      return notation != null;
+    } // isUnparsed():boolean
+
+    /** Clears the entity. */
+    public void clear() {
+      super.clear();
+      entityLocation = null;
+      notation = null;
+    } // clear()
+
+    /** Sets the values of the entity. */
+    public void setValues(Entity entity) {
+      super.setValues(entity);
+      entityLocation = null;
+      notation = null;
+    } // setValues(Entity)
+
+    /** Sets the values of the entity. */
+    public void setValues(ExternalEntity entity) {
+      super.setValues(entity);
+      entityLocation = entity.entityLocation;
+      notation = entity.notation;
+    } // setValues(ExternalEntity)
+  } // class ExternalEntity
+
+  /**
+   * Entity state.
+   *
+   * @author nb131165
+   */
+  public static class ScannedEntity extends Entity {
+
+    /** Default buffer size (4096). */
+    public static final int DEFAULT_BUFFER_SIZE = 8192;
+
+    // 4096;
 
     /**
-     * Internal entity.
-     *
-     * @author nb131165
+     * Buffer size. We get this value from a property. The default size is used if the input buffer
+     * size property is not specified. REVISIT: do we need a property for internal entity buffer
+     * size?
      */
-    public static class InternalEntity
-            extends Entity {
+    public int fBufferSize = DEFAULT_BUFFER_SIZE;
 
-        //
-        // Data
-        //
+    /** Default buffer size before we've finished with the XMLDecl: */
+    public static final int DEFAULT_XMLDECL_BUFFER_SIZE = 28;
 
-        /** Text value of entity. */
-        public String text;
+    /** Default internal entity buffer size (1024). */
+    public static final int DEFAULT_INTERNAL_BUFFER_SIZE = 1024;
 
-        //
-        // Constructors
-        //
+    //
+    // Data
+    //
 
-        /** Default constructor. */
-        public InternalEntity() {
-            clear();
-        } // <init>()
-
-        /** Constructs an internal entity. */
-        public InternalEntity(String name, String text, boolean inExternalSubset) {
-            super(name,inExternalSubset);
-            this.text = text;
-        } // <init>(String,String)
-
-        //
-        // Entity methods
-        //
-
-        /** Returns true if this is an external entity. */
-        public final boolean isExternal() {
-            return false;
-        } // isExternal():boolean
-
-        /** Returns true if this is an unparsed entity. */
-        public final boolean isUnparsed() {
-            return false;
-        } // isUnparsed():boolean
-
-        /** Clears the entity. */
-        public void clear() {
-            super.clear();
-            text = null;
-        } // clear()
-
-        /** Sets the values of the entity. */
-        public void setValues(Entity entity) {
-            super.setValues(entity);
-            text = null;
-        } // setValues(Entity)
-
-        /** Sets the values of the entity. */
-        public void setValues(InternalEntity entity) {
-            super.setValues(entity);
-            text = entity.text;
-        } // setValues(InternalEntity)
-
-    } // class InternalEntity
+    // i/o
 
     /**
-     * External entity.
-     *
-     * @author nb131165
+     * XXX let these field remain public right now, though we have defined methods for them. Input
+     * stream.
      */
-    public  static class ExternalEntity
-            extends Entity {
-
-        //
-        // Data
-        //
-
-        /** container for all relevant entity location information. */
-        public XMLResourceIdentifier entityLocation;
-
-        /** Notation name for unparsed entity. */
-        public String notation;
-
-        //
-        // Constructors
-        //
-
-        /** Default constructor. */
-        public ExternalEntity() {
-            clear();
-        } // <init>()
-
-        /** Constructs an internal entity. */
-        public ExternalEntity(String name, XMLResourceIdentifier entityLocation,
-                String notation, boolean inExternalSubset) {
-            super(name,inExternalSubset);
-            this.entityLocation = entityLocation;
-            this.notation = notation;
-        } // <init>(String,XMLResourceIdentifier, String)
-
-        //
-        // Entity methods
-        //
-
-        /** Returns true if this is an external entity. */
-        public final boolean isExternal() {
-            return true;
-        } // isExternal():boolean
-
-        /** Returns true if this is an unparsed entity. */
-        public final boolean isUnparsed() {
-            return notation != null;
-        } // isUnparsed():boolean
-
-        /** Clears the entity. */
-        public void clear() {
-            super.clear();
-            entityLocation = null;
-            notation = null;
-        } // clear()
-
-        /** Sets the values of the entity. */
-        public void setValues(Entity entity) {
-            super.setValues(entity);
-            entityLocation = null;
-            notation = null;
-        } // setValues(Entity)
-
-        /** Sets the values of the entity. */
-        public void setValues(ExternalEntity entity) {
-            super.setValues(entity);
-            entityLocation = entity.entityLocation;
-            notation = entity.notation;
-        } // setValues(ExternalEntity)
-
-    } // class ExternalEntity
+    public InputStream stream;
 
     /**
-     * Entity state.
-     *
-     * @author nb131165
+     * XXX let these field remain public right now, though we have defined methods for them. Reader.
      */
-    public static class ScannedEntity
-            extends Entity {
+    public Reader reader;
 
+    // locator information
 
-        /** Default buffer size (4096). */
-        public static final int DEFAULT_BUFFER_SIZE = 8192;
-        //4096;
+    /** entity location information */
+    public XMLResourceIdentifier entityLocation;
 
-        /**
-         * Buffer size. We get this value from a property. The default size
-         * is used if the input buffer size property is not specified.
-         * REVISIT: do we need a property for internal entity buffer size?
-         */
-        public int fBufferSize = DEFAULT_BUFFER_SIZE;
+    // encoding
 
-        /** Default buffer size before we've finished with the XMLDecl:  */
-        public static final int DEFAULT_XMLDECL_BUFFER_SIZE = 28;
+    /** Auto-detected encoding. */
+    public String encoding;
 
-        /** Default internal entity buffer size (1024). */
-        public static final int DEFAULT_INTERNAL_BUFFER_SIZE = 1024;
+    // status
 
-        //
-        // Data
-        //
+    /** True if in a literal. */
+    public boolean literal;
 
-        // i/o
+    // whether this is an external or internal scanned entity
+    public boolean isExternal;
 
-        /** XXX let these field remain public right now, though we have defined methods for them.
-         * Input stream. */
-        public InputStream stream;
+    // each 'external' parsed entity may have xml/text declaration containing version information
+    public String version;
 
-        /** XXX let these field remain public right now, though we have defined methods for them.
-         * Reader. */
-        public Reader reader;
+    // buffer
 
-        // locator information
+    /** Character buffer. */
+    public char[] ch = null;
 
-        /** entity location information */
-        public XMLResourceIdentifier entityLocation;
+    /** Position in character buffer at any point of time. */
+    public int position;
 
-        // encoding
+    /** Count of characters present in buffer. */
+    public int count;
 
-        /** Auto-detected encoding. */
-        public String encoding;
+    /** Line number. */
+    public int lineNumber = 1;
 
-        // status
+    /** Column number. */
+    public int columnNumber = 1;
 
-        /** True if in a literal.  */
-        public boolean literal;
+    /** Encoding has been set externally for eg: using DOMInput */
+    boolean declaredEncoding = false;
 
-        // whether this is an external or internal scanned entity
-        public boolean isExternal;
+    // status
 
-        //each 'external' parsed entity may have xml/text declaration containing version information
-        public String  version ;
+    /** Encoding has been set externally, for example using a SAX InputSource or a DOM LSInput. */
+    boolean externallySpecifiedEncoding = false;
 
-        // buffer
+    /** XML version. * */
+    public String xmlVersion = "1.0";
 
-        /** Character buffer. */
-        public char[] ch = null;
+    /**
+     * This variable is used to calculate the current position in the XML stream. Note that
+     * fCurrentEntity.position maintains the position relative to the buffer. At any point of time
+     * absolute position in the XML stream can be calculated as fTotalCountTillLastLoad +
+     * fCurrentEntity.position
+     */
+    public int fTotalCountTillLastLoad;
 
-        /** Position in character buffer at any point of time. */
-        public int position;
+    /**
+     * This variable stores the number of characters read during the load() operation. It is used to
+     * calculate fTotalCountTillLastLoad
+     */
+    public int fLastCount;
 
-        /** Count of characters present in buffer. */
-        public int count;
+    /** Base character offset for computing absolute character offset. */
+    public int baseCharOffset;
 
-        /** Line number. */
-        public int lineNumber = 1;
+    /** Start position in character buffer. */
+    public int startPosition;
 
-        /** Column number. */
-        public int columnNumber = 1;
+    // to allow the reader/inputStream to behave efficiently:
+    public boolean mayReadChunks;
 
-        /** Encoding has been set externally for eg: using DOMInput*/
-        boolean declaredEncoding = false;
+    // to know that prolog is read
+    public boolean xmlDeclChunkRead = false;
 
-        // status
+    /**
+     * returns the name of the current encoding
+     *
+     * @return current encoding name
+     */
+    public String getEncodingName() {
+      return encoding;
+    }
 
-        /**
-         * Encoding has been set externally, for example
-         * using a SAX InputSource or a DOM LSInput.
-         */
-        boolean externallySpecifiedEncoding = false;
+    /**
+     * each 'external' parsed entity may have xml/text declaration containing version information
+     *
+     * @return String version of the enity, for an internal entity version would be null
+     */
+    public String getEntityVersion() {
+      return version;
+    }
 
-        /** XML version. **/
-        public String xmlVersion = "1.0";
+    /**
+     * each 'external' parsed entity may have xml/text declaration containing version information
+     *
+     * @param String version of the external parsed entity
+     */
+    public void setEntityVersion(String version) {
+      this.version = version;
+    }
 
-        /** This variable is used to calculate the current position in the XML stream.
-         * Note that fCurrentEntity.position maintains the position relative to
-         * the buffer.
-         *  At any point of time absolute position in the XML stream can be calculated
-         *  as fTotalCountTillLastLoad + fCurrentEntity.position
-         */
-        public int fTotalCountTillLastLoad ;
+    /**
+     * Returns the java.io.Reader associated with this entity.Readers are used to read from the
+     * file. Readers wrap any particular InputStream that was used to open the entity.
+     *
+     * @return java.io.Reader Reader associated with this entity
+     */
+    public Reader getEntityReader() {
+      return reader;
+    }
 
-        /** This variable stores the number of characters read during the load()
-         * operation. It is used to calculate fTotalCountTillLastLoad
-         */
-        public  int fLastCount ;
+    /**
+     * if entity was opened using the stream, return the associated inputstream with this entity
+     *
+     * @return java.io.InputStream InputStream associated with this entity
+     */
+    public InputStream getEntityInputStream() {
+      return stream;
+    }
 
-        /** Base character offset for computing absolute character offset. */
-        public int baseCharOffset;
+    //
+    // Constructors
+    //
 
-        /** Start position in character buffer. */
-        public int startPosition;
+    /** Constructs a scanned entity. */
+    public ScannedEntity(
+        String name,
+        XMLResourceIdentifier entityLocation,
+        InputStream stream,
+        Reader reader,
+        String encoding,
+        boolean literal,
+        boolean mayReadChunks,
+        boolean isExternal) {
+      this.name = name;
+      this.entityLocation = entityLocation;
+      this.stream = stream;
+      this.reader = reader;
+      this.encoding = encoding;
+      this.literal = literal;
+      this.mayReadChunks = mayReadChunks;
+      this.isExternal = isExternal;
+      final int size = isExternal ? fBufferSize : DEFAULT_INTERNAL_BUFFER_SIZE;
+      BufferAllocator ba = ThreadLocalBufferAllocator.getBufferAllocator();
+      ch = ba.getCharBuffer(size);
+      if (ch == null) {
+        this.ch = new char[size];
+      }
+    } // <init>(StringXMLResourceIdentifier,InputStream,Reader,String,boolean, boolean)
 
-        // to allow the reader/inputStream to behave efficiently:
-        public boolean mayReadChunks;
+    /** Release any resources associated with this entity. */
+    public void close() throws IOException {
+      BufferAllocator ba = ThreadLocalBufferAllocator.getBufferAllocator();
+      ba.returnCharBuffer(ch);
+      ch = null;
+      reader.close();
+    }
 
-        // to know that prolog is read
-        public boolean xmlDeclChunkRead = false;
+    //
+    // Entity methods
+    //
 
-        /** returns the name of the current encoding
-         *  @return current encoding name
-         */
-        public String getEncodingName(){
-            return encoding ;
-        }
+    /** Returns whether the encoding of this entity was externally specified. * */
+    public boolean isEncodingExternallySpecified() {
+      return externallySpecifiedEncoding;
+    }
 
-        /**each 'external' parsed entity may have xml/text declaration containing version information
-         * @return String version of the enity, for an internal entity version would be null
-         */
-        public String getEntityVersion(){
-            return version ;
-        }
+    /** Sets whether the encoding of this entity was externally specified. * */
+    public void setEncodingExternallySpecified(boolean value) {
+      externallySpecifiedEncoding = value;
+    }
 
-        /** each 'external' parsed entity may have xml/text declaration containing version information
-         * @param String version of the external parsed entity
-         */
-        public void setEntityVersion(String version){
-            this.version = version ;
-        }
+    public boolean isDeclaredEncoding() {
+      return declaredEncoding;
+    }
 
-        /**  Returns the java.io.Reader associated with this entity.Readers are used
-         * to read from the file. Readers wrap any particular  InputStream that was
-         * used to open the entity.
-         * @return java.io.Reader Reader associated with this entity
-         */
-        public Reader getEntityReader(){
-            return reader;
-        }
+    public void setDeclaredEncoding(boolean value) {
+      declaredEncoding = value;
+    }
 
+    /** Returns true if this is an external entity. */
+    public final boolean isExternal() {
+      return isExternal;
+    } // isExternal():boolean
 
-        /** if entity was opened using the stream, return the associated inputstream
-         * with this entity
-         *@return java.io.InputStream InputStream associated with this entity
-         */
-        public InputStream getEntityInputStream(){
-            return stream;
-        }
+    /** Returns true if this is an unparsed entity. */
+    public final boolean isUnparsed() {
+      return false;
+    } // isUnparsed():boolean
 
-        //
-        // Constructors
-        //
+    //
+    // Object methods
+    //
 
-        /** Constructs a scanned entity. */
-        public ScannedEntity(String name,
-                XMLResourceIdentifier entityLocation,
-                InputStream stream, Reader reader,
-                String encoding, boolean literal, boolean mayReadChunks, boolean isExternal) {
-            this.name = name ;
-            this.entityLocation = entityLocation;
-            this.stream = stream;
-            this.reader = reader;
-            this.encoding = encoding;
-            this.literal = literal;
-            this.mayReadChunks = mayReadChunks;
-            this.isExternal = isExternal;
-            final int size = isExternal ? fBufferSize : DEFAULT_INTERNAL_BUFFER_SIZE;
-            BufferAllocator ba = ThreadLocalBufferAllocator.getBufferAllocator();
-            ch = ba.getCharBuffer(size);
-            if (ch == null) {
-                this.ch = new char[size];
-            }
-        } // <init>(StringXMLResourceIdentifier,InputStream,Reader,String,boolean, boolean)
+    /** Returns a string representation of this object. */
+    public String toString() {
 
-        /**
-         * Release any resources associated with this entity.
-         */
-        public void close() throws IOException {
-            BufferAllocator ba = ThreadLocalBufferAllocator.getBufferAllocator();
-            ba.returnCharBuffer(ch);
-            ch = null;
-            reader.close();
-        }
-
-        //
-        // Entity methods
-        //
-
-        /** Returns whether the encoding of this entity was externally specified. **/
-        public boolean isEncodingExternallySpecified() {
-            return externallySpecifiedEncoding;
-        }
-
-        /** Sets whether the encoding of this entity was externally specified. **/
-        public void setEncodingExternallySpecified(boolean value) {
-            externallySpecifiedEncoding = value;
-        }
-
-        public boolean isDeclaredEncoding() {
-            return declaredEncoding;
-        }
-
-        public void setDeclaredEncoding(boolean value) {
-            declaredEncoding = value;
-        }
-
-        /** Returns true if this is an external entity. */
-        public final boolean isExternal() {
-            return isExternal;
-        } // isExternal():boolean
-
-        /** Returns true if this is an unparsed entity. */
-        public final boolean isUnparsed() {
-            return false;
-        } // isUnparsed():boolean
-
-        //
-        // Object methods
-        //
-
-        /** Returns a string representation of this object. */
-        public String toString() {
-
-            StringBuffer str = new StringBuffer();
-            str.append("name=\""+name+'"');
-            str.append(",ch="+ new String(ch));
-            str.append(",position="+position);
-            str.append(",count="+count);
-            return str.toString();
-
-        } // toString():String
-
-    } // class ScannedEntity
-
+      StringBuffer str = new StringBuffer();
+      str.append("name=\"" + name + '"');
+      str.append(",ch=" + new String(ch));
+      str.append(",position=" + position);
+      str.append(",count=" + count);
+      return str.toString();
+    } // toString():String
+  } // class ScannedEntity
 } // class Entity

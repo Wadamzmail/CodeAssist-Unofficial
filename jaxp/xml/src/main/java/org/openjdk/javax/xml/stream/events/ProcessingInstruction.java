@@ -27,6 +27,7 @@
  */
 
 package org.openjdk.javax.xml.stream.events;
+
 /**
  * An interface that describes the data found in processing instructions
  *

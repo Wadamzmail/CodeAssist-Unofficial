@@ -25,55 +25,46 @@ package org.openjdk.com.sun.org.apache.xml.internal.resolver.tools;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Locale;
-
-import org.openjdk.com.sun.org.apache.xml.internal.resolver.helpers.FileURL;
-import org.xml.sax.Parser;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.DTDHandler;
-import org.xml.sax.DocumentHandler;
-import org.xml.sax.AttributeList;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.SAXException;
-
-import org.openjdk.javax.xml.parsers.SAXParserFactory;
-import org.openjdk.javax.xml.parsers.SAXParser;
-
 import org.openjdk.com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.Catalog;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogManager;
+import org.openjdk.com.sun.org.apache.xml.internal.resolver.helpers.FileURL;
+import org.openjdk.javax.xml.parsers.SAXParser;
+import org.openjdk.javax.xml.parsers.SAXParserFactory;
+import org.xml.sax.AttributeList;
+import org.xml.sax.DTDHandler;
+import org.xml.sax.DocumentHandler;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.Parser;
+import org.xml.sax.SAXException;
 
 /**
  * A SAX Parser that performs catalog-based entity resolution.
  *
- * <p>This class implements a SAX Parser that performs entity resolution
- * using the CatalogResolver. The actual, underlying parser is obtained
- * from a SAXParserFactory.</p>
- * </p>
+ * <p>This class implements a SAX Parser that performs entity resolution using the CatalogResolver.
+ * The actual, underlying parser is obtained from a SAXParserFactory.
  *
- * @deprecated This interface has been replaced by the
- *             {@link ResolvingXMLReader} for SAX2.
+ * @deprecated This interface has been replaced by the {@link ResolvingXMLReader} for SAX2.
  * @see CatalogResolver
  * @see org.xml.sax.Parser
- *
- * @author Norman Walsh
- * <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
- *
+ * @author Norman Walsh <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
  * @version 1.0
  */
-public class ResolvingParser
-  implements Parser, DTDHandler, DocumentHandler, EntityResolver {
+public class ResolvingParser implements Parser, DTDHandler, DocumentHandler, EntityResolver {
   /** Make the parser Namespace aware? */
   public static boolean namespaceAware = true;
 
   /** Make the parser validating? */
   public static boolean validating = false;
 
-  /** Suppress explanatory message?
+  /**
+   * Suppress explanatory message?
    *
    * @see #parse(InputSource)
    */
@@ -123,8 +114,10 @@ public class ResolvingParser
   /** Initialize the parser. */
   private void initParser() {
     catalogResolver = new CatalogResolver(catalogManager);
-    SAXParserFactory spf = catalogManager.useServicesMechanism() ?
-                    SAXParserFactory.newInstance() : new SAXParserFactoryImpl();
+    SAXParserFactory spf =
+        catalogManager.useServicesMechanism()
+            ? SAXParserFactory.newInstance()
+            : new SAXParserFactoryImpl();
     spf.setNamespaceAware(namespaceAware);
     spf.setValidating(validating);
 
@@ -146,27 +139,23 @@ public class ResolvingParser
   /**
    * SAX Parser API.
    *
-   * <p>Note that the JAXP 1.1ea2 parser crashes with an InternalError if
-   * it encounters a system identifier that appears to be a relative URI
-   * that begins with a slash. For example, the declaration:</p>
+   * <p>Note that the JAXP 1.1ea2 parser crashes with an InternalError if it encounters a system
+   * identifier that appears to be a relative URI that begins with a slash. For example, the
+   * declaration:
    *
    * <pre>
    * &lt;!DOCTYPE book SYSTEM "/path/to/dtd/on/my/system/docbookx.dtd">
    * </pre>
    *
-   * <p>would cause such an error. As a convenience, this method catches
-   * that error and prints an explanation. (Unfortunately, it's not possible
-   * to identify the particular system identifier that causes the problem.)
-   * </p>
+   * <p>would cause such an error. As a convenience, this method catches that error and prints an
+   * explanation. (Unfortunately, it's not possible to identify the particular system identifier
+   * that causes the problem.)
    *
-   * <p>The underlying error is forwarded after printing the explanatory
-   * message. The message is only every printed once and if
-   * <code>suppressExplanation</code> is set to <code>false</code> before
-   * parsing, it will never be printed.</p>
+   * <p>The underlying error is forwarded after printing the explanatory message. The message is
+   * only every printed once and if <code>suppressExplanation</code> is set to <code>false</code>
+   * before parsing, it will never be printed.
    */
-  public void parse(InputSource input)
-    throws IOException,
-           SAXException {
+  public void parse(InputSource input) throws IOException, SAXException {
     setupParse(input.getSystemId());
     try {
       parser.parse(input);
@@ -176,13 +165,12 @@ public class ResolvingParser
     }
   }
 
-  /** SAX Parser API.
+  /**
+   * SAX Parser API.
    *
    * @see #parse(InputSource)
    */
-  public void parse(String systemId)
-    throws IOException,
-           SAXException {
+  public void parse(String systemId) throws IOException, SAXException {
     setupParse(systemId);
     try {
       parser.parse(systemId);
@@ -205,8 +193,8 @@ public class ResolvingParser
   /**
    * SAX Parser API.
    *
-   * <p>The purpose of this class is to implement an entity resolver.
-   * Attempting to set a different one is pointless (and ignored).</p>
+   * <p>The purpose of this class is to implement an entity resolver. Attempting to set a different
+   * one is pointless (and ignored).
    */
   public void setEntityResolver(EntityResolver resolver) {
     // nop
@@ -223,10 +211,9 @@ public class ResolvingParser
   }
 
   /** SAX DocumentHandler API. */
-  public void characters(char[] ch, int start, int length)
-    throws SAXException {
+  public void characters(char[] ch, int start, int length) throws SAXException {
     if (documentHandler != null) {
-      documentHandler.characters(ch,start,length);
+      documentHandler.characters(ch, start, length);
     }
   }
 
@@ -245,16 +232,14 @@ public class ResolvingParser
   }
 
   /** SAX DocumentHandler API. */
-  public void ignorableWhitespace(char[] ch, int start, int length)
-    throws SAXException {
+  public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
     if (documentHandler != null) {
-      documentHandler.ignorableWhitespace(ch,start,length);
+      documentHandler.ignorableWhitespace(ch, start, length);
     }
   }
 
   /** SAX DocumentHandler API. */
-  public void processingInstruction(String target, String pidata)
-    throws SAXException {
+  public void processingInstruction(String target, String pidata) throws SAXException {
 
     if (target.equals("oasis-xml-catalog")) {
       URL catalog = null;
@@ -262,9 +247,9 @@ public class ResolvingParser
 
       int pos = data.indexOf("catalog=");
       if (pos >= 0) {
-        data = data.substring(pos+8);
+        data = data.substring(pos + 8);
         if (data.length() > 1) {
-          String quote = data.substring(0,1);
+          String quote = data.substring(0, 1);
           data = data.substring(1);
           pos = data.indexOf(quote);
           if (pos >= 0) {
@@ -284,11 +269,11 @@ public class ResolvingParser
 
       if (allowXMLCatalogPI) {
         if (catalogManager.getAllowOasisXMLCatalogPI()) {
-          catalogManager.debug.message(4,"oasis-xml-catalog PI", pidata);
+          catalogManager.debug.message(4, "oasis-xml-catalog PI", pidata);
 
           if (catalog != null) {
             try {
-              catalogManager.debug.message(4,"oasis-xml-catalog", catalog.toString());
+              catalogManager.debug.message(4, "oasis-xml-catalog", catalog.toString());
               oasisXMLCatalogPI = true;
 
               if (piCatalogResolver == null) {
@@ -297,18 +282,18 @@ public class ResolvingParser
 
               piCatalogResolver.getCatalog().parseCatalog(catalog.toString());
             } catch (Exception e) {
-              catalogManager.debug.message(3, "Exception parsing oasis-xml-catalog: "
-                            + catalog.toString());
+              catalogManager.debug.message(
+                  3, "Exception parsing oasis-xml-catalog: " + catalog.toString());
             }
           } else {
             catalogManager.debug.message(3, "PI oasis-xml-catalog unparseable: " + pidata);
           }
         } else {
-          catalogManager.debug.message(4,"PI oasis-xml-catalog ignored: " + pidata);
+          catalogManager.debug.message(4, "PI oasis-xml-catalog ignored: " + pidata);
         }
       } else {
-        catalogManager.debug.message(3, "PI oasis-xml-catalog occurred in an invalid place: "
-                      + pidata);
+        catalogManager.debug.message(
+            3, "PI oasis-xml-catalog occurred in an invalid place: " + pidata);
       }
     } else {
       if (documentHandler != null) {
@@ -332,41 +317,35 @@ public class ResolvingParser
   }
 
   /** SAX DocumentHandler API. */
-  public void startElement(String name, AttributeList atts)
-    throws SAXException {
+  public void startElement(String name, AttributeList atts) throws SAXException {
     allowXMLCatalogPI = false;
     if (documentHandler != null) {
-      documentHandler.startElement(name,atts);
+      documentHandler.startElement(name, atts);
     }
   }
 
   /** SAX DTDHandler API. */
-  public void notationDecl (String name, String publicId, String systemId)
-    throws SAXException {
+  public void notationDecl(String name, String publicId, String systemId) throws SAXException {
     allowXMLCatalogPI = false;
     if (dtdHandler != null) {
-      dtdHandler.notationDecl(name,publicId,systemId);
+      dtdHandler.notationDecl(name, publicId, systemId);
     }
   }
 
   /** SAX DTDHandler API. */
-  public void unparsedEntityDecl (String name,
-                                  String publicId,
-                                  String systemId,
-                                  String notationName)
-    throws SAXException {
+  public void unparsedEntityDecl(String name, String publicId, String systemId, String notationName)
+      throws SAXException {
     allowXMLCatalogPI = false;
     if (dtdHandler != null) {
-      dtdHandler.unparsedEntityDecl (name, publicId, systemId, notationName);
+      dtdHandler.unparsedEntityDecl(name, publicId, systemId, notationName);
     }
   }
 
   /**
-   * Implements the <code>resolveEntity</code> method
-   * for the SAX interface, using an underlying CatalogResolver
-   * to do the real work.
+   * Implements the <code>resolveEntity</code> method for the SAX interface, using an underlying
+   * CatalogResolver to do the real work.
    */
-  public InputSource resolveEntity (String publicId, String systemId) {
+  public InputSource resolveEntity(String publicId, String systemId) {
     allowXMLCatalogPI = false;
     String resolved = catalogResolver.getResolvedEntity(publicId, systemId);
 

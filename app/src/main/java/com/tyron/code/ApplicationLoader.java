@@ -3,13 +3,13 @@ package com.tyron.code;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import androidx.preference.PreferenceManager;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.PreferenceManager;
 import com.developer.crashx.config.CrashConfig;
+import com.google.android.material.color.DynamicColors;
 import com.tyron.actions.ActionManager;
 import com.tyron.builder.BuildModule;
 import com.tyron.code.event.EventManager;
@@ -40,6 +40,7 @@ import com.tyron.completion.main.CompletionEngine;
 import com.tyron.completion.xml.XmlCompletionModule;
 import com.tyron.completion.xml.XmlIndexProvider;
 import com.tyron.completion.xml.providers.LayoutXmlCompletionProvider;
+import com.tyron.completion.xml.v2.AndroidXmlCompletionProvider;
 import com.tyron.editor.selection.ExpandSelectionProvider;
 import com.tyron.kotlin_completion.KotlinCompletionModule;
 import com.tyron.language.fileTypes.FileTypeManager;
@@ -49,15 +50,12 @@ import com.tyron.language.xml.XmlFileType;
 import com.tyron.language.xml.XmlLanguage;
 import com.tyron.selection.java.JavaExpandSelectionProvider;
 import com.tyron.selection.xml.XmlExpandSelectionProvider;
-import com.google.android.material.color.DynamicColors;
+import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+// new
+import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
 import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
-import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
-import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
-//new
-import com.tyron.completion.xml.v2.AndroidXmlCompletionProvider;
-
 
 public class ApplicationLoader extends Application {
 
@@ -77,10 +75,11 @@ public class ApplicationLoader extends Application {
     super.onCreate();
 
     addProviders();
-    try{
-    boolean isLoggingEnabled = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("ca_logging", false);
-    if(isLoggingEnabled)Logger.initialize(this);
-    }catch(Exception e){
+    try {
+      boolean isLoggingEnabled =
+          PreferenceManager.getDefaultSharedPreferences(this).getBoolean("ca_logging", false);
+      if (isLoggingEnabled) Logger.initialize(this);
+    } catch (Exception e) {
       Logger.initialize(this);
     }
     setupTheme();
@@ -104,11 +103,11 @@ public class ApplicationLoader extends Application {
         .trackActivities(true)
         .apply();
 
-    
-    FileProviderRegistry.getInstance().addFileProvider(new AssetsFileResolver(applicationContext.getAssets()));
-    try{
-    GrammarRegistry.getInstance().loadGrammars("textmate/languages.json");
-    }catch(Exception e) {
+    FileProviderRegistry.getInstance()
+        .addFileProvider(new AssetsFileResolver(applicationContext.getAssets()));
+    try {
+      GrammarRegistry.getInstance().loadGrammars("textmate/languages.json");
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
     runStartup();
@@ -162,7 +161,7 @@ public class ApplicationLoader extends Application {
               JavaLanguage.INSTANCE, new JavaCompletionProvider());
           CompletionProvider.registerCompletionProvider(
               XmlLanguage.INSTANCE, new LayoutXmlCompletionProvider());
-             CompletionProvider.registerCompletionProvider(
+          CompletionProvider.registerCompletionProvider(
               XmlLanguage.INSTANCE, new AndroidXmlCompletionProvider());
         });
     startupManager.addStartupActivity(

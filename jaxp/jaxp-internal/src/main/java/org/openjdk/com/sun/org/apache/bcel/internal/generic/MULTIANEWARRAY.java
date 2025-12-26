@@ -58,19 +58,20 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * <http://www.apache.org/>.
  */
 import java.io.*;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
-import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
-import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantPool;
 import org.openjdk.com.sun.org.apache.bcel.internal.ExceptionConstants;
+import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantPool;
+import org.openjdk.com.sun.org.apache.bcel.internal.util.ByteSequence;
 
 /**
  * MULTIANEWARRAY - Create new mutidimensional array of references
+ *
  * <PRE>Stack: ..., count1, [count2, ...] -&gt; ..., arrayref</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
-public class MULTIANEWARRAY extends CPInstruction implements LoadClass, AllocationInstruction, ExceptionThrower {
+public class MULTIANEWARRAY extends CPInstruction
+    implements LoadClass, AllocationInstruction, ExceptionThrower {
   private short dimensions;
 
   /**
@@ -82,8 +83,7 @@ public class MULTIANEWARRAY extends CPInstruction implements LoadClass, Allocati
   public MULTIANEWARRAY(int index, short dimensions) {
     super(Constants.MULTIANEWARRAY, index);
 
-    if(dimensions < 1)
-      throw new ClassGenException("Invalid dimensions value: " + dimensions);
+    if (dimensions < 1) throw new ClassGenException("Invalid dimensions value: " + dimensions);
 
     this.dimensions = dimensions;
     length = 4;
@@ -91,6 +91,7 @@ public class MULTIANEWARRAY extends CPInstruction implements LoadClass, Allocati
 
   /**
    * Dump instruction as byte code to stream out.
+   *
    * @param out Output stream
    */
   public void dump(DataOutputStream out) throws IOException {
@@ -99,21 +100,19 @@ public class MULTIANEWARRAY extends CPInstruction implements LoadClass, Allocati
     out.writeByte(dimensions);
   }
 
-  /**
-   * Read needed data (i.e., no. dimension) from file.
-   */
-  protected void initFromFile(ByteSequence bytes, boolean wide)
-       throws IOException
-  {
+  /** Read needed data (i.e., no. dimension) from file. */
+  protected void initFromFile(ByteSequence bytes, boolean wide) throws IOException {
     super.initFromFile(bytes, wide);
     dimensions = bytes.readByte();
-    length     = 4;
+    length = 4;
   }
 
   /**
    * @return number of dimensions to be created
    */
-  public final short getDimensions() { return dimensions; }
+  public final short getDimensions() {
+    return dimensions;
+  }
 
   /**
    * @return mnemonic for instruction
@@ -130,20 +129,29 @@ public class MULTIANEWARRAY extends CPInstruction implements LoadClass, Allocati
   }
 
   /**
-   * Also works for instructions whose stack effect depends on the
-   * constant pool entry they reference.
+   * Also works for instructions whose stack effect depends on the constant pool entry they
+   * reference.
+   *
    * @return Number of words consumed from stack by this instruction
    */
-  public int consumeStack(ConstantPoolGen cpg) { return dimensions; }
+  public int consumeStack(ConstantPoolGen cpg) {
+    return dimensions;
+  }
 
   public Class[] getExceptions() {
     Class[] cs = new Class[2 + ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length];
 
-    System.arraycopy(ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION, 0,
-                     cs, 0, ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length);
+    System.arraycopy(
+        ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION,
+        0,
+        cs,
+        0,
+        ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length);
 
-    cs[ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length+1] = ExceptionConstants.NEGATIVE_ARRAY_SIZE_EXCEPTION;
-    cs[ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length]   = ExceptionConstants.ILLEGAL_ACCESS_ERROR;
+    cs[ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length + 1] =
+        ExceptionConstants.NEGATIVE_ARRAY_SIZE_EXCEPTION;
+    cs[ExceptionConstants.EXCS_CLASS_AND_INTERFACE_RESOLUTION.length] =
+        ExceptionConstants.ILLEGAL_ACCESS_ERROR;
 
     return cs;
   }
@@ -151,18 +159,17 @@ public class MULTIANEWARRAY extends CPInstruction implements LoadClass, Allocati
   public ObjectType getLoadClassType(ConstantPoolGen cpg) {
     Type t = getType(cpg);
 
-    if (t instanceof ArrayType){
+    if (t instanceof ArrayType) {
       t = ((ArrayType) t).getBasicType();
     }
 
-    return (t instanceof ObjectType)? (ObjectType) t : null;
+    return (t instanceof ObjectType) ? (ObjectType) t : null;
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

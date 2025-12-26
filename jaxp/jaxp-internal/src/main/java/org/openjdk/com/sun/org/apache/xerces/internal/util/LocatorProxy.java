@@ -29,60 +29,58 @@ import org.xml.sax.ext.Locator2;
  *
  * @author Arnaud Le Hors, IBM
  * @author Andy Clark, IBM
- *
  */
 public class LocatorProxy implements Locator2 {
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** XML locator. */
-    private final XMLLocator fLocator;
+  /** XML locator. */
+  private final XMLLocator fLocator;
 
-    //
-    // Constructors
-    //
+  //
+  // Constructors
+  //
 
-    /** Constructs an XML locator proxy. */
-    public LocatorProxy(XMLLocator locator) {
-        fLocator = locator;
-    }
+  /** Constructs an XML locator proxy. */
+  public LocatorProxy(XMLLocator locator) {
+    fLocator = locator;
+  }
 
-    //
-    // Locator methods
-    //
+  //
+  // Locator methods
+  //
 
-    /** Public identifier. */
-    public String getPublicId() {
-        return fLocator.getPublicId();
-    }
+  /** Public identifier. */
+  public String getPublicId() {
+    return fLocator.getPublicId();
+  }
 
-    /** System identifier. */
-    public String getSystemId() {
-        return fLocator.getExpandedSystemId();
-    }
+  /** System identifier. */
+  public String getSystemId() {
+    return fLocator.getExpandedSystemId();
+  }
 
-    /** Line number. */
-    public int getLineNumber() {
-        return fLocator.getLineNumber();
-    }
+  /** Line number. */
+  public int getLineNumber() {
+    return fLocator.getLineNumber();
+  }
 
-    /** Column number. */
-    public int getColumnNumber() {
-        return fLocator.getColumnNumber();
-    }
+  /** Column number. */
+  public int getColumnNumber() {
+    return fLocator.getColumnNumber();
+  }
 
-    //
-    // Locator2 methods
-    //
+  //
+  // Locator2 methods
+  //
 
-    public String getXMLVersion() {
-        return fLocator.getXMLVersion();
-    }
+  public String getXMLVersion() {
+    return fLocator.getXMLVersion();
+  }
 
-    public String getEncoding() {
-        return fLocator.getEncoding();
-    }
-
+  public String getEncoding() {
+    return fLocator.getEncoding();
+  }
 }

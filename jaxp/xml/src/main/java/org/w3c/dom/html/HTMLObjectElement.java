@@ -44,145 +44,145 @@ package org.w3c.dom.html;
 import org.w3c.dom.Document;
 
 /**
- *  Generic embedded object.  Note. In principle, all properties on the object
- * element are read-write but in some environments some properties may be
- * read-only once the underlying object is instantiated. See the  OBJECT
- * element definition in HTML 4.0.
- * <p>See also the <a href='http://www.w3.org/TR/2000/CR-DOM-Level-2-20000510'>Document Object Model (DOM) Level 2 Specification</a>.
+ * Generic embedded object. Note. In principle, all properties on the object element are read-write
+ * but in some environments some properties may be read-only once the underlying object is
+ * instantiated. See the OBJECT element definition in HTML 4.0.
+ *
+ * <p>See also the <a href='http://www.w3.org/TR/2000/CR-DOM-Level-2-20000510'>Document Object Model
+ * (DOM) Level 2 Specification</a>.
  */
 public interface HTMLObjectElement extends HTMLElement {
-    /**
-     *  Returns the <code>FORM</code> element containing this control. Returns
-     * <code>null</code> if this control is not within the context of a form.
-     */
-    public HTMLFormElement getForm();
+  /**
+   * Returns the <code>FORM</code> element containing this control. Returns <code>null</code> if
+   * this control is not within the context of a form.
+   */
+  public HTMLFormElement getForm();
 
-    /**
-     *  Applet class file. See the <code>code</code> attribute for
-     * HTMLAppletElement.
-     */
-    public String getCode();
-    public void setCode(String code);
+  /** Applet class file. See the <code>code</code> attribute for HTMLAppletElement. */
+  public String getCode();
 
-    /**
-     *  Aligns this object (vertically or horizontally)  with respect to its
-     * surrounding text. See the  align attribute definition in HTML 4.0.
-     * This attribute is deprecated in HTML 4.0.
-     */
-    public String getAlign();
-    public void setAlign(String align);
+  public void setCode(String code);
 
-    /**
-     *  Space-separated list of archives. See the  archive attribute definition
-     *  in HTML 4.0.
-     */
-    public String getArchive();
-    public void setArchive(String archive);
+  /**
+   * Aligns this object (vertically or horizontally) with respect to its surrounding text. See the
+   * align attribute definition in HTML 4.0. This attribute is deprecated in HTML 4.0.
+   */
+  public String getAlign();
 
-    /**
-     *  Width of border around the object. See the  border attribute definition
-     *  in HTML 4.0. This attribute is deprecated in HTML 4.0.
-     */
-    public String getBorder();
-    public void setBorder(String border);
+  public void setAlign(String align);
 
-    /**
-     *  Base URI for <code>classid</code> , <code>data</code> , and
-     * <code>archive</code> attributes. See the  codebase attribute definition
-     *  in HTML 4.0.
-     */
-    public String getCodeBase();
-    public void setCodeBase(String codeBase);
+  /** Space-separated list of archives. See the archive attribute definition in HTML 4.0. */
+  public String getArchive();
 
-    /**
-     *  Content type for data downloaded via <code>classid</code> attribute.
-     * See the  codetype attribute definition in HTML 4.0.
-     */
-    public String getCodeType();
-    public void setCodeType(String codeType);
+  public void setArchive(String archive);
 
-    /**
-     *  A URI specifying the location of the object's data.  See the  data
-     * attribute definition in HTML 4.0.
-     */
-    public String getData();
-    public void setData(String data);
+  /**
+   * Width of border around the object. See the border attribute definition in HTML 4.0. This
+   * attribute is deprecated in HTML 4.0.
+   */
+  public String getBorder();
 
-    /**
-     *  Declare (for future reference), but do not instantiate, this object.
-     * See the  declare attribute definition in HTML 4.0.
-     */
-    public boolean getDeclare();
-    public void setDeclare(boolean declare);
+  public void setBorder(String border);
 
-    /**
-     *  Override height. See the  height attribute definition in HTML 4.0.
-     */
-    public String getHeight();
-    public void setHeight(String height);
+  /**
+   * Base URI for <code>classid</code> , <code>data</code> , and <code>archive</code> attributes.
+   * See the codebase attribute definition in HTML 4.0.
+   */
+  public String getCodeBase();
 
-    /**
-     *  Horizontal space to the left and right of this image, applet, or
-     * object. See the  hspace attribute definition in HTML 4.0. This
-     * attribute is deprecated in HTML 4.0.
-     */
-    public String getHspace();
-    public void setHspace(String hspace);
+  public void setCodeBase(String codeBase);
 
-    /**
-     *  Form control or object name when submitted with a form. See the  name
-     * attribute definition in HTML 4.0.
-     */
-    public String getName();
-    public void setName(String name);
+  /**
+   * Content type for data downloaded via <code>classid</code> attribute. See the codetype attribute
+   * definition in HTML 4.0.
+   */
+  public String getCodeType();
 
-    /**
-     *  Message to render while loading the object. See the  standby attribute
-     * definition in HTML 4.0.
-     */
-    public String getStandby();
-    public void setStandby(String standby);
+  public void setCodeType(String codeType);
 
-    /**
-     *  Index that represents the element's position in the tabbing order. See
-     * the  tabindex attribute definition in HTML 4.0.
-     */
-    public int getTabIndex();
-    public void setTabIndex(int tabIndex);
+  /**
+   * A URI specifying the location of the object's data. See the data attribute definition in HTML
+   * 4.0.
+   */
+  public String getData();
 
-    /**
-     *  Content type for data downloaded via <code>data</code> attribute. See
-     * the  type attribute definition in HTML 4.0.
-     */
-    public String getType();
-    public void setType(String type);
+  public void setData(String data);
 
-    /**
-     *  Use client-side image map. See the  usemap attribute definition in
-     * HTML 4.0.
-     */
-    public String getUseMap();
-    public void setUseMap(String useMap);
+  /**
+   * Declare (for future reference), but do not instantiate, this object. See the declare attribute
+   * definition in HTML 4.0.
+   */
+  public boolean getDeclare();
 
-    /**
-     *  Vertical space above and below this image, applet, or object. See the
-     * vspace attribute definition in HTML 4.0. This attribute is deprecated
-     * in HTML 4.0.
-     */
-    public String getVspace();
-    public void setVspace(String vspace);
+  public void setDeclare(boolean declare);
 
-    /**
-     *  Override width. See the  width attribute definition in HTML 4.0.
-     */
-    public String getWidth();
-    public void setWidth(String width);
+  /** Override height. See the height attribute definition in HTML 4.0. */
+  public String getHeight();
 
-    /**
-     *  The document this object contains, if there is any and it is
-     * available, or <code>null</code> otherwise.
-     * @since DOM Level 2
-     */
-    public Document getContentDocument();
+  public void setHeight(String height);
 
+  /**
+   * Horizontal space to the left and right of this image, applet, or object. See the hspace
+   * attribute definition in HTML 4.0. This attribute is deprecated in HTML 4.0.
+   */
+  public String getHspace();
+
+  public void setHspace(String hspace);
+
+  /**
+   * Form control or object name when submitted with a form. See the name attribute definition in
+   * HTML 4.0.
+   */
+  public String getName();
+
+  public void setName(String name);
+
+  /**
+   * Message to render while loading the object. See the standby attribute definition in HTML 4.0.
+   */
+  public String getStandby();
+
+  public void setStandby(String standby);
+
+  /**
+   * Index that represents the element's position in the tabbing order. See the tabindex attribute
+   * definition in HTML 4.0.
+   */
+  public int getTabIndex();
+
+  public void setTabIndex(int tabIndex);
+
+  /**
+   * Content type for data downloaded via <code>data</code> attribute. See the type attribute
+   * definition in HTML 4.0.
+   */
+  public String getType();
+
+  public void setType(String type);
+
+  /** Use client-side image map. See the usemap attribute definition in HTML 4.0. */
+  public String getUseMap();
+
+  public void setUseMap(String useMap);
+
+  /**
+   * Vertical space above and below this image, applet, or object. See the vspace attribute
+   * definition in HTML 4.0. This attribute is deprecated in HTML 4.0.
+   */
+  public String getVspace();
+
+  public void setVspace(String vspace);
+
+  /** Override width. See the width attribute definition in HTML 4.0. */
+  public String getWidth();
+
+  public void setWidth(String width);
+
+  /**
+   * The document this object contains, if there is any and it is available, or <code>null</code>
+   * otherwise.
+   *
+   * @since DOM Level 2
+   */
+  public Document getContentDocument();
 }

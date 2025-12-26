@@ -58,50 +58,52 @@ package org.openjdk.com.sun.org.apache.bcel.internal.classfile;
  * <http://www.apache.org/>.
  */
 
+import java.io.*;
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
-import  java.io.*;
-
 /**
- * This class represents a local variable within a method. It contains its
- * scope, name, signature and index on the method's frame.
+ * This class represents a local variable within a method. It contains its scope, name, signature
+ * and index on the method's frame.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
- * @see     LocalVariableTable
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @see LocalVariableTable
  */
-public final class LocalVariable
-  implements Constants, Cloneable, Node, Serializable
-{
-  private int start_pc;        // Range in which the variable is valid
+public final class LocalVariable implements Constants, Cloneable, Node, Serializable {
+  private int start_pc; // Range in which the variable is valid
   private int length;
-  private int name_index;      // Index in constant pool of variable name
+  private int name_index; // Index in constant pool of variable name
   private int signature_index; // Index of variable signature
-  private int index;            /* Variable is `index'th local variable on
+  private int index; /* Variable is `index'th local variable on
                                 * this method's frame.
                                 */
 
   private ConstantPool constant_pool;
 
   /**
-   * Initialize from another object. Note that both objects use the same
-   * references (shallow copy). Use copy() for a physical copy.
+   * Initialize from another object. Note that both objects use the same references (shallow copy).
+   * Use copy() for a physical copy.
    */
   public LocalVariable(LocalVariable c) {
-    this(c.getStartPC(), c.getLength(), c.getNameIndex(),
-         c.getSignatureIndex(), c.getIndex(), c.getConstantPool());
+    this(
+        c.getStartPC(),
+        c.getLength(),
+        c.getNameIndex(),
+        c.getSignatureIndex(),
+        c.getIndex(),
+        c.getConstantPool());
   }
 
   /**
    * Construct object from file stream.
+   *
    * @param file Input stream
    * @throws IOException
    */
-  LocalVariable(DataInputStream file, ConstantPool constant_pool)
-       throws IOException
-  {
-    this(file.readUnsignedShort(), file.readUnsignedShort(),
-         file.readUnsignedShort(), file.readUnsignedShort(),
-         file.readUnsignedShort(), constant_pool);
+  LocalVariable(DataInputStream file, ConstantPool constant_pool) throws IOException {
+    this(
+        file.readUnsignedShort(), file.readUnsignedShort(),
+        file.readUnsignedShort(), file.readUnsignedShort(),
+        file.readUnsignedShort(), constant_pool);
   }
 
   /**
@@ -112,22 +114,25 @@ public final class LocalVariable
    * @param index Variable is `index'th local variable on the method's frame
    * @param constant_pool Array of constants
    */
-  public LocalVariable(int start_pc, int length, int name_index,
-                       int signature_index, int index,
-                       ConstantPool constant_pool)
-  {
-    this.start_pc        = start_pc;
-    this.length          = length;
-    this.name_index      = name_index;
+  public LocalVariable(
+      int start_pc,
+      int length,
+      int name_index,
+      int signature_index,
+      int index,
+      ConstantPool constant_pool) {
+    this.start_pc = start_pc;
+    this.length = length;
+    this.name_index = name_index;
     this.signature_index = signature_index;
-    this.index           = index;
-    this.constant_pool   = constant_pool;
+    this.index = index;
+    this.constant_pool = constant_pool;
   }
 
   /**
-   * Called by objects that are traversing the nodes of the tree implicitely
-   * defined by the contents of a Java class. I.e., the hierarchy of methods,
-   * fields, attributes, etc. spawns a tree of objects.
+   * Called by objects that are traversing the nodes of the tree implicitely defined by the contents
+   * of a Java class. I.e., the hierarchy of methods, fields, attributes, etc. spawns a tree of
+   * objects.
    *
    * @param v Visitor object
    */
@@ -141,8 +146,7 @@ public final class LocalVariable
    * @param file Output file stream
    * @throws IOException
    */
-  public final void dump(DataOutputStream file) throws IOException
-  {
+  public final void dump(DataOutputStream file) throws IOException {
     file.writeShort(start_pc);
     file.writeShort(length);
     file.writeShort(name_index);
@@ -153,52 +157,63 @@ public final class LocalVariable
   /**
    * @return Constant pool used by this object.
    */
-  public final ConstantPool getConstantPool() { return constant_pool; }
+  public final ConstantPool getConstantPool() {
+    return constant_pool;
+  }
 
   /**
    * @return Variable is valid within getStartPC() .. getStartPC()+getLength()
    */
-  public final int getLength()         { return length; }
+  public final int getLength() {
+    return length;
+  }
 
   /**
    * @return Variable name.
    */
   public final String getName() {
-    ConstantUtf8  c;
+    ConstantUtf8 c;
 
-    c = (ConstantUtf8)constant_pool.getConstant(name_index, CONSTANT_Utf8);
+    c = (ConstantUtf8) constant_pool.getConstant(name_index, CONSTANT_Utf8);
     return c.getBytes();
   }
 
   /**
    * @return Index in constant pool of variable name.
    */
-  public final int getNameIndex()      { return name_index; }
+  public final int getNameIndex() {
+    return name_index;
+  }
 
   /**
    * @return Signature.
    */
   public final String getSignature() {
-    ConstantUtf8  c;
-    c = (ConstantUtf8)constant_pool.getConstant(signature_index,
-                                                CONSTANT_Utf8);
+    ConstantUtf8 c;
+    c = (ConstantUtf8) constant_pool.getConstant(signature_index, CONSTANT_Utf8);
     return c.getBytes();
   }
 
   /**
    * @return Index in constant pool of variable signature.
    */
-  public final int getSignatureIndex() { return signature_index; }
+  public final int getSignatureIndex() {
+    return signature_index;
+  }
 
   /**
    * @return index of register where variable is stored
    */
-  public final int getIndex()           { return index; }
+  public final int getIndex() {
+    return index;
+  }
 
   /**
    * @return Start of range where he variable is valid
    */
-  public final int getStartPC()        { return start_pc; }
+  public final int getStartPC() {
+    return start_pc;
+  }
 
   /**
    * @param constant_pool Constant pool to be used for this object.
@@ -231,7 +246,9 @@ public final class LocalVariable
   /**
    * @param index.
    */
-  public final void setIndex(int index) { this.index = index; }
+  public final void setIndex(int index) {
+    this.index = index;
+  }
 
   /**
    * @param start_pc Specify range where the local variable is valid.
@@ -246,8 +263,17 @@ public final class LocalVariable
   public final String toString() {
     String name = getName(), signature = Utility.signatureToString(getSignature());
 
-    return "LocalVariable(start_pc = " + start_pc + ", length = " + length +
-      ", index = " + index + ":" + signature + " " + name + ")";
+    return "LocalVariable(start_pc = "
+        + start_pc
+        + ", length = "
+        + length
+        + ", index = "
+        + index
+        + ":"
+        + signature
+        + " "
+        + name
+        + ")";
   }
 
   /**
@@ -255,8 +281,9 @@ public final class LocalVariable
    */
   public LocalVariable copy() {
     try {
-      return (LocalVariable)clone();
-    } catch(CloneNotSupportedException e) {}
+      return (LocalVariable) clone();
+    } catch (CloneNotSupportedException e) {
+    }
 
     return null;
   }

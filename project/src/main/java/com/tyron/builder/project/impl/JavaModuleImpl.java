@@ -39,8 +39,8 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
 
   // the index of all the class files in this module
   private final PackageTrie mClassIndex = new PackageTrie();
-  
-  protected final List<CodeAssistLibrary> libraries = new ArrayList<>(); 
+
+  protected final List<CodeAssistLibrary> libraries = new ArrayList<>();
 
   public JavaModuleImpl(File root) {
     super(root);
@@ -173,21 +173,21 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   @Override
   public void addLibrary(@NonNull CodeAssistLibrary library) {
     File jar = library.getSourceFile();
-        if (jar == null) {
-            return;
-        }
-        if (!jar.getName().endsWith(".jar")) {
-            return;
-        }
-        try {
-            // noinspection unused, used to check if jar is valid.
-            JarFile jarFile = new JarFile(jar);
-            putJar(jar);
-            mLibraries.add(jar);
-            libraries.add(library);
-        } catch (IOException e) {
-            // ignored, don't put the jar
-        }
+    if (jar == null) {
+      return;
+    }
+    if (!jar.getName().endsWith(".jar")) {
+      return;
+    }
+    try {
+      // noinspection unused, used to check if jar is valid.
+      JarFile jarFile = new JarFile(jar);
+      putJar(jar);
+      mLibraries.add(jar);
+      libraries.add(library);
+    } catch (IOException e) {
+      // ignored, don't put the jar
+    }
   }
 
   private boolean hasClassFiles(File file) throws IOException {

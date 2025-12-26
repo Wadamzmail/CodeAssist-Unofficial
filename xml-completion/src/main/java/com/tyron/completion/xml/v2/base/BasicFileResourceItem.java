@@ -16,9 +16,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Resource item representing a file resource, e.g. a drawable or a layout.
- */
+/** Resource item representing a file resource, e.g. a drawable or a layout. */
 public class BasicFileResourceItem extends BasicResourceItemBase {
   @NotNull private final RepositoryConfiguration myConfiguration;
   @NotNull private final String myRelativePath;
@@ -30,13 +28,15 @@ public class BasicFileResourceItem extends BasicResourceItemBase {
    * @param name the name of the resource
    * @param configuration the configuration the resource belongs to
    * @param visibility the visibility of the resource
-   * @param relativePath defines location of the resource. Exact semantics of the path may vary depending on the resource repository
+   * @param relativePath defines location of the resource. Exact semantics of the path may vary
+   *     depending on the resource repository
    */
-  public BasicFileResourceItem(@NotNull ResourceType type,
-                               @NotNull String name,
-                               @NotNull RepositoryConfiguration configuration,
-                               @NotNull ResourceVisibility visibility,
-                               @NotNull String relativePath) {
+  public BasicFileResourceItem(
+      @NotNull ResourceType type,
+      @NotNull String name,
+      @NotNull RepositoryConfiguration configuration,
+      @NotNull ResourceVisibility visibility,
+      @NotNull String relativePath) {
     super(type, name, visibility);
     myConfiguration = configuration;
     myRelativePath = relativePath;
@@ -74,9 +74,9 @@ public class BasicFileResourceItem extends BasicResourceItemBase {
   /**
    * {@inheritDoc}
    *
-   * <p>The returned PathString points either to a file on disk, or to a ZIP entry inside a res.apk file.
-   * In the latter case the filesystem URI part points to res.apk itself, e.g. {@code "zip:///foo/bar/res.apk"}.
-   * The path part is the path of the ZIP entry containing the resource.
+   * <p>The returned PathString points either to a file on disk, or to a ZIP entry inside a res.apk
+   * file. In the latter case the filesystem URI part points to res.apk itself, e.g. {@code
+   * "zip:///foo/bar/res.apk"}. The path part is the path of the ZIP entry containing the resource.
    */
   @Override
   @NotNull
@@ -92,12 +92,12 @@ public class BasicFileResourceItem extends BasicResourceItemBase {
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicFileResourceItem other = (BasicFileResourceItem) obj;
     return myConfiguration.equals(other.myConfiguration)
         && myRelativePath.equals(other.myRelativePath);
@@ -109,10 +109,12 @@ public class BasicFileResourceItem extends BasicResourceItemBase {
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     stream.writeString(myRelativePath);
     String qualifierString = getConfiguration().getQualifierString();
@@ -122,15 +124,15 @@ public class BasicFileResourceItem extends BasicResourceItemBase {
     stream.writeInt(getEncodedDensityForSerialization());
   }
 
-  /**
-   * Creates a BasicFileResourceItem by reading its contents from the given stream.
-   */
+  /** Creates a BasicFileResourceItem by reading its contents from the given stream. */
   @NotNull
-  static BasicFileResourceItem deserialize(@NotNull Base128InputStream stream,
-                                           @NotNull ResourceType resourceType,
-                                           @NotNull String name,
-                                           @NotNull ResourceVisibility visibility,
-                                           @NotNull List<RepositoryConfiguration> configurations) throws IOException {
+  static BasicFileResourceItem deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull ResourceType resourceType,
+      @NotNull String name,
+      @NotNull ResourceVisibility visibility,
+      @NotNull List<RepositoryConfiguration> configurations)
+      throws IOException {
     String relativePath = stream.readString();
     if (relativePath == null) {
       throw StreamFormatException.invalidFormat();
@@ -142,7 +144,8 @@ public class BasicFileResourceItem extends BasicResourceItemBase {
     }
 
     Density density = Density.values()[encodedDensity - 1];
-    return new BasicDensityBasedFileResourceItem(resourceType, name, configuration, visibility, relativePath, density);
+    return new BasicDensityBasedFileResourceItem(
+        resourceType, name, configuration, visibility, relativePath, density);
   }
 
   protected int getEncodedDensityForSerialization() {

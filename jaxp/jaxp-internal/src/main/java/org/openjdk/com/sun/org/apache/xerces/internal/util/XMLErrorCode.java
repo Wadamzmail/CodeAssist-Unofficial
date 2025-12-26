@@ -21,64 +21,61 @@
 package org.openjdk.com.sun.org.apache.xerces.internal.util;
 
 /**
- * <p>A structure that represents an error code, characterized by
- * a domain and a message key.</p>
+ * A structure that represents an error code, characterized by a domain and a message key.
  *
  * @author Naela Nissar, IBM
- *
  */
 final class XMLErrorCode {
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** error domain **/
-    private String fDomain;
+  /** error domain * */
+  private String fDomain;
 
-    /** message key **/
-    private String fKey;
+  /** message key * */
+  private String fKey;
 
-    /**
-     * <p>Constructs an XMLErrorCode with the given domain and key.</p>
-     *
-     * @param domain The error domain.
-     * @param key The key of the error message.
-     */
-    public XMLErrorCode(String domain, String key) {
-        fDomain = domain;
-        fKey = key;
-    }
+  /**
+   * Constructs an XMLErrorCode with the given domain and key.
+   *
+   * @param domain The error domain.
+   * @param key The key of the error message.
+   */
+  public XMLErrorCode(String domain, String key) {
+    fDomain = domain;
+    fKey = key;
+  }
 
-    /**
-     * <p>Convenience method to set the values of an XMLErrorCode.</p>
-     *
-     * @param domain The error domain.
-     * @param key The key of the error message.
-     */
-    public void setValues(String domain, String key) {
-        fDomain = domain;
-        fKey = key;
-    }
+  /**
+   * Convenience method to set the values of an XMLErrorCode.
+   *
+   * @param domain The error domain.
+   * @param key The key of the error message.
+   */
+  public void setValues(String domain, String key) {
+    fDomain = domain;
+    fKey = key;
+  }
 
-    /**
-     * <p>Indicates whether some other object is equal to this XMLErrorCode.</p>
-     *
-     * @param obj the object with which to compare.
-     */
-    public boolean equals(Object obj) {
-        if (!(obj instanceof XMLErrorCode))
-            return false;
-        XMLErrorCode err = (XMLErrorCode) obj;
-        return (fDomain.equals(err.fDomain) && fKey.equals(err.fKey));
-    }
+  /**
+   * Indicates whether some other object is equal to this XMLErrorCode.
+   *
+   * @param obj the object with which to compare.
+   */
+  public boolean equals(Object obj) {
+    if (!(obj instanceof XMLErrorCode)) return false;
+    XMLErrorCode err = (XMLErrorCode) obj;
+    return (fDomain.equals(err.fDomain) && fKey.equals(err.fKey));
+  }
 
-    /**
-     * <p>Returns a hash code value for this XMLErrorCode.</p>
-     *
-     * @return a hash code value for this XMLErrorCode.
-     */
-    public int hashCode() {
-        return fDomain.hashCode() + fKey.hashCode();
-    }
+  /**
+   * Returns a hash code value for this XMLErrorCode.
+   *
+   * @return a hash code value for this XMLErrorCode.
+   */
+  public int hashCode() {
+    return fDomain.hashCode() + fKey.hashCode();
+  }
 }

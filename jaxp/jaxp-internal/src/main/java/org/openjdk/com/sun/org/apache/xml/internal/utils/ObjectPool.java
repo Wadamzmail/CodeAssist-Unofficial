@@ -23,26 +23,30 @@
 package org.openjdk.com.sun.org.apache.xml.internal.utils;
 
 import java.util.ArrayList;
-
+import org.openjdk.com.sun.org.apache.xalan.internal.utils.ObjectFactory;
 import org.openjdk.com.sun.org.apache.xml.internal.res.XMLErrorResources;
 import org.openjdk.com.sun.org.apache.xml.internal.res.XMLMessages;
-import org.openjdk.com.sun.org.apache.xalan.internal.utils.ObjectFactory;
-
 
 /**
  * Pool of object of a given type to pick from to help memory usage
+ *
  * @xsl.usage internal
  */
-public class ObjectPool implements java.io.Serializable
-{
-    static final long serialVersionUID = -8519013691660936643L;
+public class ObjectPool implements java.io.Serializable {
+  static final long serialVersionUID = -8519013691660936643L;
 
-  /** Type of objects in this pool.
-   *  @serial          */
+  /**
+   * Type of objects in this pool.
+   *
+   * @serial
+   */
   private final Class objectType;
 
-  /** Stack of given objects this points to.
-   *  @serial          */
+  /**
+   * Stack of given objects this points to.
+   *
+   * @serial
+   */
   private final ArrayList freeStack;
 
   /**
@@ -50,8 +54,7 @@ public class ObjectPool implements java.io.Serializable
    *
    * @param type Type of objects for this pool
    */
-  public ObjectPool(Class type)
-  {
+  public ObjectPool(Class type) {
     objectType = type;
     freeStack = new ArrayList();
   }
@@ -61,39 +64,28 @@ public class ObjectPool implements java.io.Serializable
    *
    * @param className Fully qualified name of the type of objects for this pool.
    */
-  public ObjectPool(String className)
-  {
-    try
-    {
+  public ObjectPool(String className) {
+    try {
       objectType = ObjectFactory.findProviderClass(className, true);
-    }
-    catch(ClassNotFoundException cnfe)
-    {
+    } catch (ClassNotFoundException cnfe) {
       throw new WrappedRuntimeException(cnfe);
     }
     freeStack = new ArrayList();
   }
 
-
   /**
    * Constructor ObjectPool
-   *
    *
    * @param type Type of objects for this pool
    * @param size Size of vector to allocate
    */
-  public ObjectPool(Class type, int size)
-  {
+  public ObjectPool(Class type, int size) {
     objectType = type;
     freeStack = new ArrayList(size);
   }
 
-  /**
-   * Constructor ObjectPool
-   *
-   */
-  public ObjectPool()
-  {
+  /** Constructor ObjectPool */
+  public ObjectPool() {
     objectType = null;
     freeStack = new ArrayList();
   }
@@ -101,15 +93,12 @@ public class ObjectPool implements java.io.Serializable
   /**
    * Get an instance of the given object in this pool if available
    *
-   *
    * @return an instance of the given object if available or null
    */
-  public synchronized Object getInstanceIfFree()
-  {
+  public synchronized Object getInstanceIfFree() {
 
     // Check if the pool is empty.
-    if (!freeStack.isEmpty())
-    {
+    if (!freeStack.isEmpty()) {
 
       // Remove object from end of free pool.
       Object result = freeStack.remove(freeStack.size() - 1);
@@ -122,29 +111,26 @@ public class ObjectPool implements java.io.Serializable
   /**
    * Get an instance of the given object in this pool
    *
-   *
    * @return An instance of the given object
    */
-  public synchronized Object getInstance()
-  {
+  public synchronized Object getInstance() {
 
     // Check if the pool is empty.
-    if (freeStack.isEmpty())
-    {
+    if (freeStack.isEmpty()) {
 
       // Create a new object if so.
-      try
-      {
+      try {
         return objectType.newInstance();
+      } catch (InstantiationException ex) {
+      } catch (IllegalAccessException ex) {
       }
-      catch (InstantiationException ex){}
-      catch (IllegalAccessException ex){}
 
       // Throw unchecked exception for error in pool configuration.
-      throw new RuntimeException(XMLMessages.createXMLMessage(XMLErrorResources.ER_EXCEPTION_CREATING_POOL, null)); //"exception creating new instance for pool");
-    }
-    else
-    {
+      throw new RuntimeException(
+          XMLMessages.createXMLMessage(
+              XMLErrorResources.ER_EXCEPTION_CREATING_POOL,
+              null)); // "exception creating new instance for pool");
+    } else {
 
       // Remove object from end of free pool.
       Object result = freeStack.remove(freeStack.size() - 1);
@@ -155,11 +141,9 @@ public class ObjectPool implements java.io.Serializable
   /**
    * Add an instance of the given object to the pool
    *
-   *
    * @param obj Object to add.
    */
-  public synchronized void freeInstance(Object obj)
-  {
+  public synchronized void freeInstance(Object obj) {
 
     // Make sure the object is of the correct type.
     // Remove safety.  -sb

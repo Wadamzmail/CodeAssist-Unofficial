@@ -25,43 +25,33 @@ package org.openjdk.com.sun.org.apache.xml.internal.resolver.readers;
 
 import java.util.Vector;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.Catalog;
-import org.openjdk.com.sun.org.apache.xml.internal.resolver.Resolver;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogEntry;
 import org.openjdk.com.sun.org.apache.xml.internal.resolver.CatalogException;
-
+import org.openjdk.com.sun.org.apache.xml.internal.resolver.Resolver;
 import org.xml.sax.*;
 
 /**
- * Parse Extended OASIS Entity Resolution Technical Committee
- * XML Catalog files.
+ * Parse Extended OASIS Entity Resolution Technical Committee XML Catalog files.
  *
  * @see Catalog
- *
- * @author Norman Walsh
- * <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
- *
+ * @author Norman Walsh <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
  */
 public class ExtendedXMLCatalogReader extends OASISXMLCatalogReader {
   /** The namespace name of extended catalog elements */
   public static final String extendedNamespaceName = "http://nwalsh.com/xcatalog/1.0";
 
   /**
-   * The SAX <code>startElement</code> method recognizes elements
-   * from the plain catalog format and instantiates CatalogEntry
-   * objects for them.
+   * The SAX <code>startElement</code> method recognizes elements from the plain catalog format and
+   * instantiates CatalogEntry objects for them.
    *
    * @param namespaceURI The namespace name of the element.
    * @param localName The local name of the element.
    * @param qName The QName of the element.
    * @param atts The list of attributes on the element.
-   *
    * @see CatalogEntry
    */
-  public void startElement (String namespaceURI,
-                            String localName,
-                            String qName,
-                            Attributes atts)
-    throws SAXException {
+  public void startElement(String namespaceURI, String localName, String qName, Attributes atts)
+      throws SAXException {
 
     // Check before calling the super because super will report our
     // namespace as an extension namespace, but that doesn't count
@@ -73,8 +63,7 @@ public class ExtendedXMLCatalogReader extends OASISXMLCatalogReader {
     int entryType = -1;
     Vector entryArgs = new Vector();
 
-    if (namespaceURI != null && extendedNamespaceName.equals(namespaceURI)
-        && !inExtension) {
+    if (namespaceURI != null && extendedNamespaceName.equals(namespaceURI) && !inExtension) {
       // This is an Extended XML Catalog entry
 
       if (atts.getValue("xml:base") != null) {
@@ -108,9 +97,7 @@ public class ExtendedXMLCatalogReader extends OASISXMLCatalogReader {
           entryArgs.add(atts.getValue("suffix"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "uriSuffix",
-                        atts.getValue("suffix"),
-                        atts.getValue("uri"));
+          debug.message(4, "uriSuffix", atts.getValue("suffix"), atts.getValue("uri"));
         }
       } else if (localName.equals("systemSuffix")) {
         if (checkAttributes(atts, "suffix", "uri")) {
@@ -118,9 +105,7 @@ public class ExtendedXMLCatalogReader extends OASISXMLCatalogReader {
           entryArgs.add(atts.getValue("suffix"));
           entryArgs.add(atts.getValue("uri"));
 
-          debug.message(4, "systemSuffix",
-                        atts.getValue("suffix"),
-                        atts.getValue("uri"));
+          debug.message(4, "systemSuffix", atts.getValue("suffix"), atts.getValue("uri"));
         }
       } else {
         // This is equivalent to an invalid catalog entry type
@@ -143,10 +128,7 @@ public class ExtendedXMLCatalogReader extends OASISXMLCatalogReader {
   }
 
   /** The SAX <code>endElement</code> method does nothing. */
-  public void endElement (String namespaceURI,
-                          String localName,
-                          String qName)
-    throws SAXException {
+  public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
 
     super.endElement(namespaceURI, localName, qName);
 
@@ -157,9 +139,7 @@ public class ExtendedXMLCatalogReader extends OASISXMLCatalogReader {
     int entryType = -1;
     Vector entryArgs = new Vector();
 
-    if (namespaceURI != null
-        && (extendedNamespaceName.equals(namespaceURI))
-        && !inExtension) {
+    if (namespaceURI != null && (extendedNamespaceName.equals(namespaceURI)) && !inExtension) {
 
       String popURI = (String) baseURIStack.pop();
       String baseURI = (String) baseURIStack.peek();

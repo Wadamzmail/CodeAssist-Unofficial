@@ -1,30 +1,30 @@
 package com.tyron.editor.util.diff;
 
 import com.tyron.editor.util.Ref;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-
 public final class Diff {
-//  private static final LoggerRt LOG = LoggerRt.getInstance(Diff.class);
+  //  private static final LoggerRt LOG = LoggerRt.getInstance(Diff.class);
 
   @Nullable
-  public static Change buildChanges(@NotNull CharSequence before, @NotNull CharSequence after) throws FilesTooBigForDiffException {
+  public static Change buildChanges(@NotNull CharSequence before, @NotNull CharSequence after)
+      throws FilesTooBigForDiffException {
     return buildChanges(splitLines(before), splitLines(after));
   }
 
   public static String @NotNull [] splitLines(@NotNull CharSequence s) {
-//    return s.length() == 0 ? new String[]{""} : LineTokenizer.tokenize(s, false, false);
+    //    return s.length() == 0 ? new String[]{""} : LineTokenizer.tokenize(s, false, false);
     throw new UnsupportedOperationException();
   }
 
   @Nullable
-  public static <T> Change buildChanges(T @NotNull [] objects1, T @NotNull [] objects2) throws FilesTooBigForDiffException {
+  public static <T> Change buildChanges(T @NotNull [] objects1, T @NotNull [] objects2)
+      throws FilesTooBigForDiffException {
     // Old variant of enumerator worked incorrectly with null values.
     // This check is to ensure that the corrected version does not introduce bugs.
     for (T anObjects1 : objects1) {
@@ -37,10 +37,11 @@ public final class Diff {
     final int startShift = getStartShift(objects1, objects2);
     final int endCut = getEndCut(objects1, objects2, startShift);
 
-    Ref<Change> changeRef = doBuildChangesFast(objects1.length, objects2.length, startShift, endCut);
-      if (changeRef != null) {
-          return changeRef.get();
-      }
+    Ref<Change> changeRef =
+        doBuildChangesFast(objects1.length, objects2.length, startShift, endCut);
+    if (changeRef != null) {
+      return changeRef.get();
+    }
 
     int trimmedLength = objects1.length + objects2.length - 2 * startShift - 2 * endCut;
     Enumerator<T> enumerator = new Enumerator<>(trimmedLength);
@@ -50,37 +51,44 @@ public final class Diff {
   }
 
   @Nullable
-  public static Change buildChanges(int @NotNull [] array1, int @NotNull [] array2) throws FilesTooBigForDiffException {
+  public static Change buildChanges(int @NotNull [] array1, int @NotNull [] array2)
+      throws FilesTooBigForDiffException {
     final int startShift = getStartShift(array1, array2);
     final int endCut = getEndCut(array1, array2, startShift);
 
     Ref<Change> changeRef = doBuildChangesFast(array1.length, array2.length, startShift, endCut);
-      if (changeRef != null) {
-          return changeRef.get();
-      }
+    if (changeRef != null) {
+      return changeRef.get();
+    }
 
     boolean copyArray = startShift != 0 || endCut != 0;
-    int[] ints1 = copyArray ? Arrays.copyOfRange(array1, startShift, array1.length - endCut) : array1;
-    int[] ints2 = copyArray ? Arrays.copyOfRange(array2, startShift, array2.length - endCut) : array2;
+    int[] ints1 =
+        copyArray ? Arrays.copyOfRange(array1, startShift, array1.length - endCut) : array1;
+    int[] ints2 =
+        copyArray ? Arrays.copyOfRange(array2, startShift, array2.length - endCut) : array2;
     return doBuildChanges(ints1, ints2, new ChangeBuilder(startShift));
   }
 
   @Nullable
-  private static Ref<Change> doBuildChangesFast(int length1, int length2, int startShift, int endCut) {
+  private static Ref<Change> doBuildChangesFast(
+      int length1, int length2, int startShift, int endCut) {
     int trimmedLength1 = length1 - startShift - endCut;
     int trimmedLength2 = length2 - startShift - endCut;
-      if (trimmedLength1 != 0 && trimmedLength2 != 0) {
-          return null;
-      }
-    Change change = trimmedLength1 != 0 || trimmedLength2 != 0 ?
-                    new Change(startShift, startShift, trimmedLength1, trimmedLength2, null) :
-                    null;
+    if (trimmedLength1 != 0 && trimmedLength2 != 0) {
+      return null;
+    }
+    Change change =
+        trimmedLength1 != 0 || trimmedLength2 != 0
+            ? new Change(startShift, startShift, trimmedLength1, trimmedLength2, null)
+            : null;
     return new Ref<>(change);
   }
 
-  private static Change doBuildChanges(int @NotNull [] ints1, int @NotNull [] ints2, @NotNull ChangeBuilder builder)
-    throws FilesTooBigForDiffException {
-    Reindexer reindexer = new Reindexer(); // discard unique elements, that have no chance to be matched
+  private static Change doBuildChanges(
+      int @NotNull [] ints1, int @NotNull [] ints2, @NotNull ChangeBuilder builder)
+      throws FilesTooBigForDiffException {
+    Reindexer reindexer =
+        new Reindexer(); // discard unique elements, that have no chance to be matched
     int[][] discarded = reindexer.discardUnique(ints1, ints2);
 
     if (discarded[0].length == 0 && discarded[1].length == 0) {
@@ -94,18 +102,16 @@ public final class Diff {
       PatienceIntLCS patienceIntLCS = new PatienceIntLCS(discarded[0], discarded[1]);
       patienceIntLCS.execute();
       changes = patienceIntLCS.getChanges();
-    }
-    else {
+    } else {
       try {
         MyersLCS intLCS = new MyersLCS(discarded[0], discarded[1]);
         intLCS.executeWithThreshold();
         changes = intLCS.getChanges();
-      }
-      catch (FilesTooBigForDiffException e) {
+      } catch (FilesTooBigForDiffException e) {
         PatienceIntLCS patienceIntLCS = new PatienceIntLCS(discarded[0], discarded[1]);
         patienceIntLCS.execute(true);
         changes = patienceIntLCS.getChanges();
-//        LOG.info("Successful fallback to patience diff");
+        //        LOG.info("Successful fallback to patience diff");
       }
     }
 
@@ -117,9 +123,9 @@ public final class Diff {
     final int size = Math.min(o1.length, o2.length);
     int idx = 0;
     for (int i = 0; i < size; i++) {
-        if (!o1[i].equals(o2[i])) {
-            break;
-        }
+      if (!o1[i].equals(o2[i])) {
+        break;
+      }
       ++idx;
     }
     return idx;
@@ -130,9 +136,9 @@ public final class Diff {
     int idx = 0;
 
     for (int i = 0; i < size; i++) {
-        if (!o1[o1.length - i - 1].equals(o2[o2.length - i - 1])) {
-            break;
-        }
+      if (!o1[o1.length - i - 1].equals(o2[o2.length - i - 1])) {
+        break;
+      }
       ++idx;
     }
     return idx;
@@ -142,37 +148,39 @@ public final class Diff {
     final int size = Math.min(o1.length, o2.length);
     int idx = 0;
     for (int i = 0; i < size; i++) {
-        if (o1[i] != o2[i]) {
-            break;
-        }
+      if (o1[i] != o2[i]) {
+        break;
+      }
       ++idx;
     }
     return idx;
   }
 
-  private static int getEndCut(final int @NotNull [] o1, final int @NotNull [] o2, final int startShift) {
+  private static int getEndCut(
+      final int @NotNull [] o1, final int @NotNull [] o2, final int startShift) {
     final int size = Math.min(o1.length, o2.length) - startShift;
     int idx = 0;
 
     for (int i = 0; i < size; i++) {
-        if (o1[o1.length - i - 1] != o2[o2.length - i - 1]) {
-            break;
-        }
+      if (o1[o1.length - i - 1] != o2[o2.length - i - 1]) {
+        break;
+      }
       ++idx;
     }
     return idx;
   }
 
-  public static int translateLine(@NotNull CharSequence before, @NotNull CharSequence after, int line, boolean approximate)
-    throws FilesTooBigForDiffException {
-//    String[] strings1 = LineTokenizer.tokenize(before, false);
-//    String[] strings2 = LineTokenizer.tokenize(after, false);
-//    if (approximate) {
-//      strings1 = trim(strings1);
-//      strings2 = trim(strings2);
-//    }
-//    Change change = buildChanges(strings1, strings2);
-//    return translateLine(change, line, approximate);
+  public static int translateLine(
+      @NotNull CharSequence before, @NotNull CharSequence after, int line, boolean approximate)
+      throws FilesTooBigForDiffException {
+    //    String[] strings1 = LineTokenizer.tokenize(before, false);
+    //    String[] strings2 = LineTokenizer.tokenize(after, false);
+    //    if (approximate) {
+    //      strings1 = trim(strings1);
+    //      strings2 = trim(strings2);
+    //    }
+    //    Change change = buildChanges(strings1, strings2);
+    //    return translateLine(change, line, approximate);
     throw new UnsupportedOperationException();
   }
 
@@ -185,11 +193,12 @@ public final class Diff {
   }
 
   /**
-   * Tries to translate given line that pointed to the text before change to the line that points to the same text after the change.
+   * Tries to translate given line that pointed to the text before change to the line that points to
+   * the same text after the change.
    *
-   * @param change    target change
-   * @param line      target line before change
-   * @return          translated line if the processing is ok; negative value otherwise
+   * @param change target change
+   * @param line target line before change
+   * @return translated line if the processing is ok; negative value otherwise
    */
   public static int translateLine(@Nullable Change change, int line) {
     return translateLine(change, line, false);
@@ -200,9 +209,9 @@ public final class Diff {
 
     Change currentChange = change;
     while (currentChange != null) {
-        if (line < currentChange.line0) {
-            break;
-        }
+      if (line < currentChange.line0) {
+        break;
+      }
       if (line >= currentChange.line0 + currentChange.deleted) {
         result += currentChange.inserted - currentChange.deleted;
       } else {
@@ -217,37 +226,49 @@ public final class Diff {
 
   public static class Change {
     // todo remove. Return lists instead.
-    /**
-     * Previous or next edit command.
-     */
+    /** Previous or next edit command. */
     public Change link;
-    /** # lines of file 1 changed here.  */
+
+    /** # lines of file 1 changed here. */
     public final int inserted;
-    /** # lines of file 0 changed here.  */
+
+    /** # lines of file 0 changed here. */
     public final int deleted;
-    /** Line number of 1st deleted line.  */
+
+    /** Line number of 1st deleted line. */
     public final int line0;
-    /** Line number of 1st inserted line.  */
+
+    /** Line number of 1st inserted line. */
     public final int line1;
 
-    /** Cons an additional entry onto the front of an edit script OLD.
-     LINE0 and LINE1 are the first affected lines in the two files (origin 0).
-     DELETED is the number of lines deleted here from file 0.
-     INSERTED is the number of lines inserted here in file 1.
-     If DELETED is 0 then LINE0 is the number of the line before
-     which the insertion was done; vice versa for INSERTED and LINE1.  */
+    /**
+     * Cons an additional entry onto the front of an edit script OLD. LINE0 and LINE1 are the first
+     * affected lines in the two files (origin 0). DELETED is the number of lines deleted here from
+     * file 0. INSERTED is the number of lines inserted here in file 1. If DELETED is 0 then LINE0
+     * is the number of the line before which the insertion was done; vice versa for INSERTED and
+     * LINE1.
+     */
     public Change(int line0, int line1, int deleted, int inserted, @Nullable Change old) {
       this.line0 = line0;
       this.line1 = line1;
       this.inserted = inserted;
       this.deleted = deleted;
       link = old;
-      //System.err.println(line0+","+line1+","+inserted+","+deleted);
+      // System.err.println(line0+","+line1+","+inserted+","+deleted);
     }
 
     @NonNls
     public String toString() {
-      return "change[" + "inserted=" + inserted + ", deleted=" + deleted + ", line0=" + line0 + ", line1=" + line1 + "]";
+      return "change["
+          + "inserted="
+          + inserted
+          + ", deleted="
+          + deleted
+          + ", line0="
+          + line0
+          + ", line1="
+          + line1
+          + "]";
     }
 
     public ArrayList<Change> toList() {
@@ -274,11 +295,11 @@ public final class Diff {
     @Override
     public void addChange(int first, int second) {
       Change change = new Change(myIndex1, myIndex2, first, second, null);
-        if (myLastChange != null) {
-            myLastChange.link = change;
-        } else {
-            myFirstChange = change;
-        }
+      if (myLastChange != null) {
+        myLastChange.link = change;
+      } else {
+        myFirstChange = change;
+      }
       myLastChange = change;
       skip(first, second);
     }
@@ -299,9 +320,8 @@ public final class Diff {
   }
 
   public static @Nullable CharSequence linesDiff(
-    @NotNull CharSequence @NotNull [] lines1,
-    @NotNull CharSequence @NotNull [] lines2
-  ) throws FilesTooBigForDiffException {
+      @NotNull CharSequence @NotNull [] lines1, @NotNull CharSequence @NotNull [] lines2)
+      throws FilesTooBigForDiffException {
     Change ch = buildChanges(lines1, lines2);
     if (ch == null) {
       return null;

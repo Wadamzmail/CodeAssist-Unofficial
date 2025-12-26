@@ -31,8 +31,8 @@ import com.tyron.builder.log.LogViewModel;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
+import com.tyron.code.language.LanguageManager;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
-import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.code.ui.editor.scheme.CompiledEditorScheme;
 import com.tyron.code.ui.main.MainViewModel;
@@ -42,11 +42,9 @@ import com.tyron.code.util.ApkInstaller;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.editor.Caret;
 import com.tyron.fileeditor.api.FileEditorManager;
-import com.tyron.code.language.LanguageManager;
-
-
+import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-
+import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.ArrayList;
@@ -54,9 +52,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
 import javax.tools.Diagnostic;
-import dev.mutwakil.codeassist.R;
-import com.tyron.actions.DataContext;
-import io.github.rosemoe.sora.text.Content;
 
 public class AppLogFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
 
@@ -190,7 +185,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                                 if (selectedErrorItem.getDiagnosticWrapper().getLineNumber() > 0
                                     && selectedErrorItem.getDiagnosticWrapper().getColumnNumber()
                                         > 0) {
-                                /*  Bundle bundle = new Bundle(it.getFragment().getArguments());
+                                  /*  Bundle bundle = new Bundle(it.getFragment().getArguments());
                                   bundle.putInt(
                                       CodeEditorFragment.KEY_LINE,
                                       (int)
@@ -310,11 +305,12 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
               for (DiagnosticWrapper diagnostic : diagnostics) {
                 if (diagnostic != null) {
                   if (diagnostic.getKind() != null) {
-                  if (diagnostic.getSource() == null || !diagnostic.getSource().exists()) {
-                        continue;
+                    if (diagnostic.getSource() == null || !diagnostic.getSource().exists()) {
+                      continue;
                     }
-                    String label = diagnostic.getKind().name()+": "+diagnostic.getSource().getName();
-                    label =" [ "+label + ":" + diagnostic.getLineNumber()+" ] ";
+                    String label =
+                        diagnostic.getKind().name() + ": " + diagnostic.getSource().getName();
+                    label = " [ " + label + ":" + diagnostic.getLineNumber() + " ] ";
                     insert(label);
                   }
 
@@ -330,7 +326,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                       actionFab.setVisibility(View.VISIBLE);
                       actionFab.setImageResource(R.drawable.apk_install);
                     } else {
-                     // actionFab.setVisibility(View.GONE);
+                      // actionFab.setVisibility(View.GONE);
                     }
 
                     insert(msg);
@@ -344,24 +340,23 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
                 }
               }
             }
-            
           },
           100);
     }
   }
-  
+
   void insert(String text) {
     CodeEditorView editor = mEditor;
     Content content = editor.getText();
-    String newText = text.replace(content.toString(),"");
+    String newText = text.replace(content.toString(), "");
 
     int lastLine = editor.getLineCount() - 1;
     int lastColumn = content.getColumnCount(lastLine);
 
-    content.insert(lastLine, lastColumn, newText );
-     
-     editor.setSelection(lastLine, 0);
-   }
+    content.insert(lastLine, lastColumn, newText);
+
+    editor.setSelection(lastLine, 0);
+  }
 
   @Override
   public void onProjectOpen(Project project) {}
@@ -461,6 +456,4 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       return new File(path);
     }
   }
-
 }
-

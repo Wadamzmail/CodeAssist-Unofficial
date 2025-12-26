@@ -2,16 +2,11 @@ package com.tyron.code.language.textmate;
 
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.EmptyLanguage;
-import io.github.rosemoe.sora.lang.QuickQuoteHandler;
-import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
+import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
-import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
-import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.ContentReference;
-import io.github.rosemoe.sora.widget.SymbolPairMatch;
 
 public class EmptyTextMateLanguage extends EmptyLanguage implements Language {
   public boolean createIdentifiers = false;
@@ -77,12 +72,12 @@ public class EmptyTextMateLanguage extends EmptyLanguage implements Language {
   }
 
   public void setTabSize(int tabSize) {
-        this.tabSize = tabSize;
-    }
+    this.tabSize = tabSize;
+  }
 
-    public int getTabSize() {
-        return tabSize;
-    }
+  public int getTabSize() {
+    return tabSize;
+  }
 
   @Override
   public boolean useTab() {

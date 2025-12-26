@@ -1,9 +1,8 @@
 package com.tyron.editor.util.diff;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 public class LineTokenizer extends LineTokenizerBase<String> {
   private final char[] myChars;
@@ -24,8 +23,7 @@ public class LineTokenizer extends LineTokenizerBase<String> {
   protected void addLine(List<? super String> lines, int start, int end, boolean appendNewLine) {
     if (appendNewLine) {
       lines.add(myText.substring(start, end) + "\n");
-    }
-    else {
+    } else {
       lines.add(myText.substring(start, end));
     }
   }
@@ -59,5 +57,4 @@ public class LineTokenizer extends LineTokenizerBase<String> {
   public static String correctLineSeparators(@NotNull String text) {
     return concatLines(new LineTokenizer(text).execute());
   }
-
 }

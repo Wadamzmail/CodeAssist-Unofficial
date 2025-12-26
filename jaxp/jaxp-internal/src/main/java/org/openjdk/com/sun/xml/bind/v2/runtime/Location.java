@@ -8,11 +8,10 @@ package org.openjdk.com.sun.xml.bind.v2.runtime;
  */
 // internally, Location is created from Locatable.
 public interface Location {
-    /**
-     * Returns a human-readable string that represents this position.
-     *
-     * @return
-     *      never null.
-     */
-    String toString();
+  /**
+   * Returns a human-readable string that represents this position.
+   *
+   * @return never null.
+   */
+  String toString();
 }

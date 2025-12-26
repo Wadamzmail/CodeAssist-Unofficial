@@ -12,9 +12,7 @@ import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Resource item representing a value resource, e.g. a string or a color.
- */
+/** Resource item representing a value resource, e.g. a string or a color. */
 public class BasicValueResourceItem extends BasicValueResourceItemBase {
   @Nullable private final String myValue;
 
@@ -27,11 +25,12 @@ public class BasicValueResourceItem extends BasicValueResourceItemBase {
    * @param visibility the visibility of the resource
    * @param value the value associated with the resource
    */
-  public BasicValueResourceItem(@NotNull ResourceType type,
-                                @NotNull String name,
-                                @NotNull ResourceSourceFile sourceFile,
-                                @NotNull ResourceVisibility visibility,
-                                @Nullable String value) {
+  public BasicValueResourceItem(
+      @NotNull ResourceType type,
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility,
+      @Nullable String value) {
     super(type, name, sourceFile, visibility);
     myValue = value;
   }
@@ -44,12 +43,12 @@ public class BasicValueResourceItem extends BasicValueResourceItemBase {
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicValueResourceItem other = (BasicValueResourceItem) obj;
     return Objects.equals(myValue, other.myValue);
   }
@@ -60,31 +59,35 @@ public class BasicValueResourceItem extends BasicValueResourceItemBase {
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     stream.writeString(myValue);
     String rawXmlValue = getRawXmlValue();
     stream.writeString(Objects.equals(rawXmlValue, myValue) ? null : rawXmlValue);
   }
 
-  /**
-   * Creates a BasicValueResourceItem by reading its contents from the given stream.
-   */
+  /** Creates a BasicValueResourceItem by reading its contents from the given stream. */
   @NotNull
-  static BasicValueResourceItem deserialize(@NotNull Base128InputStream stream,
-                                            @NotNull ResourceType resourceType,
-                                            @NotNull String name,
-                                            @NotNull ResourceVisibility visibility,
-                                            @NotNull ResourceSourceFile sourceFile,
-                                            @NotNull ResourceNamespace.Resolver resolver) throws IOException {
+  static BasicValueResourceItem deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull ResourceType resourceType,
+      @NotNull String name,
+      @NotNull ResourceVisibility visibility,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceNamespace.Resolver resolver)
+      throws IOException {
     String value = stream.readString();
     String rawXmlValue = stream.readString();
-    BasicValueResourceItem item = rawXmlValue == null ?
-                                  new BasicValueResourceItem(resourceType, name, sourceFile, visibility, value) :
-                                  new BasicTextValueResourceItem(resourceType, name, sourceFile, visibility, value, rawXmlValue);
+    BasicValueResourceItem item =
+        rawXmlValue == null
+            ? new BasicValueResourceItem(resourceType, name, sourceFile, visibility, value)
+            : new BasicTextValueResourceItem(
+                resourceType, name, sourceFile, visibility, value, rawXmlValue);
     item.setNamespaceResolver(resolver);
     return item;
   }

@@ -62,23 +62,21 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 
 /**
  * F2D - Convert float to double
+ *
  * <PRE>Stack: ..., value -&gt; ..., result.word1, result.word2</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class F2D extends ConversionInstruction {
-  /** Convert float to double
-   */
+  /** Convert float to double */
   public F2D() {
     super(Constants.F2D);
   }
 
-
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

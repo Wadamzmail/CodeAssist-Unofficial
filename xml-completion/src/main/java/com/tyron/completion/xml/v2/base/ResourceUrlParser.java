@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Parser of resource URLs. Unlike {@link com.android.resources.ResourceUrl}, this class is resilient to URL syntax
- * errors doesn't create any GC overhead.
+ * Parser of resource URLs. Unlike {@link com.android.resources.ResourceUrl}, this class is
+ * resilient to URL syntax errors doesn't create any GC overhead.
  */
 public final class ResourceUrlParser {
   @NotNull private String resourceUrl = "";
@@ -46,7 +46,8 @@ public final class ResourceUrlParser {
 
     int len = resourceUrl.length();
     int start = prefixEnd;
-    loop: for (int i = prefixEnd; i < len; i++) {
+    loop:
+    for (int i = prefixEnd; i < len; i++) {
       char c = resourceUrl.charAt(i);
       switch (c) {
         case '/':
@@ -83,25 +84,19 @@ public final class ResourceUrlParser {
     return colonPos >= 0 ? resourceUrl.substring(namespacePrefixStart, colonPos) : null;
   }
 
-  /**
-   * Returns the type of the resource URL, or null if the URL don't contain a type.
-   */
+  /** Returns the type of the resource URL, or null if the URL don't contain a type. */
   @Nullable
   public String getType() {
     return slashPos >= 0 ? resourceUrl.substring(typeStart, slashPos) : null;
   }
 
-  /**
-   * Returns the name part of the resource URL.
-   */
+  /** Returns the name part of the resource URL. */
   @NotNull
   public String getName() {
     return resourceUrl.substring(nameStart);
   }
 
-  /**
-   * Returns the qualified name of the resource without any prefix or type.
-   */
+  /** Returns the qualified name of the resource without any prefix or type. */
   @NotNull
   public String getQualifiedName() {
     if (colonPos < 0) {
@@ -113,9 +108,7 @@ public final class ResourceUrlParser {
     return resourceUrl.substring(namespacePrefixStart, colonPos + 1) + getName();
   }
 
-  /**
-   * Checks if the resource URL has the given type.
-   */
+  /** Checks if the resource URL has the given type. */
   public boolean hasType(@NotNull String type) {
     if (slashPos < 0) {
       return false;
@@ -123,13 +116,12 @@ public final class ResourceUrlParser {
     return slashPos == typeStart + type.length() && resourceUrl.startsWith(type, typeStart);
   }
 
-  /**
-   * Checks if the resource URL has the given namespace prefix.
-   */
+  /** Checks if the resource URL has the given namespace prefix. */
   public boolean hasNamespacePrefix(@NotNull String namespacePrefix) {
     if (colonPos < 0) {
       return false;
     }
-    return colonPos == namespacePrefixStart + namespacePrefix.length() && resourceUrl.startsWith(namespacePrefix, namespacePrefixStart);
+    return colonPos == namespacePrefixStart + namespacePrefix.length()
+        && resourceUrl.startsWith(namespacePrefix, namespacePrefixStart);
   }
 }

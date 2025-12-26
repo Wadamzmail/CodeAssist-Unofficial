@@ -16,7 +16,7 @@ public interface AndroidModule extends JavaModule, KotlinModule {
   File getNativeLibrariesDirectory();
 
   File getAssetsDirectory();
-  
+
   String getPackageName();
 
   String getNameSpace();
@@ -65,8 +65,8 @@ public interface AndroidModule extends JavaModule, KotlinModule {
   Map<String, File> getResourceClasses();
 
   void addResourceClass(@NonNull File file);
-  
+
   default String getNamespace() {
-        throw new UnsupportedOperationException();
-    }
+    throw new UnsupportedOperationException();
+  }
 }

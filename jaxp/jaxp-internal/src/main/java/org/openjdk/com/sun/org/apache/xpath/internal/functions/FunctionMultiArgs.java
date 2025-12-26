@@ -25,21 +25,23 @@ package org.openjdk.com.sun.org.apache.xpath.internal.functions;
 import org.openjdk.com.sun.org.apache.xalan.internal.res.XSLMessages;
 import org.openjdk.com.sun.org.apache.xpath.internal.Expression;
 import org.openjdk.com.sun.org.apache.xpath.internal.ExpressionOwner;
+import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitable;
 import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitor;
 import org.openjdk.com.sun.org.apache.xpath.internal.res.XPATHErrorResources;
-import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitable;
 
 /**
- * Base class for functions that accept an undetermined number of multiple
- * arguments.
+ * Base class for functions that accept an undetermined number of multiple arguments.
+ *
  * @xsl.usage advanced
  */
-public class FunctionMultiArgs extends Function3Args
-{
-    static final long serialVersionUID = 7117257746138417181L;
+public class FunctionMultiArgs extends Function3Args {
+  static final long serialVersionUID = 7117257746138417181L;
 
-  /** Argument expressions that are at index 3 or greater.
-   *  @serial */
+  /**
+   * Argument expressions that are at index 3 or greater.
+   *
+   * @serial
+   */
   Expression[] m_args;
 
   /**
@@ -47,36 +49,26 @@ public class FunctionMultiArgs extends Function3Args
    *
    * @return An array that contains the arguments at index 3 or greater.
    */
-  public Expression[] getArgs()
-  {
+  public Expression[] getArgs() {
     return m_args;
   }
 
   /**
-   * Set an argument expression for a function.  This method is called by the
-   * XPath compiler.
+   * Set an argument expression for a function. This method is called by the XPath compiler.
    *
    * @param arg non-null expression that represents the argument.
    * @param argNum The argument number index.
-   *
-   * @throws WrongNumberArgsException If a derived class determines that the
-   * number of arguments is incorrect.
+   * @throws WrongNumberArgsException If a derived class determines that the number of arguments is
+   *     incorrect.
    */
-  public void setArg(Expression arg, int argNum)
-          throws WrongNumberArgsException
-  {
+  public void setArg(Expression arg, int argNum) throws WrongNumberArgsException {
 
-    if (argNum < 3)
-      super.setArg(arg, argNum);
-    else
-    {
-      if (null == m_args)
-      {
+    if (argNum < 3) super.setArg(arg, argNum);
+    else {
+      if (null == m_args) {
         m_args = new Expression[1];
         m_args[0] = arg;
-      }
-      else
-      {
+      } else {
 
         // Slow but space conservative.
         Expression[] args = new Expression[m_args.length + 1];
@@ -91,22 +83,19 @@ public class FunctionMultiArgs extends Function3Args
   }
 
   /**
-   * This function is used to fixup variables from QNames to stack frame
-   * indexes at stylesheet build time.
-   * @param vars List of QNames that correspond to variables.  This list
-   * should be searched backwards for the first qualified name that
-   * corresponds to the variable reference qname.  The position of the
-   * QName in the vector from the start of the vector will be its position
-   * in the stack frame (but variables above the globalsTop value will need
-   * to be offset to the current stack frame).
+   * This function is used to fixup variables from QNames to stack frame indexes at stylesheet build
+   * time.
+   *
+   * @param vars List of QNames that correspond to variables. This list should be searched backwards
+   *     for the first qualified name that corresponds to the variable reference qname. The position
+   *     of the QName in the vector from the start of the vector will be its position in the stack
+   *     frame (but variables above the globalsTop value will need to be offset to the current stack
+   *     frame).
    */
-  public void fixupVariables(java.util.Vector vars, int globalsSize)
-  {
+  public void fixupVariables(java.util.Vector vars, int globalsSize) {
     super.fixupVariables(vars, globalsSize);
-    if(null != m_args)
-    {
-      for (int i = 0; i < m_args.length; i++)
-      {
+    if (null != m_args) {
+      for (int i = 0; i < m_args.length; i++) {
         m_args[i].fixupVariables(vars, globalsSize);
       }
     }
@@ -115,125 +104,104 @@ public class FunctionMultiArgs extends Function3Args
   /**
    * Check that the number of arguments passed to this function is correct.
    *
-   *
    * @param argNum The number of arguments that is being passed to the function.
-   *
    * @throws WrongNumberArgsException
    */
-  public void checkNumberArgs(int argNum) throws WrongNumberArgsException{}
+  public void checkNumberArgs(int argNum) throws WrongNumberArgsException {}
 
   /**
-   * Constructs and throws a WrongNumberArgException with the appropriate
-   * message for this function object.  This class supports an arbitrary
-   * number of arguments, so this method must never be called.
+   * Constructs and throws a WrongNumberArgException with the appropriate message for this function
+   * object. This class supports an arbitrary number of arguments, so this method must never be
+   * called.
    *
    * @throws WrongNumberArgsException
    */
   protected void reportWrongNumberArgs() throws WrongNumberArgsException {
-    String fMsg = XSLMessages.createXPATHMessage(
-        XPATHErrorResources.ER_INCORRECT_PROGRAMMER_ASSERTION,
-        new Object[]{ "Programmer's assertion:  the method FunctionMultiArgs.reportWrongNumberArgs() should never be called." });
+    String fMsg =
+        XSLMessages.createXPATHMessage(
+            XPATHErrorResources.ER_INCORRECT_PROGRAMMER_ASSERTION,
+            new Object[] {
+              "Programmer's assertion:  the method FunctionMultiArgs.reportWrongNumberArgs() should"
+                  + " never be called."
+            });
 
     throw new RuntimeException(fMsg);
   }
 
   /**
-   * Tell if this expression or it's subexpressions can traverse outside
-   * the current subtree.
+   * Tell if this expression or it's subexpressions can traverse outside the current subtree.
    *
    * @return true if traversal outside the context node's subtree can occur.
    */
-  public boolean canTraverseOutsideSubtree()
-  {
+  public boolean canTraverseOutsideSubtree() {
 
-    if (super.canTraverseOutsideSubtree())
-      return true;
-    else
-    {
+    if (super.canTraverseOutsideSubtree()) return true;
+    else {
       int n = m_args.length;
 
-      for (int i = 0; i < n; i++)
-      {
-        if (m_args[i].canTraverseOutsideSubtree())
-          return true;
+      for (int i = 0; i < n; i++) {
+        if (m_args[i].canTraverseOutsideSubtree()) return true;
       }
 
       return false;
     }
   }
 
-  class ArgMultiOwner implements ExpressionOwner
-  {
-        int m_argIndex;
+  class ArgMultiOwner implements ExpressionOwner {
+    int m_argIndex;
 
-        ArgMultiOwner(int index)
-        {
-                m_argIndex = index;
-        }
+    ArgMultiOwner(int index) {
+      m_argIndex = index;
+    }
 
     /**
      * @see ExpressionOwner#getExpression()
      */
-    public Expression getExpression()
-    {
+    public Expression getExpression() {
       return m_args[m_argIndex];
     }
-
 
     /**
      * @see ExpressionOwner#setExpression(Expression)
      */
-    public void setExpression(Expression exp)
-    {
-        exp.exprSetParent(FunctionMultiArgs.this);
-        m_args[m_argIndex] = exp;
+    public void setExpression(Expression exp) {
+      exp.exprSetParent(FunctionMultiArgs.this);
+      m_args[m_argIndex] = exp;
     }
   }
 
-
-    /**
-     * @see XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor)
-     */
-    public void callArgVisitors(XPathVisitor visitor)
-    {
-      super.callArgVisitors(visitor);
-      if (null != m_args)
-      {
-        int n = m_args.length;
-        for (int i = 0; i < n; i++)
-        {
-          m_args[i].callVisitors(new ArgMultiOwner(i), visitor);
-        }
+  /**
+   * @see XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor)
+   */
+  public void callArgVisitors(XPathVisitor visitor) {
+    super.callArgVisitors(visitor);
+    if (null != m_args) {
+      int n = m_args.length;
+      for (int i = 0; i < n; i++) {
+        m_args[i].callVisitors(new ArgMultiOwner(i), visitor);
       }
     }
+  }
 
-    /**
-     * @see Expression#deepEquals(Expression)
-     */
-    public boolean deepEquals(Expression expr)
-    {
-      if (!super.deepEquals(expr))
-            return false;
+  /**
+   * @see Expression#deepEquals(Expression)
+   */
+  public boolean deepEquals(Expression expr) {
+    if (!super.deepEquals(expr)) return false;
 
-      FunctionMultiArgs fma = (FunctionMultiArgs) expr;
-      if (null != m_args)
-      {
-        int n = m_args.length;
-        if ((null == fma) || (fma.m_args.length != n))
-              return false;
+    FunctionMultiArgs fma = (FunctionMultiArgs) expr;
+    if (null != m_args) {
+      int n = m_args.length;
+      if ((null == fma) || (fma.m_args.length != n)) return false;
 
-        for (int i = 0; i < n; i++)
-        {
-          if (!m_args[i].deepEquals(fma.m_args[i]))
-                return false;
-        }
-
-      }
-      else if (null != fma.m_args)
-      {
-          return false;
+      for (int i = 0; i < n; i++) {
+        if (!m_args[i].deepEquals(fma.m_args[i])) return false;
       }
 
-      return true;
+    } else if (null != fma.m_args) {
+      return false;
     }
+
+    return true;
+  }
 }

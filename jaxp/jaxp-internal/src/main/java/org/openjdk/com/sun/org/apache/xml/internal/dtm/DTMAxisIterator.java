@@ -22,13 +22,10 @@
  */
 package org.openjdk.com.sun.org.apache.xml.internal.dtm;
 
-/**
- * This class iterates over a single XPath Axis, and returns node handles.
- */
-public interface DTMAxisIterator extends Cloneable
-{
+/** This class iterates over a single XPath Axis, and returns node handles. */
+public interface DTMAxisIterator extends Cloneable {
 
-  /** Specifies the end of the iteration, and is the same as DTM.NULL.  */
+  /** Specifies the end of the iteration, and is the same as DTM.NULL. */
   public static final int END = DTM.NULL;
 
   /**
@@ -38,18 +35,16 @@ public interface DTMAxisIterator extends Cloneable
    */
   public int next();
 
-
   /**
    * Resets the iterator to the last start node.
    *
-   * @return A DTMAxisIterator, which may or may not be the same as this
-   *         iterator.
+   * @return A DTMAxisIterator, which may or may not be the same as this iterator.
    */
   public DTMAxisIterator reset();
 
   /**
-   * @return the number of nodes in this iterator.  This may be an expensive
-   * operation when called the first time.
+   * @return the number of nodes in this iterator. This may be an expensive operation when called
+   *     the first time.
    */
   public int getLast();
 
@@ -58,29 +53,22 @@ public interface DTMAxisIterator extends Cloneable
    */
   public int getPosition();
 
-  /**
-   * Remembers the current node for the next call to gotoMark().
-   */
+  /** Remembers the current node for the next call to gotoMark(). */
   public void setMark();
 
-  /**
-   * Restores the current node remembered by setMark().
-   */
+  /** Restores the current node remembered by setMark(). */
   public void gotoMark();
 
   /**
-   * Set start to END should 'close' the iterator,
-   * i.e. subsequent call to next() should return END.
+   * Set start to END should 'close' the iterator, i.e. subsequent call to next() should return END.
    *
    * @param node Sets the root of the iteration.
-   *
    * @return A DTMAxisIterator set to the start of the iteration.
    */
   public DTMAxisIterator setStartNode(int node);
 
   /**
-   * Get start to END should 'close' the iterator,
-   * i.e. subsequent call to next() should return END.
+   * Get start to END should 'close' the iterator, i.e. subsequent call to next() should return END.
    *
    * @return The root node of the iteration.
    */
@@ -92,14 +80,11 @@ public interface DTMAxisIterator extends Cloneable
   public boolean isReverse();
 
   /**
-   * @return a deep copy of this iterator. The clone should not be reset
-   * from its current position.
+   * @return a deep copy of this iterator. The clone should not be reset from its current position.
    */
   public DTMAxisIterator cloneIterator();
 
-  /**
-   * Set if restartable.
-   */
+  /** Set if restartable. */
   public void setRestartable(boolean isRestartable);
 
   /**

@@ -20,6 +20,7 @@ import com.tyron.builder.exception.CompilationFailedException;
 import com.tyron.builder.internal.jar.AssembleJar;
 import com.tyron.builder.log.ILogger;
 import com.tyron.builder.log.LogUtils;
+import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.model.ModuleSettings;
 import com.tyron.builder.project.Project;
@@ -70,11 +71,10 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation;
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
-//import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
+// import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
 import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.tyron.builder.model.CodeAssistLibrary;
 
 public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
@@ -1150,17 +1150,14 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
             mCollector,
             new ICReporterBase() {
               @Override
-                        public void reportCompileIteration(boolean b,
-                                                           @NotNull Collection<? extends File> collection,
-                                                           @NotNull ExitCode exitCode) {
+              public void reportCompileIteration(
+                  boolean b,
+                  @NotNull Collection<? extends File> collection,
+                  @NotNull ExitCode exitCode) {}
 
-                        }
-
-                        @Override
-                        public void report(@NotNull Function0<String> function0,
-                                           @NotNull ReportSeverity reportSeverity) {
-
-                        }
+              @Override
+              public void report(
+                  @NotNull Function0<String> function0, @NotNull ReportSeverity reportSeverity) {}
             });
 
         if (mCollector.hasErrors()) {

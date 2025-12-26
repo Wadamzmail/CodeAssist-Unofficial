@@ -1,9 +1,8 @@
 package com.tyron.editor.util.diff;
 
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public abstract class LineTokenizerBase<T> {
   private int myIndex = 0;
@@ -29,8 +28,7 @@ public abstract class LineTokenizerBase<T> {
       if (notAtEnd() && isAtEOL()) {
         if (charAt(endIndex) == '\n') {
           endIndex++;
-        }
-        else {
+        } else {
           appendNewLine = true;
         }
         skipEOL();
@@ -65,9 +63,9 @@ public abstract class LineTokenizerBase<T> {
 
   @Nullable
   public String getLineSeparator() {
-      if (myLineSeparatorStart == -1) {
-          return null;
-      }
+    if (myLineSeparatorStart == -1) {
+      return null;
+    }
     return substring(myLineSeparatorStart, myLineSeparatorEnd);
   }
 

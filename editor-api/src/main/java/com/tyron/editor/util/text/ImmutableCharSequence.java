@@ -11,8 +11,9 @@ public abstract class ImmutableCharSequence implements CharSequence {
   }
 
   private static boolean isImmutable(@NotNull final CharSequence cs) {
-    return cs instanceof ImmutableCharSequence;// ||
-//           cs instanceof CharSequenceSubSequence && isImmutable(((CharSequenceSubSequence)cs).getBaseSequence());
+    return cs instanceof ImmutableCharSequence; // ||
+    //           cs instanceof CharSequenceSubSequence &&
+    // isImmutable(((CharSequenceSubSequence)cs).getBaseSequence());
   }
 
   @Contract(pure = true)

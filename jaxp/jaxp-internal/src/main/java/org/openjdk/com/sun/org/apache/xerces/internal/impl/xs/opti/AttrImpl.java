@@ -72,81 +72,81 @@ import org.w3c.dom.TypeInfo;
  * This class represents a single attribute.
  *
  * @author Rahul Srivastava, Sun Microsystems Inc.
- *
  * @version $Id: AttrImpl.java,v 1.5 2010-11-01 04:40:01 joehw Exp $
  */
-public class AttrImpl extends NodeImpl
-                      implements Attr {
+public class AttrImpl extends NodeImpl implements Attr {
 
-    Element element;
-    String value;
+  Element element;
+  String value;
 
-    /** Default Constructor */
-    public AttrImpl() {
-        nodeType = Node.ATTRIBUTE_NODE;
-    }
+  /** Default Constructor */
+  public AttrImpl() {
+    nodeType = Node.ATTRIBUTE_NODE;
+  }
 
-    /**
-     * Constructs an attribute.
-     *
-     * @param element Element which owns this attribute
-     * @param prefix The QName prefix.
-     * @param localpart The QName localpart.
-     * @param rawname The QName rawname.
-     * @param uri The uri binding for the associated prefix.
-     * @param value The value of the attribute.
-     */
-    public AttrImpl(Element element, String prefix, String localpart, String rawname, String uri, String value) {
-        super(prefix, localpart, rawname, uri, Node.ATTRIBUTE_NODE);
-        this.element = element;
-        this.value = value;
-    }
+  /**
+   * Constructs an attribute.
+   *
+   * @param element Element which owns this attribute
+   * @param prefix The QName prefix.
+   * @param localpart The QName localpart.
+   * @param rawname The QName rawname.
+   * @param uri The uri binding for the associated prefix.
+   * @param value The value of the attribute.
+   */
+  public AttrImpl(
+      Element element, String prefix, String localpart, String rawname, String uri, String value) {
+    super(prefix, localpart, rawname, uri, Node.ATTRIBUTE_NODE);
+    this.element = element;
+    this.value = value;
+  }
 
-    public String getName() {
-        return rawname;
-    }
+  public String getName() {
+    return rawname;
+  }
 
-    public boolean getSpecified() {
-        return true;
-    }
+  public boolean getSpecified() {
+    return true;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public String getNodeValue() {
-        return getValue();
-    }
+  public String getNodeValue() {
+    return getValue();
+  }
 
-    public Element getOwnerElement() {
-        return element;
-    }
+  public Element getOwnerElement() {
+    return element;
+  }
 
-    public Document getOwnerDocument() {
-        return element.getOwnerDocument();
-    }
+  public Document getOwnerDocument() {
+    return element.getOwnerDocument();
+  }
 
-    public void setValue(String value) throws DOMException {
-        this.value = value;
-    }
+  public void setValue(String value) throws DOMException {
+    this.value = value;
+  }
 
-    /**
-     * @since DOM Level 3
-     */
-    public boolean isId(){
-        return false;
-    }
+  /**
+   * @since DOM Level 3
+   */
+  public boolean isId() {
+    return false;
+  }
 
-    /**
-     * Method getSchemaTypeInfo.
-     * @return TypeInfo
-     */
-    public TypeInfo getSchemaTypeInfo(){
-      return null;
-    }
+  /**
+   * Method getSchemaTypeInfo.
+   *
+   * @return TypeInfo
+   */
+  public TypeInfo getSchemaTypeInfo() {
+    return null;
+  }
 
-    /** NON-DOM method for debugging convenience */
-    public String toString() {
-        return getName() + "=" + "\"" + getValue() + "\"";
-    }
+  /** NON-DOM method for debugging convenience */
+  public String toString() {
+    return getName() + "=" + "\"" + getValue() + "\"";
+  }
 }

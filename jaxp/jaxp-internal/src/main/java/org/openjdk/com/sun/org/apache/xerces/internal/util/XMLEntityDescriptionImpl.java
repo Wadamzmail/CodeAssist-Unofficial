@@ -23,159 +23,173 @@ package org.openjdk.com.sun.org.apache.xerces.internal.util;
 import org.openjdk.com.sun.org.apache.xerces.internal.impl.XMLEntityDescription;
 
 /**
- * <p>This class is an implementation of the XMLEntityDescription
- * interface which describes the properties of an entity.</p>
+ * This class is an implementation of the XMLEntityDescription interface which describes the
+ * properties of an entity.
  *
  * @author Michael Glavassevich, IBM
- *
  */
-public class XMLEntityDescriptionImpl
-    extends XMLResourceIdentifierImpl
+public class XMLEntityDescriptionImpl extends XMLResourceIdentifierImpl
     implements XMLEntityDescription {
 
-    //
-    // Constructors
-    //
+  //
+  // Constructors
+  //
 
-    /** Constructs an empty entity description. */
-    public XMLEntityDescriptionImpl() {} // <init>()
+  /** Constructs an empty entity description. */
+  public XMLEntityDescriptionImpl() {} // <init>()
 
-    /**
-     * Constructs an entity description.
-     *
-     * @param entityName The name of the entity.
-     * @param publicId The public identifier.
-     * @param literalSystemId The literal system identifier.
-     * @param baseSystemId The base system identifier.
-     * @param expandedSystemId The expanded system identifier.
-     */
-    public XMLEntityDescriptionImpl(String entityName, String publicId, String literalSystemId,
-                                    String baseSystemId, String expandedSystemId) {
-        setDescription(entityName, publicId, literalSystemId, baseSystemId, expandedSystemId);
-    } // <init>(String,String,String,String,String)
+  /**
+   * Constructs an entity description.
+   *
+   * @param entityName The name of the entity.
+   * @param publicId The public identifier.
+   * @param literalSystemId The literal system identifier.
+   * @param baseSystemId The base system identifier.
+   * @param expandedSystemId The expanded system identifier.
+   */
+  public XMLEntityDescriptionImpl(
+      String entityName,
+      String publicId,
+      String literalSystemId,
+      String baseSystemId,
+      String expandedSystemId) {
+    setDescription(entityName, publicId, literalSystemId, baseSystemId, expandedSystemId);
+  } // <init>(String,String,String,String,String)
 
-    /**
-     * Constructs a resource identifier.
-     *
-     * @param entityName The name of the entity.
-     * @param publicId The public identifier.
-     * @param literalSystemId The literal system identifier.
-     * @param baseSystemId The base system identifier.
-     * @param expandedSystemId The expanded system identifier.
-     * @param namespace The namespace.
-     */
-    public XMLEntityDescriptionImpl(String entityName, String publicId, String literalSystemId,
-                                    String baseSystemId, String expandedSystemId, String namespace) {
-        setDescription(entityName, publicId, literalSystemId, baseSystemId, expandedSystemId, namespace);
-    } // <init>(String,String,String,String,String,String)
+  /**
+   * Constructs a resource identifier.
+   *
+   * @param entityName The name of the entity.
+   * @param publicId The public identifier.
+   * @param literalSystemId The literal system identifier.
+   * @param baseSystemId The base system identifier.
+   * @param expandedSystemId The expanded system identifier.
+   * @param namespace The namespace.
+   */
+  public XMLEntityDescriptionImpl(
+      String entityName,
+      String publicId,
+      String literalSystemId,
+      String baseSystemId,
+      String expandedSystemId,
+      String namespace) {
+    setDescription(
+        entityName, publicId, literalSystemId, baseSystemId, expandedSystemId, namespace);
+  } // <init>(String,String,String,String,String,String)
 
-    //
-    // Data
-    //
+  //
+  // Data
+  //
 
-    /** The name of the entity. */
-    protected String fEntityName;
+  /** The name of the entity. */
+  protected String fEntityName;
 
-    //
-    // Public methods
-    //
+  //
+  // Public methods
+  //
 
-    /**
-     * Sets the name of the entity.
-     *
-     * @param name the name of the entity
-     */
-    public void setEntityName(String name) {
-        fEntityName = name;
-    } // setEntityName(String)
+  /**
+   * Sets the name of the entity.
+   *
+   * @param name the name of the entity
+   */
+  public void setEntityName(String name) {
+    fEntityName = name;
+  } // setEntityName(String)
 
-    /**
-     * Returns the name of the entity.
-     *
-     * @return the name of the entity
-     */
-    public String getEntityName() {
-        return fEntityName;
-    } // getEntityName():String
+  /**
+   * Returns the name of the entity.
+   *
+   * @return the name of the entity
+   */
+  public String getEntityName() {
+    return fEntityName;
+  } // getEntityName():String
 
-    /**
-     * <p>Sets the values of this entity description.</p>
-     *
-     * @param entityName The name of the entity.
-     * @param publicId The public identifier.
-     * @param literalSystemId The literal system identifier.
-     * @param baseSystemId The base system identifier.
-     * @param expandedSystemId The expanded system identifier.
-     */
-    public void setDescription(String entityName, String publicId, String literalSystemId,
-                               String baseSystemId, String expandedSystemId) {
-        setDescription(entityName, publicId, literalSystemId, baseSystemId, expandedSystemId, null);
-    } // setDescription(String,String,String,String,String)
+  /**
+   * Sets the values of this entity description.
+   *
+   * @param entityName The name of the entity.
+   * @param publicId The public identifier.
+   * @param literalSystemId The literal system identifier.
+   * @param baseSystemId The base system identifier.
+   * @param expandedSystemId The expanded system identifier.
+   */
+  public void setDescription(
+      String entityName,
+      String publicId,
+      String literalSystemId,
+      String baseSystemId,
+      String expandedSystemId) {
+    setDescription(entityName, publicId, literalSystemId, baseSystemId, expandedSystemId, null);
+  } // setDescription(String,String,String,String,String)
 
-    /**
-     * <p>Sets the values of this entity description.</p>
-     *
-     * @param entityName The name of the entity.
-     * @param publicId The public identifier.
-     * @param literalSystemId The literal system identifier.
-     * @param baseSystemId The base system identifier.
-     * @param expandedSystemId The expanded system identifier.
-     * @param namespace The namespace.
-     */
-    public void setDescription(String entityName, String publicId, String literalSystemId,
-                               String baseSystemId, String expandedSystemId, String namespace) {
-        fEntityName = entityName;
-        setValues(publicId, literalSystemId, baseSystemId, expandedSystemId, namespace);
-    } // setDescription(String,String,String,String,String,String)
+  /**
+   * Sets the values of this entity description.
+   *
+   * @param entityName The name of the entity.
+   * @param publicId The public identifier.
+   * @param literalSystemId The literal system identifier.
+   * @param baseSystemId The base system identifier.
+   * @param expandedSystemId The expanded system identifier.
+   * @param namespace The namespace.
+   */
+  public void setDescription(
+      String entityName,
+      String publicId,
+      String literalSystemId,
+      String baseSystemId,
+      String expandedSystemId,
+      String namespace) {
+    fEntityName = entityName;
+    setValues(publicId, literalSystemId, baseSystemId, expandedSystemId, namespace);
+  } // setDescription(String,String,String,String,String,String)
 
-    /**
-     * <p>Clears the values.</p>
-     */
-    public void clear() {
-        super.clear();
-        fEntityName = null;
-    } // clear()
+  /** Clears the values. */
+  public void clear() {
+    super.clear();
+    fEntityName = null;
+  } // clear()
 
-    //
-    // Object methods
-    //
+  //
+  // Object methods
+  //
 
-    /** Returns a hash code for this object. */
-    public int hashCode() {
-        int code = super.hashCode();
-        if (fEntityName != null) {
-            code += fEntityName.hashCode();
-        }
-        return code;
-    } // hashCode():int
+  /** Returns a hash code for this object. */
+  public int hashCode() {
+    int code = super.hashCode();
+    if (fEntityName != null) {
+      code += fEntityName.hashCode();
+    }
+    return code;
+  } // hashCode():int
 
-    /** Returns a string representation of this object. */
-    public String toString() {
-        StringBuffer str = new StringBuffer();
-        if (fEntityName != null) {
-            str.append(fEntityName);
-        }
-        str.append(':');
-        if (fPublicId != null) {
-            str.append(fPublicId);
-        }
-        str.append(':');
-        if (fLiteralSystemId != null) {
-            str.append(fLiteralSystemId);
-        }
-        str.append(':');
-        if (fBaseSystemId != null) {
-            str.append(fBaseSystemId);
-        }
-        str.append(':');
-        if (fExpandedSystemId != null) {
-            str.append(fExpandedSystemId);
-        }
-        str.append(':');
-        if (fNamespace != null) {
-            str.append(fNamespace);
-        }
-        return str.toString();
-    } // toString():String
-
+  /** Returns a string representation of this object. */
+  public String toString() {
+    StringBuffer str = new StringBuffer();
+    if (fEntityName != null) {
+      str.append(fEntityName);
+    }
+    str.append(':');
+    if (fPublicId != null) {
+      str.append(fPublicId);
+    }
+    str.append(':');
+    if (fLiteralSystemId != null) {
+      str.append(fLiteralSystemId);
+    }
+    str.append(':');
+    if (fBaseSystemId != null) {
+      str.append(fBaseSystemId);
+    }
+    str.append(':');
+    if (fExpandedSystemId != null) {
+      str.append(fExpandedSystemId);
+    }
+    str.append(':');
+    if (fNamespace != null) {
+      str.append(fNamespace);
+    }
+    return str.toString();
+  } // toString():String
 } // XMLEntityDescriptionImpl

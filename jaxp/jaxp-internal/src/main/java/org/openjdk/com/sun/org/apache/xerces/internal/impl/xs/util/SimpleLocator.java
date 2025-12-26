@@ -27,122 +27,120 @@ import org.openjdk.com.sun.org.apache.xerces.internal.xni.XMLResourceIdentifier;
  * An XMLLocator implementation used for schema error reporting.
  *
  * @xerces.internal
- *
  * @author Sandy Gao, IBM
  */
 public class SimpleLocator implements XMLLocator {
 
-    String lsid, esid;
-    int line, column;
-    int charOffset;
+  String lsid, esid;
+  int line, column;
+  int charOffset;
 
-    public SimpleLocator() {
-    }
+  public SimpleLocator() {}
 
-    public SimpleLocator(String lsid, String esid, int line, int column) {
-        this(lsid, esid, line, column, -1);
-    }
+  public SimpleLocator(String lsid, String esid, int line, int column) {
+    this(lsid, esid, line, column, -1);
+  }
 
-    public void setValues(String lsid, String esid, int line, int column) {
-        setValues(lsid, esid, line, column, -1);
-    }
+  public void setValues(String lsid, String esid, int line, int column) {
+    setValues(lsid, esid, line, column, -1);
+  }
 
-    public SimpleLocator(String lsid, String esid, int line, int column, int offset) {
-        this.line = line;
-        this.column = column;
-        this.lsid = lsid;
-        this.esid = esid;
-        charOffset = offset;
-    }
+  public SimpleLocator(String lsid, String esid, int line, int column, int offset) {
+    this.line = line;
+    this.column = column;
+    this.lsid = lsid;
+    this.esid = esid;
+    charOffset = offset;
+  }
 
-    public void setValues(String lsid, String esid, int line, int column, int offset) {
-        this.line = line;
-        this.column = column;
-        this.lsid = lsid;
-        this.esid = esid;
-        charOffset = offset;
-    }
+  public void setValues(String lsid, String esid, int line, int column, int offset) {
+    this.line = line;
+    this.column = column;
+    this.lsid = lsid;
+    this.esid = esid;
+    charOffset = offset;
+  }
 
-    public int getLineNumber() {
-        return line;
-    }
+  public int getLineNumber() {
+    return line;
+  }
 
-    public int getColumnNumber() {
-        return column;
-    }
+  public int getColumnNumber() {
+    return column;
+  }
 
-    public int getCharacterOffset() {
-        return charOffset;
-    }
+  public int getCharacterOffset() {
+    return charOffset;
+  }
 
-    public String getPublicId() {
-        return null;
-    }
+  public String getPublicId() {
+    return null;
+  }
 
-    public String getExpandedSystemId() {
-        return esid;
-    }
+  public String getExpandedSystemId() {
+    return esid;
+  }
 
-    public String getLiteralSystemId() {
-        return lsid;
-    }
+  public String getLiteralSystemId() {
+    return lsid;
+  }
 
-    public String getBaseSystemId() {
-        return null;
-    }
-    /**
-     * @see XMLLocator#setColumnNumber(int)
-     */
-    public void setColumnNumber(int col) {
-        this.column = col;
-    }
+  public String getBaseSystemId() {
+    return null;
+  }
 
-    /**
-     * @see XMLLocator#setLineNumber(int)
-     */
-    public void setLineNumber(int line) {
-        this.line = line;
-    }
+  /**
+   * @see XMLLocator#setColumnNumber(int)
+   */
+  public void setColumnNumber(int col) {
+    this.column = col;
+  }
 
-    public void setCharacterOffset(int offset) {
-        charOffset = offset;
-    }
+  /**
+   * @see XMLLocator#setLineNumber(int)
+   */
+  public void setLineNumber(int line) {
+    this.line = line;
+  }
 
-    /**
-     * @see XMLResourceIdentifier#setBaseSystemId(String)
-     */
-    public void setBaseSystemId(String systemId) {}
+  public void setCharacterOffset(int offset) {
+    charOffset = offset;
+  }
 
-    /**
-     * @see XMLResourceIdentifier#setExpandedSystemId(String)
-     */
-    public void setExpandedSystemId(String systemId) {
-        esid = systemId;
-    }
+  /**
+   * @see XMLResourceIdentifier#setBaseSystemId(String)
+   */
+  public void setBaseSystemId(String systemId) {}
 
-    /**
-     * @see XMLResourceIdentifier#setLiteralSystemId(String)
-     */
-    public void setLiteralSystemId(String systemId) {
-        lsid = systemId;
-    }
+  /**
+   * @see XMLResourceIdentifier#setExpandedSystemId(String)
+   */
+  public void setExpandedSystemId(String systemId) {
+    esid = systemId;
+  }
 
-    /**
-     * @see XMLResourceIdentifier#setPublicId(String)
-     */
-    public void setPublicId(String publicId) {}
+  /**
+   * @see XMLResourceIdentifier#setLiteralSystemId(String)
+   */
+  public void setLiteralSystemId(String systemId) {
+    lsid = systemId;
+  }
 
-    /** Returns the encoding of the current entity.
-     * Since these locators are used in the construction of
-     * XMLParseExceptions, which know nothing about encodings, there is
-     * no point in having this object deal intelligently
-     * with encoding information.
-     */
-    public String getEncoding() {
-        return null;
-    }
+  /**
+   * @see XMLResourceIdentifier#setPublicId(String)
+   */
+  public void setPublicId(String publicId) {}
 
-    public String getXMLVersion() {
-        return null;
-    }
+  /**
+   * Returns the encoding of the current entity. Since these locators are used in the construction
+   * of XMLParseExceptions, which know nothing about encodings, there is no point in having this
+   * object deal intelligently with encoding information.
+   */
+  public String getEncoding() {
+    return null;
+  }
+
+  public String getXMLVersion() {
+    return null;
+  }
 }

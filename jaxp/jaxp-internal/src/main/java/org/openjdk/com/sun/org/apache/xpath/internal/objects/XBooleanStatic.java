@@ -25,16 +25,18 @@ package org.openjdk.com.sun.org.apache.xpath.internal.objects;
 import org.openjdk.com.sun.org.apache.xml.internal.utils.WrappedRuntimeException;
 
 /**
- * This class doesn't have any XPathContext, so override
- * whatever to ensure it works OK.
+ * This class doesn't have any XPathContext, so override whatever to ensure it works OK.
+ *
  * @xsl.usage internal
  */
-public class XBooleanStatic extends XBoolean
-{
-    static final long serialVersionUID = -8064147275772687409L;
+public class XBooleanStatic extends XBoolean {
+  static final long serialVersionUID = -8064147275772687409L;
 
-  /** The value of the object.
-   *  @serial          */
+  /**
+   * The value of the object.
+   *
+   * @serial
+   */
   private final boolean m_val;
 
   /**
@@ -42,8 +44,7 @@ public class XBooleanStatic extends XBoolean
    *
    * @param b The value of the object
    */
-  public XBooleanStatic(boolean b)
-  {
+  public XBooleanStatic(boolean b) {
 
     super(b);
 
@@ -54,19 +55,13 @@ public class XBooleanStatic extends XBoolean
    * Tell if two objects are functionally equal.
    *
    * @param obj2 Object to compare to this
-   *
    * @return True if the two objects are equal
-   *
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
-  public boolean equals(XObject obj2)
-  {
-    try
-    {
+  public boolean equals(XObject obj2) {
+    try {
       return m_val == obj2.bool();
-    }
-    catch(org.openjdk.javax.xml.transform.TransformerException te)
-    {
+    } catch (org.openjdk.javax.xml.transform.TransformerException te) {
       throw new WrappedRuntimeException(te);
     }
   }

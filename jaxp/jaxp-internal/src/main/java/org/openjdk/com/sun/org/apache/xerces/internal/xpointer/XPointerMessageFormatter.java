@@ -22,76 +22,68 @@ package org.openjdk.com.sun.org.apache.xerces.internal.xpointer;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
 import org.openjdk.com.sun.org.apache.xerces.internal.util.MessageFormatter;
 import org.openjdk.com.sun.org.apache.xerces.internal.utils.SecuritySupport;
 
 /**
- * XPointerMessageFormatter provides error messages for the XPointer Framework
- * and element() Scheme Recommendations.
+ * XPointerMessageFormatter provides error messages for the XPointer Framework and element() Scheme
+ * Recommendations.
  *
  * @xerces.internal
- *
  * @version $Id: XPointerMessageFormatter.java,v 1.5 2010-11-01 04:40:26 joehw Exp $
  */
 class XPointerMessageFormatter implements MessageFormatter {
 
-    public static final String XPOINTER_DOMAIN = "http://www.w3.org/TR/XPTR";
+  public static final String XPOINTER_DOMAIN = "http://www.w3.org/TR/XPTR";
 
-    // private objects to cache the locale and resource bundle
-    private Locale fLocale = null;
+  // private objects to cache the locale and resource bundle
+  private Locale fLocale = null;
 
-    private ResourceBundle fResourceBundle = null;
+  private ResourceBundle fResourceBundle = null;
 
-    /**
-     * Formats a message with the specified arguments using the given locale
-     * information.
-     *
-     * @param locale
-     *            The locale of the message.
-     * @param key
-     *            The message key.
-     * @param arguments
-     *            The message replacement text arguments. The order of the
-     *            arguments must match that of the placeholders in the actual
-     *            message.
-     *
-     * @return Returns the formatted message.
-     *
-     * @throws MissingResourceException
-     *             Thrown if the message with the specified key cannot be found.
-     */
-    public String formatMessage(Locale locale, String key, Object[] arguments)
-            throws MissingResourceException {
+  /**
+   * Formats a message with the specified arguments using the given locale information.
+   *
+   * @param locale The locale of the message.
+   * @param key The message key.
+   * @param arguments The message replacement text arguments. The order of the arguments must match
+   *     that of the placeholders in the actual message.
+   * @return Returns the formatted message.
+   * @throws MissingResourceException Thrown if the message with the specified key cannot be found.
+   */
+  public String formatMessage(Locale locale, String key, Object[] arguments)
+      throws MissingResourceException {
 
-        if (fResourceBundle == null || locale != fLocale) {
-            if (locale != null) {
-                fResourceBundle = SecuritySupport.getResourceBundle(
-                        "org.openjdk.com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages", locale);
-                // memorize the most-recent locale
-                fLocale = locale;
-            }
-            if (fResourceBundle == null)
-                fResourceBundle = SecuritySupport.getResourceBundle(
-                        "org.openjdk.com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages");
-        }
-
-        String msg = fResourceBundle.getString(key);
-        if (arguments != null) {
-            try {
-                msg = java.text.MessageFormat.format(msg, arguments);
-            } catch (Exception e) {
-                msg = fResourceBundle.getString("FormatFailed");
-                msg += " " + fResourceBundle.getString(key);
-            }
-        }
-
-        if (msg == null) {
-            msg = fResourceBundle.getString("BadMessageKey");
-            throw new MissingResourceException(msg,
-                    "org.openjdk.com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages", key);
-        }
-
-        return msg;
+    if (fResourceBundle == null || locale != fLocale) {
+      if (locale != null) {
+        fResourceBundle =
+            SecuritySupport.getResourceBundle(
+                "org.openjdk.com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages", locale);
+        // memorize the most-recent locale
+        fLocale = locale;
+      }
+      if (fResourceBundle == null)
+        fResourceBundle =
+            SecuritySupport.getResourceBundle(
+                "org.openjdk.com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages");
     }
+
+    String msg = fResourceBundle.getString(key);
+    if (arguments != null) {
+      try {
+        msg = java.text.MessageFormat.format(msg, arguments);
+      } catch (Exception e) {
+        msg = fResourceBundle.getString("FormatFailed");
+        msg += " " + fResourceBundle.getString(key);
+      }
+    }
+
+    if (msg == null) {
+      msg = fResourceBundle.getString("BadMessageKey");
+      throw new MissingResourceException(
+          msg, "org.openjdk.com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages", key);
+    }
+
+    return msg;
+  }
 }

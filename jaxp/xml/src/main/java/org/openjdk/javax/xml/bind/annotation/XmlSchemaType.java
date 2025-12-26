@@ -1,38 +1,35 @@
 package org.openjdk.javax.xml.bind.annotation;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PACKAGE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
 /**
  * Maps a Java type to a simple schema built-in type.
  *
- * <p> <b>Usage</b> </p>
- * <p>
- * {@code @XmlSchemaType} annotation can be used with the following program
- * elements: 
- * <ul> 
- *   <li> a JavaBean property </li>
- *   <li> field </li>
- *   <li> package</li>
+ * <p><b>Usage</b>
+ *
+ * <p>{@code @XmlSchemaType} annotation can be used with the following program elements:
+ *
+ * <ul>
+ *   <li>a JavaBean property
+ *   <li>field
+ *   <li>package
  * </ul>
  *
- * <p> {@code @XmlSchemaType} annotation defined for Java type
- * applies to all references to the Java type from a property/field. 
- * A {@code @XmlSchemaType} annotation specified on the
- * property/field overrides the {@code @XmlSchemaType} annotation
- * specified at the package level.
+ * <p>{@code @XmlSchemaType} annotation defined for Java type applies to all references to the Java
+ * type from a property/field. A {@code @XmlSchemaType} annotation specified on the property/field
+ * overrides the {@code @XmlSchemaType} annotation specified at the package level.
  *
- * <p> This annotation can be used with the following annotations:
- * {@link XmlElement},  {@link XmlAttribute}.
- * <p>
- * <b>Example 1: </b> Customize mapping of XMLGregorianCalendar on the
- *  field.
- * 
+ * <p>This annotation can be used with the following annotations: {@link XmlElement}, {@link
+ * XmlAttribute}.
+ *
+ * <p><b>Example 1: </b> Customize mapping of XMLGregorianCalendar on the field.
+ *
  * <pre>
  *     //Example: Code fragment
  *     public class USPrice {
@@ -41,7 +38,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *         public XMLGregorianCalendar date;
  *     }
  * {@code
- * 
+ *
  *     <!-- Example: Local XML Schema element -->
  *     <xs:complexType name="USPrice"/>
  *       <xs:sequence>
@@ -50,35 +47,32 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *     </xs:complexType>
  * }</pre>
  *
- * <p> <b> Example 2: </b> Customize mapping of XMLGregorianCalendar at package
- *     level </p>
+ * <p><b> Example 2: </b> Customize mapping of XMLGregorianCalendar at package level
+ *
  * <pre>
  *     package foo;
  *     &#64;javax.xml.bind.annotation.XmlSchemaType(
  *          name="date", type=javax.xml.datatype.XMLGregorianCalendar.class)
  *     }
  * </pre>
- * 
+ *
  * @since 1.6, JAXB 2.0
  */
-
-@Retention(RUNTIME) @Target({FIELD,METHOD,PACKAGE})        
+@Retention(RUNTIME)
+@Target({FIELD, METHOD, PACKAGE})
 public @interface XmlSchemaType {
-    String name();
-    String namespace() default "http://www.w3.org/2001/XMLSchema";
-    /**
-     * If this annotation is used at the package level, then value of
-     * the type() must be specified.
-     */
+  String name();
 
-    Class type() default DEFAULT.class;
+  String namespace() default "http://www.w3.org/2001/XMLSchema";
 
-    /**
-     * Used in {@link XmlSchemaType#type()} to
-     * signal that the type be inferred from the signature
-     * of the property.
-     */
+  /**
+   * If this annotation is used at the package level, then value of the type() must be specified.
+   */
+  Class type() default DEFAULT.class;
 
-    static final class DEFAULT {}
-
+  /**
+   * Used in {@link XmlSchemaType#type()} to signal that the type be inferred from the signature of
+   * the property.
+   */
+  static final class DEFAULT {}
 }

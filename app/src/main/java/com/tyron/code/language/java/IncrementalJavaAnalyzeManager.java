@@ -23,8 +23,8 @@ public class IncrementalJavaAnalyzeManager
     mLexer = new JavaLexer(LanguageLevel.HIGHEST);
   }
 
-  @Override 
-  public void onAddState(LexerPosition pos){} 
+  @Override
+  public void onAddState(LexerPosition pos) {}
 
   @Override
   public LexerPosition getInitialState() {
@@ -41,18 +41,19 @@ public class IncrementalJavaAnalyzeManager
     return state.equals(another);
   }
 
-
   public LineTokenizeResult<LexerPosition, Object> tokenizeLine(
       CharSequence line, LexerPosition state) {
     return null;
   }
-  @Override 
-  public void onAbandonState(LexerPosition state){}  
-        
-  @Override 
- public LineTokenizeResult<LexerPosition,Object> tokenizeLine(CharSequence line,LexerPosition state,int lineIndex){
-     return null;
- }    
+
+  @Override
+  public void onAbandonState(LexerPosition state) {}
+
+  @Override
+  public LineTokenizeResult<LexerPosition, Object> tokenizeLine(
+      CharSequence line, LexerPosition state, int lineIndex) {
+    return null;
+  }
 
   @Override
   public List<Span> generateSpansForLine(LineTokenizeResult<LexerPosition, Object> tokens) {

@@ -22,15 +22,16 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Resource item representing an attr resource.
- */
+/** Resource item representing an attr resource. */
 public class BasicAttrResourceItem extends BasicValueResourceItemBase implements AttrResourceValue {
   @NotNull private Set<AttributeFormat> myFormats;
+
   /** The keys are enum or flag names, the values are corresponding numeric values. */
   @NotNull private final Map<String, Integer> myValueMap;
+
   /** The keys are enum or flag names, the values are the value descriptions. */
   @NotNull private final Map<String, String> myValueDescriptionMap;
+
   @Nullable private final String myDescription;
   @Nullable private final String myGroupName;
 
@@ -43,26 +44,31 @@ public class BasicAttrResourceItem extends BasicValueResourceItemBase implements
    * @param description the description of the attr resource, if available
    * @param groupName the name of the attr group, if available
    * @param formats the allowed attribute formats
-   * @param valueMap the enum or flag integer values keyed by the value names. Some of the values in the
-   *     map may be null. The map must contain the names of all declared values, even the ones that don't
-   *     have corresponding numeric values.
+   * @param valueMap the enum or flag integer values keyed by the value names. Some of the values in
+   *     the map may be null. The map must contain the names of all declared values, even the ones
+   *     that don't have corresponding numeric values.
    * @param valueDescriptionMap the enum or flag value descriptions keyed by the value names
    */
-  public BasicAttrResourceItem(@NotNull String name,
-                               @NotNull ResourceSourceFile sourceFile,
-                               @NotNull ResourceVisibility visibility,
-                               @Nullable String description,
-                               @Nullable String groupName,
-                               @NotNull Set<AttributeFormat> formats,
-                               @NotNull Map<String, Integer> valueMap,
-                               @NotNull Map<String, String> valueDescriptionMap) {
+  public BasicAttrResourceItem(
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceVisibility visibility,
+      @Nullable String description,
+      @Nullable String groupName,
+      @NotNull Set<AttributeFormat> formats,
+      @NotNull Map<String, Integer> valueMap,
+      @NotNull Map<String, String> valueDescriptionMap) {
     super(ResourceType.ATTR, name, sourceFile, visibility);
     myDescription = description;
     myGroupName = groupName;
     myFormats = ImmutableSet.copyOf(formats);
     // Cannot use ImmutableMap.copyOf() since valueMap may contain null values.
-    myValueMap = valueMap.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(valueMap);
-    myValueDescriptionMap = valueDescriptionMap.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(valueDescriptionMap);
+    myValueMap =
+        valueMap.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(valueMap);
+    myValueDescriptionMap =
+        valueDescriptionMap.isEmpty()
+            ? Collections.emptyMap()
+            : Collections.unmodifiableMap(valueDescriptionMap);
   }
 
   @Override
@@ -72,7 +78,8 @@ public class BasicAttrResourceItem extends BasicValueResourceItemBase implements
   }
 
   /**
-   * Replaces the set of the allowed attribute formats. Intended to be called only by the resource repository code.
+   * Replaces the set of the allowed attribute formats. Intended to be called only by the resource
+   * repository code.
    *
    * @param formats the new set of the allowed attribute formats
    */
@@ -106,45 +113,56 @@ public class BasicAttrResourceItem extends BasicValueResourceItemBase implements
 
   @Override
   public boolean equals(@Nullable Object obj) {
-      if (this == obj) {
-          return true;
-      }
-      if (!super.equals(obj)) {
-          return false;
-      }
+    if (this == obj) {
+      return true;
+    }
+    if (!super.equals(obj)) {
+      return false;
+    }
     BasicAttrResourceItem other = (BasicAttrResourceItem) obj;
-    return Objects.equals(myDescription, other.myDescription) &&
-           Objects.equals(myGroupName, other.myGroupName) &&
-           myFormats.equals(other.myFormats) &&
-           myValueMap.equals(other.myValueMap) &&
-           myValueDescriptionMap.equals(other.myValueDescriptionMap);
+    return Objects.equals(myDescription, other.myDescription)
+        && Objects.equals(myGroupName, other.myGroupName)
+        && myFormats.equals(other.myFormats)
+        && myValueMap.equals(other.myValueMap)
+        && myValueDescriptionMap.equals(other.myValueDescriptionMap);
   }
 
-  /**
-   * Creates and returns an {@link BasicAttrReference} pointing to this attribute.
-   */
+  /** Creates and returns an {@link BasicAttrReference} pointing to this attribute. */
   @NotNull
   public BasicAttrReference createReference() {
     BasicAttrReference attrReference =
-        new BasicAttrReference(getNamespace(), getName(), getSourceFile(), getVisibility(), myDescription, myGroupName);
+        new BasicAttrReference(
+            getNamespace(),
+            getName(),
+            getSourceFile(),
+            getVisibility(),
+            myDescription,
+            myGroupName);
     attrReference.setNamespaceResolver(getNamespaceResolver());
     return attrReference;
   }
 
   @Override
-  public void serialize(@NotNull Base128OutputStream stream,
-                        @NotNull Object2IntMap<String> configIndexes,
-                        @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
-                        @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes) throws IOException {
+  public void serialize(
+      @NotNull Base128OutputStream stream,
+      @NotNull Object2IntMap<String> configIndexes,
+      @NotNull Object2IntMap<ResourceSourceFile> sourceFileIndexes,
+      @NotNull Object2IntMap<ResourceNamespace.Resolver> namespaceResolverIndexes)
+      throws IOException {
     super.serialize(stream, configIndexes, sourceFileIndexes, namespaceResolverIndexes);
     serializeAttrValue(this, getRepository().getNamespace(), stream);
   }
 
-  static void serializeAttrValue(@NotNull AttrResourceValue attr, @NotNull ResourceNamespace defaultNamespace,
-                                 @NotNull Base128OutputStream stream) throws IOException {
+  static void serializeAttrValue(
+      @NotNull AttrResourceValue attr,
+      @NotNull ResourceNamespace defaultNamespace,
+      @NotNull Base128OutputStream stream)
+      throws IOException {
     ResourceNamespace namespace = attr.getNamespace();
-    String namespaceSuffix = namespace.equals(defaultNamespace) ?
-                             null : namespace.getXmlNamespaceUri().substring(URI_DOMAIN_PREFIX.length());
+    String namespaceSuffix =
+        namespace.equals(defaultNamespace)
+            ? null
+            : namespace.getXmlNamespaceUri().substring(URI_DOMAIN_PREFIX.length());
     stream.writeString(namespaceSuffix);
 
     stream.writeString(attr.getDescription());
@@ -162,22 +180,25 @@ public class BasicAttrResourceItem extends BasicValueResourceItemBase implements
       String name = entry.getKey();
       stream.writeString(name);
       Integer value = entry.getValue();
-      int v = value == null ? Integer.MIN_VALUE : value + 1; // Use value + 1 to reduce length of encoded -1 value.
+      int v =
+          value == null
+              ? Integer.MIN_VALUE
+              : value + 1; // Use value + 1 to reduce length of encoded -1 value.
       stream.writeInt(v);
       String description = attr.getValueDescription(name);
       stream.writeString(description);
     }
   }
 
-  /**
-   * Creates a BasicAttrResourceItem by reading its contents from the given stream.
-   */
+  /** Creates a BasicAttrResourceItem by reading its contents from the given stream. */
   @NotNull
-  static BasicValueResourceItemBase deserialize(@NotNull Base128InputStream stream,
-                                                @NotNull String name,
-                                                @NotNull ResourceVisibility visibility,
-                                                @NotNull ResourceSourceFile sourceFile,
-                                                @NotNull ResourceNamespace.Resolver resolver) throws IOException {
+  static BasicValueResourceItemBase deserialize(
+      @NotNull Base128InputStream stream,
+      @NotNull String name,
+      @NotNull ResourceVisibility visibility,
+      @NotNull ResourceSourceFile sourceFile,
+      @NotNull ResourceNamespace.Resolver resolver)
+      throws IOException {
     String namespaceSuffix = stream.readString();
     String description = stream.readString();
     String groupName = stream.readString();
@@ -185,14 +206,18 @@ public class BasicAttrResourceItem extends BasicValueResourceItemBase implements
     int formatMask = stream.readInt();
     Set<AttributeFormat> formats = EnumSet.noneOf(AttributeFormat.class);
     AttributeFormat[] attributeFormatValues = AttributeFormat.values();
-    for (int ordinal = 0; ordinal < attributeFormatValues.length && formatMask != 0; ordinal++, formatMask >>>= 1) {
+    for (int ordinal = 0;
+        ordinal < attributeFormatValues.length && formatMask != 0;
+        ordinal++, formatMask >>>= 1) {
       if ((formatMask & 0x1) != 0) {
         formats.add(attributeFormatValues[ordinal]);
       }
     }
     int n = stream.readInt();
-    Map<String, Integer> valueMap = n == 0 ? Collections.emptyMap() : Maps.newHashMapWithExpectedSize(n);
-    Map<String, String> descriptionMap = n == 0 ? Collections.emptyMap() : Maps.newHashMapWithExpectedSize(n);
+    Map<String, Integer> valueMap =
+        n == 0 ? Collections.emptyMap() : Maps.newHashMapWithExpectedSize(n);
+    Map<String, String> descriptionMap =
+        n == 0 ? Collections.emptyMap() : Maps.newHashMapWithExpectedSize(n);
     for (int i = 0; i < n; i++) {
       String valueName = stream.readString();
       int value = stream.readInt();
@@ -206,23 +231,42 @@ public class BasicAttrResourceItem extends BasicValueResourceItemBase implements
     }
     BasicValueResourceItemBase item;
     if (formats.isEmpty() && valueMap.isEmpty()) {
-      ResourceNamespace namespace = namespaceSuffix == null ?
-                                    sourceFile.getRepository().getNamespace() :
-                                    ResourceNamespace.fromNamespaceUri(URI_DOMAIN_PREFIX + namespaceSuffix);
+      ResourceNamespace namespace =
+          namespaceSuffix == null
+              ? sourceFile.getRepository().getNamespace()
+              : ResourceNamespace.fromNamespaceUri(URI_DOMAIN_PREFIX + namespaceSuffix);
       if (namespace == null) {
         throw StreamFormatException.invalidFormat();
       }
-      item = new BasicAttrReference(namespace, name, sourceFile, visibility, description, groupName);
-    }
-    else if (namespaceSuffix == null) {
-      item = new BasicAttrResourceItem(name, sourceFile, visibility, description, groupName, formats, valueMap, descriptionMap);
-    }
-    else {
-      ResourceNamespace namespace = ResourceNamespace.fromNamespaceUri(URI_DOMAIN_PREFIX + namespaceSuffix);
+      item =
+          new BasicAttrReference(namespace, name, sourceFile, visibility, description, groupName);
+    } else if (namespaceSuffix == null) {
+      item =
+          new BasicAttrResourceItem(
+              name,
+              sourceFile,
+              visibility,
+              description,
+              groupName,
+              formats,
+              valueMap,
+              descriptionMap);
+    } else {
+      ResourceNamespace namespace =
+          ResourceNamespace.fromNamespaceUri(URI_DOMAIN_PREFIX + namespaceSuffix);
       if (namespace == null) {
         throw StreamFormatException.invalidFormat();
       }
-      item = new BasicForeignAttrResourceItem(namespace, name, sourceFile, description, groupName, formats, valueMap, descriptionMap);
+      item =
+          new BasicForeignAttrResourceItem(
+              namespace,
+              name,
+              sourceFile,
+              description,
+              groupName,
+              formats,
+              valueMap,
+              descriptionMap);
     }
     item.setNamespaceResolver(resolver);
     return item;

@@ -22,75 +22,61 @@
  */
 package org.openjdk.com.sun.org.apache.xpath.internal;
 
-import org.openjdk.javax.xml.transform.TransformerException;
-
 import org.openjdk.com.sun.org.apache.xml.internal.utils.PrefixResolver;
 import org.openjdk.com.sun.org.apache.xml.internal.utils.PrefixResolverDefault;
-import org.openjdk.com.sun.org.apache.xpath.internal.objects.XObject;
-
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XBoolean;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XNull;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XNumber;
+import org.openjdk.com.sun.org.apache.xpath.internal.objects.XObject;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XRTreeFrag;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XString;
+import org.openjdk.javax.xml.transform.TransformerException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.traversal.NodeIterator;
 
 /**
- * The methods in this class are convenience methods into the
- * low-level XPath API.
- * These functions tend to be a little slow, since a number of objects must be
- * created for each evaluation.  A faster way is to precompile the
- * XPaths using the low-level API, and then just use the XPaths
- * over and over.
+ * The methods in this class are convenience methods into the low-level XPath API. These functions
+ * tend to be a little slow, since a number of objects must be created for each evaluation. A faster
+ * way is to precompile the XPaths using the low-level API, and then just use the XPaths over and
+ * over.
  *
- * NOTE: In particular, each call to this method will create a new
- * XPathContext, a new DTMManager... and thus a new DTM. That's very
- * safe, since it guarantees that you're always processing against a
- * fully up-to-date view of your document. But it's also portentially
- * very expensive, since you're rebuilding the DTM every time. You should
- * consider using an instance of CachedXPathAPI rather than these static
- * methods.
+ * <p>NOTE: In particular, each call to this method will create a new XPathContext, a new
+ * DTMManager... and thus a new DTM. That's very safe, since it guarantees that you're always
+ * processing against a fully up-to-date view of your document. But it's also portentially very
+ * expensive, since you're rebuilding the DTM every time. You should consider using an instance of
+ * CachedXPathAPI rather than these static methods.
  *
  * @see <a href="http://www.w3.org/TR/xpath">XPath Specification</a>
- * */
-public class XPathAPI
-{
+ */
+public class XPathAPI {
 
   /**
-   * Use an XPath string to select a single node. XPath namespace
-   * prefixes are resolved from the context node, which may not
-   * be what you want (see the next method).
+   * Use an XPath string to select a single node. XPath namespace prefixes are resolved from the
+   * context node, which may not be what you want (see the next method).
    *
    * @param contextNode The node to start searching from.
    * @param str A valid XPath string.
    * @return The first node found that matches the XPath, or null.
-   *
    * @throws TransformerException
    */
-  public static Node selectSingleNode(Node contextNode, String str)
-          throws TransformerException
-  {
+  public static Node selectSingleNode(Node contextNode, String str) throws TransformerException {
     return selectSingleNode(contextNode, str, contextNode);
   }
 
   /**
-   * Use an XPath string to select a single node.
-   * XPath namespace prefixes are resolved from the namespaceNode.
+   * Use an XPath string to select a single node. XPath namespace prefixes are resolved from the
+   * namespaceNode.
    *
    * @param contextNode The node to start searching from.
    * @param str A valid XPath string.
    * @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
    * @return The first node found that matches the XPath, or null.
-   *
    * @throws TransformerException
    */
-  public static Node selectSingleNode(
-          Node contextNode, String str, Node namespaceNode)
-            throws TransformerException
-  {
+  public static Node selectSingleNode(Node contextNode, String str, Node namespaceNode)
+      throws TransformerException {
 
     // Have the XObject return its result as a NodeSetDTM.
     NodeIterator nl = selectNodeIterator(contextNode, str, namespaceNode);
@@ -100,36 +86,31 @@ public class XPathAPI
   }
 
   /**
-   *  Use an XPath string to select a nodelist.
-   *  XPath namespace prefixes are resolved from the contextNode.
+   * Use an XPath string to select a nodelist. XPath namespace prefixes are resolved from the
+   * contextNode.
    *
-   *  @param contextNode The node to start searching from.
-   *  @param str A valid XPath string.
-   *  @return A NodeIterator, should never be null.
-   *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @return A NodeIterator, should never be null.
    * @throws TransformerException
    */
   public static NodeIterator selectNodeIterator(Node contextNode, String str)
-          throws TransformerException
-  {
+      throws TransformerException {
     return selectNodeIterator(contextNode, str, contextNode);
   }
 
   /**
-   *  Use an XPath string to select a nodelist.
-   *  XPath namespace prefixes are resolved from the namespaceNode.
+   * Use an XPath string to select a nodelist. XPath namespace prefixes are resolved from the
+   * namespaceNode.
    *
-   *  @param contextNode The node to start searching from.
-   *  @param str A valid XPath string.
-   *  @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
-   *  @return A NodeIterator, should never be null.
-   *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
+   * @return A NodeIterator, should never be null.
    * @throws TransformerException
    */
-  public static NodeIterator selectNodeIterator(
-          Node contextNode, String str, Node namespaceNode)
-            throws TransformerException
-  {
+  public static NodeIterator selectNodeIterator(Node contextNode, String str, Node namespaceNode)
+      throws TransformerException {
 
     // Execute the XPath, and have it return the result
     XObject list = eval(contextNode, str, namespaceNode);
@@ -139,36 +120,30 @@ public class XPathAPI
   }
 
   /**
-   *  Use an XPath string to select a nodelist.
-   *  XPath namespace prefixes are resolved from the contextNode.
+   * Use an XPath string to select a nodelist. XPath namespace prefixes are resolved from the
+   * contextNode.
    *
-   *  @param contextNode The node to start searching from.
-   *  @param str A valid XPath string.
-   *  @return A NodeIterator, should never be null.
-   *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @return A NodeIterator, should never be null.
    * @throws TransformerException
    */
-  public static NodeList selectNodeList(Node contextNode, String str)
-          throws TransformerException
-  {
+  public static NodeList selectNodeList(Node contextNode, String str) throws TransformerException {
     return selectNodeList(contextNode, str, contextNode);
   }
 
   /**
-   *  Use an XPath string to select a nodelist.
-   *  XPath namespace prefixes are resolved from the namespaceNode.
+   * Use an XPath string to select a nodelist. XPath namespace prefixes are resolved from the
+   * namespaceNode.
    *
-   *  @param contextNode The node to start searching from.
-   *  @param str A valid XPath string.
-   *  @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
-   *  @return A NodeIterator, should never be null.
-   *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
+   * @return A NodeIterator, should never be null.
    * @throws TransformerException
    */
-  public static NodeList selectNodeList(
-          Node contextNode, String str, Node namespaceNode)
-            throws TransformerException
-  {
+  public static NodeList selectNodeList(Node contextNode, String str, Node namespaceNode)
+      throws TransformerException {
 
     // Execute the XPath, and have it return the result
     XObject list = eval(contextNode, str, namespaceNode);
@@ -178,49 +153,46 @@ public class XPathAPI
   }
 
   /**
-   *  Evaluate XPath string to an XObject.  Using this method,
-   *  XPath namespace prefixes will be resolved from the namespaceNode.
-   *  @param contextNode The node to start searching from.
-   *  @param str A valid XPath string.
-   *  @return An XObject, which can be used to obtain a string, number, nodelist, etc, should never be null.
-   *  @see XObject
-   *  @see XNull
-   *  @see XBoolean
-   *  @see XNumber
-   *  @see XString
-   *  @see XRTreeFrag
+   * Evaluate XPath string to an XObject. Using this method, XPath namespace prefixes will be
+   * resolved from the namespaceNode.
    *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @return An XObject, which can be used to obtain a string, number, nodelist, etc, should never
+   *     be null.
+   * @see XObject
+   * @see XNull
+   * @see XBoolean
+   * @see XNumber
+   * @see XString
+   * @see XRTreeFrag
    * @throws TransformerException
    */
-  public static XObject eval(Node contextNode, String str)
-          throws TransformerException
-  {
+  public static XObject eval(Node contextNode, String str) throws TransformerException {
     return eval(contextNode, str, contextNode);
   }
 
   /**
-   *  Evaluate XPath string to an XObject.
-   *  XPath namespace prefixes are resolved from the namespaceNode.
-   *  The implementation of this is a little slow, since it creates
-   *  a number of objects each time it is called.  This could be optimized
-   *  to keep the same objects around, but then thread-safety issues would arise.
+   * Evaluate XPath string to an XObject. XPath namespace prefixes are resolved from the
+   * namespaceNode. The implementation of this is a little slow, since it creates a number of
+   * objects each time it is called. This could be optimized to keep the same objects around, but
+   * then thread-safety issues would arise.
    *
-   *  @param contextNode The node to start searching from.
-   *  @param str A valid XPath string.
-   *  @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
-   *  @return An XObject, which can be used to obtain a string, number, nodelist, etc, should never be null.
-   *  @see XObject
-   *  @see XNull
-   *  @see XBoolean
-   *  @see XNumber
-   *  @see XString
-   *  @see XRTreeFrag
-   *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @param namespaceNode The node from which prefixes in the XPath will be resolved to namespaces.
+   * @return An XObject, which can be used to obtain a string, number, nodelist, etc, should never
+   *     be null.
+   * @see XObject
+   * @see XNull
+   * @see XBoolean
+   * @see XNumber
+   * @see XString
+   * @see XRTreeFrag
    * @throws TransformerException
    */
   public static XObject eval(Node contextNode, String str, Node namespaceNode)
-          throws TransformerException
-  {
+      throws TransformerException {
 
     // Since we don't have a XML Parser involved here, install some default support
     // for things like namespaces, etc.
@@ -233,9 +205,11 @@ public class XPathAPI
     // XPath namespaces are resolved from the input context node's document element
     // if it is a root node, or else the current context node (for lack of a better
     // resolution space, given the simplicity of this sample code).
-    PrefixResolverDefault prefixResolver = new PrefixResolverDefault(
-      (namespaceNode.getNodeType() == Node.DOCUMENT_NODE)
-      ? ((Document) namespaceNode).getDocumentElement() : namespaceNode);
+    PrefixResolverDefault prefixResolver =
+        new PrefixResolverDefault(
+            (namespaceNode.getNodeType() == Node.DOCUMENT_NODE)
+                ? ((Document) namespaceNode).getDocumentElement()
+                : namespaceNode);
 
     // Create the XPath object.
     XPath xpath = new XPath(str, null, prefixResolver, XPath.SELECT, null);
@@ -248,30 +222,27 @@ public class XPathAPI
   }
 
   /**
-   *   Evaluate XPath string to an XObject.
-   *   XPath namespace prefixes are resolved from the namespaceNode.
-   *   The implementation of this is a little slow, since it creates
-   *   a number of objects each time it is called.  This could be optimized
-   *   to keep the same objects around, but then thread-safety issues would arise.
+   * Evaluate XPath string to an XObject. XPath namespace prefixes are resolved from the
+   * namespaceNode. The implementation of this is a little slow, since it creates a number of
+   * objects each time it is called. This could be optimized to keep the same objects around, but
+   * then thread-safety issues would arise.
    *
-   *   @param contextNode The node to start searching from.
-   *   @param str A valid XPath string.
-   *   @param prefixResolver Will be called if the parser encounters namespace
-   *                         prefixes, to resolve the prefixes to URLs.
-   *   @return An XObject, which can be used to obtain a string, number, nodelist, etc, should never be null.
-   *   @see XObject
-   *   @see XNull
-   *   @see XBoolean
-   *   @see XNumber
-   *   @see XString
-   *   @see XRTreeFrag
-   *
+   * @param contextNode The node to start searching from.
+   * @param str A valid XPath string.
+   * @param prefixResolver Will be called if the parser encounters namespace prefixes, to resolve
+   *     the prefixes to URLs.
+   * @return An XObject, which can be used to obtain a string, number, nodelist, etc, should never
+   *     be null.
+   * @see XObject
+   * @see XNull
+   * @see XBoolean
+   * @see XNumber
+   * @see XString
+   * @see XRTreeFrag
    * @throws TransformerException
    */
-  public static XObject eval(
-          Node contextNode, String str, PrefixResolver prefixResolver)
-            throws TransformerException
-  {
+  public static XObject eval(Node contextNode, String str, PrefixResolver prefixResolver)
+      throws TransformerException {
 
     // Since we don't have a XML Parser involved here, install some default support
     // for things like namespaces, etc.

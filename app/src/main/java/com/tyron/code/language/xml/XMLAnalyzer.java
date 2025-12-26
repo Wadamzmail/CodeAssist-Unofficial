@@ -12,6 +12,7 @@ import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.common.util.Debouncer;
@@ -23,11 +24,11 @@ import com.tyron.completion.progress.ProgressManager;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.editor.Editor;
 import com.tyron.viewbinding.task.InjectViewBindingTask;
-import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import dev.mutwakil.codeassist.BuildConfig;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -39,19 +40,13 @@ import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
 import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
-import dev.mutwakil.codeassist.BuildConfig;
-import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 import org.eclipse.tm4e.core.grammar.IGrammar;
-import com.tyron.code.language.textmate.EmptyTextMateLanguage;
-import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
-import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
-
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private boolean mAnalyzerEnabled = false;
-  private static final String SCOPENAME ="text.xml";
+  private static final String SCOPENAME = "text.xml";
 
   private static final Debouncer sDebouncer =
       new Debouncer(
@@ -75,17 +70,18 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       LanguageConfiguration languageConfiguration,
       ThemeRegistry theme)
       throws Exception {
-    super(editor,lang,grammar, languageConfiguration, theme);
+    super(editor, lang, grammar, languageConfiguration, theme);
     mEditorReference = new WeakReference<>(editor);
   }
 
-  public static XMLAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
+  public static XMLAnalyzer create(Editor editor, EmptyTextMateLanguage lang) {
     try {
-        return new XMLAnalyzer(
-            editor,
-            lang,
-             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
-            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
+      return new XMLAnalyzer(
+          editor,
+          lang,
+          GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+          GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),
+          ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

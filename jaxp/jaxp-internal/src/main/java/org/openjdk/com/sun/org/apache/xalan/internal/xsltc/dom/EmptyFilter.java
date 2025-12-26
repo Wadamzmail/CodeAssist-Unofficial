@@ -28,7 +28,7 @@ package org.openjdk.com.sun.org.apache.xalan.internal.xsltc.dom;
  * @author Santiago Pericas-Geertsen
  */
 public final class EmptyFilter implements Filter {
-    public boolean test(int node) {
-        return true;
-    }
+  public boolean test(int node) {
+    return true;
+  }
 }

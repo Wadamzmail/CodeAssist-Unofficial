@@ -2,24 +2,19 @@ package com.tyron.code.analyzer;
 
 import com.tyron.code.analyzer.semantic.SemanticToken;
 import com.tyron.code.language.HighlightUtil;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.editor.CharPosition;
 import com.tyron.editor.Content;
 import com.tyron.editor.Editor;
 import io.github.rosemoe.sora.lang.styling.Span;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.lang.styling.TextStyle;
-import org.eclipse.tm4e.core.internal.theme.FontStyle;
-import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
-import org.eclipse.tm4e.core.internal.theme.ThemeTrieElementRule;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.List;
-import org.eclipse.tm4e.core.internal.theme.StyleAttributes;
-import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
-import org.eclipse.tm4e.core.grammar.IGrammar;
-import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import java.util.List;
+import org.eclipse.tm4e.core.grammar.IGrammar;
+import org.eclipse.tm4e.core.internal.theme.FontStyle;
+import org.eclipse.tm4e.core.internal.theme.StyleAttributes;
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
 public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer {
 
@@ -32,7 +27,7 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
       LanguageConfiguration languageConfiguration,
       ThemeRegistry theme)
       throws Exception {
-    super(editor,language,grammar, languageConfiguration, theme);
+    super(editor, language, grammar, languageConfiguration, theme);
   }
 
   public abstract List<SemanticToken> analyzeSpansAsync(CharSequence contents);
@@ -70,17 +65,16 @@ public abstract class SemanticAnalyzeManager extends DiagnosticTextmateAnalyzer 
   private long getStyle(SemanticToken token) {
     StyleAttributes style = getTheme().match(token.getTokenType());
     if (style != null) {
-        int foreground = style.foregroundId;
-        int fontStyle  = style.fontStyle;
+      int foreground = style.foregroundId;
+      int fontStyle = style.fontStyle;
 
-        return TextStyle.makeStyle(
-                foreground + 255,
-                0,
-                (fontStyle & FontStyle.Bold)   != 0,
-                (fontStyle & FontStyle.Italic) != 0,
-                false);
+      return TextStyle.makeStyle(
+          foreground + 255,
+          0,
+          (fontStyle & FontStyle.Bold) != 0,
+          (fontStyle & FontStyle.Italic) != 0,
+          false);
     }
     return 0L;
-}
-
+  }
 }

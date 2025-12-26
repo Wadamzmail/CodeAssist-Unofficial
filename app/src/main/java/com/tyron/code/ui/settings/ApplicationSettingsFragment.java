@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
+import com.google.android.material.transition.MaterialSharedAxis;
 import com.tyron.common.SharedPreferenceKeys;
 import dev.mutwakil.codeassist.R;
-import com.google.android.material.transition.MaterialSharedAxis;
-import androidx.annotation.Nullable;
 
 public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
 
@@ -51,7 +51,7 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
       }
     }
   }
-  
+
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -82,9 +82,11 @@ public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
           return false;
         });
     assert caLogging != null;
-    caLogging.setOnPreferenceChangeListener((preference,newValue)->{
-      Toast.makeText(requireContext(),"Changes will Apply after restart",Toast.LENGTH_SHORT).show();
-      return true;
-    });
+    caLogging.setOnPreferenceChangeListener(
+        (preference, newValue) -> {
+          Toast.makeText(requireContext(), "Changes will Apply after restart", Toast.LENGTH_SHORT)
+              .show();
+          return true;
+        });
   }
 }

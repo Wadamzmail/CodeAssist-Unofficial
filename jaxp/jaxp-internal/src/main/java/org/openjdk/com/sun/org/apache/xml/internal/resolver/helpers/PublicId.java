@@ -26,35 +26,29 @@ package org.openjdk.com.sun.org.apache.xml.internal.resolver.helpers;
 /**
  * Static methods for dealing with public identifiers.
  *
- * <p>This class defines a set of static methods that can be called
- * to handle public identifiers.</p>
+ * <p>This class defines a set of static methods that can be called to handle public identifiers.
  *
- * @author Norman Walsh
- * <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
- *
+ * @author Norman Walsh <a href="mailto:Norman.Walsh@Sun.COM">Norman.Walsh@Sun.COM</a>
  */
 public abstract class PublicId {
-  protected PublicId() { }
+  protected PublicId() {}
 
   /**
    * Normalize a public identifier.
    *
-   * <p>Public identifiers must be normalized according to the following
-   * rules before comparisons between them can be made:</p>
+   * <p>Public identifiers must be normalized according to the following rules before comparisons
+   * between them can be made:
    *
    * <ul>
-   * <li>Whitespace characters are normalized to spaces (e.g., line feeds,
-   * tabs, etc. become spaces).</li>
-   * <li>Leading and trailing whitespace is removed.</li>
-   * <li>Multiple internal whitespaces are normalized to a single
-   * space.</li>
+   *   <li>Whitespace characters are normalized to spaces (e.g., line feeds, tabs, etc. become
+   *       spaces).
+   *   <li>Leading and trailing whitespace is removed.
+   *   <li>Multiple internal whitespaces are normalized to a single space.
    * </ul>
    *
-   * <p>This method is declared static so that other classes
-   * can use it directly.</p>
+   * <p>This method is declared static so that other classes can use it directly.
    *
    * @param publicId The unnormalized public identifier.
-   *
    * @return The normalized identifier.
    */
   public static String normalize(String publicId) {
@@ -66,7 +60,7 @@ public abstract class PublicId {
     int pos;
 
     while ((pos = normal.indexOf("  ")) >= 0) {
-      normal = normal.substring(0, pos) + normal.substring(pos+1);
+      normal = normal.substring(0, pos) + normal.substring(pos + 1);
     }
 
     return normal;
@@ -75,11 +69,9 @@ public abstract class PublicId {
   /**
    * Encode a public identifier as a "publicid" URN.
    *
-   * <p>This method is declared static so that other classes
-   * can use it directly.</p>
+   * <p>This method is declared static so that other classes can use it directly.
    *
    * @param publicId The unnormalized public identifier.
-   *
    * @return The normalized identifier.
    */
   public static String encodeURN(String publicId) {
@@ -103,11 +95,9 @@ public abstract class PublicId {
   /**
    * Decode a "publicid" URN into a public identifier.
    *
-   * <p>This method is declared static so that other classes
-   * can use it directly.</p>
+   * <p>This method is declared static so that other classes can use it directly.
    *
    * @param urn The urn:publicid: URN
-   *
    * @return The normalized identifier.
    */
   public static String decodeURN(String urn) {
@@ -132,15 +122,10 @@ public abstract class PublicId {
     publicId = PublicId.stringReplace(publicId, "%25", "%");
 
     return publicId;
-    }
+  }
 
-  /**
-   * Replace one string with another.
-   *
-   */
-  private static String stringReplace(String str,
-                                      String oldStr,
-                                      String newStr) {
+  /** Replace one string with another. */
+  private static String stringReplace(String str, String oldStr, String newStr) {
 
     String result = "";
     int pos = str.indexOf(oldStr);
@@ -151,7 +136,7 @@ public abstract class PublicId {
       //      System.out.println(str + " (" + pos + ")");
       result += str.substring(0, pos);
       result += newStr;
-      str = str.substring(pos+1);
+      str = str.substring(pos + 1);
 
       pos = str.indexOf(oldStr);
     }

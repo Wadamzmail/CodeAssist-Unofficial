@@ -2,45 +2,43 @@ package com.tyron.builder.project.impl;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
 import com.google.common.collect.ImmutableMap;
+import com.tyron.builder.model.CodeAssistAndroidLibrary;
+import com.tyron.builder.model.CodeAssistLibrary;
+import com.tyron.builder.project.Project;
+import com.tyron.builder.project.api.AndroidContentRoot;
 import com.tyron.builder.project.api.AndroidModule;
+import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.cache.CacheHolder.CacheKey;
 import com.tyron.common.util.StringSearch;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 
-import com.tyron.builder.model.CodeAssistAndroidLibrary;
-import com.tyron.builder.model.CodeAssistLibrary;
-import java.io.UncheckedIOException;
-import com.tyron.builder.project.api.ContentRoot;
-import com.tyron.builder.project.Project;
-import com.tyron.builder.project.api.AndroidContentRoot;
-
-
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
-  
- // private final List<CodeAssistLibrary> libraries = new ArrayList<>();
-  
+
+  // private final List<CodeAssistLibrary> libraries = new ArrayList<>();
+
   private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
   private String packageName;
   private Project project;
-  
+
   private final Set<String> moduleDependencies = new HashSet<>();
   private final Set<ContentRoot> contentRoots = new HashSet<>(3);
 
@@ -61,35 +59,35 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
       throw new IOException("Unable to open build.gradle file");
     }
   }
-  
-  public List<CodeAssistLibrary> getCodeAssistLibraries() {
-        return libraries;
-  }
-    
-    @Override
-    public void addLibrary(@NonNull @NotNull CodeAssistLibrary library) {
-        libraries.add(library);
 
-        if (library instanceof CodeAssistAndroidLibrary) {
-            CodeAssistAndroidLibrary androidLibrary = (CodeAssistAndroidLibrary) library;
-            List<File> compileJarFiles = androidLibrary.getCompileJarFiles();
-            for (File compileJarFile : compileJarFiles) {
-                try {
-                    putJar(compileJarFile);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            }
-        } else {
-            super.addLibrary(library);
+  public List<CodeAssistLibrary> getCodeAssistLibraries() {
+    return libraries;
+  }
+
+  @Override
+  public void addLibrary(@NonNull @NotNull CodeAssistLibrary library) {
+    libraries.add(library);
+
+    if (library instanceof CodeAssistAndroidLibrary) {
+      CodeAssistAndroidLibrary androidLibrary = (CodeAssistAndroidLibrary) library;
+      List<File> compileJarFiles = androidLibrary.getCompileJarFiles();
+      for (File compileJarFile : compileJarFiles) {
+        try {
+          putJar(compileJarFile);
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
         }
+      }
+    } else {
+      super.addLibrary(library);
     }
+  }
 
   @Override
   public void index() {
     super.index();
 
-  /*  Consumer<File> kotlinConsumer = this::addKotlinFile;
+    /*  Consumer<File> kotlinConsumer = this::addKotlinFile;
 
     if (getJavaDirectory().exists()) {
       FileUtils.iterateFiles(
@@ -104,23 +102,23 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
               TrueFileFilter.INSTANCE)
           .forEachRemaining(kotlinConsumer);
     }*/
-    
+
     Consumer<File> kotlinConsumer = this::addKotlinFile;
 
-        for (ContentRoot contentRoot : getContentRoots()) {
-            if (contentRoot instanceof AndroidContentRoot) {
-                AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
-                for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
-                    // java source root may contain kotlin files aswell
-                    FileUtils.iterateFiles(javaDirectory,
-                            FileFilterUtils.suffixFileFilter(".kt"),
-                            TrueFileFilter.INSTANCE).forEachRemaining(kotlinConsumer);
-                    FileUtils.iterateFiles(javaDirectory,
-                            FileFilterUtils.suffixFileFilter(".java"),
-                            TrueFileFilter.INSTANCE).forEachRemaining(this::addJavaFile);
-                }
-            }
-        } 
+    for (ContentRoot contentRoot : getContentRoots()) {
+      if (contentRoot instanceof AndroidContentRoot) {
+        AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
+        for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
+          // java source root may contain kotlin files aswell
+          FileUtils.iterateFiles(
+                  javaDirectory, FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
+              .forEachRemaining(kotlinConsumer);
+          FileUtils.iterateFiles(
+                  javaDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+              .forEachRemaining(this::addJavaFile);
+        }
+      }
+    }
 
     // R.java files
     //        File gen = new File(getBuildDirectory(), "gen");
@@ -777,27 +775,28 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
       throw new Error(e);
     }
   }
-  
-  @Override
-    public String getPackageName() {
-        return getNameSpace();
-    }
-    
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-    
-    @Override
-    public String getNamespace() {
-        return getNameSpace();
-    }
-    @Override
-    public void setProject(Project project) {
-        this.project = project;
-    }
 
-    @Override
-    public Project getProject() {
-        return project;
-    }
+  @Override
+  public String getPackageName() {
+    return getNameSpace();
+  }
+
+  public void setPackageName(String packageName) {
+    this.packageName = packageName;
+  }
+
+  @Override
+  public String getNamespace() {
+    return getNameSpace();
+  }
+
+  @Override
+  public void setProject(Project project) {
+    this.project = project;
+  }
+
+  @Override
+  public Project getProject() {
+    return project;
+  }
 }

@@ -26,14 +26,12 @@ package org.openjdk.com.sun.org.apache.xml.internal.dtm.ref;
 import org.openjdk.javax.xml.transform.SourceLocator;
 
 /**
- * <code>NodeLocator</code> maintains information on an XML source
- * node.
+ * <code>NodeLocator</code> maintains information on an XML source node.
  *
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since May 23, 2001
  */
-public class NodeLocator implements SourceLocator
-{
+public class NodeLocator implements SourceLocator {
   protected String m_publicId;
   protected String m_systemId;
   protected int m_lineNumber;
@@ -47,9 +45,7 @@ public class NodeLocator implements SourceLocator
    * @param lineNumber an <code>int</code> value
    * @param columnNumber an <code>int</code> value
    */
-  public NodeLocator(String publicId, String systemId,
-                     int lineNumber, int columnNumber)
-  {
+  public NodeLocator(String publicId, String systemId, int lineNumber, int columnNumber) {
     this.m_publicId = publicId;
     this.m_systemId = systemId;
     this.m_lineNumber = lineNumber;
@@ -61,8 +57,7 @@ public class NodeLocator implements SourceLocator
    *
    * @return a <code>String</code> value
    */
-  public String getPublicId()
-  {
+  public String getPublicId() {
     return m_publicId;
   }
 
@@ -71,8 +66,7 @@ public class NodeLocator implements SourceLocator
    *
    * @return a <code>String</code> value
    */
-  public String getSystemId()
-  {
+  public String getSystemId() {
     return m_systemId;
   }
 
@@ -81,32 +75,25 @@ public class NodeLocator implements SourceLocator
    *
    * @return an <code>int</code> value
    */
-  public int getLineNumber()
-  {
+  public int getLineNumber() {
     return m_lineNumber;
   }
 
   /**
-   * <code>getColumnNumber</code> returns the column number of the
-   * node.
+   * <code>getColumnNumber</code> returns the column number of the node.
    *
    * @return an <code>int</code> value
    */
-  public int getColumnNumber()
-  {
+  public int getColumnNumber() {
     return m_columnNumber;
   }
 
   /**
-   * <code>toString</code> returns a string representation of this
-   * NodeLocator instance.
+   * <code>toString</code> returns a string representation of this NodeLocator instance.
    *
    * @return a <code>String</code> value
    */
-  public String toString()
-  {
-    return "file '" + m_systemId
-      + "', line #" + m_lineNumber
-      + ", column #" + m_columnNumber;
+  public String toString() {
+    return "file '" + m_systemId + "', line #" + m_lineNumber + ", column #" + m_columnNumber;
   }
 }

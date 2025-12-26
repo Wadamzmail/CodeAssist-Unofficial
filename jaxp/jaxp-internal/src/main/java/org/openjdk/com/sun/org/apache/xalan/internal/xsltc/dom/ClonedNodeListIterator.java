@@ -27,57 +27,55 @@ import org.openjdk.com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;
 import org.openjdk.com.sun.org.apache.xml.internal.dtm.ref.DTMAxisIteratorBase;
 
 /**
- * A ClonedNodeListIterator is returned by the cloneIterator() method
- * of a CachedNodeListIterator. Its next() method retrieves the nodes from
- * the cache of the CachedNodeListIterator.
+ * A ClonedNodeListIterator is returned by the cloneIterator() method of a CachedNodeListIterator.
+ * Its next() method retrieves the nodes from the cache of the CachedNodeListIterator.
  */
 public final class ClonedNodeListIterator extends DTMAxisIteratorBase {
 
-    /**
-     * Source for this iterator.
-     */
-    private CachedNodeListIterator _source;
-    private int _index = 0;
+  /** Source for this iterator. */
+  private CachedNodeListIterator _source;
 
-    public ClonedNodeListIterator(CachedNodeListIterator source) {
-        _source = source;
-    }
+  private int _index = 0;
 
-    public void setRestartable(boolean isRestartable) {
-        //_isRestartable = isRestartable;
-        //_source.setRestartable(isRestartable);
-    }
+  public ClonedNodeListIterator(CachedNodeListIterator source) {
+    _source = source;
+  }
 
-    public DTMAxisIterator setStartNode(int node) {
-        return this;
-    }
+  public void setRestartable(boolean isRestartable) {
+    // _isRestartable = isRestartable;
+    // _source.setRestartable(isRestartable);
+  }
 
-    public int next() {
-        return _source.getNode(_index++);
-    }
+  public DTMAxisIterator setStartNode(int node) {
+    return this;
+  }
 
-    public int getPosition() {
-        return _index == 0 ? 1 : _index;
-    }
+  public int next() {
+    return _source.getNode(_index++);
+  }
 
-    public int getNodeByPosition(int pos) {
-        return _source.getNode(pos);
-    }
+  public int getPosition() {
+    return _index == 0 ? 1 : _index;
+  }
 
-    public DTMAxisIterator cloneIterator() {
-        return _source.cloneIterator();
-    }
+  public int getNodeByPosition(int pos) {
+    return _source.getNode(pos);
+  }
 
-    public DTMAxisIterator reset() {
-        _index = 0;
-        return this;
-    }
+  public DTMAxisIterator cloneIterator() {
+    return _source.cloneIterator();
+  }
 
-    public void setMark() {
-        _source.setMark();
-    }
+  public DTMAxisIterator reset() {
+    _index = 0;
+    return this;
+  }
 
-    public void gotoMark() {
-        _source.gotoMark();
-    }
+  public void setMark() {
+    _source.setMark();
+  }
+
+  public void gotoMark() {
+    _source.gotoMark();
+  }
 }

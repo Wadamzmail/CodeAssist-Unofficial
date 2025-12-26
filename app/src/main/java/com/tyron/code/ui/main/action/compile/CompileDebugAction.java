@@ -1,30 +1,28 @@
 package com.tyron.code.ui.main.action.compile;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
-
 import com.tyron.actions.AnActionEvent;
 import com.tyron.builder.compiler.BuildType;
-import dev.mutwakil.codeassist.R;
 import com.tyron.code.ui.main.CompileCallback;
 import com.tyron.code.ui.main.MainFragment;
+import dev.mutwakil.codeassist.R;
 
 public class CompileDebugAction extends CompileAction {
 
-    public CompileDebugAction() {
-        super(BuildType.DEBUG);
-    }
+  public CompileDebugAction() {
+    super(BuildType.DEBUG);
+  }
 
-    @Override
-    public void actionPerformed(@NonNull AnActionEvent e) {
-        super.actionPerformed(e);
-        CompileCallback callback = e.getRequiredData(MainFragment.COMPILE_CALLBACK_KEY);
-        callback.compile(BuildType.DEBUG);
-    }
+  @Override
+  public void actionPerformed(@NonNull AnActionEvent e) {
+    super.actionPerformed(e);
+    CompileCallback callback = e.getRequiredData(MainFragment.COMPILE_CALLBACK_KEY);
+    callback.compile(BuildType.DEBUG);
+  }
 
-    @Override
-    public String getTitle(Context context) {
-        return context.getString(R.string.action_menu_build_debug);
-    }
+  @Override
+  public String getTitle(Context context) {
+    return context.getString(R.string.action_menu_build_debug);
+  }
 }

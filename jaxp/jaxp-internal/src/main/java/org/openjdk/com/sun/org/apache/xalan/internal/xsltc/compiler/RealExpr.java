@@ -36,23 +36,23 @@ import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeChe
  * @author Santiago Pericas-Geertsen
  */
 final class RealExpr extends Expression {
-    private double _value;
+  private double _value;
 
-    public RealExpr(double value) {
-        _value = value;
-    }
+  public RealExpr(double value) {
+    _value = value;
+  }
 
-    public Type typeCheck(SymbolTable stable) throws TypeCheckError {
-        return _type = Type.Real;
-    }
+  public Type typeCheck(SymbolTable stable) throws TypeCheckError {
+    return _type = Type.Real;
+  }
 
-    public String toString() {
-        return "real-expr(" + _value + ')';
-    }
+  public String toString() {
+    return "real-expr(" + _value + ')';
+  }
 
-    public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
-        ConstantPoolGen cpg = classGen.getConstantPool();
-        InstructionList il = methodGen.getInstructionList();
-        il.append(new PUSH(cpg, _value));
-    }
+  public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
+    ConstantPoolGen cpg = classGen.getConstantPool();
+    InstructionList il = methodGen.getInstructionList();
+    il.append(new PUSH(cpg, _value));
+  }
 }

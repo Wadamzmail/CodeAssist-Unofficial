@@ -234,4 +234,4 @@ public class AAPT2Compiler {
 
     throw new IOException("AAPT2 Binary not found");
   }
-      } 
+}

@@ -25,47 +25,43 @@ package org.openjdk.com.sun.org.apache.xpath.internal.operations;
 import org.openjdk.com.sun.org.apache.xpath.internal.Expression;
 import org.openjdk.com.sun.org.apache.xpath.internal.ExpressionOwner;
 import org.openjdk.com.sun.org.apache.xpath.internal.XPathContext;
+import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitable;
 import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitor;
 import org.openjdk.com.sun.org.apache.xpath.internal.objects.XObject;
-import org.openjdk.com.sun.org.apache.xpath.internal.XPathVisitable;
 
-/**
- * The unary operation base class.
- */
-public abstract class UnaryOperation extends Expression implements ExpressionOwner
-{
-    static final long serialVersionUID = 6536083808424286166L;
+/** The unary operation base class. */
+public abstract class UnaryOperation extends Expression implements ExpressionOwner {
+  static final long serialVersionUID = 6536083808424286166L;
 
-  /** The operand for the operation.
-   *  @serial */
+  /**
+   * The operand for the operation.
+   *
+   * @serial
+   */
   protected Expression m_right;
 
   /**
-   * This function is used to fixup variables from QNames to stack frame
-   * indexes at stylesheet build time.
-   * @param vars List of QNames that correspond to variables.  This list
-   * should be searched backwards for the first qualified name that
-   * corresponds to the variable reference qname.  The position of the
-   * QName in the vector from the start of the vector will be its position
-   * in the stack frame (but variables above the globalsTop value will need
-   * to be offset to the current stack frame).
+   * This function is used to fixup variables from QNames to stack frame indexes at stylesheet build
+   * time.
+   *
+   * @param vars List of QNames that correspond to variables. This list should be searched backwards
+   *     for the first qualified name that corresponds to the variable reference qname. The position
+   *     of the QName in the vector from the start of the vector will be its position in the stack
+   *     frame (but variables above the globalsTop value will need to be offset to the current stack
+   *     frame).
    */
-  public void fixupVariables(java.util.Vector vars, int globalsSize)
-  {
+  public void fixupVariables(java.util.Vector vars, int globalsSize) {
     m_right.fixupVariables(vars, globalsSize);
   }
 
   /**
-   * Tell if this expression or it's subexpressions can traverse outside
-   * the current subtree.
+   * Tell if this expression or it's subexpressions can traverse outside the current subtree.
    *
    * @return true if traversal outside the context node's subtree can occur.
    */
-  public boolean canTraverseOutsideSubtree()
-  {
+  public boolean canTraverseOutsideSubtree() {
 
-    if (null != m_right && m_right.canTraverseOutsideSubtree())
-      return true;
+    if (null != m_right && m_right.canTraverseOutsideSubtree()) return true;
 
     return false;
   }
@@ -73,12 +69,9 @@ public abstract class UnaryOperation extends Expression implements ExpressionOwn
   /**
    * Set the expression operand for the operation.
    *
-   *
-   * @param r The expression operand to which the unary operation will be
-   *          applied.
+   * @param r The expression operand to which the unary operation will be applied.
    */
-  public void setRight(Expression r)
-  {
+  public void setRight(Expression r) {
     m_right = r;
     r.exprSetParent(this);
   }
@@ -86,16 +79,13 @@ public abstract class UnaryOperation extends Expression implements ExpressionOwn
   /**
    * Execute the operand and apply the unary operation to the result.
    *
-   *
    * @param xctxt The runtime execution context.
-   *
-   * @return An XObject that represents the result of applying the unary
-   *         operation to the evaluated operand.
-   *
+   * @return An XObject that represents the result of applying the unary operation to the evaluated
+   *     operand.
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
-  public XObject execute(XPathContext xctxt) throws org.openjdk.javax.xml.transform.TransformerException
-  {
+  public XObject execute(XPathContext xctxt)
+      throws org.openjdk.javax.xml.transform.TransformerException {
 
     return operate(m_right.execute(xctxt));
   }
@@ -103,64 +93,52 @@ public abstract class UnaryOperation extends Expression implements ExpressionOwn
   /**
    * Apply the operation to two operands, and return the result.
    *
-   *
    * @param right non-null reference to the evaluated right operand.
-   *
    * @return non-null reference to the XObject that represents the result of the operation.
-   *
    * @throws org.openjdk.javax.xml.transform.TransformerException
    */
   public abstract XObject operate(XObject right)
-    throws org.openjdk.javax.xml.transform.TransformerException;
+      throws org.openjdk.javax.xml.transform.TransformerException;
 
-  /** @return the operand of unary operation, as an Expression.
+  /**
+   * @return the operand of unary operation, as an Expression.
    */
-  public Expression getOperand(){
+  public Expression getOperand() {
     return m_right;
   }
 
   /**
    * @see XPathVisitable#callVisitors(ExpressionOwner, XPathVisitor)
    */
-  public void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
-  {
-        if(visitor.visitUnaryOperation(owner, this))
-        {
-                m_right.callVisitors(this, visitor);
-        }
+  public void callVisitors(ExpressionOwner owner, XPathVisitor visitor) {
+    if (visitor.visitUnaryOperation(owner, this)) {
+      m_right.callVisitors(this, visitor);
+    }
   }
-
 
   /**
    * @see ExpressionOwner#getExpression()
    */
-  public Expression getExpression()
-  {
+  public Expression getExpression() {
     return m_right;
   }
 
   /**
    * @see ExpressionOwner#setExpression(Expression)
    */
-  public void setExpression(Expression exp)
-  {
-        exp.exprSetParent(this);
-        m_right = exp;
+  public void setExpression(Expression exp) {
+    exp.exprSetParent(this);
+    m_right = exp;
   }
 
   /**
    * @see Expression#deepEquals(Expression)
    */
-  public boolean deepEquals(Expression expr)
-  {
-        if(!isSameClass(expr))
-                return false;
+  public boolean deepEquals(Expression expr) {
+    if (!isSameClass(expr)) return false;
 
-        if(!m_right.deepEquals(((UnaryOperation)expr).m_right))
-                return false;
+    if (!m_right.deepEquals(((UnaryOperation) expr).m_right)) return false;
 
-        return true;
+    return true;
   }
-
-
 }

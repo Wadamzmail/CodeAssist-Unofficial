@@ -59,11 +59,10 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  */
 
 /**
- * Denotes a push instruction that produces a literal on the stack
- * such as  SIPUSH, BIPUSH, ICONST, etc.
+ * Denotes a push instruction that produces a literal on the stack such as SIPUSH, BIPUSH, ICONST,
+ * etc.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
-
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  * @see ICONST
  * @see SIPUSH
  */

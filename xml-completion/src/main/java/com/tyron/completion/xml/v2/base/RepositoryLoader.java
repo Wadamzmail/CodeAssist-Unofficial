@@ -72,7 +72,6 @@ import com.google.common.collect.Tables;
 import com.tyron.common.logging.IdeLog;
 import com.tyron.completion.progress.ProcessCanceledException;
 import com.tyron.completion.progress.ProgressManager;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -107,33 +106,60 @@ import org.xmlpull.v1.XmlPullParserException;
 
 public abstract class RepositoryLoader<T extends LoadableResourceRepository> implements FileFilter {
   private static final Logger LOG = IdeLog.getCurrentLogger(RepositoryLoader.class);
-  /** The set of attribute formats that is used when no formats are explicitly specified and the attribute is not a flag or enum. */
-  private final Set<AttributeFormat> DEFAULT_ATTR_FORMATS = Sets.immutableEnumSet(
-      AttributeFormat.BOOLEAN,
-      AttributeFormat.COLOR,
-      AttributeFormat.DIMENSION,
-      AttributeFormat.FLOAT,
-      AttributeFormat.FRACTION,
-      AttributeFormat.INTEGER,
-      AttributeFormat.REFERENCE,
-      AttributeFormat.STRING);
-  private final PatternBasedFileFilter myFileFilter
-    = new PatternBasedFileFilter(new AndroidAaptIgnore(System.getenv(ANDROID_AAPT_IGNORE)));
 
-  @NotNull private final Map<ResourceType, Set<String>> myPublicResources = new EnumMap<>(ResourceType.class);
-  @NotNull private final ListMultimap<String, BasicAttrResourceItem> myAttrs = ArrayListMultimap.create();
-  @NotNull private final ListMultimap<String, BasicAttrResourceItem> myAttrCandidates = ArrayListMultimap.create();
-  @NotNull private final ListMultimap<String, BasicStyleableResourceItem> myStyleables = ArrayListMultimap.create();
+  /**
+   * The set of attribute formats that is used when no formats are explicitly specified and the
+   * attribute is not a flag or enum.
+   */
+  private final Set<AttributeFormat> DEFAULT_ATTR_FORMATS =
+      Sets.immutableEnumSet(
+          AttributeFormat.BOOLEAN,
+          AttributeFormat.COLOR,
+          AttributeFormat.DIMENSION,
+          AttributeFormat.FLOAT,
+          AttributeFormat.FRACTION,
+          AttributeFormat.INTEGER,
+          AttributeFormat.REFERENCE,
+          AttributeFormat.STRING);
+
+  private final PatternBasedFileFilter myFileFilter =
+      new PatternBasedFileFilter(new AndroidAaptIgnore(System.getenv(ANDROID_AAPT_IGNORE)));
+
+  @NotNull
+  private final Map<ResourceType, Set<String>> myPublicResources =
+      new EnumMap<>(ResourceType.class);
+
+  @NotNull
+  private final ListMultimap<String, BasicAttrResourceItem> myAttrs = ArrayListMultimap.create();
+
+  @NotNull
+  private final ListMultimap<String, BasicAttrResourceItem> myAttrCandidates =
+      ArrayListMultimap.create();
+
+  @NotNull
+  private final ListMultimap<String, BasicStyleableResourceItem> myStyleables =
+      ArrayListMultimap.create();
+
   @NotNull protected ResourceVisibility myDefaultVisibility = ResourceVisibility.PRIVATE;
-  /** Cache of FolderConfiguration instances, keyed by qualifier strings (see {@link FolderConfiguration#getQualifierString()}). */
+
+  /**
+   * Cache of FolderConfiguration instances, keyed by qualifier strings (see {@link
+   * FolderConfiguration#getQualifierString()}).
+   */
   @NotNull protected final Map<String, FolderConfiguration> myFolderConfigCache = new HashMap<>();
-  @NotNull private final Map<FolderConfiguration, RepositoryConfiguration> myConfigCache = new HashMap<>();
+
+  @NotNull
+  private final Map<FolderConfiguration, RepositoryConfiguration> myConfigCache = new HashMap<>();
+
   @NotNull private final ValueResourceXmlParser myParser = new ValueResourceXmlParser();
   @NotNull private final XmlTextExtractor myTextExtractor = new XmlTextExtractor();
   @NotNull private final ResourceUrlParser myUrlParser = new ResourceUrlParser();
+
   // Used to keep track of resources defined in the current value resource file.
-  @NotNull private final Table<ResourceType, String, BasicValueResourceItemBase> myValueFileResources =
+  @NotNull
+  private final Table<ResourceType, String, BasicValueResourceItemBase> myValueFileResources =
       Tables.newCustomTable(new EnumMap<>(ResourceType.class), LinkedHashMap::new);
+
   @NotNull protected final Path myResourceDirectoryOrFile;
   @NotNull private final PathString myResourceDirectoryOrFilePath;
   private final boolean myLoadingFromZipArchive;
@@ -142,8 +168,10 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   @Nullable private final Collection<PathString> myResourceFilesAndFolders;
   @Nullable protected ZipFile myZipFile;
 
-  public RepositoryLoader(@NotNull Path resourceDirectoryOrFile, @Nullable Collection<PathString> resourceFilesAndFolders,
-                          @NotNull ResourceNamespace namespace) {
+  public RepositoryLoader(
+      @NotNull Path resourceDirectoryOrFile,
+      @Nullable Collection<PathString> resourceFilesAndFolders,
+      @NotNull ResourceNamespace namespace) {
     myResourceDirectoryOrFile = resourceDirectoryOrFile;
     myResourceDirectoryOrFilePath = new PathString(myResourceDirectoryOrFile);
     myLoadingFromZipArchive = isZipArchive(resourceDirectoryOrFile);
@@ -168,8 +196,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   public void loadRepositoryContents(@NotNull T repository) {
     if (myLoadingFromZipArchive) {
       loadFromZip(repository);
-    }
-    else {
+    } else {
       loadFromResFolder(repository);
     }
   }
@@ -184,20 +211,23 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       loadPublicResourceNames();
       boolean shouldParseResourceIds = !loadIdsFromRTxt();
 
-      zipFile.stream().forEach(zipEntry -> {
-        if (!zipEntry.isDirectory()) {
-          PathString path = new PathString(zipEntry.getName());
-          loadResourceFile(path, repository, shouldParseResourceIds);
-        }
-      });
-    }
-    catch (ProcessCanceledException e) {
+      zipFile.stream()
+          .forEach(
+              zipEntry -> {
+                if (!zipEntry.isDirectory()) {
+                  PathString path = new PathString(zipEntry.getName());
+                  loadResourceFile(path, repository, shouldParseResourceIds);
+                }
+              });
+    } catch (ProcessCanceledException e) {
       throw e;
-    }
-    catch (Exception e) {
-      LOG.severe("Failed to load resources from " + myResourceDirectoryOrFile.toString() + "\n" + e.toString());
-    }
-    finally {
+    } catch (Exception e) {
+      LOG.severe(
+          "Failed to load resources from "
+              + myResourceDirectoryOrFile.toString()
+              + "\n"
+              + e.toString());
+    } finally {
       myZipFile = null;
     }
 
@@ -207,36 +237,39 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   protected void loadFromResFolder(@NotNull T repository) {
     try {
       if (CancellableFileIo.notExists(myResourceDirectoryOrFile)) {
-        return; // Don't report errors if the resource directory doesn't exist. This happens in some tests.
+        return; // Don't report errors if the resource directory doesn't exist. This happens in some
+        // tests.
       }
 
       loadPublicResourceNames();
       boolean shouldParseResourceIds = !loadIdsFromRTxt();
 
-      List<Path> sourceFilesAndFolders = myResourceFilesAndFolders == null ?
-                                         ImmutableList.of(myResourceDirectoryOrFile) :
-                                         ContainerUtil.map(myResourceFilesAndFolders, PathString::toPath);
+      List<Path> sourceFilesAndFolders =
+          myResourceFilesAndFolders == null
+              ? ImmutableList.of(myResourceDirectoryOrFile)
+              : ContainerUtil.map(myResourceFilesAndFolders, PathString::toPath);
       List<PathString> resourceFiles = findResourceFiles(sourceFilesAndFolders);
       for (PathString file : resourceFiles) {
         loadResourceFile(file, repository, shouldParseResourceIds);
       }
-    }
-    catch (ProcessCanceledException e) {
+    } catch (ProcessCanceledException e) {
       throw e;
-    }
-    catch (Exception e) {
-      LOG.severe("Failed to load resources from " + myResourceDirectoryOrFile.toString() + "\n" + e);
+    } catch (Exception e) {
+      LOG.severe(
+          "Failed to load resources from " + myResourceDirectoryOrFile.toString() + "\n" + e);
     }
 
     finishLoading(repository);
   }
 
-  protected final void loadResourceFile(@NotNull PathString file, @NotNull T repository, boolean shouldParseResourceIds) {
+  protected final void loadResourceFile(
+      @NotNull PathString file, @NotNull T repository, boolean shouldParseResourceIds) {
     String folderName = file.getParentFileName();
     if (folderName != null) {
       FolderInfo folderInfo = FolderInfo.create(folderName, myFolderConfigCache);
       if (folderInfo != null) {
-        RepositoryConfiguration configuration = getConfiguration(repository, folderInfo.configuration);
+        RepositoryConfiguration configuration =
+            getConfiguration(repository, folderInfo.configuration);
         loadResourceFile(file, folderInfo, configuration, shouldParseResourceIds);
       }
     }
@@ -250,8 +283,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   public final String getSourceFileProtocol() {
     if (myLoadingFromZipArchive) {
       return "jar";
-    }
-    else {
+    } else {
       return "file";
     }
   }
@@ -260,8 +292,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   public final String getResourcePathPrefix() {
     if (myLoadingFromZipArchive) {
       return portableFileName(myResourceDirectoryOrFile.toString()) + "!/" + "res/";
-    }
-    else {
+    } else {
       return portableFileName(myResourceDirectoryOrFile.toString()) + '/';
     }
   }
@@ -270,14 +301,14 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   public final String getResourceUrlPrefix() {
     if (myLoadingFromZipArchive) {
       return "jar" + "://" + portableFileName(myResourceDirectoryOrFile.toString()) + "!/" + "res/";
-    }
-    else {
+    } else {
       return portableFileName(myResourceDirectoryOrFile.toString()) + '/';
     }
   }
 
   /**
-   * A hook for loading resource IDs from a R.txt file. This implementation does nothing but subclasses may override.
+   * A hook for loading resource IDs from a R.txt file. This implementation does nothing but
+   * subclasses may override.
    *
    * @return true if the IDs were successfully loaded from R.txt
    */
@@ -294,16 +325,15 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     return myFileFilter.isIgnored(fileOrDirectory.toString(), attrs.isDirectory());
   }
 
-  /**
-   * Loads names of the public resources and populates {@link #myPublicResources}.
-   */
+  /** Loads names of the public resources and populates {@link #myPublicResources}. */
   protected void loadPublicResourceNames() {
     Path valuesFolder = myResourceDirectoryOrFile.resolve(FD_RES_VALUES);
     List<String> fileNames = getPublicXmlFileNames();
     for (String fileName : fileNames) {
       Path publicXmlFile = valuesFolder.resolve(fileName);
 
-      try (InputStream stream = new BufferedInputStream(CancellableFileIo.newInputStream(publicXmlFile))) {
+      try (InputStream stream =
+          new BufferedInputStream(CancellableFileIo.newInputStream(publicXmlFile))) {
         CommentTrackingXmlPullParser parser = new CommentTrackingXmlPullParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
         parser.setInput(stream, UTF_8.name());
@@ -327,23 +357,23 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
                     // Skip attributes other than "type" and "name".
                     break;
                   }
-                }
-                else if (attribute.equals(ATTR_TYPE)) {
+                } else if (attribute.equals(ATTR_TYPE)) {
                   typeName = parser.getAttributeValue(i);
                 }
               }
 
-              if (name != null && !name.startsWith("__removed") && (typeName != null || groupType != null) &&
-                  (parser.getLastComment() == null || !containsWord(parser.getLastComment(), "@hide"))) {
+              if (name != null
+                  && !name.startsWith("__removed")
+                  && (typeName != null || groupType != null)
+                  && (parser.getLastComment() == null
+                      || !containsWord(parser.getLastComment(), "@hide"))) {
                 ResourceType type;
                 if (groupType != null) {
                   type = groupType;
-                }
-                else {
+                } else {
                   if (typeName.equals(lastTypeName)) {
                     type = lastType;
-                  }
-                  else {
+                  } else {
                     type = ResourceType.fromXmlValue(typeName);
                     lastType = type;
                     lastTypeName = typeName;
@@ -352,45 +382,43 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
                 if (type != null) {
                   addPublicResourceName(type, name);
-                }
-                else {
-                  LOG.severe("Public resource declaration \"" + name + "\" of type " + typeName + " points to unknown resource type.");
+                } else {
+                  LOG.severe(
+                      "Public resource declaration \""
+                          + name
+                          + "\" of type "
+                          + typeName
+                          + " points to unknown resource type.");
                 }
               }
-            }
-            else if (isPublicGroupTag(parser.getName())) {
+            } else if (isPublicGroupTag(parser.getName())) {
               groupTag = parser.getName();
               String typeName = parser.getAttributeValue(null, ATTR_TYPE);
               groupType = typeName == null ? null : ResourceType.fromXmlValue(typeName);
             }
-          }
-          else if (event == XmlPullParser.END_TAG) {
+          } else if (event == XmlPullParser.END_TAG) {
             if (groupTag != null && groupTag.equals(parser.getName())) {
               groupTag = null;
               groupType = null;
             }
-          }
-          else if (event == XmlPullParser.END_DOCUMENT) {
+          } else if (event == XmlPullParser.END_DOCUMENT) {
             break;
           }
         }
-      }
-      catch (ProcessCanceledException e) {
+      } catch (ProcessCanceledException e) {
         throw e;
-      }
-      catch (NoSuchFileException e) {
+      } catch (NoSuchFileException e) {
         // There is no public.xml. This not considered an error.
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         LOG.severe("Can't read and parse " + publicXmlFile + " " + e);
       }
     }
   }
 
   private boolean isPublicGroupTag(@NotNull String tag) {
-    return tag.equals(TAG_PUBLIC_GROUP) ||
-           tag.equals(TAG_STAGING_PUBLIC_GROUP) ||
-           tag.equals(TAG_STAGING_PUBLIC_GROUP_FINAL);
+    return tag.equals(TAG_PUBLIC_GROUP)
+        || tag.equals(TAG_STAGING_PUBLIC_GROUP)
+        || tag.equals(TAG_STAGING_PUBLIC_GROUP_FINAL);
   }
 
   protected final void addPublicResourceName(ResourceType type, String name) {
@@ -398,10 +426,9 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     names.add(name);
   }
 
-  /**
-   * Checks if the given text contains the given word.
-   */
-  private static boolean containsWord(@NotNull String text, @SuppressWarnings("SameParameterValue") @NotNull String word) {
+  /** Checks if the given text contains the given word. */
+  private static boolean containsWord(
+      @NotNull String text, @SuppressWarnings("SameParameterValue") @NotNull String word) {
     int end = 0;
     while (true) {
       int start = text.indexOf(word, end);
@@ -409,8 +436,8 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
         return false;
       }
       end = start + word.length();
-      if ((start == 0 || Character.isWhitespace(text.charAt(start))) &&
-          (end == text.length() || Character.isWhitespace(text.charAt(end)))) {
+      if ((start == 0 || Character.isWhitespace(text.charAt(start)))
+          && (end == text.length() || Character.isWhitespace(text.charAt(end)))) {
         return true;
       }
     }
@@ -422,20 +449,21 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     for (Path file : filesOrFolders) {
       try {
         CancellableFileIo.walkFileTree(file, fileCollector);
-      }
-      catch (IOException e) {
+      } catch (IOException e) {
         // All IOExceptions are logged by ResourceFileCollector.
       }
     }
     for (IOException e : fileCollector.ioErrors) {
       LOG.severe("Error loading resources from " + myResourceDirectoryOrFile + "\n" + e);
     }
-    Collections.sort(fileCollector.resourceFiles); // Make sure that the files are in canonical order.
+    Collections.sort(
+        fileCollector.resourceFiles); // Make sure that the files are in canonical order.
     return fileCollector.resourceFiles;
   }
 
   @NotNull
-  protected final RepositoryConfiguration getConfiguration(@NotNull T repository, @NotNull FolderConfiguration folderConfiguration) {
+  protected final RepositoryConfiguration getConfiguration(
+      @NotNull T repository, @NotNull FolderConfiguration folderConfiguration) {
     RepositoryConfiguration repositoryConfiguration = myConfigCache.get(folderConfiguration);
     if (repositoryConfiguration != null) {
       return repositoryConfiguration;
@@ -446,19 +474,22 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     return repositoryConfiguration;
   }
 
-  private void loadResourceFile(@NotNull PathString file, @NotNull FolderInfo folderInfo, @NotNull RepositoryConfiguration configuration,
-                                boolean shouldParseResourceIds) {
+  private void loadResourceFile(
+      @NotNull PathString file,
+      @NotNull FolderInfo folderInfo,
+      @NotNull RepositoryConfiguration configuration,
+      boolean shouldParseResourceIds) {
     if (folderInfo.resourceType == null) {
       if (isXmlFile(file)) {
         parseValueResourceFile(file, configuration);
       }
-    }
-    else {
+    } else {
       if (shouldParseResourceIds && folderInfo.isIdGenerating && isXmlFile(file)) {
         parseIdGeneratingResourceFile(file, configuration);
       }
 
-      BasicFileResourceItem item = createFileResourceItem(file, folderInfo.resourceType, configuration);
+      BasicFileResourceItem item =
+          createFileResourceItem(file, folderInfo.resourceType, configuration);
       addResourceItem(item);
     }
   }
@@ -473,12 +504,13 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
   @SuppressWarnings("unchecked")
   private void addResourceItem(@NotNull BasicResourceItemBase item) {
-    addResourceItem(item, (T)item.getRepository());
+    addResourceItem(item, (T) item.getRepository());
   }
 
   protected abstract void addResourceItem(@NotNull BasicResourceItem item, @NotNull T repository);
 
-  protected final void parseValueResourceFile(@NotNull PathString file, @NotNull RepositoryConfiguration configuration) {
+  protected final void parseValueResourceFile(
+      @NotNull PathString file, @NotNull RepositoryConfiguration configuration) {
     try (InputStream stream = getInputStream(file)) {
       ResourceSourceFile sourceFile = createResourceSourceFile(file, configuration);
       myParser.setInput(stream, null);
@@ -497,28 +529,26 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
             if (!tagName.equals(TAG_RESOURCES)) {
               break;
             }
-          }
-          else if (depth > 1) {
+          } else if (depth > 1) {
             ResourceType resourceType = getResourceType(tagName, file);
             if (resourceType != null && resourceType != ResourceType.PUBLIC) {
               String resourceName = myParser.getAttributeValue(null, ATTR_NAME);
               if (resourceName != null) {
                 validateResourceName(resourceName, resourceType, file);
-                BasicValueResourceItemBase item = createResourceItem(resourceType, resourceName, sourceFile);
+                BasicValueResourceItemBase item =
+                    createResourceItem(resourceType, resourceName, sourceFile);
                 addValueResourceItem(item);
               } else {
                 // Skip the subtags when the tag of a valid resource type doesn't have a name.
                 skipSubTags();
               }
-            }
-            else {
+            } else {
               skipSubTags();
             }
           }
         }
       } while (event != XmlPullParser.END_DOCUMENT);
-    }
-    catch (ProcessCanceledException e) {
+    } catch (ProcessCanceledException e) {
       throw e;
     }
     // KXmlParser throws RuntimeException for an undefined prefix and an illegal attribute name.
@@ -530,22 +560,23 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   }
 
   @NotNull
-  protected ResourceSourceFile createResourceSourceFile(@NotNull PathString file, @NotNull RepositoryConfiguration configuration) {
+  protected ResourceSourceFile createResourceSourceFile(
+      @NotNull PathString file, @NotNull RepositoryConfiguration configuration) {
     return new ResourceSourceFileImpl(getResRelativePath(file), configuration);
   }
 
   private void addValueResourceItem(@NotNull BasicValueResourceItemBase item) {
     ResourceType resourceType = item.getType();
-    // Add attr and styleable resources to intermediate maps to post-process them in the processAttrsAndStyleables
+    // Add attr and styleable resources to intermediate maps to post-process them in the
+    // processAttrsAndStyleables
     // method after all resources are loaded.
     if (resourceType == ResourceType.ATTR) {
-      addAttr((BasicAttrResourceItem)item, myAttrs);
-    }
-    else if (resourceType == ResourceType.STYLEABLE) {
-      myStyleables.put(item.getName(), (BasicStyleableResourceItem)item);
-    }
-    else {
-      // For compatibility with resource merger code we add value resources first to a file-specific map,
+      addAttr((BasicAttrResourceItem) item, myAttrs);
+    } else if (resourceType == ResourceType.STYLEABLE) {
+      myStyleables.put(item.getName(), (BasicStyleableResourceItem) item);
+    } else {
+      // For compatibility with resource merger code we add value resources first to a file-specific
+      // map,
       // then move them to the global resource table. In case when there are multiple definitions of
       // the same resource in a single XML file, this algorithm preserves only the last definition.
       myValueFileResources.put(resourceType, item.getName(), item);
@@ -559,7 +590,8 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     myValueFileResources.clear();
   }
 
-  protected final void parseIdGeneratingResourceFile(@NotNull PathString file, @NotNull RepositoryConfiguration configuration) {
+  protected final void parseIdGeneratingResourceFile(
+      @NotNull PathString file, @NotNull RepositoryConfiguration configuration) {
     try (InputStream stream = getInputStream(file)) {
       ResourceSourceFile sourceFile = createResourceSourceFile(file, configuration);
       XmlPullParser parser = new KXmlParser();
@@ -580,8 +612,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
           }
         }
       } while (event != XmlPullParser.END_DOCUMENT);
-    }
-    catch (ProcessCanceledException e) {
+    } catch (ProcessCanceledException e) {
       throw e;
     }
     // KXmlParser throws RuntimeException for an undefined prefix and an illegal attribute name.
@@ -602,8 +633,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       Path path = file.toPath();
       Preconditions.checkArgument(path != null);
       return new BufferedInputStream(CancellableFileIo.newInputStream(path));
-    }
-    else {
+    } else {
       ProgressManager.checkCanceled();
       ZipEntry entry = myZipFile.getEntry(file.getPortablePath());
       if (entry == null) {
@@ -613,9 +643,11 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     }
   }
 
-  protected final void addIdResourceItem(@NotNull String resourceName, @NotNull ResourceSourceFile sourceFile) {
+  protected final void addIdResourceItem(
+      @NotNull String resourceName, @NotNull ResourceSourceFile sourceFile) {
     ResourceVisibility visibility = getVisibility(ResourceType.ID, resourceName);
-    BasicValueResourceItem item = new BasicValueResourceItem(ResourceType.ID, resourceName, sourceFile, visibility, null);
+    BasicValueResourceItem item =
+        new BasicValueResourceItem(ResourceType.ID, resourceName, sourceFile, visibility, null);
     if (!resourceAlreadyDefined(item)) { // Don't create duplicate ID resources.
       addValueResourceItem(item);
     }
@@ -623,30 +655,36 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
   @NotNull
   private BasicFileResourceItem createFileResourceItem(
-      @NotNull PathString file, @NotNull ResourceType resourceType, @NotNull RepositoryConfiguration configuration) {
+      @NotNull PathString file,
+      @NotNull ResourceType resourceType,
+      @NotNull RepositoryConfiguration configuration) {
     String resourceName = SdkUtils.fileNameToResourceName(file.getFileName());
     ResourceVisibility visibility = getVisibility(resourceType, resourceName);
     Density density = null;
     if (DensityBasedResourceValue.isDensityBasedResourceType(resourceType)) {
-      DensityQualifier densityQualifier = configuration.getFolderConfiguration().getDensityQualifier();
+      DensityQualifier densityQualifier =
+          configuration.getFolderConfiguration().getDensityQualifier();
       if (densityQualifier != null) {
         density = densityQualifier.getValue();
       }
     }
-    return createFileResourceItem(file, resourceType, resourceName, configuration, visibility, density);
+    return createFileResourceItem(
+        file, resourceType, resourceName, configuration, visibility, density);
   }
 
   @NotNull
-  protected final BasicFileResourceItem createFileResourceItem(@NotNull PathString file,
-                                                               @NotNull ResourceType type,
-                                                               @NotNull String name,
-                                                               @NotNull RepositoryConfiguration configuration,
-                                                               @NotNull ResourceVisibility visibility,
-                                                               @Nullable Density density) {
+  protected final BasicFileResourceItem createFileResourceItem(
+      @NotNull PathString file,
+      @NotNull ResourceType type,
+      @NotNull String name,
+      @NotNull RepositoryConfiguration configuration,
+      @NotNull ResourceVisibility visibility,
+      @Nullable Density density) {
     String relativePath = getResRelativePath(file);
-    return density == null ?
-           new BasicFileResourceItem(type, name, configuration, visibility, relativePath) :
-           new BasicDensityBasedFileResourceItem(type, name, configuration, visibility, relativePath, density);
+    return density == null
+        ? new BasicFileResourceItem(type, name, configuration, visibility, relativePath)
+        : new BasicDensityBasedFileResourceItem(
+            type, name, configuration, visibility, relativePath, density);
   }
 
   @NotNull
@@ -687,39 +725,53 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   }
 
   @NotNull
-  private BasicArrayResourceItem createArrayItem(@NotNull String name, @NotNull ResourceSourceFile sourceFile)
+  private BasicArrayResourceItem createArrayItem(
+      @NotNull String name, @NotNull ResourceSourceFile sourceFile)
       throws IOException, XmlPullParserException, XmlSyntaxException {
     String indexValue = myParser.getAttributeValue(TOOLS_URI, ATTR_INDEX);
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
     List<String> values = new ArrayList<>();
-    forSubTags(TAG_ITEM, () -> {
-      String text = myTextExtractor.extractText(myParser, false);
-      values.add(text);
-    });
+    forSubTags(
+        TAG_ITEM,
+        () -> {
+          String text = myTextExtractor.extractText(myParser, false);
+          values.add(text);
+        });
     int index = 0;
     if (indexValue != null) {
       try {
         index = Integer.parseUnsignedInt(indexValue);
-      }
-      catch (NumberFormatException e) {
+      } catch (NumberFormatException e) {
         throw new XmlSyntaxException(
-            "The value of the " + namespaceResolver.prefixToUri(TOOLS_URI) + ':' + ATTR_INDEX + " attribute is not a valid number.",
-            myParser, getDisplayName(sourceFile));
+            "The value of the "
+                + namespaceResolver.prefixToUri(TOOLS_URI)
+                + ':'
+                + ATTR_INDEX
+                + " attribute is not a valid number.",
+            myParser,
+            getDisplayName(sourceFile));
       }
       if (index >= values.size()) {
         throw new XmlSyntaxException(
-            "The value of the " + namespaceResolver.prefixToUri(TOOLS_URI) + ':' + ATTR_INDEX + " attribute is out of bounds.",
-            myParser, getDisplayName(sourceFile));
+            "The value of the "
+                + namespaceResolver.prefixToUri(TOOLS_URI)
+                + ':'
+                + ATTR_INDEX
+                + " attribute is out of bounds.",
+            myParser,
+            getDisplayName(sourceFile));
       }
     }
     ResourceVisibility visibility = getVisibility(ResourceType.ARRAY, name);
-    BasicArrayResourceItem item = new BasicArrayResourceItem(name, sourceFile, visibility, values, index);
+    BasicArrayResourceItem item =
+        new BasicArrayResourceItem(name, sourceFile, visibility, values, index);
     item.setNamespaceResolver(namespaceResolver);
     return item;
   }
 
   @NotNull
-  private BasicAttrResourceItem createAttrItem(@NotNull String name, @NotNull ResourceSourceFile sourceFile)
+  private BasicAttrResourceItem createAttrItem(
+      @NotNull String name, @NotNull ResourceSourceFile sourceFile)
       throws IOException, XmlPullParserException, XmlSyntaxException {
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
     ResourceNamespace attrNamespace;
@@ -728,9 +780,14 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       attrNamespace = ResourceNamespace.ANDROID;
     } else {
       String prefix = myUrlParser.getNamespacePrefix();
-      attrNamespace = ResourceNamespace.fromNamespacePrefix(prefix, myNamespace, myParser.getNamespaceResolver());
+      attrNamespace =
+          ResourceNamespace.fromNamespacePrefix(
+              prefix, myNamespace, myParser.getNamespaceResolver());
       if (attrNamespace == null) {
-        throw new XmlSyntaxException("Undefined prefix of attr resource name \"" + name + "\"", myParser, getDisplayName(sourceFile));
+        throw new XmlSyntaxException(
+            "Undefined prefix of attr resource name \"" + name + "\"",
+            myParser,
+            getDisplayName(sourceFile));
       }
     }
     name = myUrlParser.getName();
@@ -739,47 +796,71 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     String groupName = myParser.getAttrGroupComment();
     String formatString = myParser.getAttributeValue(null, ATTR_FORMAT);
     Set<AttributeFormat> formats =
-      (formatString == null || formatString.isEmpty()) ? EnumSet.noneOf(AttributeFormat.class) : AttributeFormat.parse(formatString);
+        (formatString == null || formatString.isEmpty())
+            ? EnumSet.noneOf(AttributeFormat.class)
+            : AttributeFormat.parse(formatString);
 
-    // The average number of enum or flag values is 7 for Android framework, so start with small maps.
+    // The average number of enum or flag values is 7 for Android framework, so start with small
+    // maps.
     Map<String, Integer> valueMap = Maps.newHashMapWithExpectedSize(8);
     Map<String, String> descriptionMap = Maps.newHashMapWithExpectedSize(8);
-    forSubTags(null, () -> {
-      if (myParser.getPrefix() == null) {
-        String tagName = myParser.getName();
-        AttributeFormat format =
-            tagName.equals(TAG_ENUM) ? AttributeFormat.ENUM : tagName.equals(TAG_FLAG) ? AttributeFormat.FLAGS : null;
-        if (format != null) {
-          formats.add(format);
-          String valueName = myParser.getAttributeValue(null, ATTR_NAME);
-          if (valueName != null) {
-            String valueDescription = myParser.getLastComment();
-            if (valueDescription != null) {
-              descriptionMap.put(valueName, valueDescription);
-            }
-            String value = myParser.getAttributeValue(null, ATTR_VALUE);
-            Integer numericValue = null;
-            if (value != null) {
-              try {
-                // Integer.decode/parseInt can't deal with hex value > 0x7FFFFFFF so we use Long.decode instead.
-                numericValue = Long.decode(value).intValue();
+    forSubTags(
+        null,
+        () -> {
+          if (myParser.getPrefix() == null) {
+            String tagName = myParser.getName();
+            AttributeFormat format =
+                tagName.equals(TAG_ENUM)
+                    ? AttributeFormat.ENUM
+                    : tagName.equals(TAG_FLAG) ? AttributeFormat.FLAGS : null;
+            if (format != null) {
+              formats.add(format);
+              String valueName = myParser.getAttributeValue(null, ATTR_NAME);
+              if (valueName != null) {
+                String valueDescription = myParser.getLastComment();
+                if (valueDescription != null) {
+                  descriptionMap.put(valueName, valueDescription);
+                }
+                String value = myParser.getAttributeValue(null, ATTR_VALUE);
+                Integer numericValue = null;
+                if (value != null) {
+                  try {
+                    // Integer.decode/parseInt can't deal with hex value > 0x7FFFFFFF so we use
+                    // Long.decode instead.
+                    numericValue = Long.decode(value).intValue();
+                  } catch (NumberFormatException ignored) {
+                  }
+                }
+                valueMap.put(valueName, numericValue);
               }
-              catch (NumberFormatException ignored) {
-              }
             }
-            valueMap.put(valueName, numericValue);
           }
-        }
-      }
-    });
+        });
 
     BasicAttrResourceItem item;
     if (attrNamespace.equals(myNamespace)) {
       ResourceVisibility visibility = getVisibility(ResourceType.ATTR, name);
-      item = new BasicAttrResourceItem(name, sourceFile, visibility, description, groupName, formats, valueMap, descriptionMap);
-    }
-    else {
-      item = new BasicForeignAttrResourceItem(attrNamespace, name, sourceFile, description, groupName, formats, valueMap, descriptionMap);
+      item =
+          new BasicAttrResourceItem(
+              name,
+              sourceFile,
+              visibility,
+              description,
+              groupName,
+              formats,
+              valueMap,
+              descriptionMap);
+    } else {
+      item =
+          new BasicForeignAttrResourceItem(
+              attrNamespace,
+              name,
+              sourceFile,
+              description,
+              groupName,
+              formats,
+              valueMap,
+              descriptionMap);
     }
 
     item.setNamespaceResolver(namespaceResolver);
@@ -787,54 +868,70 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   }
 
   @NotNull
-  private BasicPluralsResourceItem createPluralsItem(@NotNull String name, @NotNull ResourceSourceFile sourceFile)
+  private BasicPluralsResourceItem createPluralsItem(
+      @NotNull String name, @NotNull ResourceSourceFile sourceFile)
       throws IOException, XmlPullParserException, XmlSyntaxException {
     String defaultQuantity = myParser.getAttributeValue(TOOLS_URI, ATTR_QUANTITY);
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
     EnumMap<Arity, String> values = new EnumMap<>(Arity.class);
-    forSubTags(TAG_ITEM, () -> {
-      String quantityValue = myParser.getAttributeValue(null, ATTR_QUANTITY);
-      if (quantityValue != null) {
-        Arity quantity = Arity.getEnum(quantityValue);
-        if (quantity != null) {
-          String text = myTextExtractor.extractText(myParser, false);
-          values.put(quantity, text);
-        }
-      }
-    });
+    forSubTags(
+        TAG_ITEM,
+        () -> {
+          String quantityValue = myParser.getAttributeValue(null, ATTR_QUANTITY);
+          if (quantityValue != null) {
+            Arity quantity = Arity.getEnum(quantityValue);
+            if (quantity != null) {
+              String text = myTextExtractor.extractText(myParser, false);
+              values.put(quantity, text);
+            }
+          }
+        });
     Arity defaultArity = null;
     if (defaultQuantity != null) {
       defaultArity = Arity.getEnum(defaultQuantity);
       if (defaultArity == null || !values.containsKey(defaultArity)) {
         throw new XmlSyntaxException(
-            "Invalid value of the " + namespaceResolver.prefixToUri(TOOLS_URI) + ':' + ATTR_QUANTITY + " attribute.", myParser,
+            "Invalid value of the "
+                + namespaceResolver.prefixToUri(TOOLS_URI)
+                + ':'
+                + ATTR_QUANTITY
+                + " attribute.",
+            myParser,
             getDisplayName(sourceFile));
       }
     }
     ResourceVisibility visibility = getVisibility(ResourceType.PLURALS, name);
-    BasicPluralsResourceItem item = new BasicPluralsResourceItem(name, sourceFile, visibility, values, defaultArity);
+    BasicPluralsResourceItem item =
+        new BasicPluralsResourceItem(name, sourceFile, visibility, values, defaultArity);
     item.setNamespaceResolver(namespaceResolver);
     return item;
   }
 
   @NotNull
   private BasicValueResourceItem createStringItem(
-      @NotNull ResourceType type, @NotNull String name, @NotNull ResourceSourceFile sourceFile, boolean withRowXml)
+      @NotNull ResourceType type,
+      @NotNull String name,
+      @NotNull ResourceSourceFile sourceFile,
+      boolean withRowXml)
       throws IOException, XmlPullParserException {
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
-    String text = type == ResourceType.ID ? null : myTextExtractor.extractText(myParser, withRowXml);
+    String text =
+        type == ResourceType.ID ? null : myTextExtractor.extractText(myParser, withRowXml);
     String rawXml = type == ResourceType.ID ? null : myTextExtractor.getRawXml();
-    assert withRowXml || rawXml == null; // Text extractor doesn't extract raw XML unless asked to do it.
+    assert withRowXml
+        || rawXml == null; // Text extractor doesn't extract raw XML unless asked to do it.
     ResourceVisibility visibility = getVisibility(type, name);
-    BasicValueResourceItem item = rawXml == null ?
-                                  new BasicValueResourceItem(type, name, sourceFile, visibility, text) :
-                                  new BasicTextValueResourceItem(type, name, sourceFile, visibility, text, rawXml);
+    BasicValueResourceItem item =
+        rawXml == null
+            ? new BasicValueResourceItem(type, name, sourceFile, visibility, text)
+            : new BasicTextValueResourceItem(type, name, sourceFile, visibility, text, rawXml);
     item.setNamespaceResolver(namespaceResolver);
     return item;
   }
 
   @NotNull
-  private BasicStyleResourceItem createStyleItem(@NotNull String name, @NotNull ResourceSourceFile sourceFile)
+  private BasicStyleResourceItem createStyleItem(
+      @NotNull String name, @NotNull ResourceSourceFile sourceFile)
       throws IOException, XmlPullParserException {
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
     String parentStyle = myParser.getAttributeValue(null, ATTR_PARENT);
@@ -843,56 +940,69 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       parentStyle = myUrlParser.getQualifiedName();
     }
     List<StyleItemResourceValue> styleItems = new ArrayList<>();
-    forSubTags(TAG_ITEM, () -> {
-      ResourceNamespace.Resolver itemNamespaceResolver = myParser.getNamespaceResolver();
-      String itemName = myParser.getAttributeValue(null, ATTR_NAME);
-      if (itemName != null) {
-        String text = myTextExtractor.extractText(myParser, false);
-        StyleItemResourceValueImpl styleItem =
-            new StyleItemResourceValueImpl(myNamespace, itemName, text, sourceFile.getRepository().getLibraryName());
-        styleItem.setNamespaceResolver(itemNamespaceResolver);
-        styleItems.add(styleItem);
-      }
-    });
+    forSubTags(
+        TAG_ITEM,
+        () -> {
+          ResourceNamespace.Resolver itemNamespaceResolver = myParser.getNamespaceResolver();
+          String itemName = myParser.getAttributeValue(null, ATTR_NAME);
+          if (itemName != null) {
+            String text = myTextExtractor.extractText(myParser, false);
+            StyleItemResourceValueImpl styleItem =
+                new StyleItemResourceValueImpl(
+                    myNamespace, itemName, text, sourceFile.getRepository().getLibraryName());
+            styleItem.setNamespaceResolver(itemNamespaceResolver);
+            styleItems.add(styleItem);
+          }
+        });
     ResourceVisibility visibility = getVisibility(ResourceType.STYLE, name);
-    BasicStyleResourceItem item = new BasicStyleResourceItem(name, sourceFile, visibility, parentStyle, styleItems);
+    BasicStyleResourceItem item =
+        new BasicStyleResourceItem(name, sourceFile, visibility, parentStyle, styleItems);
     item.setNamespaceResolver(namespaceResolver);
     return item;
   }
 
   @NotNull
-  private BasicStyleableResourceItem createStyleableItem(@NotNull String name, @NotNull ResourceSourceFile sourceFile)
+  private BasicStyleableResourceItem createStyleableItem(
+      @NotNull String name, @NotNull ResourceSourceFile sourceFile)
       throws IOException, XmlPullParserException {
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
     List<AttrResourceValue> attrs = new ArrayList<>();
-    forSubTags(TAG_ATTR, () -> {
-      String attrName = myParser.getAttributeValue(null, ATTR_NAME);
-      if (attrName != null) {
-        try {
-          BasicAttrResourceItem attr = createAttrItem(attrName, sourceFile);
-          // Mimic behavior of AAPT2 and put an attr reference inside a styleable resource.
-          attrs.add(attr.getFormats().isEmpty() ? attr : attr.createReference());
+    forSubTags(
+        TAG_ATTR,
+        () -> {
+          String attrName = myParser.getAttributeValue(null, ATTR_NAME);
+          if (attrName != null) {
+            try {
+              BasicAttrResourceItem attr = createAttrItem(attrName, sourceFile);
+              // Mimic behavior of AAPT2 and put an attr reference inside a styleable resource.
+              attrs.add(attr.getFormats().isEmpty() ? attr : attr.createReference());
 
-          // Don't create top-level attr resources in a foreign namespace, or for attr references in the res-auto namespace.
-          // The second condition is determined by the fact that the attr in the res-auto namespace may have an explicit definition
-          // outside of this resource repository.
-          if (attr.getNamespace().equals(myNamespace) && (myNamespace != ResourceNamespace.RES_AUTO || !attr.getFormats().isEmpty())) {
-            addAttr(attr, myAttrCandidates);
+              // Don't create top-level attr resources in a foreign namespace, or for attr
+              // references in the res-auto namespace.
+              // The second condition is determined by the fact that the attr in the res-auto
+              // namespace may have an explicit definition
+              // outside of this resource repository.
+              if (attr.getNamespace().equals(myNamespace)
+                  && (myNamespace != ResourceNamespace.RES_AUTO || !attr.getFormats().isEmpty())) {
+                addAttr(attr, myAttrCandidates);
+              }
+            } catch (XmlSyntaxException e) {
+              LOG.severe(e.toString());
+            }
           }
-        }
-        catch (XmlSyntaxException e) {
-          LOG.severe(e.toString());
-        }
-      }
-    });
+        });
     // AAPT2 treats all styleable resources as public.
-    // See https://android.googlesource.com/platform/frameworks/base/+/master/tools/aapt2/ResourceParser.cpp#1539
-    BasicStyleableResourceItem item = new BasicStyleableResourceItem(name, sourceFile, ResourceVisibility.PUBLIC, attrs);
+    // See
+    // https://android.googlesource.com/platform/frameworks/base/+/master/tools/aapt2/ResourceParser.cpp#1539
+    BasicStyleableResourceItem item =
+        new BasicStyleableResourceItem(name, sourceFile, ResourceVisibility.PUBLIC, attrs);
     item.setNamespaceResolver(namespaceResolver);
     return item;
   }
 
-  private static void addAttr(@NotNull BasicAttrResourceItem attr, @NotNull ListMultimap<String, BasicAttrResourceItem> map) {
+  private static void addAttr(
+      @NotNull BasicAttrResourceItem attr,
+      @NotNull ListMultimap<String, BasicAttrResourceItem> map) {
     List<BasicAttrResourceItem> attrs = map.get(attr.getName());
     int i = findResourceWithSameNameAndConfiguration(attr, attrs);
     if (i >= 0) {
@@ -900,18 +1010,17 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       BasicAttrResourceItem existing = attrs.get(i);
       if (!attr.getFormats().isEmpty()) {
         if (existing.getFormats().isEmpty()) {
-          attrs.set(i, attr); // Use the new attr since it contains more information than the existing one.
-        }
-        else if (!attr.getFormats().equals(existing.getFormats())) {
+          attrs.set(
+              i,
+              attr); // Use the new attr since it contains more information than the existing one.
+        } else if (!attr.getFormats().equals(existing.getFormats())) {
           // Both, the existing and the new attr contain formats, but they are not the same.
           // Assign union of formats to both attr definitions.
           if (attr.getFormats().containsAll(existing.getFormats())) {
             existing.setFormats(attr.getFormats());
-          }
-          else if (existing.getFormats().containsAll(attr.getFormats())) {
+          } else if (existing.getFormats().containsAll(attr.getFormats())) {
             attr.setFormats(existing.getFormats());
-          }
-          else {
+          } else {
             Set<AttributeFormat> formats = EnumSet.copyOf(attr.getFormats());
             formats.addAll(existing.getFormats());
             formats = ImmutableSet.copyOf(formats);
@@ -921,17 +1030,17 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
         }
       }
       if (existing.getFormats().isEmpty() && !attr.getFormats().isEmpty()) {
-        attrs.set(i, attr); // Use the new attr since it contains more information than the existing one.
+        attrs.set(
+            i, attr); // Use the new attr since it contains more information than the existing one.
       }
-    }
-    else {
+    } else {
       attrs.add(attr);
     }
   }
 
   /**
-   * Adds attr definitions from {@link #myAttrs}, and attr definition candidates from {@link #myAttrCandidates}
-   * if they don't match the attr definitions present in {@link #myAttrs}.
+   * Adds attr definitions from {@link #myAttrs}, and attr definition candidates from {@link
+   * #myAttrCandidates} if they don't match the attr definitions present in {@link #myAttrs}.
    */
   private void processAttrsAndStyleables() {
     for (BasicAttrResourceItem attr : myAttrs.values()) {
@@ -946,24 +1055,27 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       }
     }
 
-    // Resolve attribute references where it can be done without loosing any data to reduce resource memory footprint.
+    // Resolve attribute references where it can be done without loosing any data to reduce resource
+    // memory footprint.
     for (BasicStyleableResourceItem styleable : myStyleables.values()) {
       addResourceItem(resolveAttrReferences(styleable));
     }
   }
 
   /**
-   * Returns a styleable with attr references replaced by attr definitions returned by
-   * the {@link BasicStyleableResourceItem#getCanonicalAttr} method.
+   * Returns a styleable with attr references replaced by attr definitions returned by the {@link
+   * BasicStyleableResourceItem#getCanonicalAttr} method.
    */
   @NotNull
-  public static BasicStyleableResourceItem resolveAttrReferences(@NotNull BasicStyleableResourceItem styleable) {
+  public static BasicStyleableResourceItem resolveAttrReferences(
+      @NotNull BasicStyleableResourceItem styleable) {
     ResourceRepository repository = styleable.getRepository();
     List<AttrResourceValue> attributes = styleable.getAllAttributes();
     List<AttrResourceValue> resolvedAttributes = null;
     for (int i = 0; i < attributes.size(); i++) {
       AttrResourceValue attr = attributes.get(i);
-      AttrResourceValue canonicalAttr = BasicStyleableResourceItem.getCanonicalAttr(attr, repository);
+      AttrResourceValue canonicalAttr =
+          BasicStyleableResourceItem.getCanonicalAttr(attr, repository);
       if (canonicalAttr != attr) {
         if (resolvedAttributes == null) {
           resolvedAttributes = new ArrayList<>(attributes.size());
@@ -972,8 +1084,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
           }
         }
         resolvedAttributes.add(canonicalAttr);
-      }
-      else if (resolvedAttributes != null) {
+      } else if (resolvedAttributes != null) {
         resolvedAttributes.add(attr);
       }
     }
@@ -981,7 +1092,11 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     if (resolvedAttributes != null) {
       ResourceNamespace.Resolver namespaceResolver = styleable.getNamespaceResolver();
       styleable =
-          new BasicStyleableResourceItem(styleable.getName(), styleable.getSourceFile(), styleable.getVisibility(), resolvedAttributes);
+          new BasicStyleableResourceItem(
+              styleable.getName(),
+              styleable.getSourceFile(),
+              styleable.getVisibility(),
+              resolvedAttributes);
       styleable.setNamespaceResolver(namespaceResolver);
     }
     return styleable;
@@ -989,8 +1104,16 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
   private void addAttrWithAdjustedFormats(@NotNull BasicAttrResourceItem attr) {
     if (attr.getFormats().isEmpty()) {
-      attr = new BasicAttrResourceItem(attr.getName(), attr.getSourceFile(), attr.getVisibility(), attr.getDescription(),
-                                       attr.getGroupName(), DEFAULT_ATTR_FORMATS, Collections.emptyMap(), Collections.emptyMap());
+      attr =
+          new BasicAttrResourceItem(
+              attr.getName(),
+              attr.getSourceFile(),
+              attr.getVisibility(),
+              attr.getDescription(),
+              attr.getGroupName(),
+              DEFAULT_ATTR_FORMATS,
+              Collections.emptyMap(),
+              Collections.emptyMap());
     }
     addResourceItem(attr);
   }
@@ -1003,11 +1126,13 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
    */
   private static boolean resourceAlreadyDefined(@NotNull BasicResourceItemBase resource) {
     ResourceRepository repository = resource.getRepository();
-    List<ResourceItem> items = repository.getResources(resource.getNamespace(), resource.getType(), resource.getName());
+    List<ResourceItem> items =
+        repository.getResources(resource.getNamespace(), resource.getType(), resource.getName());
     return findResourceWithSameNameAndConfiguration(resource, items) >= 0;
   }
 
-  private static int findResourceWithSameNameAndConfiguration(@NotNull ResourceItem resource, @NotNull List<? extends ResourceItem> items) {
+  private static int findResourceWithSameNameAndConfiguration(
+      @NotNull ResourceItem resource, @NotNull List<? extends ResourceItem> items) {
     for (int i = 0; i < items.size(); i++) {
       ResourceItem item = items.get(i);
       if (item.getConfiguration().equals(resource.getConfiguration())) {
@@ -1023,17 +1148,21 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       throws IOException, XmlPullParserException {
     ResourceNamespace.Resolver namespaceResolver = myParser.getNamespaceResolver();
     String text = myTextExtractor.extractText(myParser, false).trim();
-    if (!text.isEmpty() && !text.startsWith(PREFIX_RESOURCE_REF) && !text.startsWith(PREFIX_THEME_REF)) {
+    if (!text.isEmpty()
+        && !text.startsWith(PREFIX_RESOURCE_REF)
+        && !text.startsWith(PREFIX_THEME_REF)) {
       text = text.replace('/', File.separatorChar);
     }
     ResourceVisibility visibility = getVisibility(type, name);
-    BasicValueResourceItem item = new BasicValueResourceItem(type, name, sourceFile, visibility, text);
+    BasicValueResourceItem item =
+        new BasicValueResourceItem(type, name, sourceFile, visibility, text);
     item.setNamespaceResolver(namespaceResolver);
     return item;
   }
 
   @Nullable
-  private ResourceType getResourceType(@NotNull String tagName, @NotNull PathString file) throws XmlSyntaxException {
+  private ResourceType getResourceType(@NotNull String tagName, @NotNull PathString file)
+      throws XmlSyntaxException {
     ResourceType type = ResourceType.fromXmlTagName(tagName);
 
     if (type == null) {
@@ -1049,11 +1178,22 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
             return type;
           }
 
-          LOG.warning("Unrecognized type attribute \"" + typeAttr + "\" at " + getDisplayName(file) + " line " + myParser.getLineNumber());
+          LOG.warning(
+              "Unrecognized type attribute \""
+                  + typeAttr
+                  + "\" at "
+                  + getDisplayName(file)
+                  + " line "
+                  + myParser.getLineNumber());
         }
-      }
-      else {
-        LOG.warning("Unrecognized tag name \"" + tagName + "\" at " + getDisplayName(file) + " line " + myParser.getLineNumber());
+      } else {
+        LOG.warning(
+            "Unrecognized tag name \""
+                + tagName
+                + "\" at "
+                + getDisplayName(file)
+                + " line "
+                + myParser.getLineNumber());
       }
     }
 
@@ -1061,34 +1201,40 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   }
 
   /**
-   * If {@code tagName} is null, calls {@code subtagVisitor.visitTag()} for every subtag of the current tag.
-   * If {@code tagName} is not null, calls {@code subtagVisitor.visitTag()} for every subtag of the current tag
-   * which name doesn't have a prefix and matches {@code tagName}.
+   * If {@code tagName} is null, calls {@code subtagVisitor.visitTag()} for every subtag of the
+   * current tag. If {@code tagName} is not null, calls {@code subtagVisitor.visitTag()} for every
+   * subtag of the current tag which name doesn't have a prefix and matches {@code tagName}.
    */
-  private void forSubTags(@Nullable String tagName, @NotNull XmlTagVisitor subtagVisitor) throws IOException, XmlPullParserException {
+  private void forSubTags(@Nullable String tagName, @NotNull XmlTagVisitor subtagVisitor)
+      throws IOException, XmlPullParserException {
     int elementDepth = myParser.getDepth();
     int event;
     do {
       event = myParser.nextToken();
-      if (event == XmlPullParser.START_TAG && (tagName == null || tagName.equals(myParser.getName()) && myParser.getPrefix() == null)) {
+      if (event == XmlPullParser.START_TAG
+          && (tagName == null
+              || tagName.equals(myParser.getName()) && myParser.getPrefix() == null)) {
         subtagVisitor.visitTag();
       }
-    } while (event != XmlPullParser.END_DOCUMENT && (event != XmlPullParser.END_TAG || myParser.getDepth() > elementDepth));
+    } while (event != XmlPullParser.END_DOCUMENT
+        && (event != XmlPullParser.END_TAG || myParser.getDepth() > elementDepth));
   }
 
   /**
-   * Skips all subtags of the current tag. When the method returns, the parser is positioned at the end tag
-   * of the current element.
+   * Skips all subtags of the current tag. When the method returns, the parser is positioned at the
+   * end tag of the current element.
    */
   private void skipSubTags() throws IOException, XmlPullParserException {
     int elementDepth = myParser.getDepth();
     int event;
     do {
       event = myParser.nextToken();
-    } while (event != XmlPullParser.END_DOCUMENT && (event != XmlPullParser.END_TAG || myParser.getDepth() > elementDepth));
+    } while (event != XmlPullParser.END_DOCUMENT
+        && (event != XmlPullParser.END_TAG || myParser.getDepth() > elementDepth));
   }
 
-  private void validateResourceName(@NotNull String resourceName, @NotNull ResourceType resourceType, @NotNull PathString file)
+  private void validateResourceName(
+      @NotNull String resourceName, @NotNull ResourceType resourceType, @NotNull PathString file)
       throws XmlSyntaxException {
     String error = ValueResourceNameValidator.getErrorText(resourceName, resourceType);
     if (error != null) {
@@ -1098,7 +1244,9 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
   @NotNull
   private String getDisplayName(@NotNull PathString file) {
-    return file.isAbsolute() ? file.getNativePath() : file.getPortablePath() + " in " + myResourceDirectoryOrFile.toString();
+    return file.isAbsolute()
+        ? file.getNativePath()
+        : file.getPortablePath() + " in " + myResourceDirectoryOrFile.toString();
   }
 
   @NotNull
@@ -1109,17 +1257,19 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   }
 
   @NotNull
-  protected final ResourceVisibility getVisibility(@NotNull ResourceType resourceType, @NotNull String resourceName) {
+  protected final ResourceVisibility getVisibility(
+      @NotNull ResourceType resourceType, @NotNull String resourceName) {
     Set<String> names = myPublicResources.get(resourceType);
-    return names != null && names.contains(getKeyForVisibilityLookup(resourceName)) ? ResourceVisibility.PUBLIC : myDefaultVisibility;
+    return names != null && names.contains(getKeyForVisibilityLookup(resourceName))
+        ? ResourceVisibility.PUBLIC
+        : myDefaultVisibility;
   }
 
-  /**
-   * Transforms the given resource name to a key for lookup in myPublicResources.
-   */
+  /** Transforms the given resource name to a key for lookup in myPublicResources. */
   @NotNull
   protected String getKeyForVisibilityLookup(@NotNull String resourceName) {
-    // In public.txt all resource names are transformed by replacing dots, colons and dashes with underscores.
+    // In public.txt all resource names are transformed by replacing dots, colons and dashes with
+    // underscores.
     return ResourcesUtil.resourceNameToFieldName(resourceName);
   }
 
@@ -1137,9 +1287,9 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
   private static boolean isZipArchive(@NotNull Path resourceDirectoryOrFile) {
     String filename = resourceDirectoryOrFile.getFileName().toString();
-    return SdkUtils.endsWithIgnoreCase(filename, DOT_AAR) ||
-           SdkUtils.endsWithIgnoreCase(filename, DOT_JAR) ||
-           SdkUtils.endsWithIgnoreCase(filename, DOT_ZIP);
+    return SdkUtils.endsWithIgnoreCase(filename, DOT_AAR)
+        || SdkUtils.endsWithIgnoreCase(filename, DOT_JAR)
+        || SdkUtils.endsWithIgnoreCase(filename, DOT_ZIP);
   }
 
   @NotNull
@@ -1152,19 +1302,18 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     void visitTag() throws IOException, XmlPullParserException;
   }
 
-  /**
-   * Information about a resource folder.
-   */
+  /** Information about a resource folder. */
   protected static class FolderInfo {
     @NotNull public final ResourceFolderType folderType;
     @NotNull public final FolderConfiguration configuration;
     @Nullable public final ResourceType resourceType;
     public final boolean isIdGenerating;
 
-    private FolderInfo(@NotNull ResourceFolderType folderType,
-                       @NotNull FolderConfiguration configuration,
-                       @Nullable ResourceType resourceType,
-                       boolean isIdGenerating) {
+    private FolderInfo(
+        @NotNull ResourceFolderType folderType,
+        @NotNull FolderConfiguration configuration,
+        @Nullable ResourceType resourceType,
+        boolean isIdGenerating) {
       this.configuration = configuration;
       this.resourceType = resourceType;
       this.folderType = folderType;
@@ -1179,14 +1328,17 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
      * @return the FolderInfo object, or null if folderName is not a valid name of a resource folder
      */
     @Nullable
-    public static FolderInfo create(@NotNull String folderName, @NotNull Map<String, FolderConfiguration> folderConfigCache) {
+    public static FolderInfo create(
+        @NotNull String folderName, @NotNull Map<String, FolderConfiguration> folderConfigCache) {
       ResourceFolderType folderType = ResourceFolderType.getFolderType(folderName);
       if (folderType == null) {
         return null;
       }
 
       String qualifier = FolderConfiguration.getQualifier(folderName);
-      FolderConfiguration config = folderConfigCache.computeIfAbsent(qualifier, FolderConfiguration::getConfigForQualifierString);
+      FolderConfiguration config =
+          folderConfigCache.computeIfAbsent(
+              qualifier, FolderConfiguration::getConfigForQualifierString);
       if (config == null) {
         return null;
       }
@@ -1197,8 +1349,7 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       if (folderType == ResourceFolderType.VALUES) {
         resourceType = null;
         isIdGenerating = false;
-      }
-      else {
+      } else {
         resourceType = FolderTypeRelationship.getNonIdRelatedResourceType(folderType);
         isIdGenerating = FolderTypeRelationship.isIdGeneratingFolderType(folderType);
       }
@@ -1218,7 +1369,8 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
 
     @Override
     @NotNull
-    public FileVisitResult preVisitDirectory(@NotNull Path dir, @NotNull BasicFileAttributes attrs) {
+    public FileVisitResult preVisitDirectory(
+        @NotNull Path dir, @NotNull BasicFileAttributes attrs) {
       if (fileFilter.isIgnored(dir, attrs)) {
         return FileVisitResult.SKIP_SUBTREE;
       }
@@ -1256,7 +1408,8 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
     private boolean nontrivialRawXml;
 
     @NotNull
-    String extractText(@NotNull XmlPullParser parser, boolean withRawXml) throws IOException, XmlPullParserException {
+    String extractText(@NotNull XmlPullParser parser, boolean withRawXml)
+        throws IOException, XmlPullParserException {
       text.setLength(0);
       rawXml.setLength(0);
       textInclusionState.clear();
@@ -1268,90 +1421,93 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
       do {
         event = parser.nextToken();
         switch (event) {
-          case XmlPullParser.START_TAG: {
-            String tagName = parser.getName();
-            if (XLIFF_G_TAG.equals(tagName) && isXliffNamespace(parser.getNamespace())) {
-              boolean includeNestedText = getTextInclusionState();
-              String example = parser.getAttributeValue(null, ATTR_EXAMPLE);
-              if (example != null) {
-                text.append('(').append(example).append(')');
-                includeNestedText = false;
-              }
-              else {
-                String id = parser.getAttributeValue(null, ATTR_ID);
-                if (id != null && !id.equals("id")) {
-                  text.append('$').append('{').append(id).append('}');
+          case XmlPullParser.START_TAG:
+            {
+              String tagName = parser.getName();
+              if (XLIFF_G_TAG.equals(tagName) && isXliffNamespace(parser.getNamespace())) {
+                boolean includeNestedText = getTextInclusionState();
+                String example = parser.getAttributeValue(null, ATTR_EXAMPLE);
+                if (example != null) {
+                  text.append('(').append(example).append(')');
                   includeNestedText = false;
+                } else {
+                  String id = parser.getAttributeValue(null, ATTR_ID);
+                  if (id != null && !id.equals("id")) {
+                    text.append('$').append('{').append(id).append('}');
+                    includeNestedText = false;
+                  }
                 }
+                textInclusionState.addLast(includeNestedText);
               }
-              textInclusionState.addLast(includeNestedText);
-            }
-            if (withRawXml) {
-              nontrivialRawXml = true;
-              rawXml.append('<');
-              String prefix = parser.getPrefix();
-              if (prefix != null) {
-                rawXml.append(prefix).append(':');
-              }
-              rawXml.append(tagName);
-              int numAttr = parser.getAttributeCount();
-              for (int i = 0; i < numAttr; i++) {
-                rawXml.append(' ');
-                String attributePrefix = parser.getAttributePrefix(i);
-                if (attributePrefix != null) {
-                  rawXml.append(attributePrefix).append(':');
+              if (withRawXml) {
+                nontrivialRawXml = true;
+                rawXml.append('<');
+                String prefix = parser.getPrefix();
+                if (prefix != null) {
+                  rawXml.append(prefix).append(':');
                 }
-                rawXml.append(parser.getAttributeName(i)).append('=').append('"');
-                XmlUtils.appendXmlAttributeValue(rawXml, parser.getAttributeValue(i));
-                rawXml.append('"');
+                rawXml.append(tagName);
+                int numAttr = parser.getAttributeCount();
+                for (int i = 0; i < numAttr; i++) {
+                  rawXml.append(' ');
+                  String attributePrefix = parser.getAttributePrefix(i);
+                  if (attributePrefix != null) {
+                    rawXml.append(attributePrefix).append(':');
+                  }
+                  rawXml.append(parser.getAttributeName(i)).append('=').append('"');
+                  XmlUtils.appendXmlAttributeValue(rawXml, parser.getAttributeValue(i));
+                  rawXml.append('"');
+                }
+                rawXml.append('>');
               }
-              rawXml.append('>');
+              break;
             }
-            break;
-          }
 
-          case XmlPullParser.END_TAG: {
-            if (parser.getDepth() <= elementDepth) {
-              break loop;
-            }
-            String tagName = parser.getName();
-            if (withRawXml) {
-              rawXml.append('<').append('/');
-              String prefix = parser.getPrefix();
-              if (prefix != null) {
-                rawXml.append(prefix).append(':');
+          case XmlPullParser.END_TAG:
+            {
+              if (parser.getDepth() <= elementDepth) {
+                break loop;
               }
-              rawXml.append(tagName).append('>');
+              String tagName = parser.getName();
+              if (withRawXml) {
+                rawXml.append('<').append('/');
+                String prefix = parser.getPrefix();
+                if (prefix != null) {
+                  rawXml.append(prefix).append(':');
+                }
+                rawXml.append(tagName).append('>');
+              }
+              if (XLIFF_G_TAG.equals(tagName) && isXliffNamespace(parser.getNamespace())) {
+                textInclusionState.removeLast();
+              }
+              break;
             }
-            if (XLIFF_G_TAG.equals(tagName) && isXliffNamespace(parser.getNamespace())) {
-              textInclusionState.removeLast();
-            }
-            break;
-          }
 
           case XmlPullParser.ENTITY_REF:
-          case XmlPullParser.TEXT: {
-            String textPiece = parser.getText();
-            if (getTextInclusionState()) {
-              text.append(textPiece);
+          case XmlPullParser.TEXT:
+            {
+              String textPiece = parser.getText();
+              if (getTextInclusionState()) {
+                text.append(textPiece);
+              }
+              if (withRawXml) {
+                rawXml.append(textPiece);
+              }
+              break;
             }
-            if (withRawXml) {
-              rawXml.append(textPiece);
-            }
-            break;
-          }
 
-          case XmlPullParser.CDSECT: {
-            String textPiece = parser.getText();
-            if (getTextInclusionState()) {
-              text.append(textPiece);
+          case XmlPullParser.CDSECT:
+            {
+              String textPiece = parser.getText();
+              if (getTextInclusionState()) {
+                text.append(textPiece);
+              }
+              if (withRawXml) {
+                nontrivialRawXml = true;
+                rawXml.append("<![CDATA[").append(textPiece).append("]]>");
+              }
+              break;
             }
-            if (withRawXml) {
-              nontrivialRawXml = true;
-              rawXml.append("<![CDATA[").append(textPiece).append("]]>");
-            }
-            break;
-          }
         }
       } while (event != XmlPullParser.END_DOCUMENT);
 
@@ -1373,7 +1529,8 @@ public abstract class RepositoryLoader<T extends LoadableResourceRepository> imp
   }
 
   private static class XmlSyntaxException extends Exception {
-    XmlSyntaxException(@NotNull String error, @NotNull XmlPullParser parser, @NotNull String filename) {
+    XmlSyntaxException(
+        @NotNull String error, @NotNull XmlPullParser parser, @NotNull String filename) {
       super(error + " at " + filename + " line " + parser.getLineNumber());
     }
   }

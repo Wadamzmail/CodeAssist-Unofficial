@@ -59,18 +59,15 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  */
 
 /**
- * Denotes an unparameterized instruction to store a value into a local variable,
- * e.g. ISTORE.
+ * Denotes an unparameterized instruction to store a value into a local variable, e.g. ISTORE.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
-public abstract class StoreInstruction extends LocalVariableInstruction
-  implements PopInstruction
-{
+public abstract class StoreInstruction extends LocalVariableInstruction implements PopInstruction {
   /**
    * Empty constructor needed for the Class.newInstance() statement in
-   * Instruction.readInstruction(). Not to be used otherwise.
-   * tag and length are defined in readInstruction and initFromFile, respectively.
+   * Instruction.readInstruction(). Not to be used otherwise. tag and length are defined in
+   * readInstruction and initFromFile, respectively.
    */
   StoreInstruction(short canon_tag, short c_tag) {
     super(canon_tag, c_tag);
@@ -86,10 +83,9 @@ public abstract class StoreInstruction extends LocalVariableInstruction
   }
 
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */

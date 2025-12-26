@@ -57,21 +57,19 @@ package org.openjdk.com.sun.org.apache.bcel.internal.generic;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+import java.util.StringTokenizer;
 import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.*;
-
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.Constant;
 import org.openjdk.com.sun.org.apache.bcel.internal.classfile.ConstantPool;
-
-import java.util.StringTokenizer;
 
 /**
  * Super class for the INVOKExxx family of instructions.
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public abstract class InvokeInstruction extends FieldOrMethod
-  implements ExceptionThrower, TypedInstruction, StackConsumer, StackProducer {
+    implements ExceptionThrower, TypedInstruction, StackConsumer, StackProducer {
   /**
    * Empty constructor needed for the Class.newInstance() statement in
    * Instruction.readInstruction(). Not to be used otherwise.
@@ -89,63 +87,68 @@ public abstract class InvokeInstruction extends FieldOrMethod
    * @return mnemonic for instruction with symbolic references resolved
    */
   public String toString(ConstantPool cp) {
-    Constant c   = cp.getConstant(index);
+    Constant c = cp.getConstant(index);
     StringTokenizer tok = new StringTokenizer(cp.constantToString(c));
 
-    return Constants.OPCODE_NAMES[opcode] + " " +
-      tok.nextToken().replace('.', '/') + tok.nextToken();
+    return Constants.OPCODE_NAMES[opcode]
+        + " "
+        + tok.nextToken().replace('.', '/')
+        + tok.nextToken();
   }
 
   /**
-   * Also works for instructions whose stack effect depends on the
-   * constant pool entry they reference.
+   * Also works for instructions whose stack effect depends on the constant pool entry they
+   * reference.
+   *
    * @return Number of words consumed from stack by this instruction
    */
   public int consumeStack(ConstantPoolGen cpg) {
-      String signature = getSignature(cpg);
-      Type[] args      = Type.getArgumentTypes(signature);
-      int    sum;
+    String signature = getSignature(cpg);
+    Type[] args = Type.getArgumentTypes(signature);
+    int sum;
 
-      if(opcode == Constants.INVOKESTATIC)
-        sum = 0;
-      else
-        sum = 1;  // this reference
+    if (opcode == Constants.INVOKESTATIC) sum = 0;
+    else sum = 1; // this reference
 
-      int n = args.length;
-      for (int i = 0; i < n; i++)
-        sum += args[i].getSize();
+    int n = args.length;
+    for (int i = 0; i < n; i++) sum += args[i].getSize();
 
-      return sum;
-   }
+    return sum;
+  }
 
   /**
-   * Also works for instructions whose stack effect depends on the
-   * constant pool entry they reference.
+   * Also works for instructions whose stack effect depends on the constant pool entry they
+   * reference.
+   *
    * @return Number of words produced onto stack by this instruction
    */
   public int produceStack(ConstantPoolGen cpg) {
     return getReturnType(cpg).getSize();
   }
 
-  /** @return return type of referenced method.
+  /**
+   * @return return type of referenced method.
    */
   public Type getType(ConstantPoolGen cpg) {
     return getReturnType(cpg);
   }
 
-  /** @return name of referenced method.
+  /**
+   * @return name of referenced method.
    */
   public String getMethodName(ConstantPoolGen cpg) {
     return getName(cpg);
   }
 
-  /** @return return type of referenced method.
+  /**
+   * @return return type of referenced method.
    */
   public Type getReturnType(ConstantPoolGen cpg) {
     return Type.getReturnType(getSignature(cpg));
   }
 
-  /** @return argument types of referenced method.
+  /**
+   * @return argument types of referenced method.
    */
   public Type[] getArgumentTypes(ConstantPoolGen cpg) {
     return Type.getArgumentTypes(getSignature(cpg));

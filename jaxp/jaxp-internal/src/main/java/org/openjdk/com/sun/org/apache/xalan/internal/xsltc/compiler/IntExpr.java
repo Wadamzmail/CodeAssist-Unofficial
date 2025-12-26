@@ -36,23 +36,23 @@ import org.openjdk.com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeChe
  * @author Santiago Pericas-Geertsen
  */
 final class IntExpr extends Expression {
-    private final int _value;
+  private final int _value;
 
-    public IntExpr(int value) {
-        _value = value;
-    }
+  public IntExpr(int value) {
+    _value = value;
+  }
 
-    public Type typeCheck(SymbolTable stable) throws TypeCheckError {
-        return _type = Type.Int;
-    }
+  public Type typeCheck(SymbolTable stable) throws TypeCheckError {
+    return _type = Type.Int;
+  }
 
-    public String toString() {
-        return "int-expr(" + _value + ')';
-    }
+  public String toString() {
+    return "int-expr(" + _value + ')';
+  }
 
-    public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
-        ConstantPoolGen cpg = classGen.getConstantPool();
-        InstructionList il = methodGen.getInstructionList();
-        il.append(new PUSH(cpg, _value));
-    }
+  public void translate(ClassGenerator classGen, MethodGenerator methodGen) {
+    ConstantPoolGen cpg = classGen.getConstantPool();
+    InstructionList il = methodGen.getInstructionList();
+    il.append(new PUSH(cpg, _value));
+  }
 }

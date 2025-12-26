@@ -62,10 +62,10 @@ import org.openjdk.com.sun.org.apache.bcel.internal.Constants;
 /**
  * Denotes array type, such as int[][]
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public final class ArrayType extends ReferenceType {
-  private int  dimensions;
+  private int dimensions;
   private Type basic_type;
 
   /**
@@ -94,28 +94,27 @@ public final class ArrayType extends ReferenceType {
   public ArrayType(Type type, int dimensions) {
     super(Constants.T_ARRAY, "<dummy>");
 
-    if((dimensions < 1) || (dimensions > Constants.MAX_BYTE))
+    if ((dimensions < 1) || (dimensions > Constants.MAX_BYTE))
       throw new ClassGenException("Invalid number of dimensions: " + dimensions);
 
-    switch(type.getType()) {
-    case Constants.T_ARRAY:
-      ArrayType array = (ArrayType)type;
-      this.dimensions = dimensions + array.dimensions;
-      basic_type      = array.basic_type;
-      break;
+    switch (type.getType()) {
+      case Constants.T_ARRAY:
+        ArrayType array = (ArrayType) type;
+        this.dimensions = dimensions + array.dimensions;
+        basic_type = array.basic_type;
+        break;
 
-    case Constants.T_VOID:
-      throw new ClassGenException("Invalid type: void[]");
+      case Constants.T_VOID:
+        throw new ClassGenException("Invalid type: void[]");
 
-    default: // Basic type or reference
-      this.dimensions = dimensions;
-      basic_type = type;
-      break;
+      default: // Basic type or reference
+        this.dimensions = dimensions;
+        basic_type = type;
+        break;
     }
 
     StringBuffer buf = new StringBuffer();
-    for(int i=0; i < this.dimensions; i++)
-      buf.append('[');
+    for (int i = 0; i < this.dimensions; i++) buf.append('[');
 
     buf.append(basic_type.getSignature());
 
@@ -133,27 +132,31 @@ public final class ArrayType extends ReferenceType {
    * @return element type of array, i.e., for int[][][] the element type is int[][]
    */
   public Type getElementType() {
-    if(dimensions == 1)
-      return basic_type;
-    else
-      return new ArrayType(basic_type, dimensions - 1);
+    if (dimensions == 1) return basic_type;
+    else return new ArrayType(basic_type, dimensions - 1);
   }
 
-  /** @return number of dimensions of array
+  /**
+   * @return number of dimensions of array
    */
-  public int getDimensions() { return dimensions; }
+  public int getDimensions() {
+    return dimensions;
+  }
 
-  /** @return a hash code value for the object.
+  /**
+   * @return a hash code value for the object.
    */
-  public int hashCode() { return basic_type.hashCode() ^ dimensions; }
+  public int hashCode() {
+    return basic_type.hashCode() ^ dimensions;
+  }
 
-  /** @return true if both type objects refer to the same array type.
+  /**
+   * @return true if both type objects refer to the same array type.
    */
   public boolean equals(Object type) {
-    if(type instanceof ArrayType) {
-      ArrayType array = (ArrayType)type;
+    if (type instanceof ArrayType) {
+      ArrayType array = (ArrayType) type;
       return (array.dimensions == dimensions) && array.basic_type.equals(basic_type);
-    } else
-      return false;
+    } else return false;
   }
 }

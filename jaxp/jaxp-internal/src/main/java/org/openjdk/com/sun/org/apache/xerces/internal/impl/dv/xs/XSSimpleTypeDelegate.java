@@ -38,182 +38,181 @@ import org.openjdk.com.sun.org.apache.xerces.internal.xs.XSTypeDefinition;
  * Base class for XSSimpleType wrapper implementations.
  *
  * @xerces.internal
- *
  * @version $Id: XSSimpleTypeDelegate.java,v 1.3 2010-11-01 04:39:47 joehw Exp $
  */
-public class XSSimpleTypeDelegate
-    implements XSSimpleType {
+public class XSSimpleTypeDelegate implements XSSimpleType {
 
-    protected final XSSimpleType type;
+  protected final XSSimpleType type;
 
-    public XSSimpleTypeDelegate(XSSimpleType type) {
-        if (type == null) {
-            throw new NullPointerException();
-        }
-        this.type = type;
+  public XSSimpleTypeDelegate(XSSimpleType type) {
+    if (type == null) {
+      throw new NullPointerException();
     }
+    this.type = type;
+  }
 
-    public XSSimpleType getWrappedXSSimpleType() {
-        return type;
-    }
+  public XSSimpleType getWrappedXSSimpleType() {
+    return type;
+  }
 
-    public XSObjectList getAnnotations() {
-        return type.getAnnotations();
-    }
+  public XSObjectList getAnnotations() {
+    return type.getAnnotations();
+  }
 
-    public boolean getBounded() {
-        return type.getBounded();
-    }
+  public boolean getBounded() {
+    return type.getBounded();
+  }
 
-    public short getBuiltInKind() {
-        return type.getBuiltInKind();
-    }
+  public short getBuiltInKind() {
+    return type.getBuiltInKind();
+  }
 
-    public short getDefinedFacets() {
-        return type.getDefinedFacets();
-    }
+  public short getDefinedFacets() {
+    return type.getDefinedFacets();
+  }
 
-    public XSObjectList getFacets() {
-        return type.getFacets();
-    }
+  public XSObjectList getFacets() {
+    return type.getFacets();
+  }
 
-    public boolean getFinite() {
-        return type.getFinite();
-    }
+  public boolean getFinite() {
+    return type.getFinite();
+  }
 
-    public short getFixedFacets() {
-        return type.getFixedFacets();
-    }
+  public short getFixedFacets() {
+    return type.getFixedFacets();
+  }
 
-    public XSSimpleTypeDefinition getItemType() {
-        return type.getItemType();
-    }
+  public XSSimpleTypeDefinition getItemType() {
+    return type.getItemType();
+  }
 
-    public StringList getLexicalEnumeration() {
-        return type.getLexicalEnumeration();
-    }
+  public StringList getLexicalEnumeration() {
+    return type.getLexicalEnumeration();
+  }
 
-    public String getLexicalFacetValue(short facetName) {
-        return type.getLexicalFacetValue(facetName);
-    }
+  public String getLexicalFacetValue(short facetName) {
+    return type.getLexicalFacetValue(facetName);
+  }
 
-    public StringList getLexicalPattern() {
-        return type.getLexicalPattern();
-    }
+  public StringList getLexicalPattern() {
+    return type.getLexicalPattern();
+  }
 
-    public XSObjectList getMemberTypes() {
-        return type.getMemberTypes();
-    }
+  public XSObjectList getMemberTypes() {
+    return type.getMemberTypes();
+  }
 
-    public XSObjectList getMultiValueFacets() {
-        return type.getMultiValueFacets();
-    }
+  public XSObjectList getMultiValueFacets() {
+    return type.getMultiValueFacets();
+  }
 
-    public boolean getNumeric() {
-        return type.getNumeric();
-    }
+  public boolean getNumeric() {
+    return type.getNumeric();
+  }
 
-    public short getOrdered() {
-        return type.getOrdered();
-    }
+  public short getOrdered() {
+    return type.getOrdered();
+  }
 
-    public XSSimpleTypeDefinition getPrimitiveType() {
-        return type.getPrimitiveType();
-    }
+  public XSSimpleTypeDefinition getPrimitiveType() {
+    return type.getPrimitiveType();
+  }
 
-    public short getVariety() {
-        return type.getVariety();
-    }
+  public short getVariety() {
+    return type.getVariety();
+  }
 
-    public boolean isDefinedFacet(short facetName) {
-        return type.isDefinedFacet(facetName);
-    }
+  public boolean isDefinedFacet(short facetName) {
+    return type.isDefinedFacet(facetName);
+  }
 
-    public boolean isFixedFacet(short facetName) {
-        return type.isFixedFacet(facetName);
-    }
+  public boolean isFixedFacet(short facetName) {
+    return type.isFixedFacet(facetName);
+  }
 
-    public boolean derivedFrom(String namespace, String name, short derivationMethod) {
-        return type.derivedFrom(namespace, name, derivationMethod);
-    }
+  public boolean derivedFrom(String namespace, String name, short derivationMethod) {
+    return type.derivedFrom(namespace, name, derivationMethod);
+  }
 
-    public boolean derivedFromType(XSTypeDefinition ancestorType, short derivationMethod) {
-        return type.derivedFromType(ancestorType, derivationMethod);
-    }
+  public boolean derivedFromType(XSTypeDefinition ancestorType, short derivationMethod) {
+    return type.derivedFromType(ancestorType, derivationMethod);
+  }
 
-    public boolean getAnonymous() {
-        return type.getAnonymous();
-    }
+  public boolean getAnonymous() {
+    return type.getAnonymous();
+  }
 
-    public XSTypeDefinition getBaseType() {
-        return type.getBaseType();
-    }
+  public XSTypeDefinition getBaseType() {
+    return type.getBaseType();
+  }
 
-    public short getFinal() {
-        return type.getFinal();
-    }
+  public short getFinal() {
+    return type.getFinal();
+  }
 
-    public short getTypeCategory() {
-        return type.getTypeCategory();
-    }
+  public short getTypeCategory() {
+    return type.getTypeCategory();
+  }
 
-    public boolean isFinal(short restriction) {
-        return type.isFinal(restriction);
-    }
+  public boolean isFinal(short restriction) {
+    return type.isFinal(restriction);
+  }
 
-    public String getName() {
-        return type.getName();
-    }
+  public String getName() {
+    return type.getName();
+  }
 
-    public String getNamespace() {
-        return type.getNamespace();
-    }
+  public String getNamespace() {
+    return type.getNamespace();
+  }
 
-    public XSNamespaceItem getNamespaceItem() {
-        return type.getNamespaceItem();
-    }
+  public XSNamespaceItem getNamespaceItem() {
+    return type.getNamespaceItem();
+  }
 
-    public short getType() {
-        return type.getType();
-    }
+  public short getType() {
+    return type.getType();
+  }
 
-    public void applyFacets(XSFacets facets, short presentFacet, short fixedFacet, ValidationContext context)
-        throws InvalidDatatypeFacetException {
-        type.applyFacets(facets, presentFacet, fixedFacet, context);
-    }
+  public void applyFacets(
+      XSFacets facets, short presentFacet, short fixedFacet, ValidationContext context)
+      throws InvalidDatatypeFacetException {
+    type.applyFacets(facets, presentFacet, fixedFacet, context);
+  }
 
-    public short getPrimitiveKind() {
-        return type.getPrimitiveKind();
-    }
+  public short getPrimitiveKind() {
+    return type.getPrimitiveKind();
+  }
 
-    public short getWhitespace() throws DatatypeException {
-        return type.getWhitespace();
-    }
+  public short getWhitespace() throws DatatypeException {
+    return type.getWhitespace();
+  }
 
-    public boolean isEqual(Object value1, Object value2) {
-        return type.isEqual(value1, value2);
-    }
+  public boolean isEqual(Object value1, Object value2) {
+    return type.isEqual(value1, value2);
+  }
 
-    public boolean isIDType() {
-        return type.isIDType();
-    }
+  public boolean isIDType() {
+    return type.isIDType();
+  }
 
-    public void validate(ValidationContext context, ValidatedInfo validatedInfo)
-        throws InvalidDatatypeValueException {
-        type.validate(context, validatedInfo);
-    }
+  public void validate(ValidationContext context, ValidatedInfo validatedInfo)
+      throws InvalidDatatypeValueException {
+    type.validate(context, validatedInfo);
+  }
 
-    public Object validate(String content, ValidationContext context, ValidatedInfo validatedInfo)
-        throws InvalidDatatypeValueException {
-        return type.validate(content, context, validatedInfo);
-    }
+  public Object validate(String content, ValidationContext context, ValidatedInfo validatedInfo)
+      throws InvalidDatatypeValueException {
+    return type.validate(content, context, validatedInfo);
+  }
 
-    public Object validate(Object content, ValidationContext context, ValidatedInfo validatedInfo)
-        throws InvalidDatatypeValueException {
-        return type.validate(content, context, validatedInfo);
-    }
+  public Object validate(Object content, ValidationContext context, ValidatedInfo validatedInfo)
+      throws InvalidDatatypeValueException {
+    return type.validate(content, context, validatedInfo);
+  }
 
-    public String toString() {
-        return type.toString();
-    }
+  public String toString() {
+    return type.toString();
+  }
 }

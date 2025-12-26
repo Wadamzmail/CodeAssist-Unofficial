@@ -65,7 +65,7 @@ import org.openjdk.com.sun.org.apache.bcel.internal.ExceptionConstants;
  *
  * <PRE>Stack: ..., [arg1, [arg2 ...]] -&gt; ...</PRE>
  *
- * @author  <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
+ * @author <A HREF="mailto:markus.dahm@berlin.de">M. Dahm</A>
  */
 public class INVOKESTATIC extends InvokeInstruction {
   /**
@@ -81,21 +81,25 @@ public class INVOKESTATIC extends InvokeInstruction {
   public Class[] getExceptions() {
     Class[] cs = new Class[2 + ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length];
 
-    System.arraycopy(ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION, 0,
-                     cs, 0, ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length);
+    System.arraycopy(
+        ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION,
+        0,
+        cs,
+        0,
+        ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length);
 
-    cs[ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length] = ExceptionConstants.UNSATISFIED_LINK_ERROR;
-    cs[ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length+1] = ExceptionConstants.INCOMPATIBLE_CLASS_CHANGE_ERROR;
+    cs[ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length] =
+        ExceptionConstants.UNSATISFIED_LINK_ERROR;
+    cs[ExceptionConstants.EXCS_FIELD_AND_METHOD_RESOLUTION.length + 1] =
+        ExceptionConstants.INCOMPATIBLE_CLASS_CHANGE_ERROR;
 
     return cs;
   }
 
-
   /**
-   * Call corresponding visitor method(s). The order is:
-   * Call visitor methods of implemented interfaces first, then
-   * call methods according to the class hierarchy in descending order,
-   * i.e., the most specific visitXXX() call comes last.
+   * Call corresponding visitor method(s). The order is: Call visitor methods of implemented
+   * interfaces first, then call methods according to the class hierarchy in descending order, i.e.,
+   * the most specific visitXXX() call comes last.
    *
    * @param v Visitor object
    */
