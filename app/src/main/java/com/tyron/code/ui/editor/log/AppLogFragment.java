@@ -65,6 +65,8 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     fragment.setArguments(bundle);
     return fragment;
   }
+  
+  private final String TAG = "AppLogFragment";
 
   private CodeEditorView mEditor;
   private FloatingActionButton copyText, actionFab;
@@ -353,8 +355,12 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
 
    // content.insert(lastLine, lastColumn, newText);
     editor.setText(text);
-
-    editor.setSelection(lastLine, 0);
+    if(lastLine>=1)return;
+    try{
+     editor.setSelection(lastLine, 0);
+    }catch(Exception e){
+     android.util.Log.e(TAG,"failed to select last line",e);
+    }
   }
 
   @Override
