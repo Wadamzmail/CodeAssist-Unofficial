@@ -69,6 +69,11 @@ import org.apache.commons.vfs2.FileObject;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import com.tyron.code.util.DiagnosticsUtils;
+import com.tyron.completion.java.util.DiagnosticUtil;
+import com.tyron.code.language.xml.LanguageXML;
+
 
 public class RosemoeEditorFacade {
 
@@ -79,9 +84,7 @@ public class RosemoeEditorFacade {
   private final FrameLayout container;
   private final CodeEditorView editor;
 
-  // my edits
   private LogViewModel logViewModel;
-  private MainViewModel mMainViewModel;
 
   private View.OnTouchListener dragToOpenListener;
 
@@ -97,7 +100,6 @@ public class RosemoeEditorFacade {
     container.addView(editor);
 
     logViewModel = new ViewModelProvider(MainActivity.instance).get(LogViewModel.class);
-    mMainViewModel = new ViewModelProvider(MainActivity.instance).get(MainViewModel.class);
 
     EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
     eventManager.subscribeEvent(
@@ -131,36 +133,40 @@ public class RosemoeEditorFacade {
     }
 
     Objects.requireNonNull(editor.getDiagnostics()).reset();
+    editor.getDiagnosticsList().clear();
 
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);
-      Function<Diagnostic.Kind, Short> severitySupplier =
-          it -> {
-            switch (it) {
-              case ERROR:
-                return DiagnosticRegion.SEVERITY_ERROR;
-              case MANDATORY_WARNING:
-              case WARNING:
-                return DiagnosticRegion.SEVERITY_WARNING;
-              default:
-              case OTHER:
-              case NOTE:
-                return DiagnosticRegion.SEVERITY_NONE;
-            }
-          };
-      diagnostics.stream()
-          .map(
-              it ->
-                  new DiagnosticRegion(
-                      (int) it.getStartPosition(),
-                      (int) it.getEndPosition(),
-                      severitySupplier.apply(it.getKind())))
-          .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
-      //  ProgressManager.getInstance()
-      // .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG,
-      // diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList())));
+       
+      //Function<Diagnostic.Kind, Short> severitySupplier =
+      //    it -> {
+      //      switch (it) {
+      //        case ERROR:
+      //          return DiagnosticRegion.SEVERITY_ERROR;
+      //        case MANDATORY_WARNING:
+      //        case WARNING:
+      //          return DiagnosticRegion.SEVERITY_WARNING;
+      //        default:
+      //        case OTHER:
+      //        case NOTE:
+      //          return DiagnosticRegion.SEVERITY_NONE;
+      //      }
+      //    };
+      //diagnostics.stream()
+      //    .map(
+      //        it ->
+      //            new DiagnosticRegion(
+      //                (int) it.getStartPosition(),
+      //                (int) it.getEndPosition(),
+      //                severitySupplier.apply(it.getKind())))
+      //    .forEach(Objects.requireNonNull(editor.getDiagnostics())::addDiagnostic);
+      editor.setDiagnostics(diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
     }
+    
+    ProgressManager.getInstance()
+        .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG,editor.getDiagnosticsList())); 
+    
   }
 
   @SuppressLint("ClickableViewAccessibility")
@@ -344,6 +350,17 @@ public class RosemoeEditorFacade {
       JavaDataContextUtil.addEditorKeys(
           dataContext, currentProject, editor.getCurrentFile(), editor.getCursor().getLeft());
     }
+    DiagnosticWrapper diagnosticWrapper =
+        DiagnosticUtil.getDiagnosticWrapper(
+            editor.getDiagnosticsList(),
+            editor.getCursor().getLeft(),
+            editor.getCursor().getRight());
+    if (diagnosticWrapper == null && editor.getEditorLanguage() instanceof LanguageXML) {
+      diagnosticWrapper =
+          DiagnosticUtil.getXmlDiagnosticWrapper(
+              mEditor.getDiagnosticsList(), mEditor.getCursor().getLeftLine());
+    }
+    dataContext.putData(CommonDataKeys.DIAGNOSTIC, diagnosticWrapper);
     return dataContext;
   }
 

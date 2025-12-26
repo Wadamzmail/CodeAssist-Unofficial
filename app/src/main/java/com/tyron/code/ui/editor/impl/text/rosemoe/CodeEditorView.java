@@ -36,6 +36,7 @@ import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -60,7 +61,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   private boolean mIsBackgroundAnalysisEnabled;
 
-  private List<DiagnosticWrapper> mDiagnostics;
+  private List<DiagnosticWrapper> mDiagnostics = new ArrayList<>();
   private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
   private File mCurrentFile;
   private EditorViewModel mViewModel;
@@ -142,6 +143,11 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public void setDiagnosticsListener(Consumer<List<DiagnosticWrapper>> listener) {
     mDiagnosticsListener = listener;
   }
+  
+  @Override 
+  public List<DiagnosticWrapper> getDiagnosticsList(){
+     return mDiagnostics;
+  }  
 
   @Override
   public File getCurrentFile() {

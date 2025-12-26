@@ -17,8 +17,10 @@ import com.tyron.editor.Editor;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
 
+
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import io.github.rosemoe.sora.lang.Language;
@@ -49,6 +51,8 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.common.SharedPreferenceKeys;
+import com.tyron.builder.model.DiagnosticWrapper;
+import dev.mutwakil.completion.kotlin.util.KotlinSeverityMapper;
 //test
 import android.widget.Toast;
 import com.tyron.code.MainActivity;
@@ -70,6 +74,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final DiagnosticsContainer container = new DiagnosticsContainer();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
+    private final List<DiagnosticWrapper> diagnostics = new ArrayList<>();
    // private FirKotlinEnvironment firEnvironment;
      
     
@@ -145,10 +150,12 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
            
-            container.reset();                
+            Objects.requireNonNull(editor.getDiagnostics()).reset();
+            editor.getDiagnosticsList().clear();
+            diagnostics.clear();            
             List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
             if (itemsList==null)return;
-            Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
+            Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(diagnostics));
             itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
        }catch(Exception e){
             kotlinEnvironment.analysis = null;
@@ -219,30 +226,40 @@ private void destroyAnalysis(){
             if (editor==null) return kotlin.Unit.INSTANCE;
             if (!isHighlightEnabled()) return kotlin.Unit.INSTANCE;
 
-            short severity;
-            CompilerMessageSeverity s = issue.getSeverity();
+            // short severity;
+            // CompilerMessageSeverity s = issue.getSeverity();
 
-            if (s == CompilerMessageSeverity.ERROR) {
-                severity = DiagnosticRegion.SEVERITY_ERROR;
-            } else if (s == CompilerMessageSeverity.WARNING
-                    || s == CompilerMessageSeverity.STRONG_WARNING) {
-                severity = DiagnosticRegion.SEVERITY_WARNING;
-            } else {
-                return kotlin.Unit.INSTANCE;
-            }
+            //if (s == CompilerMessageSeverity.ERROR) {
+            //    severity = DiagnosticRegion.SEVERITY_ERROR;
+            //} else if (s == CompilerMessageSeverity.WARNING
+            //        || s == CompilerMessageSeverity.STRONG_WARNING) {
+            //    severity = DiagnosticRegion.SEVERITY_WARNING;
+            //} else {
+            //    return kotlin.Unit.INSTANCE;
+            //}
+            
+           DiagnosticWrapper wrapper = new DiagnosticWrapper();
+           wrapper.setStartPosition(issue.getStartOffset());
+           wrapper.setEndPosition(issue.getEndOffset());
+           wrapper.setMessage(issue.getMessage());
+           wrapper.setKind(
+               KotlinSeverityMapper.toKind(issue.getSeverity()));
+           if (wrapper.getKind()==null) return kotlin.Unit.INSTANCE;
+           diagnostics.add(wrapper);
             
            if (!analysisRunning) return kotlin.Unit.INSTANCE;
 
             Objects.requireNonNull((CodeEditorView) editor).post(() -> {
-                container.addDiagnostic(
-                        new DiagnosticRegion(
-                                issue.getStartOffset(),
-                                issue.getEndOffset(),
-                                severity, 
-                                0,
-                                new DiagnosticDetail("Info",issue.getMessage(),null,null)
-                        )
-                );
+               // container.addDiagnostic(
+               //         new DiagnosticRegion(
+               //                 issue.getStartOffset(),
+               //                 issue.getEndOffset(),
+               //                 severity, 
+               //                 0,
+               //                 new DiagnosticDetail("Info",issue.getMessage(),null,null)
+               //         )
+               // );
+               editor.setDiagnostics(diagnostics);
             });
             return kotlin.Unit.INSTANCE;
         });
@@ -270,7 +287,7 @@ private void destroyAnalysis(){
             if (!analysisRunning) return;
 
             Objects.requireNonNull((CodeEditorView) editor)
-                    .post(() -> ((CodeEditorView) editor).setDiagnostics(container));
+                    .post(() -> ((CodeEditorView) editor).setDiagnostics(diagnostics));
 
         } catch (Throwable e) {
             if (!(e instanceof InterruptedException)

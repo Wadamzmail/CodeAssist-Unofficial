@@ -2,6 +2,9 @@ package dev.mutwakil.completion.kotlin.jar
 
 import java.io.File
 import java.util.zip.ZipFile
+/*
+* @author Wadamzmail
+*/
 
 class JarImportIndex(classpath: List<File>) {
 

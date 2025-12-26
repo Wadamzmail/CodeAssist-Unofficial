@@ -3,10 +3,7 @@ package dev.mutwakil.completion.kotlin.fir
 import com.tyron.kotlin.completion.KotlinFile
 
 object FirCompletionUtil {
-
-    /**
-     * يرجّع النص قبل الكيرسر مباشرة
-     */
+ 
     fun textBeforeCursor(
         file: KotlinFile,
         line: Int,
@@ -21,9 +18,7 @@ object FirCompletionUtil {
         }
     }
 
-    /**
-     * يرجّع آخر سطر قبل الكيرسر
-     */
+ 
     fun lastLineBeforeCursor(
         file: KotlinFile,
         line: Int,
@@ -33,10 +28,7 @@ object FirCompletionUtil {
         return before.substringAfterLast('\n')
     }
 
-    /**
-     * prefix للكلمات (حروف فقط)
-     * مثال: "pri" من "print"
-     */
+ 
     fun wordPrefix(
         file: KotlinFile,
         line: Int,
@@ -46,10 +38,7 @@ object FirCompletionUtil {
         return lineText.takeLastWhile { it.isLetter() }
     }
 
-    /**
-     * prefix للإيمبورت
-     * مثال: "android.widget"
-     */
+ 
     fun importPrefix(
         file: KotlinFile,
         line: Int,
@@ -61,9 +50,7 @@ object FirCompletionUtil {
             .trim()
     }
     
-    /**
-     * هل الكيرسر بعد نقطة مباشرة
-     */
+ 
     fun isAfterDot(
        file: KotlinFile,
        line: Int,
@@ -73,10 +60,7 @@ object FirCompletionUtil {
       return before.endsWith(".")
     }
 
-    /**
-     * يرجّع النص قبل آخر نقطة
-     * مثال: "list" من "list.ele"
-     */
+ 
     fun receiverText(
       file: KotlinFile,
       line: Int,

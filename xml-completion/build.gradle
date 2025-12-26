@@ -44,6 +44,7 @@ dependencies {
     
     implementation project(path: ':actions-api')
     implementation project(path: ':editor-api')
+    implementation project(':fileeditor-api')
 
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.13.0'
@@ -56,7 +57,6 @@ dependencies {
     // v2 dependencies
     implementation 'it.unimi.dsi:fastutil:8.5.8'
     implementation 'net.sf.kxml:kxml2:2.3.0'
- //   implementation project(':kotlinc')
 
     implementation project(path: ':language-api')
     implementation project(path: ':completion-api')
