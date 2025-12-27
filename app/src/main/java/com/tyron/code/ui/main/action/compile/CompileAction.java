@@ -11,7 +11,6 @@ import com.tyron.actions.Presentation;
 import com.tyron.builder.compiler.BuildType;
 import com.tyron.code.ui.main.CompileCallback;
 import com.tyron.code.ui.main.MainFragment;
-import com.tyron.code.ui.main.action.project.SaveAction;
 
 public abstract class CompileAction extends AnAction {
 
@@ -44,9 +43,7 @@ public abstract class CompileAction extends AnAction {
 
   @CallSuper
   @Override
-  public void actionPerformed(@NonNull AnActionEvent e) {
-    SaveAction.doSave();
-  }
+  public void actionPerformed(@NonNull AnActionEvent e) {}
 
   public abstract String getTitle(Context context);
 }

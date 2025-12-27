@@ -2,6 +2,7 @@ package com.tyron.code.ui.editor.impl.cls;
 
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import com.tyron.fileeditor.api.FileEditor;
 import java.io.File;
 import java.util.Objects;
@@ -23,8 +24,8 @@ public class ClsEditor implements FileEditor {
   }
 
   @Override
-  public View getView() {
-    return null;
+  public Fragment getFragment() {
+    return mFragment;
   }
 
   @Override

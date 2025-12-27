@@ -8,10 +8,10 @@ import com.tyron.code.ui.main.MainViewModel;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorManager;
 import com.tyron.fileeditor.api.FileEditorProvider;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.Arrays;
 import java.util.function.Consumer;
+import dev.mutwakil.codeassist.R;
 
 public class FileEditorManagerImpl extends FileEditorManager {
 
@@ -38,7 +38,7 @@ public class FileEditorManagerImpl extends FileEditorManager {
   public void openFile(@NonNull Context context, File file, Consumer<FileEditor> callback) {
     checkAttached();
 
-    FileEditor[] fileEditors = getFileEditors(context, file);
+    FileEditor[] fileEditors = getFileEditors(file);
     openChooser(context, fileEditors, callback);
   }
 
@@ -47,18 +47,18 @@ public class FileEditorManagerImpl extends FileEditorManager {
   public FileEditor[] openFile(@NonNull Context context, @NonNull File file, boolean focus) {
     checkAttached();
 
-    FileEditor[] editors = getFileEditors(context, file);
+    FileEditor[] editors = getFileEditors(file);
     openChooser(context, editors, this::openFileEditor);
     return editors;
   }
 
   @Override
-  public FileEditor[] getFileEditors(Context context, @NonNull File file) {
+  public FileEditor[] getFileEditors(@NonNull File file) {
     FileEditor[] editors;
     FileEditorProvider[] providers = FileEditorProviderManagerImpl.getInstance().getProviders(file);
     editors = new FileEditor[providers.length];
     for (int i = 0; i < providers.length; i++) {
-      FileEditor editor = providers[i].createEditor(context, file);
+      FileEditor editor = providers[i].createEditor(file);
       editors[i] = editor;
     }
     return editors;

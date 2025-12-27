@@ -1,6 +1,5 @@
 package com.tyron.code.ui.editor.impl.xml;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 import com.tyron.code.ui.editor.impl.text.rosemoe.RosemoeEditorProvider;
 import com.tyron.code.util.ProjectUtils;
@@ -21,8 +20,8 @@ public class LayoutTextEditorProvider extends RosemoeEditorProvider {
 
   @NonNull
   @Override
-  public FileEditor createEditor(@NonNull Context context, @NonNull File file) {
-    return new LayoutEditor(context, file, this);
+  public FileEditor createEditor(@NonNull File file) {
+    return new LayoutEditor(file, this);
   }
 
   @NonNull

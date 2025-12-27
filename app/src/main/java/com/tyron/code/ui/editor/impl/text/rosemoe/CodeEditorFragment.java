@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,9 +40,9 @@ import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import com.tyron.code.language.xml.LanguageXML;
 import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
-import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.Savable;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
@@ -61,7 +62,6 @@ import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.java.util.JavaDataContextUtil;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.CharPosition;
-import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.event.ClickEvent;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.LongPressEvent;
@@ -80,10 +80,11 @@ import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
+import dev.mutwakil.codeassist.R;
+import java.lang.reflect.Field;
+import org.eclipse.tm4e.core.internal.theme.Theme;
+import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
+import io.github.rosemoe.sora.widget.component.Magnifier;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -205,8 +206,7 @@ public class CodeEditorFragment extends Fragment
 
     View topView = view.findViewById(R.id.top_view);
     EditorViewModel viewModel =
-        new ViewModelProvider((ViewModelStoreOwner) requireParentFragment())
-            .get(EditorViewModel.class);
+        new ViewModelProvider((ViewModelStoreOwner) this).get(EditorViewModel.class);
     viewModel
         .getAnalyzeState()
         .observe(
@@ -294,15 +294,13 @@ public class CodeEditorFragment extends Fragment
     editor.setBackgroundAnalysisEnabled(false);
     editor.setTypefaceText(
         ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));
-    CodeAssistCompletionWindow mCompletionWindow = new CodeAssistCompletionWindow(editor);
-    mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
-    mCompletionWindow.setLayout(new CodeAssistCompletionLayout());
-    editor.replaceComponent(EditorAutoCompletion.class, mCompletionWindow);
+    editor.getComponent(EditorAutoCompletion.class).setLayout(new CodeAssistCompletionLayout());
     editor.setLigatureEnabled(true);
     editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.openFile(mCurrentFile);
-    //  editor.setAutoCompletionItemAdapter(new CodeAssistCompletionAdapter());
+    //editor.getComponent(Magnifier.class).setWithinEditorForcibly(true);
+  //  editor.replaceComponent(CodeAssistCompletionAdapter.class,new CodeAssistCompletionAdapter());
     editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
     editor.setInputType(
         EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
@@ -429,8 +427,12 @@ public class CodeEditorFragment extends Fragment
                 assert result != null;
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
-                  //   ((BaseTextmateAnalyzer) mLanguage.getAnalyzeManager()).updateTheme(
-                  //       result.getRawTheme());
+                 /* try{
+                      Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
+                      themeField.setAccessible(true);
+                     String themeNameF = ((ThemeModel) themeField.get(result)).getName();
+                      ThemeRegistry.setTheme(themeNameF);
+                }catch(Exception e) {}*/
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }
@@ -452,23 +454,51 @@ public class CodeEditorFragment extends Fragment
   /** Show the popup menu with the actions api */
   private void showPopupMenu(LongPressEvent event) {
     MotionEvent e = event.getCausingEvent();
+    if (e == null || requireContext() == null || mEditor == null) {
+      // Handle null values here
+      return;
+    }
+
     CoordinatePopupMenu popupMenu =
         new CoordinatePopupMenu(requireContext(), mEditor, Gravity.BOTTOM);
+    if (popupMenu == null) {
+      // Handle null popupMenu here
+      return;
+    }
+
     DataContext dataContext = createDataContext();
-    ActionManager.getInstance()
-        .fillMenu(dataContext, popupMenu.getMenu(), ActionPlaces.EDITOR, true, false);
+    if (dataContext == null) {
+      // Handle null dataContext here
+      return;
+    }
+
+    ActionManager actionManager = ActionManager.getInstance();
+    if (actionManager == null) {
+      // Handle null actionManager here
+      return;
+    }
+
+    Menu menu = popupMenu.getMenu();
+    if (menu == null) {
+      // Handle null menu here
+      return;
+    }
+
+    actionManager.fillMenu(dataContext, menu, ActionPlaces.EDITOR, true, false);
     popupMenu.show((int) e.getX(), ((int) e.getY()) - AndroidUtilities.dp(24));
 
     // we don't want to enable the drag to open listener right away,
     // this may cause the buttons to be clicked right away
     // so wait for a few ms
-    ProgressManager.getInstance()
-        .runLater(
-            () -> {
-              popupMenu.setOnDismissListener(d -> mDragToOpenListener = null);
-              mDragToOpenListener = popupMenu.getDragToOpenListener();
-            },
-            300);
+    ProgressManager progressManager = ProgressManager.getInstance();
+    if (progressManager != null) {
+      progressManager.runLater(
+          () -> {
+            popupMenu.setOnDismissListener(d -> mDragToOpenListener = null);
+            mDragToOpenListener = popupMenu.getDragToOpenListener();
+          },
+          300);
+    }
   }
 
   @Override
@@ -597,10 +627,8 @@ public class CodeEditorFragment extends Fragment
   private ListenableFuture<String> readFile() {
     return Futures.submitAsync(
         () -> {
-          FileSystemManager manager = VFS.getManager();
-          FileObject fileObject = manager.resolveFile(mCurrentFile.toURI());
-          FileContent content = fileObject.getContent();
-          return Futures.immediateFuture(content.getString(StandardCharsets.UTF_8));
+          String contents = FileUtils.readFileToString(mCurrentFile, StandardCharsets.UTF_8);
+          return Futures.immediateFuture(contents);
         },
         Executors.newSingleThreadExecutor());
   }
@@ -774,17 +802,15 @@ public class CodeEditorFragment extends Fragment
 
   public void format() {
     if (mEditor != null) {
-      //            if (mEditor.getCursor().isSelected()) {
-      //                if (mLanguage instanceof JavaLanguage) {
-      //                    Cursor cursor = mEditor.getCursor();
-      //                    CharSequence format = mLanguage.format(mEditor.getText(),
-      // cursor.getLeft(),
-      //                            cursor.getRight());
-      //                    mEditor.setText(format);
-      //                    return;
-      //                }
-      //            }
       mEditor.formatCodeAsync();
+    }
+  }
+
+  public void search() {
+    if (mEditor != null) {
+
+      mEditor.getSearcher().stopSearch();
+      mEditor.beginSearchMode();
     }
   }
 
@@ -814,6 +840,18 @@ public class CodeEditorFragment extends Fragment
       JavaDataContextUtil.addEditorKeys(
           dataContext, currentProject, mCurrentFile, mEditor.getCursor().getLeft());
     }
+
+    DiagnosticWrapper diagnosticWrapper =
+        DiagnosticUtil.getDiagnosticWrapper(
+            mEditor.getDiagnosticsList(),
+            mEditor.getCursor().getLeft(),
+            mEditor.getCursor().getRight());
+    if (diagnosticWrapper == null && mLanguage instanceof LanguageXML) {
+      diagnosticWrapper =
+          DiagnosticUtil.getXmlDiagnosticWrapper(
+              mEditor.getDiagnosticsList(), mEditor.getCursor().getLeftLine());
+    }
+    dataContext.putData(CommonDataKeys.DIAGNOSTIC, diagnosticWrapper);
     return dataContext;
   }
 }

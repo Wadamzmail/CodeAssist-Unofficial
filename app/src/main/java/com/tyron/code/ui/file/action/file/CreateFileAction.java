@@ -22,9 +22,9 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.ui.treeview.TreeNode;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.io.IOException;
+import dev.mutwakil.codeassist.R;
 
 public class CreateFileAction extends FileAction {
 
@@ -80,7 +80,7 @@ public class CreateFileAction extends FileAction {
 
                   try {
                     InjectResourcesTask.inject(ProjectManager.getInstance().getCurrentProject());
-                  } catch (Exception e) {
+                  } catch (IOException e) {
                     // ignored
                   }
                 }

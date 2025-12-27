@@ -155,4 +155,4 @@ public class CodeAssistColorScheme extends EditorColorScheme {
       sIdToNameMap.put(KEYWORD, "keyword");
     }
   }
-}
+} 

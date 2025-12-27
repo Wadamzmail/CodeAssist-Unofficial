@@ -36,10 +36,10 @@ import com.tyron.code.ui.wizard.WizardFragment;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.BuildConfig;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.Objects;
+import dev.mutwakil.codeassist.BuildConfig;
+import dev.mutwakil.codeassist.R;
 
 public class HomeFragment extends Fragment {
 

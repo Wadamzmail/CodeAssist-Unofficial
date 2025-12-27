@@ -5,7 +5,7 @@ import com.tyron.editor.Editor;
 
 public interface TextEditor extends FileEditor {
 
-  Content getContent();
-
-  Editor getEditor();
+  default Content getContent(){
+   return null;
+  }
 }

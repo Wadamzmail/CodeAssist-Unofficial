@@ -16,11 +16,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tyron.builder.model.DiagnosticWrapper;
-import dev.mutwakil.codeassist.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.tools.Diagnostic;
+import org.codeassist.unofficial.R;
 
 public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
 
@@ -98,6 +98,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
       super(layout);
 
       textView = new TextView(layout.getContext());
+      textView.setTextSize(12);
       textView.setTypeface(
           ResourcesCompat.getFont(layout.getContext(), R.font.jetbrains_mono_regular));
       textView.setMovementMethod(LinkMovementMethod.getInstance());
@@ -105,21 +106,20 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
     }
 
     public void bind(DiagnosticWrapper diagnostic) {
-      if (diagnostic.getMessage(Locale.getDefault()) == null) {
-        return;
-      }
       SpannableStringBuilder builder = new SpannableStringBuilder();
-      //            if (diagnostic.getKind() != null) {
-      //                builder.append(new ForegroundColorSpan(getColor(diagnostic.getKind())),
-      //                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-      //            }
+      if (diagnostic.getKind() != null) {
+        builder.append(
+            diagnostic.getKind().name() + ": ",
+            new ForegroundColorSpan(getColor(diagnostic.getKind())),
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      }
       if (diagnostic.getKind() == Diagnostic.Kind.ERROR) {
         builder.append(
             diagnostic.getMessage(Locale.getDefault()),
             new ForegroundColorSpan(getColor(diagnostic.getKind())),
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
       } else {
-        builder.append(diagnostic.getMessageCharSequence());
+        builder.append(diagnostic.getMessage(Locale.getDefault()));
       }
       if (diagnostic.getSource() != null) {
         builder.append(' ');

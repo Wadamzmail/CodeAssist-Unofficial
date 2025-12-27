@@ -6,12 +6,14 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.PowerManager;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationChannelCompat;
@@ -31,10 +33,10 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.code.util.ApkInstaller;
 import com.tyron.completion.progress.ProgressIndicator;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.BuildConfig;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.lang.ref.WeakReference;
+import dev.mutwakil.codeassist.BuildConfig;
+import dev.mutwakil.codeassist.R;
 
 public class CompilerService extends Service {
 
@@ -223,7 +225,8 @@ public class CompilerService extends Service {
     projectBuilder.setTaskListener(this::updateNotification);
 
     PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-    wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CodeAssist:CompileLock");
+    wakeLock =
+        pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CodeAssist:CompileLock");
     // Acquire with timeout to prevent battery drain
     wakeLock.acquire(10 * 60 * 1000L);
 

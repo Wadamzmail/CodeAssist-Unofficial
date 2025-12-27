@@ -16,7 +16,7 @@ public class UndoAction implements ShortcutAction {
   @Override
   public void apply(Editor editor, ShortcutItem item) {
     if (editor.getContent().canUndo()) {
-      editor.getContent().tryUndo();
+      editor.getContent().undo();
     }
   }
 }

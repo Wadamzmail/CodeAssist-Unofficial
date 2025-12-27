@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import com.caverock.androidsvg.SVG;
+import com.caverock.androidsvg.SVGParseException;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.ui.drawable.Drawables;
-import com.tyron.code.ui.drawable.VectorDrawableCreator;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +32,15 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import dev.mutwakil.codeassist.R;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
+import com.tyron.code.ui.drawable.VectorDrawableCreator;
+    
 public class DrawableManagerAdapter
     extends RecyclerView.Adapter<DrawableManagerAdapter.ViewHolder> {
 
@@ -165,11 +170,9 @@ public class DrawableManagerAdapter
       } else if (name.endsWith(".xml")) {
         title.setText(name.replace(".xml", ""));
 
-        d =
-            VectorDrawableCreator.getVectorDrawable(
-                ApplicationLoader.applicationContext, drawables.getRootFile());
+        d = VectorDrawableCreator.getVectorDrawable(ApplicationLoader.applicationContext, drawables.getRootFile());
         drawable.setImageDrawable(d);
-
+            
         /*File icon_cache = ApplicationLoader.applicationContext.getExternalFilesDir("icon_cache");
 
         if (icon_cache.exists()) {

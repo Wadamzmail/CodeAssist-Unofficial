@@ -1,6 +1,5 @@
 package com.tyron.code.ui.editor.impl.text.rosemoe;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.common.collect.ImmutableSet;
 import com.tyron.fileeditor.api.FileEditor;
@@ -15,7 +14,7 @@ public class RosemoeEditorProvider implements FileEditorProvider {
       ImmutableSet.<String>builder()
           .add("jar", "zip", "png", "jpg")
           .add("jpeg", "mp4", "mp3", "ogg")
-          .add("7zip", "tar")
+          .add("7zip", "tar", "apk", "class", "dex", "res")
           .build();
   private static final String TYPE_ID = "rosemoe-code-editor";
 
@@ -31,8 +30,8 @@ public class RosemoeEditorProvider implements FileEditorProvider {
 
   @NonNull
   @Override
-  public FileEditor createEditor(@NonNull Context context, @NonNull File file) {
-    return new RosemoeCodeEditor(context, file, this);
+  public FileEditor createEditor(@NonNull File file) {
+    return new RosemoeCodeEditor(file, this);
   }
 
   @NonNull

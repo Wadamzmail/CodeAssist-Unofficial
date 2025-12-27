@@ -16,8 +16,8 @@ import androidx.core.app.NotificationManagerCompat;
 import com.tyron.builder.log.ILogger;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ui.project.ProjectManager;
-import dev.mutwakil.codeassist.R;
 import java.lang.ref.WeakReference;
+import dev.mutwakil.codeassist.R;
 
 public class IndexService extends Service {
 

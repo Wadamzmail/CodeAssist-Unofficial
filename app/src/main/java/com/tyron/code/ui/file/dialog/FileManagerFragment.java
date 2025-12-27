@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.file.FileManagerAdapter;
 import com.tyron.code.ui.main.MainFragment;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.Objects;
+import org.codeassist.unofficial.R;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class FileManagerFragment extends Fragment {

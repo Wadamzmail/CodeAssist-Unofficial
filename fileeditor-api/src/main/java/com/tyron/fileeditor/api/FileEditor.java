@@ -3,6 +3,7 @@ package com.tyron.fileeditor.api;
 import android.view.View;
 import androidx.annotation.NonNull;
 import com.tyron.editor.*;
+import androidx.fragment.app.Fragment;
 import java.io.File;
 
 /** Represents the Tab view and can contain different views based on it's function */
@@ -15,7 +16,7 @@ public interface FileEditor {
    return null;
   } */
 
-  View getView();
+  Fragment getFragment();
 
   /**
    * @return the view to be focused when this editor has been selected.

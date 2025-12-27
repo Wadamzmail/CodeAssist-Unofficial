@@ -18,12 +18,12 @@ import com.tyron.code.template.CodeTemplate;
 import com.tyron.code.template.java.JavaClassTemplate;
 import com.tyron.code.ui.file.RegexReason;
 import com.tyron.common.util.SingleTextWatcher;
-import dev.mutwakil.codeassist.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
+import org.codeassist.unofficial.R;
 
 public class CreateClassDialogFragment extends DialogFragment {
 

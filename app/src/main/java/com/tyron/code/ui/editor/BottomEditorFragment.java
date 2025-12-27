@@ -16,9 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.common.base.Strings;
 import com.tyron.builder.log.LogViewModel;
-import com.tyron.code.ApplicationLoader;
-import com.tyron.code.event.EventManager;
-import com.tyron.code.event.PerformShortcutEvent;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.code.ui.editor.log.AppLogFragment;
 import com.tyron.code.ui.editor.shortcuts.ShortcutAction;
 import com.tyron.code.ui.editor.shortcuts.ShortcutItem;
@@ -32,12 +30,12 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.editor.Caret;
 import com.tyron.editor.Editor;
 import com.tyron.fileeditor.api.FileEditor;
-import dev.mutwakil.codeassist.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import dev.mutwakil.codeassist.R;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class BottomEditorFragment extends Fragment {
@@ -113,8 +111,9 @@ public class BottomEditorFragment extends Fragment {
         (item, pos) -> {
           FileEditor currentFile = mFilesViewModel.getCurrentFileEditor();
           if (currentFile != null) {
-            EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
-            eventManager.dispatchEvent(new PerformShortcutEvent(item, currentFile));
+            if (currentFile.getFragment() instanceof CodeEditorFragment) {
+              ((CodeEditorFragment) currentFile.getFragment()).performShortcut(item);
+            }
           }
         });
 
@@ -122,7 +121,9 @@ public class BottomEditorFragment extends Fragment {
         .setFragmentResultListener(
             OFFSET_KEY,
             getViewLifecycleOwner(),
-            ((requestKey, result) -> setOffset(result.getFloat("offset", 0f))));
+            ((requestKey, result) -> {
+              setOffset(result.getFloat("offset", 0f));
+            }));
   }
 
   private void setOffset(float offset) {
@@ -208,6 +209,7 @@ public class BottomEditorFragment extends Fragment {
     return items;
   }
 
+  @SuppressWarnings("deprecation")
   private static class PageAdapter extends FragmentStateAdapter {
 
     public PageAdapter(@NonNull Fragment fragment) {

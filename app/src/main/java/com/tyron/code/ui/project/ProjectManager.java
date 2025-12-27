@@ -42,23 +42,6 @@ import java.util.logging.Logger;
 //import kotlin.collections.CollectionsKt;
 import org.apache.commons.io.FileUtils;
 
-//new
-import com.tyron.completion.xml.v2.events.XmlReparsedEvent;
-import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
-import com.tyron.completion.xml.v2.project.ResourceRepositoryManager; 
-import java.util.function.Consumer;
-import com.tyron.code.event.FileCreatedEvent;
-import com.tyron.code.event.FileDeletedEvent;
-import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
-import com.tyron.common.util.DebouncerStore;
-import com.tyron.builder.BuildModule;
-import com.tyron.completion.java.compiler.Parser;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.kotlin.completion.KotlinEnvironment;
-import com.tyron.completion.java.provider.PruneMethodBodies;
-
-
 public class ProjectManager {
 
   private static final Logger LOG = IdeLog.getCurrentLogger(ProjectManager.class);
@@ -127,7 +110,8 @@ public class ProjectManager {
     mCurrentProject = project;
     Module module = mCurrentProject.getMainModule();
     
- 
+  //  mPreferences = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance());
+ //   boolean isCustomIndex = mPreferences.getBoolean("custom_index_project", false);
 
     now = Instant.now();
     boolean shouldReturn = false;
@@ -191,48 +175,6 @@ public class ProjectManager {
     } catch (IOException exception) {
       logger.warning("Failed to open project: " + exception.getMessage());
     }
-    
-    Consumer<File> modifiedEventConsumer = file -> {
-            // we only want xml files
-            if (!ProjectUtils.isResourceXMLFile(file)) {
-                return;
-            }
-            // this will cause an update to repository, causing reparse to the affected file
-            mCurrentProject.getEventManager().dispatchEvent(
-                    new XmlResourceChangeEvent(file, null)
-            );
-        };
-        mCurrentProject.getEventManager().subscribeEvent(FileDeletedEvent.class, (event, u) -> {
-            modifiedEventConsumer.accept(event.getDeletedFile());
-
-            mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(event.getDeletedFile()));
-        });
-        // listen for newly created files and notify the resources repository
-        mCurrentProject.getEventManager().subscribeEvent(FileCreatedEvent.class, (event, u) -> {
-            modifiedEventConsumer.accept(event.getFile());
-        });
-        mCurrentProject.getEventManager().subscribeEvent(XmlReparsedEvent.class,
-                (event, unsubscribe) -> DebouncerStore.DEFAULT.registerOrGetDebouncer("ResourceInjector").debounce(300, () -> ProgressManager.getInstance().runNonCancelableAsync(() -> {
-                    File file = event.getFile();
-                    Module module2;
-                    if (file == null) {
-                        //module2 = mCurrentProject.getModuleByName(":app");
-                        module2 = mCurrentProject.getMainModule();
-                    } else {
-                        module2 = mCurrentProject.getModule(file);
-                    }
-                    if (module2 instanceof AndroidModule && indexFiles.containsKey(RES)) {
-                        try {
-                            InjectResourcesTask.inject(mCurrentProject, (AndroidModule) module2);
-                        } catch (IOException e) {
-                            IdeLog.getLogger().severe(e.getMessage());
-                        }
-                    }
-                })));
-
-     // the following will extract the jar files if it does not exist
-       BuildModule.getAndroidJar();
-       BuildModule.getLambdaStubs();
 
     JavaModule javaModule = (JavaModule) module;
     if (gradleFile.exists() && indexFiles.containsKey(DOWNLOAD)) {
@@ -278,9 +220,6 @@ public class ProjectManager {
         if (module instanceof JavaModule && indexFiles.containsKey(XML)) {
           if (module instanceof AndroidModule) {
             mListener.onTaskStarted("Indexing XML files.");
-            
-            //new 
-            ResourceRepositoryManager.getProjectResources((AndroidModule)module);
 
             XmlIndexProvider index = CompilerService.getInstance().getIndex(XmlIndexProvider.KEY);
             index.clear();
@@ -292,7 +231,6 @@ public class ProjectManager {
                 logger.debug(
                     "> Task :" + module.getRootFile().getName() + ":" + "indexingResources");
                 xmlRepository.initialize((AndroidModule) module);
-                
               }
             } catch (IOException e) {
               String message =
@@ -315,9 +253,6 @@ public class ProjectManager {
                 if (module instanceof AndroidModule) {
                   String packageName = getApplicationId(((AndroidModule) module));
                   if (packageName != null) {
-                    //new 
-                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null));
-                    //
                     InjectResourcesTask.inject(project, (AndroidModule) module);
                     InjectViewBindingTask.inject(project, (AndroidModule) module);
                     logger.debug(
@@ -330,9 +265,6 @@ public class ProjectManager {
               if (first != null) {
                 service.compile(first.toPath());
               }
-              
-              //new instead of the upper ^
-              indexModule(module);
           }
         } catch (Throwable e) {
           String message = "Failure indexing project.\n" + Throwables.getStackTraceAsString(e);
@@ -340,8 +272,7 @@ public class ProjectManager {
         }
         }
     }
-    
-    mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
+
     mCurrentProject.setIndexing(false);
     mListener.onComplete(project, true, "Index successful");
 
@@ -354,31 +285,6 @@ public class ProjectManager {
       logger.debug("TIME TOOK " + seconds + "s");
     }
   }
-  
-  private void indexModule(Module module) throws IOException {
-        module.open();
-        module.index();
-         if(!(module instanceof JavaModule))return;
-        JavaModule javaModule = (JavaModule) module;
-        for (File value : javaModule.getJavaFiles().values()) {
-            CompilationInfo info = CompilationInfo.get(module.getProject(), value);
-            if (info == null) {
-                continue;
-            }
-            info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
-                    JavaFileObject.Kind.SOURCE) {
-                @Override
-                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                    Parser parser = Parser.parseFile(module.getProject(), value.toPath());
-                    // During indexing, statements inside methods are not needed so
-                    // it is stripped to speed up the index process
-                    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
-                }
-            });
-        }
-
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module);
-    }
 
   private void downloadLibraries(JavaModule project, TaskListener listener, ILogger logger)
       throws IOException {

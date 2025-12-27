@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
-import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.fileeditor.api.FileEditor;
-import com.tyron.fileeditor.api.TextEditor;
 
 public class SearchAction extends AnAction {
 
@@ -32,12 +32,13 @@ public class SearchAction extends AnAction {
 
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
+    Context context = e.getRequiredData(CommonDataKeys.CONTEXT);
+    context = getActivityContext(context);
+
     FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-    if (fileEditor instanceof TextEditor) {
-      CodeEditorView cEditor = (CodeEditorView) ((TextEditor) fileEditor).getEditor();
-      if (cEditor == null) return;
-      cEditor.getSearcher().stopSearch();
-      cEditor.beginSearchMode();
+    Fragment fragment = fileEditor.getFragment();
+    if (fragment instanceof CodeEditorFragment) {
+      ((CodeEditorFragment) fragment).search();
     }
   }
 

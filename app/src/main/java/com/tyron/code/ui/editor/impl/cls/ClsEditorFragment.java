@@ -20,13 +20,13 @@ import com.tyron.code.ui.editor.scheme.CompiledEditorScheme;
 import com.tyron.code.ui.theme.ThemeRepository;
 import com.tyron.code.util.TaskExecutor;
 import com.tyron.common.SharedPreferenceKeys;
-import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.concurrent.CompletableFuture;
+import dev.mutwakil.codeassist.R;
 
 public class ClsEditorFragment extends Fragment {
 

@@ -21,12 +21,12 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.ui.treeview.TreeNode;
 import com.tyron.ui.treeview.TreeView;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import dev.mutwakil.codeassist.R;
 
 public class CreateClassAction extends FileAction {
 

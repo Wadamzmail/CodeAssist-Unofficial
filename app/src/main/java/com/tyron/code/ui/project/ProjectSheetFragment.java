@@ -4,6 +4,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import androidx.preference.PreferenceManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,9 +17,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
@@ -35,15 +34,17 @@ import com.tyron.code.ui.project.adapter.ProjectManagerAdapter;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import android.content.DialogInterface;
+import androidx.appcompat.app.AlertDialog;
 import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
+import dev.mutwakil.codeassist.R;
 
 public class ProjectSheetFragment extends BottomSheetDialogFragment {
 
@@ -345,25 +346,24 @@ public class ProjectSheetFragment extends BottomSheetDialogFragment {
     }
     return root_projects;
   }
-
+  
   private void checkIndexingThen(Runnable runnable) {
     if (!ProjectManager.indexFiles.isEmpty()) {}
-    ProjectManager.indexFiles.clear();
-
-    ProjectManager.indexFiles.put(ProjectManager.XML, true);
-    ProjectManager.indexFiles.put(ProjectManager.JAVA, true);
-    ProjectManager.indexFiles.put(ProjectManager.RES, true);
-    ProjectManager.indexFiles.put(ProjectManager.DOWNLOAD, true);
-    ProjectManager.indexFiles.put(ProjectManager.INJECT_RES, true);
-
-    boolean isCustomIndex =
-        PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance())
-            .getBoolean("custom_index_project", false);
-    if (!isCustomIndex) {
-      runnable.run();
-      return;
-    }
-
+      ProjectManager.indexFiles.clear();
+    
+        ProjectManager.indexFiles.put(ProjectManager.XML, true);
+        ProjectManager.indexFiles.put(ProjectManager.JAVA, true);
+        ProjectManager.indexFiles.put(ProjectManager.RES, true);
+        ProjectManager.indexFiles.put(ProjectManager.DOWNLOAD, true);
+        ProjectManager.indexFiles.put(ProjectManager.INJECT_RES, true);
+    
+     
+    boolean isCustomIndex = PreferenceManager.getDefaultSharedPreferences(ApplicationLoader.getInstance()).getBoolean("custom_index_project", false);
+    if(!isCustomIndex){
+    runnable.run();
+    return;
+    } 
+    
     AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
     builder.setTitle("Select Tasks for Indexing");
 
@@ -373,70 +373,60 @@ public class ProjectSheetFragment extends BottomSheetDialogFragment {
 
     // Default all tasks to checked
     for (int i = 0; i < checkedItems.length; i++) {
-      checkedItems[i] = true;
+        checkedItems[i] = true;
     }
 
-    builder.setMultiChoiceItems(
-        tasks,
-        checkedItems,
-        (dialog, which, isChecked) -> {
-          // Update the task's state when a checkbox is checked/unchecked
-          checkedItems[which] = isChecked;
-        });
+    builder.setMultiChoiceItems(tasks, checkedItems, (dialog, which, isChecked) -> {
+        // Update the task's state when a checkbox is checked/unchecked
+        checkedItems[which] = isChecked;
+    });
 
-    builder.setPositiveButton(
-        "Proceed",
-        (dialog, which) -> {
-          // Update the indexFiles map based on user selection
-          for (int i = 0; i < tasks.length; i++) {
+    builder.setPositiveButton("Proceed", (dialog, which) -> {
+        // Update the indexFiles map based on user selection
+        for (int i = 0; i < tasks.length; i++) {
             if (checkedItems[i]) {
-              ProjectManager.indexFiles.put(tasks[i], true);
+                ProjectManager.indexFiles.put(tasks[i], true);
             } else {
-              ProjectManager.indexFiles.remove(tasks[i]);
+                ProjectManager.indexFiles.remove(tasks[i]);
             }
-          }
+        }
 
-          // Run the provided Runnable
-          runnable.run();
-        });
+        // Run the provided Runnable
+        runnable.run();
+    });
 
-    builder.setNegativeButton(
-        "Cancel",
-        (dialog, which) -> {
-          // Do nothing and dismiss the dialog
-          dialog.dismiss();
-        });
+    builder.setNegativeButton("Cancel", (dialog, which) -> {
+        // Do nothing and dismiss the dialog
+        dialog.dismiss();
+    });
 
     AlertDialog dialog = builder.create();
     dialog.show();
-  }
+}
 
   public void openProject(Project project) {
-    checkIndexingThen(
-        () -> {
-          dismiss();
-          MainFragment fragment =
-              MainFragment.newInstance(project.getRootFile().getAbsolutePath(), "app");
-          getParentFragmentManager()
-              .beginTransaction()
-              .replace(R.id.fragment_container, fragment)
-              .addToBackStack(null)
-              .commit();
-        });
+    checkIndexingThen(()->{
+        dismiss();
+        MainFragment fragment =
+            MainFragment.newInstance(project.getRootFile().getAbsolutePath(), "app");
+        getParentFragmentManager()
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit();
+    });
   }
 
   public void openProject(Project project, String name) {
-    checkIndexingThen(
-        () -> {
-          dismiss();
-          MainFragment fragment =
-              MainFragment.newInstance(project.getRootFile().getAbsolutePath(), name);
-          getParentFragmentManager()
-              .beginTransaction()
-              .replace(R.id.fragment_container, fragment)
-              .addToBackStack(null)
-              .commit();
-        });
+    checkIndexingThen(()->{
+        dismiss();
+        MainFragment fragment = MainFragment.newInstance(project.getRootFile().getAbsolutePath(), name);
+        getParentFragmentManager()
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit();
+    });
   }
 
   private void loadProjects() {

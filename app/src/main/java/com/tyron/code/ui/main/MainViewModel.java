@@ -1,6 +1,5 @@
 package com.tyron.code.ui.main;
 
-import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -28,22 +27,12 @@ public class MainViewModel extends ViewModel {
   private final MutableLiveData<String> mToolbarTitle = new MutableLiveData<>();
 
   /** The current position of the CodeEditor */
-  private final CustomMutableLiveData<Integer> currentPosition = new CustomMutableLiveData<>(-1);
+  private final CustomMutableLiveData<Integer> currentPosition = new CustomMutableLiveData<>(0);
 
   private final MutableLiveData<Integer> mBottomSheetState =
       new MutableLiveData<>(BottomSheetBehavior.STATE_COLLAPSED);
 
   private final MutableLiveData<Boolean> mDrawerState = new MutableLiveData<>(false);
-
-  private final MutableLiveData<Activity> mActivity = new MutableLiveData<>();
-
-  public void setActivity(Activity a) {
-    mActivity.setValue(a);
-  }
-
-  public LiveData<Activity> getActivity() {
-    return mActivity;
-  }
 
   public MutableLiveData<String> getCurrentState() {
     if (mCurrentState == null) {
@@ -114,10 +103,13 @@ public class MainViewModel extends ViewModel {
   }
 
   public void setCurrentPosition(int pos, boolean update) {
+    Integer value = currentPosition.getValue();
+    if (value != null && value.equals(pos)) {
+      return;
+    }
     currentPosition.setValue(pos, update);
   }
 
-  @Nullable
   public FileEditor getCurrentFileEditor() {
     List<FileEditor> files = getFiles().getValue();
     if (files == null) {
@@ -125,7 +117,7 @@ public class MainViewModel extends ViewModel {
     }
 
     Integer currentPos = currentPosition.getValue();
-    if (currentPos == null || currentPos == -1) {
+    if (currentPos == null) {
       return null;
     }
 
@@ -172,10 +164,8 @@ public class MainViewModel extends ViewModel {
     if (files == null) {
       files = new ArrayList<>();
     }
-    if (!files.contains(file)) {
-      files.add(file);
-      mFiles.setValue(files);
-    }
+    files.add(file);
+    mFiles.setValue(files);
     setCurrentPosition(files.indexOf(file));
   }
 

@@ -9,8 +9,8 @@ import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
-import com.tyron.code.ui.editor.EditorContainerFragment;
-import com.tyron.code.util.ProjectUtils;
+import com.tyron.code.ui.editor.impl.xml.LayoutEditor;
+import com.tyron.code.ui.editor.impl.xml.LayoutTextEditorFragment;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.fileeditor.api.FileEditor;
 import dev.mutwakil.codeassist.R;
@@ -29,9 +29,9 @@ public class PreviewLayoutAction extends AnAction {
     }
 
     FileEditor fileEditor = event.getData(CommonDataKeys.FILE_EDITOR_KEY);
-    if (fileEditor == null) return;
-    if (fileEditor.getFile() == null) return;
-    if (!ProjectUtils.isLayoutXMLFile(fileEditor.getFile())) return;
+    if (!(fileEditor instanceof LayoutEditor)) {
+      return;
+    }
 
     presentation.setVisible(true);
     presentation.setText(event.getDataContext().getString(R.string.menu_preview_layout));
@@ -39,8 +39,8 @@ public class PreviewLayoutAction extends AnAction {
 
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
-    //        FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
-    Fragment fragment = e.getRequiredData(CommonDataKeys.FRAGMENT);
+    FileEditor fileEditor = e.getRequiredData(CommonDataKeys.FILE_EDITOR_KEY);
+    Fragment fragment = fileEditor.getFragment();
     if (fragment == null || fragment.isDetached() || fragment.getActivity() == null) {
       return;
     }
@@ -51,8 +51,8 @@ public class PreviewLayoutAction extends AnAction {
     }
     AndroidUtilities.hideKeyboard(currentFocus);
 
-    if (fragment instanceof EditorContainerFragment) {
-      ((EditorContainerFragment) fragment).preview();
+    if (fragment instanceof LayoutTextEditorFragment) {
+      ((LayoutTextEditorFragment) fragment).preview();
     }
   }
 }

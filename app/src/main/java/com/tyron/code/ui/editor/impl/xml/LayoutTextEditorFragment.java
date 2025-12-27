@@ -12,8 +12,8 @@ import com.tyron.builder.compiler.manifest.xml.XmlPrettyPrinter;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.code.ui.layoutEditor.LayoutEditorFragment;
 import com.tyron.code.util.ProjectUtils;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
+import dev.mutwakil.codeassist.R;
 
 /** A {@link CodeEditorFragment} that supports editing layout files */
 public class LayoutTextEditorFragment extends CodeEditorFragment {

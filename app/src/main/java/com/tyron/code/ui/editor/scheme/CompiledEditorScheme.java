@@ -7,9 +7,9 @@ import android.util.TypedValue;
 import androidx.annotation.StyleableRes;
 import com.google.android.material.color.MaterialColors;
 import com.google.common.collect.ImmutableMap;
-import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import java.util.Map;
+import dev.mutwakil.codeassist.R;
 
 /** An editor color scheme that is based on compiled xml files. */
 public class CompiledEditorScheme extends EditorColorScheme {
@@ -76,4 +76,4 @@ public class CompiledEditorScheme extends EditorColorScheme {
   private void setColorInternal(int id, int value) {
     colors.put(id, value);
   }
-}
+} 

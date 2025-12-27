@@ -23,7 +23,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.util.SingleTextWatcher;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +31,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import dev.mutwakil.codeassist.R;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -151,8 +151,7 @@ public class EditVectorDialogFragment extends DialogFragment {
       if (nodeList.getLength() > 0) {
         Element element = (Element) nodeList.item(0);
         String a =
-            "<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\n"
-                + "    android:width=\""
+            "<vector xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    android:width=\""
                 + width
                 + "dp"
                 + "\"\n    android:height=\""
@@ -164,10 +163,7 @@ public class EditVectorDialogFragment extends DialogFragment {
                 + height
                 + "\"\n    android:tint=\""
                 + color
-                + "\">\n"
-                + "  <path\n"
-                + "      android:fillColor=\"@android:color/white\"\n"
-                + "      android:pathData=\""
+                + "\">\n  <path\n      android:fillColor=\"@android:color/white\"\n      android:pathData=\""
                 + element.getAttribute("d")
                 + "\"/>\n</vector>\n";
 

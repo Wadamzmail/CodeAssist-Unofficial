@@ -31,8 +31,6 @@ public class CloseAllEditorAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     MainViewModel mainViewModel = e.getData(MainFragment.MAIN_VIEW_MODEL_KEY);
-    if (mainViewModel != null) {
-      mainViewModel.clear();
-    }
+    mainViewModel.clear();
   }
 }

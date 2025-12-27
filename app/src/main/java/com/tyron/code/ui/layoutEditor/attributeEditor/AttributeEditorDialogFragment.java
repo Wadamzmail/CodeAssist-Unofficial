@@ -25,11 +25,11 @@ import com.tyron.completion.xml.XmlRepository;
 import com.tyron.completion.xml.util.AttributeProcessingUtil;
 import com.tyron.xml.completion.repository.api.AttrResourceValue;
 import com.tyron.xml.completion.repository.api.ResourceNamespace;
-import dev.mutwakil.codeassist.R;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import kotlin.Pair;
+import dev.mutwakil.codeassist.R;
 
 public class AttributeEditorDialogFragment extends BottomSheetDialogFragment {
 

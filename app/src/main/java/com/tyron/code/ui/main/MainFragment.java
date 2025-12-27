@@ -44,9 +44,9 @@ import com.tyron.code.service.CompilerService;
 import com.tyron.code.service.CompilerServiceConnection;
 import com.tyron.code.service.IndexService;
 import com.tyron.code.service.IndexServiceConnection;
+import com.tyron.code.ui.editor.EditorContainerFragment;
 import com.tyron.code.ui.file.FileViewModel;
 import com.tyron.code.ui.file.event.RefreshRootEvent;
-import com.tyron.code.ui.main.action.project.SaveAction;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.code.util.UiUtilsKt;
 import com.tyron.common.SharedPreferenceKeys;
@@ -55,7 +55,6 @@ import com.tyron.completion.java.provider.CompletionEngine;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorSavedState;
-import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
@@ -67,6 +66,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
+import dev.mutwakil.codeassist.R;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 
 public class MainFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
@@ -475,7 +475,8 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
 
     Collection<Module> modules = mProject.getModules();
     modules.forEach(it -> it.getFileManager().saveContents());
-    SaveAction.doSave();
+
+    getChildFragmentManager().setFragmentResult(EditorContainerFragment.SAVE_ALL_KEY, Bundle.EMPTY);
 
     ProjectSettings settings = mProject.getSettings();
     if (settings == null) {
@@ -501,6 +502,8 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     if (mServiceConnection.isCompiling() || CompletionEngine.isIndexing()) {
       return;
     }
+
+    saveAll();
     mServiceConnection.setBuildType(type);
 
     mMainViewModel.setCurrentState(getString(R.string.compilation_state_compiling));
@@ -546,12 +549,13 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
           };
       String packageName = ((AndroidModule) module).getNameSpace();
       if (packageName != null) {
-        IntentFilter filter = new IntentFilter(packageName + ".LOG");
-        requireActivity()
-            .registerReceiver(
-                mLogReceiver, filter, Context.RECEIVER_NOT_EXPORTED // safer by default
-                );
-      } else {
+    IntentFilter filter = new IntentFilter(packageName + ".LOG");
+    requireActivity().registerReceiver(
+        mLogReceiver,
+        filter,
+        Context.RECEIVER_NOT_EXPORTED // safer by default
+    );
+} else {
         mLogReceiver = null;
       }
     }
@@ -580,7 +584,6 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     context.putData(COMPILE_CALLBACK_KEY, mCompileCallback);
     context.putData(INDEX_CALLBACK_KEY, mIndexCallback);
     context.putData(CommonDataKeys.FILE_EDITOR_KEY, mMainViewModel.getCurrentFileEditor());
-    context.putData(CommonDataKeys.FRAGMENT, MainFragment.this);
   }
 
   public void refreshToolbar() {

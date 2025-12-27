@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.tyron.code.ui.ssh.SshKeys;
-import dev.mutwakil.codeassist.R;
 import java.util.ArrayList;
 import java.util.List;
+import dev.mutwakil.codeassist.R;
 
 public class SshKeyManagerAdapter extends RecyclerView.Adapter<SshKeyManagerAdapter.ViewHolder> {
 
