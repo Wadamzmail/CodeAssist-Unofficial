@@ -11,12 +11,12 @@ import com.tyron.completion.index.CompilerService;
 import com.tyron.completion.java.compiler.JavaCompilerService;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.nio.file.Files;
 
 public class JavaCompilerProvider extends CompilerProvider<JavaCompilerService> {
   public static final String KEY = JavaCompilerProvider.class.getSimpleName();
@@ -111,7 +111,7 @@ public class JavaCompilerProvider extends CompilerProvider<JavaCompilerService> 
 
     return false;
   }
-  
+
   public Set<File> getFiles(File dir, String ext) {
     Set<File> Files = new HashSet<>();
 

@@ -55,6 +55,7 @@ import com.tyron.completion.java.provider.CompletionEngine;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorSavedState;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
@@ -66,7 +67,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
-import dev.mutwakil.codeassist.R;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 
 public class MainFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
@@ -549,13 +549,12 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
           };
       String packageName = ((AndroidModule) module).getNameSpace();
       if (packageName != null) {
-    IntentFilter filter = new IntentFilter(packageName + ".LOG");
-    requireActivity().registerReceiver(
-        mLogReceiver,
-        filter,
-        Context.RECEIVER_NOT_EXPORTED // safer by default
-    );
-} else {
+        IntentFilter filter = new IntentFilter(packageName + ".LOG");
+        requireActivity()
+            .registerReceiver(
+                mLogReceiver, filter, Context.RECEIVER_NOT_EXPORTED // safer by default
+                );
+      } else {
         mLogReceiver = null;
       }
     }

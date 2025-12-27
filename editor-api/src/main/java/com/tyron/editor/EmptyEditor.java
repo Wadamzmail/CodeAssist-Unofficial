@@ -3,8 +3,8 @@ package com.tyron.editor;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import java.io.File;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 public class EmptyEditor implements Editor {
@@ -21,9 +21,9 @@ public class EmptyEditor implements Editor {
 
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {}
-  
-  @Override 
-  public List<DiagnosticWrapper> getDiagnosticsList(){
+
+  @Override
+  public List<DiagnosticWrapper> getDiagnosticsList() {
     return new ArrayList<DiagnosticWrapper>();
   }
 

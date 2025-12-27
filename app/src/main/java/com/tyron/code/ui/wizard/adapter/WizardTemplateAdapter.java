@@ -12,11 +12,11 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.shape.CornerFamily;
 import com.tyron.code.ui.wizard.WizardTemplate;
 import com.tyron.common.util.AndroidUtilities;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import dev.mutwakil.codeassist.R;
 
 public class WizardTemplateAdapter extends RecyclerView.Adapter<WizardTemplateAdapter.ViewHolder> {
 

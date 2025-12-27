@@ -49,6 +49,7 @@ import com.tyron.completion.java.provider.CompletionEngine;
 import com.tyron.layoutpreview.BoundaryDrawingFrameLayout;
 import com.tyron.layoutpreview.convert.LayoutToXmlConverter;
 import com.tyron.layoutpreview.inflate.PreviewLayoutInflater;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +59,6 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import kotlin.Pair;
-import dev.mutwakil.codeassist.R;
 
 public class LayoutEditorFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
 

@@ -25,13 +25,13 @@ import com.tyron.code.ui.drawable.Icons;
 import com.tyron.code.ui.drawable.adapter.IconManagerAdapter;
 import com.tyron.common.util.Decompress;
 import com.tyron.completion.progress.ProgressManager;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
-import dev.mutwakil.codeassist.R;
 
 public class IconManagerFragment extends Fragment {
 

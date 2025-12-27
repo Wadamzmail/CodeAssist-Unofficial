@@ -52,12 +52,14 @@ import com.tyron.code.ui.file.tree.binder.TreeFileNodeViewFactory;
 import com.tyron.code.ui.file.tree.model.TreeFile;
 import com.tyron.code.ui.main.MainViewModel;
 import com.tyron.code.ui.project.ProjectManager;
+import com.tyron.code.util.EventManagerUtilsKt;
 import com.tyron.code.util.UiUtilsKt;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.ui.treeview.TreeNode;
 import com.tyron.ui.treeview.TreeView;
+import dev.mutwakil.codeassist.R;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,8 +75,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.io.FileUtils;
-import dev.mutwakil.codeassist.R;
-import com.tyron.code.util.EventManagerUtilsKt;
 
 public class TreeFileManagerFragment extends Fragment {
 
@@ -195,8 +195,12 @@ public class TreeFileManagerFragment extends Fragment {
     treeView.getView().setNestedScrollingEnabled(false);
 
     EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
-    
-    EventManagerUtilsKt.subscribeEvent(eventManager, getViewLifecycleOwner(), RefreshRootEvent.class, (event, unsubscribe) -> {
+
+    EventManagerUtilsKt.subscribeEvent(
+        eventManager,
+        getViewLifecycleOwner(),
+        RefreshRootEvent.class,
+        (event, unsubscribe) -> {
           File refreshRoot = event.getRoot();
           TreeNode<TreeFile> currentRoot = treeView.getRoot();
           if (currentRoot != null && refreshRoot.equals(currentRoot.getValue().getFile())) {
@@ -423,7 +427,8 @@ public class TreeFileManagerFragment extends Fragment {
             + "    buildTypes {\n"
             + "        release {\n"
             + "            minifyEnabled false\n"
-            + "            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'\n"
+            + "            proguardFiles getDefaultProguardFile('proguard-android.txt'),"
+            + " 'proguard-rules.pro'\n"
             + "        }\n"
             + "    }\n"
             + "\n"

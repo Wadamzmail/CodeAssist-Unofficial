@@ -12,14 +12,6 @@ import java.io.File;
 import java.time.Instant;
 import java.util.Objects;
 
-import com.tyron.editor.Content;
-import com.tyron.fileeditor.api.FileDocumentManager;
-import com.tyron.fileeditor.api.TextEditor;
-
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.VFS;
-
 public class RosemoeCodeEditor implements TextEditor {
 
   private final File mFile;

@@ -232,7 +232,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
     CharSequence formatted = null;
     try {
       formatted = new com.google.googlejavaformat.java.Formatter().formatSource(text.toString());
-     } catch (Exception e) {
+    } catch (Exception e) {
       formatted = text;
     }
 

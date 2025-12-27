@@ -30,12 +30,12 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.editor.Caret;
 import com.tyron.editor.Editor;
 import com.tyron.fileeditor.api.FileEditor;
+import dev.mutwakil.codeassist.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import dev.mutwakil.codeassist.R;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class BottomEditorFragment extends Fragment {

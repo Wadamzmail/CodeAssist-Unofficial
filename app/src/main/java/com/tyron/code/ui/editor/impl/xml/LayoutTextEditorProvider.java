@@ -1,11 +1,11 @@
 package com.tyron.code.ui.editor.impl.xml;
 
+import android.content.Context;
 import androidx.annotation.NonNull;
 import com.tyron.code.ui.editor.impl.text.rosemoe.RosemoeEditorProvider;
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.fileeditor.api.FileEditor;
 import java.io.File;
-import android.content.Context;
 
 public class LayoutTextEditorProvider extends RosemoeEditorProvider {
 

@@ -1,88 +1,82 @@
 package com.tyron.code.util;
 
+import android.util.Log;
 import com.tyron.builder.model.DiagnosticWrapper;
-
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import android.util.Log;
-
 import javax.tools.Diagnostic;
 
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
-  /*
-  * @author Wadamzmail
-  */
+/*
+ * @author Wadamzmail
+ */
 public final class DiagnosticsUtils {
-    
-    private static final String TAG = "DiagnosticsUtils";
-    
-    private DiagnosticsUtils() {}
 
-    @SuppressWarnings("unchecked")
-    public static List<DiagnosticWrapper> toWrappers(DiagnosticsContainer container) {
-        if (container == null)
-           return Collections.emptyList();
+  private static final String TAG = "DiagnosticsUtils";
 
-        try {
-            Field regionsField =
-                    DiagnosticsContainer.class.getDeclaredField("regions");
-            regionsField.setAccessible(true);
+  private DiagnosticsUtils() {}
 
-            List<DiagnosticRegion> regions =
-                    (List<DiagnosticRegion>) regionsField.get(container);
+  @SuppressWarnings("unchecked")
+  public static List<DiagnosticWrapper> toWrappers(DiagnosticsContainer container) {
+    if (container == null) return Collections.emptyList();
 
-            if (regions == null || regions.isEmpty()) {
-                return Collections.emptyList();
-            }
+    try {
+      Field regionsField = DiagnosticsContainer.class.getDeclaredField("regions");
+      regionsField.setAccessible(true);
 
-            List<DiagnosticWrapper> result = new ArrayList<>(regions.size());
+      List<DiagnosticRegion> regions = (List<DiagnosticRegion>) regionsField.get(container);
 
-            for (DiagnosticRegion region : regions) {
-                DiagnosticWrapper wrapper = new DiagnosticWrapper();
+      if (regions == null || regions.isEmpty()) {
+        return Collections.emptyList();
+      }
 
-                wrapper.setStartPosition(region.startIndex);
-                wrapper.setEndPosition(region.endIndex);
-                wrapper.setPosition(region.startIndex);
+      List<DiagnosticWrapper> result = new ArrayList<>(regions.size());
 
-                wrapper.setKind(mapSeverity(region.severity));
+      for (DiagnosticRegion region : regions) {
+        DiagnosticWrapper wrapper = new DiagnosticWrapper();
 
-                DiagnosticDetail detail = region.detail;
-                if (detail != null) {
-                    wrapper.setMessage(
-                            detail.getDetailedMessage() != null
-                                    ? detail.getDetailedMessage()
-                                    : detail.getBriefMessage()
-                    );
-                    
-                    wrapper.setExtra(detail);
-                }
+        wrapper.setStartPosition(region.startIndex);
+        wrapper.setEndPosition(region.endIndex);
+        wrapper.setPosition(region.startIndex);
 
-                result.add(wrapper);
-            }
+        wrapper.setKind(mapSeverity(region.severity));
 
-            return result;
+        DiagnosticDetail detail = region.detail;
+        if (detail != null) {
+          wrapper.setMessage(
+              detail.getDetailedMessage() != null
+                  ? detail.getDetailedMessage()
+                  : detail.getBriefMessage());
 
-        } catch (Throwable e) {
-            Log.e(TAG,"Failed to Convert Diagnostics",e);
-            return Collections.emptyList();
+          wrapper.setExtra(detail);
         }
-    }
 
-    private static Diagnostic.Kind mapSeverity(short severity) {
-        switch (severity) {
-            case DiagnosticRegion.SEVERITY_ERROR:
-                return Diagnostic.Kind.ERROR;
-            case DiagnosticRegion.SEVERITY_WARNING:
-                return Diagnostic.Kind.WARNING;
-            case DiagnosticRegion.SEVERITY_TYPO:
-                return Diagnostic.Kind.MANDATORY_WARNING;
-            case DiagnosticRegion.SEVERITY_NONE:
-            default:
-                return Diagnostic.Kind.NOTE;
-        }
+        result.add(wrapper);
+      }
+
+      return result;
+
+    } catch (Throwable e) {
+      Log.e(TAG, "Failed to Convert Diagnostics", e);
+      return Collections.emptyList();
     }
+  }
+
+  private static Diagnostic.Kind mapSeverity(short severity) {
+    switch (severity) {
+      case DiagnosticRegion.SEVERITY_ERROR:
+        return Diagnostic.Kind.ERROR;
+      case DiagnosticRegion.SEVERITY_WARNING:
+        return Diagnostic.Kind.WARNING;
+      case DiagnosticRegion.SEVERITY_TYPO:
+        return Diagnostic.Kind.MANDATORY_WARNING;
+      case DiagnosticRegion.SEVERITY_NONE:
+      default:
+        return Diagnostic.Kind.NOTE;
+    }
+  }
 }

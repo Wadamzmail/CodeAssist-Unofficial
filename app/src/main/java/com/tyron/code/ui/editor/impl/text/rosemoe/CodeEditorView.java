@@ -11,7 +11,6 @@ import com.tyron.actions.DataContext;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
-import com.tyron.code.language.EditorFormatter;
 import com.tyron.code.language.HighlightUtil;
 import com.tyron.code.language.xml.LanguageXML;
 import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
@@ -19,7 +18,6 @@ import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.NoOpTextActionWindow;
 import com.tyron.code.ui.project.ProjectManager;
-import com.tyron.completion.progress.ProgressManager;
 import com.tyron.completion.xml.model.XmlCompletionType;
 import com.tyron.completion.xml.util.XmlUtils;
 import com.tyron.editor.Caret;
@@ -29,6 +27,8 @@ import com.tyron.editor.Editor;
 import com.tyron.xml.completion.util.DOMUtils;
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.TextUtils;
@@ -39,27 +39,17 @@ import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import javax.tools.Diagnostic;
 import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import dev.mutwakil.codeassist.R;
-//import io.github.rosemoe.sora.text.CharPosition;
-import io.github.rosemoe.sora.text.TextRange;
-import java.util.Objects;
-import java.util.function.Function;
-
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
-
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
-
+// import io.github.rosemoe.sora.text.CharPosition;
 
 public class CodeEditorView extends CodeEditor implements Editor {
 
@@ -89,7 +79,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
   public CodeEditorView(Context context, AttributeSet attrs) {
-    this(DataContext.wrap(context), attrs,0);
+    this(DataContext.wrap(context), attrs, 0);
   }
 
   public CodeEditorView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -144,7 +134,6 @@ public class CodeEditorView extends CodeEditor implements Editor {
     super.setColorScheme(colors);
   }
 
-  
   public List<DiagnosticWrapper> getDiagnosticsList() {
     return mDiagnostics;
   }
@@ -221,24 +210,28 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void commitText(CharSequence text) {
-   try{ super.commitText(text);}catch(Exception e){e.printStackTrace();}
+    try {
+      super.commitText(text);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
   public void commitText(CharSequence text, boolean applyAutoIndent) {
-   try{
-    if (text.length() == 1) {
-      char currentChar = getText().charAt(getCursor().getLeft());
-      char c = text.charAt(0);
-      if (IGNORED_PAIR_ENDS.contains(c) && c == currentChar) {
-        // ignored pair end, just move the cursor over the character
-        setSelection(getCursor().getLeftLine(), getCursor().getLeftColumn() + 1);
-        return;
+    try {
+      if (text.length() == 1) {
+        char currentChar = getText().charAt(getCursor().getLeft());
+        char c = text.charAt(0);
+        if (IGNORED_PAIR_ENDS.contains(c) && c == currentChar) {
+          // ignored pair end, just move the cursor over the character
+          setSelection(getCursor().getLeftLine(), getCursor().getLeftColumn() + 1);
+          return;
+        }
       }
+    } catch (Exception e) {
+      android.util.Log.e("CodeEditorView", "failed to commit text", e);
     }
-   }catch(Exception e){
-   android.util.Log.e("CodeEditorView","failed to commit text",e);
-   }
     super.commitText(text, applyAutoIndent);
 
     if (text.length() == 1) {
@@ -272,29 +265,31 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void deleteText() {
-   try{
-    Cursor cursor = getCursor();
-    if (!cursor.isSelected()) {
-      io.github.rosemoe.sora.text.Content text = getText();
-      int startIndex = cursor.getLeft();
-      if (startIndex - 1 >= 0) {
-        char deleteChar = text.charAt(startIndex - 1);
-        char afterChar = text.charAt(startIndex);
-        SymbolPairMatch.SymbolPair replacement = null;
+    try {
+      Cursor cursor = getCursor();
+      if (!cursor.isSelected()) {
+        io.github.rosemoe.sora.text.Content text = getText();
+        int startIndex = cursor.getLeft();
+        if (startIndex - 1 >= 0) {
+          char deleteChar = text.charAt(startIndex - 1);
+          char afterChar = text.charAt(startIndex);
+          SymbolPairMatch.SymbolPair replacement = null;
 
-        SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
-        if (pairs != null) {
-          replacement = pairs.matchBestPairBySingleChar(deleteChar);
-        }
-        if (replacement != null) {
-          if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
-            text.delete(startIndex - 1, startIndex + 1);
-            return;
+          SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
+          if (pairs != null) {
+            replacement = pairs.matchBestPairBySingleChar(deleteChar);
+          }
+          if (replacement != null) {
+            if (("" + deleteChar + afterChar + "").equals(replacement.open)) {
+              text.delete(startIndex - 1, startIndex + 1);
+              return;
+            }
           }
         }
       }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-   }catch(Exception e){e.printStackTrace();}
     super.deleteText();
   }
 
@@ -375,7 +370,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
     getText().endBatchEdit();
   }
 
-/*  public boolean isFormatting() {
+  /*  public boolean isFormatting() {
     try {
       //return sFormatThreadField.get(this) != null;
     } catch (IllegalAccessException e) {
@@ -389,9 +384,10 @@ public class CodeEditorView extends CodeEditor implements Editor {
     return CodeEditorView.super.formatCodeAsync();
   }
 
- @Override
+  @Override
   public synchronized boolean formatCodeAsync(int start, int end) {
-     return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
+    return formatCodeAsync(
+        getText().getIndexer().getCharPosition(start), getText().getIndexer().getCharPosition(end));
   }
 
   @Override
@@ -455,14 +451,18 @@ public class CodeEditorView extends CodeEditor implements Editor {
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
   }
-  @Override 
- public void moveSelectionRight(){}
-  @Override 
-public  void moveSelectionUp(){} 
-  @Override 
-public  void moveSelectionDown(){}
-  @Override 
-public  void moveSelectionLeft(){}
+
+  @Override
+  public void moveSelectionRight() {}
+
+  @Override
+  public void moveSelectionUp() {}
+
+  @Override
+  public void moveSelectionDown() {}
+
+  @Override
+  public void moveSelectionLeft() {}
 
   private void drawSquigglyLine(Canvas canvas, float startX, float startY, float endX, float endY) {
     float waveSize = getDpUnit() * 3;
@@ -487,37 +487,35 @@ public  void moveSelectionLeft(){}
     }
   }
 
-
   private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
 
-    Function<Diagnostic.Kind, Short> severitySupplier = it -> {
-        switch (it) {
+    Function<Diagnostic.Kind, Short> severitySupplier =
+        it -> {
+          switch (it) {
             case ERROR:
-                return DiagnosticRegion.SEVERITY_ERROR;
+              return DiagnosticRegion.SEVERITY_ERROR;
             case MANDATORY_WARNING:
             case WARNING:
-                return DiagnosticRegion.SEVERITY_WARNING;
+              return DiagnosticRegion.SEVERITY_WARNING;
             default:
             case OTHER:
             case NOTE:
-                return DiagnosticRegion.SEVERITY_NONE;
-        }
-    };
+              return DiagnosticRegion.SEVERITY_NONE;
+          }
+        };
     mStopConv = false;
     DiagnosticsContainer container = new DiagnosticsContainer();
 
-         for (var it : diagnostics) {
-               if (mStopConv)break;
-             DiagnosticRegion region = new DiagnosticRegion(
-                    (int) it.getStartPosition(),
-                    (int) it.getEndPosition(),
-                    severitySupplier.apply(it.getKind())
-             );
-             container.addDiagnostic(region);
-        }
+    for (var it : diagnostics) {
+      if (mStopConv) break;
+      DiagnosticRegion region =
+          new DiagnosticRegion(
+              (int) it.getStartPosition(),
+              (int) it.getEndPosition(),
+              severitySupplier.apply(it.getKind()));
+      container.addDiagnostic(region);
+    }
 
-     setDiagnostics(container);
+    setDiagnostics(container);
   }
-
-  
 }

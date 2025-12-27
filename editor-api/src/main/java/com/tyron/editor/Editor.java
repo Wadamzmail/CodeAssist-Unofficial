@@ -15,6 +15,7 @@ public interface Editor {
   Project getProject();
 
   void setDiagnostics(List<DiagnosticWrapper> diagnostics);
+
   List<DiagnosticWrapper> getDiagnosticsList();
 
   boolean isBackgroundAnalysisEnabled();

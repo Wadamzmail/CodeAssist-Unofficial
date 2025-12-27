@@ -23,6 +23,7 @@ import com.tyron.code.ui.drawable.adapter.DrawableManagerAdapter;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
-import dev.mutwakil.codeassist.R;
 
 public class DrawableManagerFragment extends Fragment {
 

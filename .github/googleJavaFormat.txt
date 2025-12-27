@@ -1,0 +1,4 @@
+find /storage/emulated/0/AndroidIDEProjects/CodeAssist-Unofficial-rewrite \
+  -type d \( -name build -o -name .gradle -o -name out \) -prune -o \
+  -type f -name "*.java" -print0 2>/dev/null | \
+xargs -0 java -jar $HOME/google-java-format-1.33.0-all-deps.jar --replace

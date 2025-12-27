@@ -1,5 +1,6 @@
 package com.tyron.code.ui.editor.impl.text.rosemoe;
 
+import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.common.collect.ImmutableSet;
 import com.tyron.fileeditor.api.FileEditor;
@@ -7,7 +8,6 @@ import com.tyron.fileeditor.api.FileEditorProvider;
 import java.io.File;
 import java.util.Set;
 import kotlin.io.FilesKt;
-import android.content.Context;
 
 public class RosemoeEditorProvider implements FileEditorProvider {
 

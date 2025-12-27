@@ -41,7 +41,6 @@ import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.language.xml.LanguageXML;
-import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.Savable;
@@ -58,10 +57,14 @@ import com.tyron.code.util.PopupMenuHelper;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.logging.IdeLog;
 import com.tyron.common.util.AndroidUtilities;
+import com.tyron.common.util.DebouncerStore;
 import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.java.util.JavaDataContextUtil;
 import com.tyron.completion.progress.ProgressManager;
+import com.tyron.diagnostics.DiagnosticProvider;
 import com.tyron.editor.CharPosition;
+import com.tyron.language.api.CodeAssistLanguage;
+import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.event.ClickEvent;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.LongPressEvent;
@@ -76,32 +79,21 @@ import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
-import dev.mutwakil.codeassist.R;
-import java.lang.reflect.Field;
-import org.eclipse.tm4e.core.internal.theme.Theme;
-import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
-import io.github.rosemoe.sora.widget.component.Magnifier;
-import com.tyron.common.util.DebouncerStore;
-import com.tyron.language.api.CodeAssistLanguage;
-import com.tyron.diagnostics.DiagnosticProvider;
-import com.tyron.builder.model.DiagnosticWrapper;
-import javax.tools.Diagnostic;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ServiceLoader;
-import java.util.function.Function;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javax.tools.Diagnostic;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
-//import com.tyron.editor.Content;
 
+// import com.tyron.editor.Content;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -190,7 +182,7 @@ public class CodeEditorFragment extends Fragment
   public void onResume() {
     super.onResume();
   }
-  
+
   private void onContentChange(com.tyron.editor.Content content) {
     Language language = mEditor.getEditorLanguage();
     File currentFile = mEditor.getCurrentFile();
@@ -213,13 +205,10 @@ public class CodeEditorFragment extends Fragment
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);
-       
-      mEditor.setDiagnostics(diagnostics.stream()
-            .map(DiagnosticWrapper::new)
-            .collect(Collectors.toList())
-            );
+
+      mEditor.setDiagnostics(
+          diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
     }
-    
   }
 
   public void hideEditorWindows() {
@@ -431,14 +420,19 @@ public class CodeEditorFragment extends Fragment
           }
           updateFile(event.getEditor().getText());
           ProgressManager.getInstance()
-                        .runNonCancelableAsync(() -> DebouncerStore.DEFAULT.registerOrGetDebouncer(
-                                "contentChange").debounce(300, () -> {
-                            try {
-                                onContentChange(new ContentWrapper(mEditor.getText()));
-                            } catch (Exception t) {
-                                LOG.severe("Error in onContentChange"+": "+t.getMessage());
-                            }
-                        }));
+              .runNonCancelableAsync(
+                  () ->
+                      DebouncerStore.DEFAULT
+                          .registerOrGetDebouncer("contentChange")
+                          .debounce(
+                              300,
+                              () -> {
+                                try {
+                                  onContentChange(new ContentWrapper(mEditor.getText()));
+                                } catch (Exception t) {
+                                  LOG.severe("Error in onContentChange" + ": " + t.getMessage());
+                                }
+                              }));
         });
 
     LogViewModel logViewModel = new ViewModelProvider(requireActivity()).get(LogViewModel.class);
@@ -482,12 +476,12 @@ public class CodeEditorFragment extends Fragment
                 assert result != null;
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
-                 /* try{
-                      Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
-                      themeField.setAccessible(true);
-                     String themeNameF = ((ThemeModel) themeField.get(result)).getName();
-                      ThemeRegistry.setTheme(themeNameF);
-                }catch(Exception e) {}*/
+                  /* try{
+                        Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
+                        themeField.setAccessible(true);
+                       String themeNameF = ((ThemeModel) themeField.get(result)).getName();
+                        ThemeRegistry.setTheme(themeNameF);
+                  }catch(Exception e) {}*/
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }
@@ -680,13 +674,15 @@ public class CodeEditorFragment extends Fragment
   }
 
   private ListenableFuture<String> readFile() {
-        return Futures.submitAsync(() -> {
-            FileSystemManager manager = VFS.getManager();
-            FileObject fileObject = manager.resolveFile(mCurrentFile.toURI());
-            FileContent content = fileObject.getContent();
-            return Futures.immediateFuture(content.getString(StandardCharsets.UTF_8));
-        }, Executors.newSingleThreadExecutor());
-    }
+    return Futures.submitAsync(
+        () -> {
+          FileSystemManager manager = VFS.getManager();
+          FileObject fileObject = manager.resolveFile(mCurrentFile.toURI());
+          FileContent content = fileObject.getContent();
+          return Futures.immediateFuture(content.getString(StandardCharsets.UTF_8));
+        },
+        Executors.newSingleThreadExecutor());
+  }
 
   private void readFile(@NonNull Project currentProject, @Nullable Bundle savedInstanceState) {
     mCanSave = false;

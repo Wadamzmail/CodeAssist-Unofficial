@@ -22,7 +22,7 @@ dependencies {
         exclude group: 'com.android.tools', module: 'common'
     }
     implementation 'javax.inject:javax.inject:1'
-   implementation project(':javac') 
+    implementation project(':javac') 
     implementation project(path: ':common')
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')

@@ -39,13 +39,10 @@ import com.tyron.common.util.UniqueNameBuilder;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorManager;
+import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
-import dev.mutwakil.codeassist.R;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.VFS;
 
 public class EditorContainerFragment extends Fragment
     implements FileListener,
@@ -237,6 +234,14 @@ public class EditorContainerFragment extends Fragment
             files -> {
               mAdapter.submitList(files);
               mTabLayout.setVisibility(files.isEmpty() ? View.GONE : View.VISIBLE);
+              if (files.isEmpty()) {
+                ProgressManager.getInstance()
+                    .runLater(
+                        () ->
+                            getParentFragmentManager()
+                                .setFragmentResult(MainFragment.REFRESH_TOOLBAR_KEY, Bundle.EMPTY),
+                        150);
+              }
             });
     mMainViewModel
         .getCurrentPosition()
