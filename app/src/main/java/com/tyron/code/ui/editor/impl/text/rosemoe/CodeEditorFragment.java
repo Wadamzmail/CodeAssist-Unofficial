@@ -88,6 +88,10 @@ import io.github.rosemoe.sora.widget.component.Magnifier;
 import com.tyron.common.util.DebouncerStore;
 import com.tyron.language.api.CodeAssistLanguage;
 import com.tyron.diagnostics.DiagnosticProvider;
+import com.tyron.builder.model.DiagnosticWrapper;
+import javax.tools.Diagnostic;
+import java.util.stream.Collectors;
+import java.util.List;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Function;
@@ -213,9 +217,6 @@ public class CodeEditorFragment extends Fragment
             .collect(Collectors.toList())
             );
     }
-    
-    ProgressManager.getInstance()
-        .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG,editor.getDiagnosticsList())); 
     
   }
 
