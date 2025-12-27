@@ -101,6 +101,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 
+
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
     implements Savable,
@@ -433,10 +434,10 @@ public class CodeEditorFragment extends Fragment
                                 "contentChange").debounce(300, () -> {
                             try {
                                 onContentChange(editor.getContent());
-                            } catch (Throwable t) {
-                                LOGGER.error("Error in onContentChange", t);
+                            } catch (Exception t) {
+                                LOG.severe("Error in onContentChange"+": "+t.getMessage());
                             }
-                        })) 
+                        }));
         });
 
     LogViewModel logViewModel = new ViewModelProvider(requireActivity()).get(LogViewModel.class);
