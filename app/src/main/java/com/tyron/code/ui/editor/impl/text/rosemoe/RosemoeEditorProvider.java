@@ -7,6 +7,7 @@ import com.tyron.fileeditor.api.FileEditorProvider;
 import java.io.File;
 import java.util.Set;
 import kotlin.io.FilesKt;
+import android.content.Context;
 
 public class RosemoeEditorProvider implements FileEditorProvider {
 
@@ -30,7 +31,7 @@ public class RosemoeEditorProvider implements FileEditorProvider {
 
   @NonNull
   @Override
-  public FileEditor createEditor(@NonNull File file) {
+  public FileEditor createEditor(@NonNull Context context, @NonNull File file) {
     return new RosemoeCodeEditor(file, this);
   }
 

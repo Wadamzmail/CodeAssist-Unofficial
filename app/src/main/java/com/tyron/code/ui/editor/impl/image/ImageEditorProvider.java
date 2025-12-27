@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorProvider;
 import java.io.File;
+import android.content.Context;
 
 public class ImageEditorProvider implements FileEditorProvider {
 
@@ -30,7 +31,7 @@ public class ImageEditorProvider implements FileEditorProvider {
 
   @NonNull
   @Override
-  public FileEditor createEditor(@NonNull File file) {
+  public FileEditor createEditor(@NonNull Context context, @NonNull File file) {
     return new ImageEditor(file, this);
   }
 

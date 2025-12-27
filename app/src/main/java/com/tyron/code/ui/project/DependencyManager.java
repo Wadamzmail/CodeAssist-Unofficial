@@ -8,7 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.tyron.builder.log.ILogger;
-import com.tyron.builder.model.Library;
+import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.ModuleSettings;
 import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.JavaModule;
@@ -253,7 +253,7 @@ public class DependencyManager {
 
     if (!declaredApiDependencies.isEmpty()) {
       resolvedApiPoms = mResolver.resolveDependencies(declaredApiDependencies);
-      List<Library> apiLibraries = getFiles(resolvedApiPoms, logger);
+      List<CodeAssistLibrary> apiLibraries = getFiles(resolvedApiPoms, logger);
       checkDependencies(project, root, idea, logger, apiLibraries, gradleFile, scopeTypeApi);
       resolvedApiPoms.clear();
       apiLibraries.clear();
@@ -267,7 +267,7 @@ public class DependencyManager {
     if (!declaredNativesDependencies.isEmpty()) {
       resolvedNativesPoms = mResolver.resolveDependencies(declaredNativesDependencies);
 
-      List<Library> nativesLibraries = getFiles(resolvedNativesPoms, logger);
+      List<CodeAssistLibrary> nativesLibraries = getFiles(resolvedNativesPoms, logger);
       checkDependencies(
           project, root, idea, logger, nativesLibraries, gradleFile, scopeTypeNatives);
       resolvedNativesPoms.clear();
@@ -282,7 +282,7 @@ public class DependencyManager {
     if (!declaredImplementationDependencies.isEmpty()) {
       resolvedImplementationPoms =
           mResolver.resolveDependencies(declaredImplementationDependencies);
-      List<Library> implementationLibraries = getFiles(resolvedImplementationPoms, logger);
+      List<CodeAssistLibrary> implementationLibraries = getFiles(resolvedImplementationPoms, logger);
       checkDependencies(
           project,
           root,
@@ -302,7 +302,7 @@ public class DependencyManager {
 
     if (!declaredCompileOnlyDependencies.isEmpty()) {
       resolvedCompileOnlyPoms = mResolver.resolveDependencies(declaredCompileOnlyDependencies);
-      List<Library> compileOnlyLibraries = getFiles(resolvedCompileOnlyPoms, logger);
+      List<CodeAssistLibrary> compileOnlyLibraries = getFiles(resolvedCompileOnlyPoms, logger);
       checkDependencies(
           project, root, idea, logger, compileOnlyLibraries, gradleFile, scopeTypeCompileOnly);
       resolvedCompileOnlyPoms.clear();
@@ -317,7 +317,7 @@ public class DependencyManager {
     if (!declaredCompileOnlyApiDependencies.isEmpty()) {
       resolvedCompileOnlyApiPoms =
           mResolver.resolveDependencies(declaredCompileOnlyApiDependencies);
-      List<Library> compileOnlyApiLibraries = getFiles(resolvedCompileOnlyApiPoms, logger);
+      List<CodeAssistLibrary> compileOnlyApiLibraries = getFiles(resolvedCompileOnlyApiPoms, logger);
       checkDependencies(
           project,
           root,
@@ -337,7 +337,7 @@ public class DependencyManager {
 
     if (!declaredRuntimeOnlyDependencies.isEmpty()) {
       resolvedRuntimeOnlyPoms = mResolver.resolveDependencies(declaredRuntimeOnlyDependencies);
-      List<Library> runtimeOnlyLibraries = getFiles(resolvedRuntimeOnlyPoms, logger);
+      List<CodeAssistLibrary> runtimeOnlyLibraries = getFiles(resolvedRuntimeOnlyPoms, logger);
       checkDependencies(
           project, root, idea, logger, runtimeOnlyLibraries, gradleFile, scopeTypeRuntimeOnly);
       resolvedRuntimeOnlyPoms.clear();
@@ -352,7 +352,7 @@ public class DependencyManager {
     if (!declaredRuntimeOnlyApiDependencies.isEmpty()) {
       resolvedRuntimeOnlyApiPoms =
           mResolver.resolveDependencies(declaredRuntimeOnlyApiDependencies);
-      List<Library> runtimeOnlyApiLibraries = getFiles(resolvedRuntimeOnlyApiPoms, logger);
+      List<CodeAssistLibrary> runtimeOnlyApiLibraries = getFiles(resolvedRuntimeOnlyApiPoms, logger);
       checkDependencies(
           project,
           root,
@@ -410,14 +410,14 @@ public class DependencyManager {
       File root,
       File idea,
       ILogger logger,
-      List<Library> newLibraries,
+      List<CodeAssistLibrary> newLibraries,
       File gradleFile,
       String scope)
       throws IOException {
 
-    Set<Library> libraries = new HashSet<>(newLibraries);
-    Map<String, Library> fileLibsHashes = new HashMap<>();
-    Map<String, Library> md5Map = new HashMap<>();
+    Set<CodeAssistLibrary> libraries = new HashSet<>(newLibraries);
+    Map<String, CodeAssistLibrary> fileLibsHashes = new HashMap<>();
+    Map<String, CodeAssistLibrary> md5Map = new HashMap<>();
 
     libraries =
         new HashSet<>(
@@ -451,9 +451,9 @@ public class DependencyManager {
       JavaModule project, File root, File idea, ILogger logger, File gradleFile, String scope)
       throws IOException {
 
-    Set<Library> libraries = new HashSet<>();
-    Map<String, Library> fileLibsHashes = new HashMap<>();
-    Map<String, Library> md5Map = new HashMap<>();
+    Set<CodeAssistLibrary> libraries = new HashSet<>();
+    Map<String, CodeAssistLibrary> fileLibsHashes = new HashMap<>();
+    Map<String, CodeAssistLibrary> md5Map = new HashMap<>();
 
     AbstractMap.SimpleEntry<ArrayList<String>, ArrayList<String>> result =
         project.extractListDirAndIncludes(gradleFile, scope);
@@ -517,11 +517,11 @@ public class DependencyManager {
     libraries.clear();
   }
 
-  public Map<String, Library> checkDirLibraries(
-      Map<String, Library> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
+  public Map<String, CodeAssistLibrary> checkDirLibraries(
+      Map<String, CodeAssistLibrary> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
     try {
       ZipFile zipFile = new ZipFile(new File(dir, include));
-      Library library = new Library();
+      CodeAssistLibrary library = new CodeAssistLibrary();
       library.setSourceFile(new File(dir, include));
       fileLibsHashes.put(AndroidUtilities.calculateMD5(new File(dir, include)), library);
     } catch (IOException e) {
@@ -531,8 +531,8 @@ public class DependencyManager {
     return fileLibsHashes;
   }
 
-  public Map<String, Library> checkDirIncludeLibraries(
-      Map<String, Library> fileLibsHashes,
+  public Map<String, CodeAssistLibrary> checkDirIncludeLibraries(
+      Map<String, CodeAssistLibrary> fileLibsHashes,
       ILogger logger,
       File dir,
       ArrayList<String> includes,
@@ -543,7 +543,7 @@ public class DependencyManager {
         for (File fileLibrary : fileLibraries) {
           try {
             ZipFile zipFile = new ZipFile(fileLibrary);
-            Library library = new Library();
+            CodeAssistLibrary library = new CodeAssistLibrary();
             library.setSourceFile(fileLibrary);
             fileLibsHashes.put(AndroidUtilities.calculateMD5(fileLibrary), library);
           } catch (IOException e) {
@@ -556,14 +556,14 @@ public class DependencyManager {
     return fileLibsHashes;
   }
 
-  public Set<Library> parseLibraries(Set<Library> libraries, File file, String scope) {
+  public Set<CodeAssistLibrary> parseLibraries(Set<CodeAssistLibrary> libraries, File file, String scope) {
     ModuleSettings myModuleSettings = new ModuleSettings(file);
     String librariesString = myModuleSettings.getString(scope + "_libraries", "[]");
     try {
-      List<Library> parsedLibraries =
-          new Gson().fromJson(librariesString, new TypeToken<List<Library>>() {}.getType());
+      List<CodeAssistLibrary> parsedLibraries =
+          new Gson().fromJson(librariesString, new TypeToken<List<CodeAssistLibrary>>() {}.getType());
       if (parsedLibraries != null) {
-        for (Library parsedLibrary : parsedLibraries) {
+        for (CodeAssistLibrary parsedLibrary : parsedLibraries) {
           if (!libraries.contains(parsedLibrary)) {
             Log.d("LibraryCheck", "Removed library" + parsedLibrary);
           } else {
@@ -576,10 +576,10 @@ public class DependencyManager {
     return libraries;
   }
 
-  public Map<String, Library> checkLibraries(
-      Map<String, Library> md5Map,
-      Set<Library> libraries,
-      Map<String, Library> fileLibsHashes,
+  public Map<String, CodeAssistLibrary> checkLibraries(
+      Map<String, CodeAssistLibrary> md5Map,
+      Set<CodeAssistLibrary> libraries,
+      Map<String, CodeAssistLibrary> fileLibsHashes,
       File libs)
       throws IOException {
     libraries.forEach(it -> md5Map.put(AndroidUtilities.calculateMD5(it.getSourceFile()), it));
@@ -605,10 +605,10 @@ public class DependencyManager {
       File libs,
       File file,
       String scope,
-      Map<String, Library> libraries,
-      Map<String, Library> fileLibraries)
+      Map<String, CodeAssistLibrary> libraries,
+      Map<String, CodeAssistLibrary> fileLibraries)
       throws IOException {
-    Map<String, Library> combined = new HashMap<>();
+    Map<String, CodeAssistLibrary> combined = new HashMap<>();
     combined.putAll(libraries);
     combined.putAll(fileLibraries);
 
@@ -616,9 +616,9 @@ public class DependencyManager {
       ((JavaModule) module).putLibraryHashes(combined);
     }
 
-    for (Map.Entry<String, Library> entry : combined.entrySet()) {
+    for (Map.Entry<String, CodeAssistLibrary> entry : combined.entrySet()) {
       String hash = entry.getKey();
-      Library library = entry.getValue();
+      CodeAssistLibrary library = entry.getValue();
 
       File libraryDir = new File(libs, hash);
       if (!libraryDir.exists()) {
@@ -665,13 +665,13 @@ public class DependencyManager {
     myModuleSettings.edit().putString(scope + "_libraries", librariesString).apply();
   }
 
-  public List<Library> getFiles(List<Pom> resolvedPoms, ILogger logger) {
-    List<Library> files = new ArrayList<>();
+  public List<CodeAssistLibrary> getFiles(List<Pom> resolvedPoms, ILogger logger) {
+    List<CodeAssistLibrary> files = new ArrayList<>();
     for (Pom resolvedPom : resolvedPoms) {
       try {
         File file = mRepository.getLibrary(resolvedPom);
         if (file != null) {
-          Library library = new Library();
+          CodeAssistLibrary library = new CodeAssistLibrary();
           library.setSourceFile(file);
           library.setDeclaration(resolvedPom.getDeclarationString());
           files.add(library);

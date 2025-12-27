@@ -191,9 +191,9 @@ public class CodeEditorFragment extends Fragment
   }
   
   private void onContentChange(Content content) {
-    Language language = editor.getEditorLanguage();
-    File currentFile = editor.getCurrentFile();
-    Project project = editor.getProject();
+    Language language = mEditor.getEditorLanguage();
+    File currentFile = mEditor.getCurrentFile();
+    Project project = mEditor.getProject();
     if (project == null) {
       return;
     }
@@ -206,14 +206,14 @@ public class CodeEditorFragment extends Fragment
       ((CodeAssistLanguage) language).onContentChange(currentFile, content);
     }
 
-    Objects.requireNonNull(editor.getDiagnostics()).reset();
-    editor.getDiagnosticsList().clear();
+    Objects.requireNonNull(mEditor.getDiagnostics()).reset();
+    mEditor.getDiagnosticsList().clear();
 
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);
        
-      editor.setDiagnostics(diagnostics.stream()
+      mEditor.setDiagnostics(diagnostics.stream()
             .map(DiagnosticWrapper::new)
             .collect(Collectors.toList())
             );
@@ -433,7 +433,7 @@ public class CodeEditorFragment extends Fragment
                         .runNonCancelableAsync(() -> DebouncerStore.DEFAULT.registerOrGetDebouncer(
                                 "contentChange").debounce(300, () -> {
                             try {
-                                onContentChange(editor.getContent());
+                                onContentChange(mEditor.getContent());
                             } catch (Exception t) {
                                 LOG.severe("Error in onContentChange"+": "+t.getMessage());
                             }
