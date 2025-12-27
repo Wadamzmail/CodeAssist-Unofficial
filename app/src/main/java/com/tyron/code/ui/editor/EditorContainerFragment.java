@@ -43,6 +43,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import dev.mutwakil.codeassist.R;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.VFS;
 
 public class EditorContainerFragment extends Fragment
     implements FileListener,

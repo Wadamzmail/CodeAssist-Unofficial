@@ -28,6 +28,7 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.tree.JCTree;
+import dev.mutwakil.javac.*;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class FindCurrentPath extends TreePathScanner<TreePath, Pair<Long, Long>>
     private CompilationUnitTree mCompilationUnit;
 
     public FindCurrentPath(JavacTask task) {
-        mPos = Trees.instance(task).getSourcePositions();
+        mPos = MTrees.instance(task).getSourcePositions();
     }
 
     public FindCurrentPath(Trees trees) {

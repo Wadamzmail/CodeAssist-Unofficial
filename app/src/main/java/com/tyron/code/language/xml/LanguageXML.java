@@ -209,7 +209,6 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
     // AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
     //  try{ InjectResourcesTask.inject(mEditor.getProject());}catch(Exception e){}
     //  try{ InjectViewBindingTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}
-    getAnalyzeManager().rerun();
   }
 
   @Override

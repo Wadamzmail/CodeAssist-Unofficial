@@ -77,6 +77,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   private List<DiagnosticWrapper> mDiagnostics;
   private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
+  private boolean mStopConv = false;
   private File mCurrentFile;
   private EditorViewModel mViewModel;
 
@@ -150,6 +151,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
+    mStopConv = true;
     mDiagnostics = diagnostics;
 
     AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
@@ -165,7 +167,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
     if (styles != null) {
       HighlightUtil.clearDiagnostics(styles);
       HighlightUtil.markDiagnostics(this, diagnostics, styles);
-      setStyles(/*manager,*/ styles);
+      setStyles(styles);
     }
     convDiagnostics(diagnostics);
   }
@@ -224,6 +226,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void commitText(CharSequence text, boolean applyAutoIndent) {
+   try{
     if (text.length() == 1) {
       char currentChar = getText().charAt(getCursor().getLeft());
       char c = text.charAt(0);
@@ -233,6 +236,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
         return;
       }
     }
+   }catch(Exception e){
+   android.util.Log.e("CodeEditorView","failed to commit text",e);
+   }
     super.commitText(text, applyAutoIndent);
 
     if (text.length() == 1) {
@@ -266,6 +272,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void deleteText() {
+   try{
     Cursor cursor = getCursor();
     if (!cursor.isSelected()) {
       io.github.rosemoe.sora.text.Content text = getText();
@@ -287,6 +294,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
         }
       }
     }
+   }catch(Exception e){e.printStackTrace();}
     super.deleteText();
   }
 
@@ -383,35 +391,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
  @Override
   public synchronized boolean formatCodeAsync(int start, int end) {
-   /* if (isFormatting()) {
-      return false;
-    }*/
-    return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
-   // if(true) return false;
-   /* if (getEditorLanguage() instanceof EditorFormatter
-        && getText() != null
-        && getEditorLanguage() != null) {
-      ProgressManager.getInstance()
-          .runNonCancelableAsync(
-              () -> {
-                CharSequence originalText = getText();
-                if (originalText != null) {
-                  final CharSequence formatted =
-                      ((EditorFormatter) getEditorLanguage()).format(originalText, start, end);
-                  if (formatted != null) {
-                    TextRange tRange = new TextRange(getText().getIndexer().getCharPosition(start),
-                                                     getText().getIndexer().getCharPosition(end));
-                    super.onFormatSucceed(formatted, tRange);
-                  } else {
-                    // Handle null formatted text
-                  }
-                } else {
-                  // Handle null original text
-                }
-              });
-      return true;
-    }
-    return false;*/
+     return formatCodeAsync(getText().getIndexer().getCharPosition(start),getText().getIndexer().getCharPosition(end));
   }
 
   @Override
@@ -523,16 +503,18 @@ public  void moveSelectionLeft(){}
                 return DiagnosticRegion.SEVERITY_NONE;
         }
     };
-
+    mStopConv = false;
     DiagnosticsContainer container = new DiagnosticsContainer();
 
-    diagnostics.stream()
-            .map(it -> new DiagnosticRegion(
+         for (var it : diagnostics) {
+               if (mStopConv)break;
+             DiagnosticRegion region = new DiagnosticRegion(
                     (int) it.getStartPosition(),
                     (int) it.getEndPosition(),
                     severitySupplier.apply(it.getKind())
-            ))
-            .forEach(container::addDiagnostic);
+             );
+             container.addDiagnostic(region);
+        }
 
      setDiagnostics(container);
   }

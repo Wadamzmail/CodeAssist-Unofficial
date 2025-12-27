@@ -225,18 +225,6 @@ private void destroyAnalysis(){
             if (!analysisRunning) return kotlin.Unit.INSTANCE;
             if (editor==null) return kotlin.Unit.INSTANCE;
             if (!isHighlightEnabled()) return kotlin.Unit.INSTANCE;
-
-            // short severity;
-            // CompilerMessageSeverity s = issue.getSeverity();
-
-            //if (s == CompilerMessageSeverity.ERROR) {
-            //    severity = DiagnosticRegion.SEVERITY_ERROR;
-            //} else if (s == CompilerMessageSeverity.WARNING
-            //        || s == CompilerMessageSeverity.STRONG_WARNING) {
-            //    severity = DiagnosticRegion.SEVERITY_WARNING;
-            //} else {
-            //    return kotlin.Unit.INSTANCE;
-            //}
             
            DiagnosticWrapper wrapper = new DiagnosticWrapper();
            wrapper.setStartPosition(issue.getStartOffset());
@@ -250,15 +238,6 @@ private void destroyAnalysis(){
            if (!analysisRunning) return kotlin.Unit.INSTANCE;
 
             Objects.requireNonNull((CodeEditorView) editor).post(() -> {
-               // container.addDiagnostic(
-               //         new DiagnosticRegion(
-               //                 issue.getStartOffset(),
-               //                 issue.getEndOffset(),
-               //                 severity, 
-               //                 0,
-               //                 new DiagnosticDetail("Info",issue.getMessage(),null,null)
-               //         )
-               // );
                editor.setDiagnostics(diagnostics);
             });
             return kotlin.Unit.INSTANCE;

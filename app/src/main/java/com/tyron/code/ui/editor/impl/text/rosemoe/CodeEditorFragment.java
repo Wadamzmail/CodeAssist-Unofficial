@@ -85,6 +85,17 @@ import java.lang.reflect.Field;
 import org.eclipse.tm4e.core.internal.theme.Theme;
 import io.github.rosemoe.sora.langs.textmate.registry.model.ThemeModel;
 import io.github.rosemoe.sora.widget.component.Magnifier;
+import com.tyron.common.util.DebouncerStore;
+import com.tyron.language.api.CodeAssistLanguage;
+import com.tyron.diagnostics.DiagnosticProvider;
+import java.util.Objects;
+import java.util.ServiceLoader;
+import java.util.function.Function;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class CodeEditorFragment extends Fragment
@@ -172,6 +183,40 @@ public class CodeEditorFragment extends Fragment
   @Override
   public void onResume() {
     super.onResume();
+  }
+  
+  private void onContentChange(Content content) {
+    Language language = editor.getEditorLanguage();
+    File currentFile = editor.getCurrentFile();
+    Project project = editor.getProject();
+    if (project == null) {
+      return;
+    }
+    Module module = project.getModule(currentFile);
+    if (module == null) {
+      return;
+    }
+
+    if (language instanceof CodeAssistLanguage) {
+      ((CodeAssistLanguage) language).onContentChange(currentFile, content);
+    }
+
+    Objects.requireNonNull(editor.getDiagnostics()).reset();
+    editor.getDiagnosticsList().clear();
+
+    ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
+    for (DiagnosticProvider provider : providers) {
+      List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);
+       
+      editor.setDiagnostics(diagnostics.stream()
+            .map(DiagnosticWrapper::new)
+            .collect(Collectors.toList())
+            );
+    }
+    
+    ProgressManager.getInstance()
+        .runLater(() -> Objects.requireNonNull(logViewModel).updateLogs(LogViewModel.DEBUG,editor.getDiagnosticsList())); 
+    
   }
 
   public void hideEditorWindows() {
@@ -299,8 +344,6 @@ public class CodeEditorFragment extends Fragment
     editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.openFile(mCurrentFile);
-    //editor.getComponent(Magnifier.class).setWithinEditorForcibly(true);
-  //  editor.replaceComponent(CodeAssistCompletionAdapter.class,new CodeAssistCompletionAdapter());
     editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
     editor.setInputType(
         EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
@@ -384,6 +427,15 @@ public class CodeEditorFragment extends Fragment
             return;
           }
           updateFile(event.getEditor().getText());
+          ProgressManager.getInstance()
+                        .runNonCancelableAsync(() -> DebouncerStore.DEFAULT.registerOrGetDebouncer(
+                                "contentChange").debounce(300, () -> {
+                            try {
+                                onContentChange(editor.getContent());
+                            } catch (Throwable t) {
+                                LOGGER.error("Error in onContentChange", t);
+                            }
+                        })) 
         });
 
     LogViewModel logViewModel = new ViewModelProvider(requireActivity()).get(LogViewModel.class);
@@ -625,13 +677,13 @@ public class CodeEditorFragment extends Fragment
   }
 
   private ListenableFuture<String> readFile() {
-    return Futures.submitAsync(
-        () -> {
-          String contents = FileUtils.readFileToString(mCurrentFile, StandardCharsets.UTF_8);
-          return Futures.immediateFuture(contents);
-        },
-        Executors.newSingleThreadExecutor());
-  }
+        return Futures.submitAsync(() -> {
+            FileSystemManager manager = VFS.getManager();
+            FileObject fileObject = manager.resolveFile(mCurrentFile.toURI());
+            FileContent content = fileObject.getContent();
+            return Futures.immediateFuture(content.getString(StandardCharsets.UTF_8));
+        }, Executors.newSingleThreadExecutor());
+    }
 
   private void readFile(@NonNull Project currentProject, @Nullable Bundle savedInstanceState) {
     mCanSave = false;
