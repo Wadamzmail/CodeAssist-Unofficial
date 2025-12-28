@@ -41,7 +41,7 @@ dependencies {
     implementation project(path: ':jaxp:xml')
      
     runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0')
-	api files('libs/kotlin-compiler-embeddable-2.3.0.jar')
+	api files('libs/kotlin-compiler-embeddable-2.1.21.jar')
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')

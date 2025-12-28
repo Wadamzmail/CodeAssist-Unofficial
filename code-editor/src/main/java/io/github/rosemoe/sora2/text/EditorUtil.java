@@ -16,12 +16,11 @@ import io.github.rosemoe.sora.text.ContentLine;
 import io.github.rosemoe.sora.text.ICUUtils;
 import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
-import java.lang.reflect.Method;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
-import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
-import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
+import java.lang.reflect.Method;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawThemeSetting;
+import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
 import org.eclipse.tm4e.core.registry.IThemeSource;
 
 public class EditorUtil {
@@ -34,42 +33,41 @@ public class EditorUtil {
 
   @NonNull
   public static TextMateColorScheme createTheme() throws Exception {
-    TextMateColorScheme scheme =
-        TextMateColorScheme.create(ThemeRegistry.getInstance());
+    TextMateColorScheme scheme = TextMateColorScheme.create(ThemeRegistry.getInstance());
     scheme.setTheme(ThemeRegistry.getInstance().getCurrentThemeModel());
-    try{
-     IRawTheme rawTheme = scheme.getRawTheme();
-     Collection<IRawThemeSetting> settings = rawTheme.getSettings();
-     if (settings != null && settings.size() >= 1) {
-         RawTheme setting = (RawTheme) settings.iterator().next();
-         setting = (RawTheme) setting.getSetting();
+    try {
+      IRawTheme rawTheme = scheme.getRawTheme();
+      Collection<IRawThemeSetting> settings = rawTheme.getSettings();
+      if (settings != null && settings.size() >= 1) {
+        RawTheme setting = (RawTheme) settings.iterator().next();
+        setting = (RawTheme) setting.getSetting();
 
-         Object blockLine = setting.get(KEY_BLOCK_LINE);
-         if (blockLine != null) {
-             scheme.setColor(EditorColorScheme.BLOCK_LINE, getColor(blockLine));
-         }
+        Object blockLine = setting.get(KEY_BLOCK_LINE);
+        if (blockLine != null) {
+          scheme.setColor(EditorColorScheme.BLOCK_LINE, getColor(blockLine));
+        }
 
-         Object currBlockLine = setting.get(KEY_CURRENT_BLOCK_LINE);
-         if (currBlockLine == null) {
-             currBlockLine = blockLine;
-         }
-         if (currBlockLine != null) {
-             scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, getColor(currBlockLine));
-         }
+        Object currBlockLine = setting.get(KEY_CURRENT_BLOCK_LINE);
+        if (currBlockLine == null) {
+          currBlockLine = blockLine;
+        }
+        if (currBlockLine != null) {
+          scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, getColor(currBlockLine));
+        }
 
-         Object completionWindowBackground = setting.get(KEY_COMPLETION_WINDOW_BACKGROUND);
-         if (completionWindowBackground == null) {
-             completionWindowBackground = setting.get(KEY_BACKGROUND);
-         }
-         scheme.setColor(EditorColorScheme.COMPLETION_WND_BACKGROUND,
-                         getColor(completionWindowBackground));
+        Object completionWindowBackground = setting.get(KEY_COMPLETION_WINDOW_BACKGROUND);
+        if (completionWindowBackground == null) {
+          completionWindowBackground = setting.get(KEY_BACKGROUND);
+        }
+        scheme.setColor(
+            EditorColorScheme.COMPLETION_WND_BACKGROUND, getColor(completionWindowBackground));
 
-         Object completionStroke = setting.get(KEY_COMPLETION_WINDOW_STROKE);
-         scheme.setColor(EditorColorScheme.COMPLETION_WND_CORNER,
-                         getColor(completionStroke, Color.TRANSPARENT));
-     }
-    }catch(Exception e){
-    e.printStackTrace();
+        Object completionStroke = setting.get(KEY_COMPLETION_WINDOW_STROKE);
+        scheme.setColor(
+            EditorColorScheme.COMPLETION_WND_CORNER, getColor(completionStroke, Color.TRANSPARENT));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return scheme;
   }

@@ -21,7 +21,7 @@ public final class KotlinSeverityMapper {
         return Diagnostic.Kind.ERROR;
 
       case STRONG_WARNING:
-      case FIXED_WARNING:
+      // case FIXED_WARNING:
       case WARNING:
         return Diagnostic.Kind.WARNING;
 

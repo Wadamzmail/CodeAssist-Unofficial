@@ -28,7 +28,6 @@ import com.tyron.xml.completion.util.DOMUtils;
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.TextUtils;
@@ -49,6 +48,7 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+
 // import io.github.rosemoe.sora.text.CharPosition;
 
 public class CodeEditorView extends CodeEditor implements Editor {
@@ -503,10 +503,10 @@ public class CodeEditorView extends CodeEditor implements Editor {
               return DiagnosticRegion.SEVERITY_NONE;
           }
         };
-        
-    getDiagnostics().reset();   
+
+    getDiagnostics().reset();
     mStopConv = false;
-      
+
     for (var it : diagnostics) {
       if (mStopConv) break;
       DiagnosticRegion region =

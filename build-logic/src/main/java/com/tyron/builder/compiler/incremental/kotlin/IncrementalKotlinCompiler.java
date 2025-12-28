@@ -366,7 +366,6 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         List<File> plugins = getPlugins();
         getLogger().debug("Loading kotlin compiler plugins: " + plugins);
 
-
         List<String> args = new ArrayList<>();
         args.add("dalvikvm");
         args.add("-Xcompiler-option");

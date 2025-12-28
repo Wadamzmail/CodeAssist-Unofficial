@@ -39,9 +39,9 @@ import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
+import com.tyron.code.language.kotlin.KotlinLanguage;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.language.xml.LanguageXML;
-import com.tyron.code.language.kotlin.KotlinLanguage;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.Savable;
@@ -186,22 +186,20 @@ public class CodeEditorFragment extends Fragment
 
   private void onContentChange(com.tyron.editor.Content content) {
     Language language = mEditor.getEditorLanguage();
-   
-    Module module = ProjectManager.getInstance()
-                      .getCurrentProject()
-                      .getModule(mCurrentFile);
-                      
+
+    Module module = ProjectManager.getInstance().getCurrentProject().getModule(mCurrentFile);
+
     if (module == null) return;
-    
+
     if (language instanceof CodeAssistLanguage)
       ((CodeAssistLanguage) language).onContentChange(currentFile, content);
-    
-    if(language instanceof KotlinLanguage)return;
-    if(language instanceof LanguageXML)return;
-    
+
+    if (language instanceof KotlinLanguage) return;
+    if (language instanceof LanguageXML) return;
+
     Objects.requireNonNull(mEditor.getDiagnostics()).reset();
-    mEditor.getDiagnosticsList().clear(); 
-    
+    mEditor.getDiagnosticsList().clear();
+
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);

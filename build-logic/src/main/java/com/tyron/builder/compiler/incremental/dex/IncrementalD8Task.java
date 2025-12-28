@@ -10,6 +10,7 @@ import com.tyron.builder.compiler.BuildType;
 import com.tyron.builder.compiler.Task;
 import com.tyron.builder.compiler.dex.D8Task;
 import com.tyron.builder.compiler.dex.DexDiagnosticHandler;
+import com.tyron.builder.compiler.dex.MyClassConflictResolver;
 import com.tyron.builder.exception.CompilationFailedException;
 import com.tyron.builder.log.ILogger;
 import com.tyron.builder.model.CodeAssistLibrary;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
-import com.tyron.builder.compiler.dex.MyClassConflictResolver;
 
 public class IncrementalD8Task extends Task<AndroidModule> {
 
@@ -190,7 +190,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
           D8Command.builder(diagnosticsHandler)
               .addProgramFiles(getAllDexFiles(mOutputPath.toFile()))
               .addLibraryFiles(getLibraryFiles())
-              .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
+              .setClassConflictResolver(new MyClassConflictResolver(getLogger()))
               .addClasspathFiles(
                   uniqueLibraryFiles.stream().map(File::toPath).collect(Collectors.toList()))
               .setMinApiLevel(getModule().getMinSdk());
@@ -233,7 +233,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
             .addProgramFiles(getLibraryDexes())
             .setMinApiLevel(getModule().getMinSdk())
             .setMode(CompilationMode.RELEASE)
-            .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
+            .setClassConflictResolver(new MyClassConflictResolver(getLogger()))
             .setOutput(output.toPath(), OutputMode.DexIndexed)
             .build();
     D8.run(command);
@@ -323,7 +323,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
                   .addProgramFiles(lib.toPath())
                   .setMode(CompilationMode.RELEASE)
                   .setMinApiLevel(getModule().getMinSdk())
-                  .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
+                  .setClassConflictResolver(new MyClassConflictResolver(getLogger()))
                   .setOutput(lib.getParentFile().toPath(), OutputMode.DexIndexed)
                   .build();
           D8.run(command);

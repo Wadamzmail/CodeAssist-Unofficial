@@ -392,7 +392,6 @@ public class IncrementalJavaTask extends Task<JavaModule> {
         runtimeClassPath.add(getModule().getBootstrapJarFile());
         runtimeClassPath.add(getModule().getLambdaStubsJarFile());
 
-
         List<String> args = new ArrayList<>();
         args.add("dalvikvm");
         args.add("-Xcompiler-option");
