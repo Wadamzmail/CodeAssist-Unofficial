@@ -11,11 +11,11 @@ import java.util.Objects;
 * @author Wadamzmail
 * special thanks to TK Studio
 */
-public class MyConflictResolver implements ClassConflictResolver {
+public class MyClassConflictResolver implements ClassConflictResolver {
     
     private ILogger log;
     
-    public MyConflictResolver(ILogger log){
+    public MyClassConflictResolver(ILogger log){
      this.log = log;
     }
     
