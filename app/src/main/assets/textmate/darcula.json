@@ -2,10 +2,14 @@
     "name": "darcula",
     "settings": [{
         "settings": {
-            "background": "#242424",
+            "background": "#1F1A1B",
             "foreground": "#cccccc",
             "lineHighlight": "#2B2B2B",
+            "blockLineColor": "#575757",
+            "currentBlockLineColor": "#7a7a7a",
             "selection": "#214283",
+            "completionWindowBackground": "#1F1A1B",
+            "completionWindowStroke": "#555555",
             "highlightedDelimitersForeground": "#57f6c0"
         }
     },

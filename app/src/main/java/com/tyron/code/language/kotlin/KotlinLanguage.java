@@ -149,9 +149,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
             KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
-           
-            Objects.requireNonNull(((CodeEditorView)editor).getDiagnostics()).reset();
-            editor.getDiagnosticsList().clear();
+          
             diagnostics.clear();            
             List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
             if (itemsList==null)return;
@@ -165,15 +163,6 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
        kotlinEnvironment.analysis = null;
 
   }
-
-    private KotlinEnvironment getOrCreateKotlinEnvironment() {
-        if (kotlinEnvironment == null) {
-            kotlinEnvironment =
-                    KotlinEnvironment.Companion.with(List.of(Objects.requireNonNull(BuildModule.getAndroidJar()),
-                            BuildModule.getLambdaStubs()));
-        }
-        return kotlinEnvironment;
-    }
 
     @Override
     public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {

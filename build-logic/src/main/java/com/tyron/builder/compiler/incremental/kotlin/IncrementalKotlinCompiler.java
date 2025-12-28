@@ -73,11 +73,6 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
     mFilesToCompile.addAll(getSourceFiles(javaDir));
     mFilesToCompile.addAll(getSourceFiles(kotlinDir));
 
-    //        mKotlinHome = new File(BuildModule.getContext().getFilesDir(), "kotlin-home");
-    //        if (!mKotlinHome.exists() && !mKotlinHome.mkdirs()) {
-    //            throw new IOException("Unable to create kotlin home directory");
-    //        }
-
     mClassOutput = new File(getModule().getBuildDirectory(), "bin/kotlin/classes");
     if (!mClassOutput.exists() && !mClassOutput.mkdirs()) {
       throw new IOException("Unable to create class output directory");
@@ -102,12 +97,9 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
 
       boolean isCompilerEnabled =
           Boolean.parseBoolean(
-              buildSettingsJson.optJSONObject("kotlin").optString("isCompilerEnabled", "false"));
+              buildSettingsJson.optJSONObject("kotlin").optString("isCompilerEnabled", "true"));
 
       String jvm_target = buildSettingsJson.optJSONObject("kotlin").optString("jvmTarget", "1.8");
-
-      // String language_version =
-      //     buildSettingsJson.optJSONObject("kotlin").optString("languageVersion", "2.1");
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         BuildModule.getKotlinc().setReadOnly();
@@ -210,6 +202,9 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.setReportPerf(false);
         args.setReportOutputFiles(false);
         args.setDumpPerf(null);
+        args.setLanguageVersion("2.3");
+        args.setUseFastJarFileSystem(true);
+        args.setJvmTarget(jvm_target);
 
         args.setUseJavac(false);
         args.setCompileJava(false);
@@ -371,80 +366,6 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         List<File> plugins = getPlugins();
         getLogger().debug("Loading kotlin compiler plugins: " + plugins);
 
-        /*  String[] command =
-            new String[] {
-              "dalvikvm",
-              "-Xcompiler-option",
-              "--compiler-filter=speed",
-              "-Xmx256m",
-              "-cp",
-              compiler_path,
-              "org.jetbrains.kotlin.cli.jvm.K2JVMCompiler",
-              "-no-reflect",
-              "-no-jdk",
-              "-no-stdlib",
-              "-jvm-target",
-              jvm_target,
-              //  "-language-version",
-              //  language_version,
-              "-cp",
-              Arrays.toString(arguments.toArray(new String[0])).replace("[", "").replace("]", ""),
-              "-Xjava-source-roots="
-                  + Arrays.toString(
-                          javaSourceRoots.stream()
-                              .map(File::getAbsolutePath)
-                              .toArray(String[]::new))
-                      .replace("[", "")
-                      .replace("]", "")
-            };
-
-        for (File file : fileList) {
-          command = appendElement(command, file.getAbsolutePath());
-        }
-
-        command = appendElement(command, "-d");
-        command = appendElement(command, mClassOutput.getAbsolutePath());
-        command = appendElement(command, "-module-name");
-        command = appendElement(command, getModule().getRootFile().getName());
-        command = appendElement(command, "-P");
-
-        String plugin = "";
-        String pluginString =
-            Arrays.toString(plugins.stream().map(File::getAbsolutePath).toArray(String[]::new))
-                .replace("[", "")
-                .replace("]", "");
-
-        String pluginOptionsString =
-            Arrays.toString(getPluginOptions()).replace("[", "").replace("]", "");
-
-        plugin = pluginString + ":" + (pluginOptionsString.isEmpty() ? ":=" : pluginOptionsString);
-
-        command = appendElement(command, "plugin:" + plugin);
-
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        StringBuilder output = new StringBuilder(); // To store the output
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-          output.append(line).append("\n"); // Append each line to the output
-        }
-
-        String message = output.toString();
-
-        if (!message.isEmpty()) {
-          getLogger().info(output.toString());
-        }
-
-        process.waitFor();
-
-        if (output.toString().contains("error")) {
-          throw new CompilationFailedException("Compilation failed, see logs for more details");
-        }*/
 
         List<String> args = new ArrayList<>();
         args.add("dalvikvm");
@@ -456,7 +377,6 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.add("org.jetbrains.kotlin.cli.jvm.K2JVMCompiler");
 
         // new
-        args.add("-language-version 2.3");
         args.add("-Xuse-fast-jar-file-system");
 
         args.add("-no-jdk");

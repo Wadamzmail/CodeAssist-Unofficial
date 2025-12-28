@@ -503,9 +503,10 @@ public class CodeEditorView extends CodeEditor implements Editor {
               return DiagnosticRegion.SEVERITY_NONE;
           }
         };
+        
+    getDiagnostics().reset();   
     mStopConv = false;
-    DiagnosticsContainer container = new DiagnosticsContainer();
-
+      
     for (var it : diagnostics) {
       if (mStopConv) break;
       DiagnosticRegion region =
@@ -513,9 +514,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
               (int) it.getStartPosition(),
               (int) it.getEndPosition(),
               severitySupplier.apply(it.getKind()));
-      container.addDiagnostic(region);
+      getDiagnostics().addDiagnostic(region);
     }
-
-    setDiagnostics(container);
   }
 }

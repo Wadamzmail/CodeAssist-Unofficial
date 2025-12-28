@@ -41,6 +41,7 @@ import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.language.xml.LanguageXML;
+import com.tyron.code.language.kotlin.KotlinLanguage;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.Savable;
@@ -185,23 +186,22 @@ public class CodeEditorFragment extends Fragment
 
   private void onContentChange(com.tyron.editor.Content content) {
     Language language = mEditor.getEditorLanguage();
-    File currentFile = mEditor.getCurrentFile();
-    Project project = mEditor.getProject();
-    if (project == null) {
-      return;
-    }
-    Module module = project.getModule(currentFile);
-    if (module == null) {
-      return;
-    }
-
-    if (language instanceof CodeAssistLanguage) {
+   
+    Module module = ProjectManager.getInstance()
+                      .getCurrentProject()
+                      .getModule(mCurrentFile);
+                      
+    if (module == null) return;
+    
+    if (language instanceof CodeAssistLanguage)
       ((CodeAssistLanguage) language).onContentChange(currentFile, content);
-    }
-
+    
+    if(language instanceof KotlinLanguage)return;
+    if(language instanceof LanguageXML)return;
+    
     Objects.requireNonNull(mEditor.getDiagnostics()).reset();
-    mEditor.getDiagnosticsList().clear();
-
+    mEditor.getDiagnosticsList().clear(); 
+    
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);
@@ -428,9 +428,9 @@ public class CodeEditorFragment extends Fragment
                               300,
                               () -> {
                                 try {
-                                  onContentChange(new ContentWrapper(mEditor.getText()));
-                                } catch (Exception t) {
-                                  LOG.severe("Error in onContentChange" + ": " + t.getMessage());
+                                  onContentChange(mEditor.getContent());
+                                } catch (Throwable t) {
+                                  LOG.severe("Error in onContentChange" + ": " + t);
                                 }
                               }));
         });
@@ -476,12 +476,6 @@ public class CodeEditorFragment extends Fragment
                 assert result != null;
                 mEditor.setColorScheme(result);
                 if (mLanguage.getAnalyzeManager() instanceof BaseTextmateAnalyzer) {
-                  /* try{
-                        Field themeField = TextMateColorScheme.class.getDeclaredField("currentTheme");
-                        themeField.setAccessible(true);
-                       String themeNameF = ((ThemeModel) themeField.get(result)).getName();
-                        ThemeRegistry.setTheme(themeNameF);
-                  }catch(Exception e) {}*/
                   mLanguage.getAnalyzeManager().rerun();
                 }
               }

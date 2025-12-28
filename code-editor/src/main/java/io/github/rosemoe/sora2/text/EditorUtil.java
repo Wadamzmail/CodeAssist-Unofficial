@@ -17,6 +17,11 @@ import io.github.rosemoe.sora.text.ICUUtils;
 import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import java.lang.reflect.Method;
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
+import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.RawThemeReader;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import org.eclipse.tm4e.core.internal.theme.raw.IRawThemeSetting;
 import org.eclipse.tm4e.core.registry.IThemeSource;
 
 public class EditorUtil {
@@ -28,11 +33,11 @@ public class EditorUtil {
   public static final String KEY_COMPLETION_WINDOW_STROKE = "completionWindowStroke";
 
   @NonNull
-  public static TextMateColorScheme createTheme(/*ThemeModel themeModel*/ ) throws Exception {
+  public static TextMateColorScheme createTheme() throws Exception {
     TextMateColorScheme scheme =
-        TextMateColorScheme.create(/*themeModel*/ ThemeRegistry.getInstance());
-    scheme.setTheme(/*themeModel*/ ThemeRegistry.getInstance().getCurrentThemeModel());
-    /*try{
+        TextMateColorScheme.create(ThemeRegistry.getInstance());
+    scheme.setTheme(ThemeRegistry.getInstance().getCurrentThemeModel());
+    try{
      IRawTheme rawTheme = scheme.getRawTheme();
      Collection<IRawThemeSetting> settings = rawTheme.getSettings();
      if (settings != null && settings.size() >= 1) {
@@ -63,7 +68,9 @@ public class EditorUtil {
          scheme.setColor(EditorColorScheme.COMPLETION_WND_CORNER,
                          getColor(completionStroke, Color.TRANSPARENT));
      }
-    }catch(Exception e){}*/
+    }catch(Exception e){
+    e.printStackTrace();
+    }
     return scheme;
   }
 
@@ -104,32 +111,14 @@ public class EditorUtil {
 
   public static TextMateColorScheme getDefaultColorScheme(Context context, boolean light) {
     try {
-      /*AssetManager assets = context.getAssets();
-      IRawTheme rawTheme;
-      if (light) {
-          rawTheme = RawThemeReader.readThemeSync("QuietLight.tmTheme", assets.open(
-                  "textmate/QuietLight.tmTheme"));
-      } else {
-          rawTheme = RawThemeReader.readThemeSync("darcula.json",
-                                               assets.open("textmate/darcula.json"));
-      }*/
-
       String path = "";
       if (light) {
         path = "textmate/QuietLight.tmTheme";
       } else {
         path = "textmate/darcula.json";
       }
-      /*  IThemeSource themeSource =   IThemeSource.fromInputStream(
-                     FileProviderRegistry.getInstance().tryGetInputStream(path), path, null
-                 );
-        // return createTheme(rawTheme);
-      ThemeModel themeModel = new ThemeModel(themeSource);
-      themeModel.setDark(!light);
-      themeModel.load();*/
-
       ThemeRegistry themeRegistry = ThemeRegistry.getInstance();
-      String name = path; // light?"quietlight":"darcula"; // name of theme
+      String name = path;
       String themeAssetsPath = path;
       ThemeModel model =
           new ThemeModel(
@@ -143,7 +132,7 @@ public class EditorUtil {
       model.load();
       themeRegistry.loadTheme(model);
 
-      return createTheme(/*themeModel*/ );
+      return createTheme();
     } catch (Exception e) {
       // should not happen, the bundled theme should always work.
       throw new Error(e);

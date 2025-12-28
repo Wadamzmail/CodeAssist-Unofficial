@@ -39,10 +39,10 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.8.2'
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')
+    implementation files('libs/java.lang.management-1.0.5.jar')
 
     runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0')
 	api files('libs/kotlin-compiler-embeddable-2.3.0.jar')
-	api files('libs/analysis-api-for-ide-2.3.0.jar')
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')

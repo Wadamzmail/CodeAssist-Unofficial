@@ -73,9 +73,6 @@ public class IncrementalJavaTask extends Task<JavaModule> {
     mFilesToCompile = new ArrayList<>();
     mClassCache = getModule().getCache(CACHE_KEY, new Cache<>());
     mJavaFiles = new ArrayList<>();
-    /*if (getModule() instanceof AndroidModule) {
-      mJavaFiles.addAll(((AndroidModule) getModule()).getResourceClasses().values());
-    }*/
     mJavaFiles.addAll(getJavaFiles(new File(getModule().getRootFile() + "/src/main/java")));
     mJavaFiles.addAll(getJavaFiles(new File(getModule().getBuildDirectory(), "gen")));
     mJavaFiles.addAll(getJavaFiles(new File(getModule().getBuildDirectory(), "view_binding")));
@@ -242,9 +239,9 @@ public class IncrementalJavaTask extends Task<JavaModule> {
         List<String> options = new ArrayList<>();
         options.add("-proc:none");
         options.add("-source");
-        options.add("1.8");
+        options.add(sourceCompatibility);
         options.add("-target");
-        options.add("1.8");
+        options.add(targetCompatibility);
         options.add("-Xlint:cast");
         options.add("-Xlint:deprecation");
         options.add("-Xlint:empty");
@@ -395,59 +392,12 @@ public class IncrementalJavaTask extends Task<JavaModule> {
         runtimeClassPath.add(getModule().getBootstrapJarFile());
         runtimeClassPath.add(getModule().getLambdaStubsJarFile());
 
-        /* String[] command =
-            new String[] {
-              "dalvikvm",
-              "-Xcompiler-option",
-              "--compiler-filter=speed",
-              "-Xmx256m",
-              "-cp",
-              BuildModule.getJavac().getAbsolutePath(),
-              "com.sun.tools.javac.MainKt",
-              "-sourcepath",
-              mJavaFiles.stream().map(File::toString).collect(Collectors.joining(":")),
-              "-d",
-              mOutputDir.getAbsolutePath(),
-              "-bootclasspath",
-              runtimeClassPath.stream().map(File::toString).collect(Collectors.joining(":")),
-              "-classpath",
-              compileClassPath.stream().map(File::toString).collect(Collectors.joining(":")),
-              "-source",
-              sourceCompatibility,
-              "-target",
-              targetCompatibility
-            };
-
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        StringBuilder output = new StringBuilder(); // To store the output
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-          output.append(line).append("\n"); // Append each line to the output
-        }
-
-        String message = output.toString();
-
-        if (!message.isEmpty()) {
-          getLogger().info(output.toString());
-        }
-
-        process.waitFor();
-
-        if (output.toString().contains("error")) {
-          throw new CompilationFailedException("Compilation failed, see logs for more details");
-        }*/
 
         List<String> args = new ArrayList<>();
         args.add("dalvikvm");
         args.add("-Xcompiler-option");
         args.add("--compiler-filter=speed");
-        args.add("-Xmx256m");
+        args.add("-Xmx512m");
         args.add("-cp");
         args.add(BuildModule.getJavac().getAbsolutePath());
         args.add("com.sun.tools.javac.MainKt");
