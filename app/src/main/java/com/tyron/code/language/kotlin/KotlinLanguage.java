@@ -74,6 +74,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final DiagnosticsContainer container = new DiagnosticsContainer();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
+    private volatile boolean shouldAnalyze = true;
     private final List<DiagnosticWrapper> diagnostics = new ArrayList<>();
    // private FirKotlinEnvironment firEnvironment;
      
@@ -116,10 +117,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         this.editor = editor;
         delegate = LanguageManager.createTextMateLanguage(SCOPE_NAME);
         
-        Project project = ProjectManager.getInstance().getCurrentProject();
-        Module currentModule = project.getModule(editor.getCurrentFile());
-        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-      //  firEnvironment = FirKotlinEnvironment.Companion.get(currentModule);
+        kotlinEnvironment = getKotlinEnvironment();
         if(isHighlightEnabled()){
         initAnalysis();
         }
@@ -155,14 +153,32 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             if (itemsList==null)return;
             Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(diagnostics));
             itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
+            if(isHighlightEnabled()&&shouldAnalyze){
+              initAnalysis();
+            }
        }catch(Exception e){
-            kotlinEnvironment.analysis = null;
+            getKotlinEnvironment().analysis = null;
           //  Log.e(TAG,"Completion Canceled",e);
             throw new CompletionCancelledException(e.toString());
        }
-       kotlinEnvironment.analysis = null;
+       getKotlinEnvironment().analysis = null;
 
   }
+  
+  private KotlinEnvironment getKotlinEnvironment() {
+        if (kotlinEnvironment == null) {
+        try{
+         Module currentModule = ProjectManager.getInstance()
+                                                 .getCurrentProject()
+                                                 .project.getModule(editor.getCurrentFile());
+            kotlinEnvironment =
+                    KotlinEnvironment.Companion.get(currentModule);
+        }catch(Exception e){
+         Log.e(TAG,"failed to initialize KotlinEnvironment",e);
+        }     
+        }
+        return kotlinEnvironment;
+    }
 
     @Override
     public int getIndentAdvance(@NonNull ContentReference content, int line, int column) {
@@ -208,9 +224,15 @@ private void destroyAnalysis(){
 }
     
    private void initAnalysis() {
+    if(getKotlinEnvironment()==null){
+      analysisRunning = false;
+      shouldAnalyze = true;
+      return;
+     }
     analysisRunning = true;
+    shouldAnalyze = false;
     analysisThread = new Thread(() -> {
-        kotlinEnvironment.addIssueListener(issue -> {
+        getKotlinEnvironment().addIssueListener(issue -> {
             if (!analysisRunning) return kotlin.Unit.INSTANCE;
             if (editor==null) return kotlin.Unit.INSTANCE;
             if (!isHighlightEnabled()) return kotlin.Unit.INSTANCE;
@@ -237,7 +259,7 @@ private void destroyAnalysis(){
         if (editor==null) return;
         if (editor.getCurrentFile()==null)return;
 
-        var fileEntry = kotlinEnvironment.kotlinFiles.get(editor.getCurrentFile().getAbsolutePath());
+        var fileEntry = getKotlinEnvironment().kotlinFiles.get(editor.getCurrentFile().getAbsolutePath());
         if (fileEntry == null) return;
 
         var ktFile = fileEntry.getKotlinFile();
@@ -245,7 +267,7 @@ private void destroyAnalysis(){
         try {
             if (!analysisRunning) return;
 
-            kotlinEnvironment.analysisOf(
+            getKotlinEnvironment().analysisOf(
                     kotlinEnvironment.kotlinFiles.values().stream()
                             .map(it -> it.getKotlinFile())
                             .toList(),
