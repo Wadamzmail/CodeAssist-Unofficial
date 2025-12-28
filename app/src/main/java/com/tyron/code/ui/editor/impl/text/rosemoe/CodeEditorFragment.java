@@ -348,6 +348,7 @@ public class CodeEditorFragment extends Fragment
     DirectAccessProps props = editor.getProps();
     props.overScrollEnabled = false;
     props.allowFullscreen = false;
+    props.stickyScroll = true;
     props.deleteEmptyLineFast = pref.getBoolean(SharedPreferenceKeys.DELETE_WHITESPACES, false);
   }
 
