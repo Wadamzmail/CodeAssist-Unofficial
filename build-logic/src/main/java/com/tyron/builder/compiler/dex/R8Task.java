@@ -77,7 +77,7 @@ public class R8Task extends Task<AndroidModule> {
               .addProguardConfigurationFiles(getProguardRules())
               .setMinApiLevel(getModule().getMinSdk())
               .setMode(CompilationMode.RELEASE)
-              .setClassConflictResolver(true) 
+              .setClassConflictResolver(new MyConflictResolver(getLogger()) 
               .setProguardMapOutputPath(mappingOutput.toPath())
               .setOutput(output.toPath(), OutputMode.DexIndexed);
       R8.run(command.build());
