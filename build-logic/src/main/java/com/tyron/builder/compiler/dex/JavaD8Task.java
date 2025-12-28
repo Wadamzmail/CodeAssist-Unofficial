@@ -128,7 +128,7 @@ public class JavaD8Task extends Task<JavaModule> {
               .setMinApiLevel(getModule().getMinSdk())
               .setMode(CompilationMode.RELEASE)
               .setIntermediate(true)
-              .setClassConflictResolver(new MyConflictResolver(getLogger())) 
+              .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
               .setOutput(mOutputPath, OutputMode.DexFilePerClassFile)
               .build();
       D8.run(command);
@@ -171,7 +171,7 @@ public class JavaD8Task extends Task<JavaModule> {
               .setMinApiLevel(getModule().getMinSdk())
               .setMode(CompilationMode.DEBUG)
               .setIntermediate(true)
-              .setClassConflictResolver(new MyConflictResolver(getLogger())) 
+              .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
               .setOutput(mOutputPath, OutputMode.DexFilePerClassFile)
               .build();
       D8.run(command);
@@ -184,7 +184,7 @@ public class JavaD8Task extends Task<JavaModule> {
           D8Command.builder(diagnosticsHandler)
               .addProgramFiles(getAllDexFiles(mOutputPath.toFile()))
               .addLibraryFiles(getLibraryFiles())
-              .setClassConflictResolver(new MyConflictResolver(getLogger())) 
+              .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
               .addClasspathFiles(
                   uniqueLibraryFiles.stream().map(File::toPath).collect(Collectors.toList()))
               .setMinApiLevel(getModule().getMinSdk());
@@ -228,7 +228,7 @@ public class JavaD8Task extends Task<JavaModule> {
             .addProgramFiles(getLibraryDexes())
             .setMinApiLevel(getModule().getMinSdk())
             .setMode(CompilationMode.RELEASE)
-            .setClassConflictResolver(new MyConflictResolver(getLogger())) 
+            .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
             .setOutput(output.toPath(), OutputMode.DexIndexed)
             .build();
     D8.run(command);
@@ -313,7 +313,7 @@ public class JavaD8Task extends Task<JavaModule> {
                   .setMinApiLevel(getModule().getMinSdk())
                   .addProgramFiles(lib.toPath())
                   .setMode(CompilationMode.RELEASE)
-                  .setClassConflictResolver(new MyConflictResolver(getLogger())) 
+                  .setClassConflictResolver(new MyClassConflictResolver(getLogger())) 
                   .setOutput(lib.getParentFile().toPath(), OutputMode.DexIndexed)
                   .build();
           D8.run(command);

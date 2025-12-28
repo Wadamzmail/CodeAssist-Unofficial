@@ -80,7 +80,7 @@ public class AboutUsFragment extends MaterialAboutFragment {
                     getDrawable(R.drawable.ic_icons8_telegram_app),
                     "Telegram",
                     false,
-                    Uri.parse("https://t.me/codeassist_app")))
+                    Uri.parse("https://t.me/codeassist_unofficial")))
             .build();
 
     MaterialAboutCard licenseCard =
@@ -88,8 +88,8 @@ public class AboutUsFragment extends MaterialAboutFragment {
             context,
             getDrawable(R.drawable.ic_baseline_menu_book_24),
             getString(R.string.app_name),
-            "2024",
-            "Tyron, Deenu, Mutwakil Suliman (Wadamzmail)",
+            "2025",
+            "Tyron 2022, Deenu 2023, Mutwakil Suliman (Wadamzmail) 2025",
             OpenSourceLicense.GNU_GPL_3);
 
     return new MaterialAboutList.Builder()
