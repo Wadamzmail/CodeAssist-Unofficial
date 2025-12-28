@@ -76,10 +76,28 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
                   () -> {
                     try {
                       mEditor.setAnalyzing(true);
-                      diagnostics.clear();
+                      diagnostics.clear();                            
+                      doAnalysis();          
+                    } catch (Exception e) {
+                      Log.e(TAG, "Analysis failed", e);    
+                    }
+                    ProgressManager.getInstance()
+                          .runLater(() -> mEditor.setAnalyzing(false), 300);
+                  },
+                  900);
+        }
+      }
+    }
+  }
 
-                      Objects.requireNonNull(getKotlinEnvironment())
-                          .addIssueListener(
+  private void doAnalysis() {
+    if (kotlinEnvironment == null) {
+        Module currentModule =
+            ProjectManager.getInstance()
+                .getCurrentProject()
+                .getModule(editor.getCurrentFile());
+        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        kotlinEnvironment.addIssueListener(
                               issue -> {
                                 DiagnosticWrapper wrapper = new DiagnosticWrapper();
                                 wrapper.setStartPosition(issue.getStartOffset());
@@ -88,57 +106,10 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
                                 wrapper.setKind(KotlinSeverityMapper.toKind(issue.getSeverity()));
                                 if (wrapper.getKind() == null) return kotlin.Unit.INSTANCE;
                                 diagnostics.add(wrapper);
-
-                                Objects.requireNonNull((CodeEditorView) mEditor)
-                                    .post(
-                                        () -> {
-                                          editor.setDiagnostics(diagnostics);
-                                        });
+                                editor.setDiagnostics(diagnostics);                            
                                 return kotlin.Unit.INSTANCE;
                               });
-                              
-                      var fileEntry = Objects.requireNonNull(getKotlinEnvironment()).kotlinFiles.get(editor.getCurrentFile().getAbsolutePath());
-                      if (fileEntry == null) return;
-                      var ktFile = fileEntry.getKotlinFile();      
-                              
-                      Objects.requireNonNull(getKotlinEnvironment())
-                          .analysisOf(
-                              Objects.requireNonNull(getKotlinEnvironment())
-                                  .kotlinFiles
-                                  .values()
-                                  .stream()
-                                  .map(it -> it.getKotlinFile())
-                                  .toList(),
-                              ktFile);
-                      Objects.requireNonNull(getKotlinEnvironment()).analysis = null;
-                      ProgressManager.getInstance()
-                          .runLater(() -> mEditor.setAnalyzing(false), 300);
-
-                    } catch (Exception e) {
-                      Objects.requireNonNull(getKotlinEnvironment()).analysis = null;
-                      ProgressManager.getInstance()
-                          .runLater(() -> mEditor.setAnalyzing(false), 300);
-                      Log.e(TAG, "Analysis failed", e);    
-                    }
-                  },
-                  900);
-        }
-      }
     }
-  }
-
-  private KotlinEnvironment getKotlinEnvironment() {
-    if (kotlinEnvironment == null) {
-      try {
-        Module currentModule =
-            ProjectManager.getInstance()
-                .getCurrentProject()
-                .getModule(editor.getCurrentFile());
-        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-      } catch (Exception e) {
-        Log.e(TAG, "failed to initialize KotlinEnvironment", e);
-      }
-    }
-    return kotlinEnvironment;
+   
   }
 }

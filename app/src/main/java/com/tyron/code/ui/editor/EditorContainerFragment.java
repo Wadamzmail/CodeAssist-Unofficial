@@ -43,6 +43,16 @@ import dev.mutwakil.codeassist.R;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import com.tyron.code.ui.main.action.project.SaveEvent;
+import com.tyron.code.util.EventManagerUtilsKt;
+import com.tyron.fileeditor.api.FileDocumentManager;
+import com.tyron.fileeditor.api.TextEditor;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.VFS;
+import com.tyron.editor.event.ContentEvent;
+import com.tyron.editor.event.ContentListener;
+import com.tyron.code.util.Listeners;
 
 public class EditorContainerFragment extends Fragment
     implements FileListener,
@@ -178,19 +188,39 @@ public class EditorContainerFragment extends Fragment
     }
     return root;
   }
-
-  private void updateTab(TabLayout.Tab tab, int pos) {
-    FileEditor currentEditor =
-        Objects.requireNonNull(mMainViewModel.getFiles().getValue()).get(pos);
-    File current = currentEditor.getFile();
-
-    String text = current != null ? getUniqueTabTitle(current) : "Unknown";
-    if (currentEditor.isModified()) {
-      text = "*" + text;
-    }
-
-    tab.setText(text);
+  
+  private void updateTabs() {
+        FileEditor fileEditor = mMainViewModel.getCurrentFileEditor();
+        int index = mEditors.indexOf(fileEditor);
+        if (index != -1) {
+            updateTab(index);
+        }
   }
+
+  private void updateTab(int pos) {
+        TabLayout.Tab tab = mTabLayout.getTabAt(pos);
+        if (tab == null) {
+            return;
+        }
+
+        List<FileEditor> fileEditors = mMainViewModel.getFiles().getValue();
+        if (fileEditors == null) {
+            fileEditors = Collections.emptyList();
+        }
+        List<File> files = fileEditors.stream().map(FileEditor::getFile).collect(Collectors.toList());
+        FileEditor currentEditor =
+                Objects.requireNonNull(fileEditors).get(pos);
+        File current = currentEditor.getFile();
+
+        String text = current != null ?
+                EditorUtil.getUniqueTabTitle(current, files)
+                : "Unknown";
+        if (currentEditor.isModified()) {
+            text = "*" + text;
+        }
+
+        tab.setText(text);
+    }
 
   private String getUniqueTabTitle(@NonNull File currentFile) {
     if (!pref.getBoolean(SharedPreferenceKeys.EDITOR_TAB_UNIQUE_FILE_NAME, true)) {
@@ -256,7 +286,34 @@ public class EditorContainerFragment extends Fragment
               if (mBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                 mMainViewModel.setBottomSheetState(BottomSheetBehavior.STATE_COLLAPSED);
               }
-            });
+              FileEditor currentFileEditor = mMainViewModel.getCurrentFileEditor();
+              if (position == -1 || currentFileEditor == null) {
+                return;
+              }
+              try {
+                File file = currentFileEditor.getFile();
+                FileObject fileObject = VFS.getManager().toFileObject(file);
+                Content content = FileDocumentManager.getInstance().getContent(fileObject);
+
+                if (content != null) {
+                    Listeners.registerListener(new ContentListener() {
+                        @Override
+                        public void contentChanged(@NonNull ContentEvent event) {
+                           updateTabs();
+                        }
+                    }, getViewLifecycleOwner(), content::addContentListener, content::removeContentListener);
+                 }
+              } catch (FileSystemException e) {
+                // safe to ignore here, just don't register the listener then
+              }
+           });
+      EventManagerUtilsKt.subscribeEvent(
+                ApplicationLoader.getInstance().getEventManager(),
+                getViewLifecycleOwner(),
+                SaveEvent.class,
+                (event, unsubscribe) -> updateTabs()
+        );      
+            
     mMainViewModel
         .getBottomSheetState()
         .observe(

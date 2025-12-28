@@ -192,8 +192,8 @@ data class KotlinEnvironment(
         currentItemCount = 0
         var list: List<CompletionItem>
         val originalFile = file.kotlinFile
-       // CoroutineScope(Dispatchers.IO).launch {
-        //    analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
+      //  CoroutineScope(Dispatchers.IO).launch {
+      //      analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
       //  }
 
         with(file.insert(COMPLETION_SUFFIX, line, character)) {
@@ -565,7 +565,7 @@ data class KotlinEnvironment(
                             }
 
                             val languageVersion =
-                                LanguageVersion.fromVersionString("2.3")!!
+                                LanguageVersion.fromVersionString("2.1")!!
                             val languageVersionSettings = LanguageVersionSettingsImpl(
                                 languageVersion,
                                 ApiVersion.createByLanguageVersion(languageVersion),

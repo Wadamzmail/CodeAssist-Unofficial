@@ -10,6 +10,7 @@ import com.tyron.fileeditor.api.FileEditor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import androidx.recyclerview.widget.ListUpdateCallback;
 
 public class PageAdapter extends FragmentStateAdapter {
 
@@ -18,6 +19,33 @@ public class PageAdapter extends FragmentStateAdapter {
   public PageAdapter(FragmentManager fm, Lifecycle lifecycle) {
     super(fm, lifecycle);
   }
+  
+  public static void getDiff(List<FileEditor> oldFiles, List<FileEditor> newFiles, ListUpdateCallback callback) {
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldFiles.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newFiles.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return Objects.equals(oldFiles.get(oldItemPosition), newFiles.get(newItemPosition));
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return Objects.equals(oldFiles.get(oldItemPosition), newFiles.get(newItemPosition));
+            }
+        });
+        oldFiles.clear();
+        oldFiles.addAll(newFiles);
+        result.dispatchUpdatesTo(callback);
+    }
 
   public void submitList(List<FileEditor> files) {
     DiffUtil.DiffResult result =

@@ -11,6 +11,7 @@ import com.tyron.fileeditor.api.TextEditor;
 import java.io.File;
 import java.time.Instant;
 import java.util.Objects;
+import com.tyron.fileeditor.api.FileDocumentManager;
 
 public class RosemoeCodeEditor implements TextEditor {
 
@@ -39,6 +40,11 @@ public class RosemoeCodeEditor implements TextEditor {
     }
     return mFragment;
   }
+  
+  @Override 
+  public Content getContent(){
+     return getFragment().getEditor().getContent();
+  }   
 
   @Override
   public View getPreferredFocusedView() {
@@ -53,18 +59,8 @@ public class RosemoeCodeEditor implements TextEditor {
 
   @Override
   public boolean isModified() {
-    Project project = ProjectManager.getInstance().getCurrentProject();
-    if (project != null) {
-      Module module = project.getModule(mFile);
-      if (module != null) {
-        Instant diskModified = Instant.ofEpochMilli(mFile.lastModified());
-        Instant lastModified = module.getFileManager().getLastModified(mFile);
-        if (lastModified != null) {
-          return lastModified.isAfter(diskModified);
-        }
-      }
-    }
-    return false;
+    FileDocumentManager instance = FileDocumentManager.getInstance();
+        return instance.isContentUnsaved(getContent());
   }
 
   @Override

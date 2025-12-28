@@ -93,6 +93,13 @@ import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
+import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import java.lang.reflect.Field;
+import io.github.rosemoe.sora.event.EditorKeyEvent;
+import io.github.rosemoe.sora.event.Event;
+import io.github.rosemoe.sora.event.InterceptTarget;
+import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 
 // import com.tyron.editor.Content;
 
@@ -331,6 +338,7 @@ public class CodeEditorFragment extends Fragment
         ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));
     editor.getComponent(EditorAutoCompletion.class).setLayout(new CodeAssistCompletionLayout());
     editor.setLigatureEnabled(true);
+    editor.setDiagnostics(new DiagnosticsContainer());
     editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.openFile(mCurrentFile);
@@ -363,6 +371,31 @@ public class CodeEditorFragment extends Fragment
           }
           return false;
         });
+        
+      mEditor.subscribeEvent(EditorKeyEvent.class, (event, unsubscribe) -> {
+            CodeAssistCompletionWindow window =
+                    (CodeAssistCompletionWindow) mEditor.getComponent(EditorAutoCompletion.class);
+            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER ||
+                event.getKeyCode() == KeyEvent.KEYCODE_TAB) {
+                if (window.isShowing() && window.trySelect()) {
+                    event.setResult(true);
+
+                    // KeyEvent cannot be intercepted???
+                    // workaround
+                    Field mInterceptTargets =
+                            ReflectionUtil.getDeclaredField(Event.class, "mInterceptTargets");
+                    mInterceptTargets.setAccessible(true);
+                    try {
+                        mInterceptTargets.set(event, InterceptTarget.TARGET_EDITOR);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("REFLECTION FAILED");
+                    }
+
+                    mEditor.requestFocus();
+                }
+            }
+        }); 
+         
     mEditor.subscribeEvent(
         LongPressEvent.class,
         (event, unsubscribe) -> {

@@ -38,6 +38,8 @@ import io.github.rosemoe.sora.util.MyCharacter;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import java.io.File;
 import java.util.List;
+import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
+import com.tyron.code.event.EventManager;
 
 public class LanguageXML extends EmptyTextMateLanguage implements Language, CodeAssistLanguage {
 
@@ -206,6 +208,8 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
     if (mEditor.getProject() == null) {
       return;
     }
+    EventManager eventManager = mEditor.getProject().getEventManager();
+        eventManager.dispatchEvent(new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
     // AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
     //  try{ InjectResourcesTask.inject(mEditor.getProject());}catch(Exception e){}
     //  try{ InjectViewBindingTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}

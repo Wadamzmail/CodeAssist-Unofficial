@@ -102,6 +102,7 @@ public class LogAdapter extends RecyclerView.Adapter<LogAdapter.ViewHolder> {
           ResourcesCompat.getFont(layout.getContext(), R.font.jetbrains_mono_regular));
       textView.setMovementMethod(LinkMovementMethod.getInstance());
       textView.setTextIsSelectable(true);
+      textView.setTextSize(13);
       layout.addView(textView);
     }
 

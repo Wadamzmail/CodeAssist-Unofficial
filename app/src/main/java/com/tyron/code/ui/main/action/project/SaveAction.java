@@ -27,6 +27,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
+import com.tyron.code.ApplicationLoader;
+import com.tyron.fileeditor.api.FileDocumentManager;
+import com.tyron.fileeditor.api.FileEditor;
 
 public class SaveAction extends AnAction {
 
@@ -82,6 +85,7 @@ public class SaveAction extends AnAction {
                             .collect(Collectors.joining("\n\n")))
                     .show();
               }
+              doSave();    
             });
   }
 
@@ -109,5 +113,11 @@ public class SaveAction extends AnAction {
       }
     }
     return exceptions;
+  }
+  
+  public static void doSave() {
+        FileDocumentManager.getInstance().saveAllContents();
+        EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
+        eventManager.dispatchEvent(new SaveEvent());
   }
 }
