@@ -134,7 +134,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
               .setMinApiLevel(getModule().getMinSdk())
               .setMode(CompilationMode.RELEASE)
               .setIntermediate(true)
-              .setClassConflictResolver(new MyConflictResolver(getLogger()) 
+              .setClassConflictResolver(new MyConflictResolver(getLogger()))
               .setOutput(mOutputPath, OutputMode.DexFilePerClassFile)
               .build();
       D8.run(command);
@@ -177,7 +177,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
               .setMinApiLevel(getModule().getMinSdk())
               .setMode(CompilationMode.DEBUG)
               .setIntermediate(true)
-              .setClassConflictResolver(new MyConflictResolver(getLogger()) 
+              .setClassConflictResolver(new MyConflictResolver(getLogger()))
               .setOutput(mOutputPath, OutputMode.DexFilePerClassFile)
               .build();
       D8.run(command);
@@ -190,7 +190,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
           D8Command.builder(diagnosticsHandler)
               .addProgramFiles(getAllDexFiles(mOutputPath.toFile()))
               .addLibraryFiles(getLibraryFiles())
-              .setClassConflictResolver(new MyConflictResolver(getLogger()) 
+              .setClassConflictResolver(new MyConflictResolver(getLogger())) 
               .addClasspathFiles(
                   uniqueLibraryFiles.stream().map(File::toPath).collect(Collectors.toList()))
               .setMinApiLevel(getModule().getMinSdk());
@@ -233,7 +233,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
             .addProgramFiles(getLibraryDexes())
             .setMinApiLevel(getModule().getMinSdk())
             .setMode(CompilationMode.RELEASE)
-            .setClassConflictResolver(new MyConflictResolver(getLogger()) 
+            .setClassConflictResolver(new MyConflictResolver(getLogger())) 
             .setOutput(output.toPath(), OutputMode.DexIndexed)
             .build();
     D8.run(command);
@@ -323,7 +323,7 @@ public class IncrementalD8Task extends Task<AndroidModule> {
                   .addProgramFiles(lib.toPath())
                   .setMode(CompilationMode.RELEASE)
                   .setMinApiLevel(getModule().getMinSdk())
-                  .setClassConflictResolver(new MyConflictResolver(getLogger()) 
+                  .setClassConflictResolver(new MyConflictResolver(getLogger())) 
                   .setOutput(lib.getParentFile().toPath(), OutputMode.DexIndexed)
                   .build();
           D8.run(command);
