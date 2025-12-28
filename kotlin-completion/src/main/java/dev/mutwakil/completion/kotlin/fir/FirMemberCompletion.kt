@@ -1,4 +1,4 @@
-package dev.mutwakil.completion.kotlin.fir
+/*package dev.mutwakil.completion.kotlin.fir
 
 import com.tyron.kotlin.completion.KotlinFile
 import com.tyron.completion.model.CompletionItem
@@ -12,4 +12,4 @@ object FirMemberCompletion {
     ): List<CompletionItem>? {
         return null
     }
-}
+}*/

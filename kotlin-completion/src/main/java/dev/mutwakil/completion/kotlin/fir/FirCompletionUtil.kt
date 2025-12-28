@@ -1,4 +1,4 @@
-package dev.mutwakil.completion.kotlin.fir
+/*package dev.mutwakil.completion.kotlin.fir
 
 import com.tyron.kotlin.completion.KotlinFile
 
@@ -75,4 +75,4 @@ object FirCompletionUtil {
     }
     
     
-}
+}*/

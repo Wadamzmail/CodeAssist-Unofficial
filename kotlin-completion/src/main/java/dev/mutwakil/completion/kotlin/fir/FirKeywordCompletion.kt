@@ -1,4 +1,4 @@
-package dev.mutwakil.completion.kotlin.fir
+/*package dev.mutwakil.completion.kotlin.fir
 
 import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.model.DrawableKind
@@ -31,4 +31,4 @@ object FirKeywordCompletion {
                 } else null
             }
     }
-}
+}*/

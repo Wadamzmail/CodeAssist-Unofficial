@@ -1,4 +1,4 @@
-package dev.mutwakil.completion.kotlin.fir
+/*package dev.mutwakil.completion.kotlin.fir
 
 import com.tyron.kotlin.completion.KotlinFile
 import com.tyron.completion.model.CompletionItem
@@ -23,9 +23,7 @@ class FirKotlinEnvironment private constructor(
     private val importIndex: JarImportIndex
 ) {
 
-    /* ========================
-     * Completion entry point
-     * ======================== */
+
 
     fun complete(
         file: KotlinFile,
@@ -71,9 +69,7 @@ class FirKotlinEnvironment private constructor(
         return emptyList()
     }
 
-    /* ========================
-     * Factory + caching
-     * ======================== */
+
 
     companion object {
 
@@ -146,4 +142,4 @@ class FirKotlinEnvironment private constructor(
             return FirKotlinEnvironment(coreEnv, importIndex)
         }
     }
-}
+}*/
