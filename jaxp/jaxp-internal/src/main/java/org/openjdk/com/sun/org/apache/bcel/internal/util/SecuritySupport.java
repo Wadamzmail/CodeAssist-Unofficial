@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 // don't remove
+import java.lang.ClassLoader;
 
 /**
  * This class is duplicated for each subpackage so keep it in sync. It is package private and
