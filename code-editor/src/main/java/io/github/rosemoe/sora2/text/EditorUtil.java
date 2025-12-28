@@ -18,6 +18,7 @@ import io.github.rosemoe.sora.util.IntPair;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
 import org.eclipse.tm4e.core.internal.theme.raw.IRawThemeSetting;
 import org.eclipse.tm4e.core.internal.theme.raw.RawTheme;
