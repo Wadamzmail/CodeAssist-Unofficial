@@ -192,7 +192,7 @@ public class CodeEditorFragment extends Fragment
     if (module == null) return;
 
     if (language instanceof CodeAssistLanguage)
-      ((CodeAssistLanguage) language).onContentChange(currentFile, content);
+      ((CodeAssistLanguage) language).onContentChange(mCurrentFile, content);
 
     if (language instanceof KotlinLanguage) return;
     if (language instanceof LanguageXML) return;
@@ -202,7 +202,7 @@ public class CodeEditorFragment extends Fragment
 
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
-      List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, currentFile);
+      List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, mCurrentFile);
 
       mEditor.setDiagnostics(
           diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));

@@ -28,6 +28,7 @@ import java.util.List;
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
   public static final String TAG = "KotlinLanguage";
+  public static final String SCOPE_NAME = "source.kotlin";
   private final TextMateLanguage delegate;
   private final Editor editor;
   public boolean createIdentifiers = false;

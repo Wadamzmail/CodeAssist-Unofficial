@@ -1,5 +1,6 @@
 package com.tyron.code.language.kotlin;
 
+import android.util.Log;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.AndroidModule;
@@ -30,6 +31,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
   private final String TAG = "KotlinAnalyzer";
   private ArrayList<DiagnosticWrapper> diagnostics = new ArrayList<>();
   private KotlinEnvironment kotlinEnvironment;
+  private Editor editor;
 
   public static KotlinAnalyzer create(Editor editor, EmptyTextMateLanguage lang) {
     try {
@@ -52,6 +54,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
       ThemeRegistry theme)
       throws Exception {
     super(editor, lang, grammar, languageConfiguration, theme);
+    this.editor = editor;
   }
 
   @Override
@@ -93,6 +96,11 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
                                         });
                                 return kotlin.Unit.INSTANCE;
                               });
+                              
+                      var fileEntry = Objects.requireNonNull(getKotlinEnvironment()).kotlinFiles.get(editor.getCurrentFile().getAbsolutePath());
+                      if (fileEntry == null) return;
+                      var ktFile = fileEntry.getKotlinFile();      
+                              
                       Objects.requireNonNull(getKotlinEnvironment())
                           .analysisOf(
                               Objects.requireNonNull(getKotlinEnvironment())
@@ -110,6 +118,7 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
                       Objects.requireNonNull(getKotlinEnvironment()).analysis = null;
                       ProgressManager.getInstance()
                           .runLater(() -> mEditor.setAnalyzing(false), 300);
+                      Log.e(TAG, "Analysis failed", e);    
                     }
                   },
                   900);
@@ -124,7 +133,6 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
         Module currentModule =
             ProjectManager.getInstance()
                 .getCurrentProject()
-                .project
                 .getModule(editor.getCurrentFile());
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
       } catch (Exception e) {
