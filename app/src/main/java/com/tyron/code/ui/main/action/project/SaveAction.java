@@ -30,6 +30,7 @@ import org.apache.commons.io.FileUtils;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.fileeditor.api.FileDocumentManager;
 import com.tyron.fileeditor.api.FileEditor;
+import com.tyron.code.event.EventManager;
 
 public class SaveAction extends AnAction {
 

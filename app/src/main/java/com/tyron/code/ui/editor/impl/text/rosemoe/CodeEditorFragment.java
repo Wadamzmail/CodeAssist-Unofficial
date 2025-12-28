@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -204,7 +205,6 @@ public class CodeEditorFragment extends Fragment
     if (language instanceof KotlinLanguage) return;
     if (language instanceof LanguageXML) return;
 
-    Objects.requireNonNull(mEditor.getDiagnostics()).reset();
     mEditor.getDiagnosticsList().clear();
 
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);

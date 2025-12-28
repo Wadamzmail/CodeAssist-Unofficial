@@ -12,6 +12,7 @@ import java.io.File;
 import java.time.Instant;
 import java.util.Objects;
 import com.tyron.fileeditor.api.FileDocumentManager;
+import com.tyron.editor.Content;
 
 public class RosemoeCodeEditor implements TextEditor {
 
@@ -43,7 +44,7 @@ public class RosemoeCodeEditor implements TextEditor {
   
   @Override 
   public Content getContent(){
-     return getFragment().getEditor().getContent();
+     return ((CodeEditorFragment)getFragment()).getEditor().getContent();
   }   
 
   @Override
