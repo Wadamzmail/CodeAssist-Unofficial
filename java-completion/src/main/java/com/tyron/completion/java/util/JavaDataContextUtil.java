@@ -7,13 +7,19 @@ import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.DataContext;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
+import com.tyron.builder.project.api.JavaModule;
+import com.tyron.builder.project.api.Module;
 import com.tyron.common.SharedPreferenceKeys;
+import com.tyron.completion.index.CompilerService;
+import com.tyron.completion.java.JavaCompilerProvider;
+import com.tyron.completion.java.action.CommonJavaContextKeys;
 import com.tyron.completion.java.compiler.services.NBLog;
 import com.tyron.completion.java.parse.CompilationInfo;
 import java.io.File;
 import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+// added remote codes
 
 public class JavaDataContextUtil {
 
@@ -36,6 +42,13 @@ public class JavaDataContextUtil {
           }
         }
       }
+      // added removed codes
+      Module currentModule = project.getModule(file);
+      if (!(currentModule instanceof JavaModule)) return;
+      JavaCompilerProvider service =
+          CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
+      JavaCompilerService compiler = service.getCompiler(project, (JavaModule) currentModule);
+      context.putData(CommonJavaContextKeys.COMPILER, compiler);
     }
   }
 }

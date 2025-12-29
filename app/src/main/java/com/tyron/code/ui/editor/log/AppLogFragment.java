@@ -56,10 +56,9 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
   public View onCreateView(
       @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     FrameLayout mRoot = new FrameLayout(requireContext());
-    
-    if (id == LogViewModel.BUILD_LOG) {
-    
-     }
+
+    if (id == LogViewModel.BUILD_LOG) {}
+
     mAdapter = new LogAdapter();
     mAdapter.setListener(
         diagnostic -> {
@@ -109,12 +108,13 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
   private void process(List<DiagnosticWrapper> texts) {
     mAdapter.submitList(texts);
 
-    mRecyclerView.post(() -> {
-        int last = mAdapter.getItemCount() - 1;
-        if (last >= 0) {
+    mRecyclerView.post(
+        () -> {
+          int last = mAdapter.getItemCount() - 1;
+          if (last >= 0) {
             mRecyclerView.scrollToPosition(last);
-        }
-    });
+          }
+        });
   }
 
   @Override

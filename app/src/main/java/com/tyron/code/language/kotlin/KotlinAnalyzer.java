@@ -8,7 +8,6 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
-import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.completion.progress.ProgressManager;
@@ -18,7 +17,6 @@ import dev.mutwakil.completion.kotlin.util.KotlinSeverityMapper;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import java.util.ArrayList;
-import java.util.Objects;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
@@ -71,18 +69,17 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
         if (ApplicationLoader.getDefaultPreferences()
             .getBoolean(SharedPreferenceKeys.KOTLIN_HIGHLIGHTING, true)) {
-            diagnostics.clear(); 
+          diagnostics.clear();
           ProgressManager.getInstance()
               .runLater(
                   () -> {
                     try {
-                      mEditor.setAnalyzing(true);                           
-                      doAnalysis();          
+                      mEditor.setAnalyzing(true);
+                      doAnalysis();
                     } catch (Exception e) {
-                      Log.e(TAG, "Analysis failed", e);    
+                      Log.e(TAG, "Analysis failed", e);
                     }
-                    ProgressManager.getInstance()
-                          .runLater(() -> mEditor.setAnalyzing(false), 300);
+                    ProgressManager.getInstance().runLater(() -> mEditor.setAnalyzing(false), 300);
                   },
                   900);
         }
@@ -92,24 +89,21 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
   private void doAnalysis() {
     if (kotlinEnvironment == null) {
-        Module currentModule =
-            ProjectManager.getInstance()
-                .getCurrentProject()
-                .getModule(editor.getCurrentFile());
-        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-        kotlinEnvironment.addIssueListener(
-                              issue -> {
-                                DiagnosticWrapper wrapper = new DiagnosticWrapper();
-                                wrapper.setStartPosition(issue.getStartOffset());
-                                wrapper.setEndPosition(issue.getEndOffset());
-                                wrapper.setMessage(issue.getMessage());
-                                wrapper.setKind(KotlinSeverityMapper.toKind(issue.getSeverity()));
-                                if (wrapper.getKind() == null) return kotlin.Unit.INSTANCE;
-                                diagnostics.add(wrapper);
-                                editor.setDiagnostics(diagnostics);                            
-                                return kotlin.Unit.INSTANCE;
-                              });
+      Module currentModule =
+          ProjectManager.getInstance().getCurrentProject().getModule(editor.getCurrentFile());
+      kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+      kotlinEnvironment.addIssueListener(
+          issue -> {
+            DiagnosticWrapper wrapper = new DiagnosticWrapper();
+            wrapper.setStartPosition(issue.getStartOffset());
+            wrapper.setEndPosition(issue.getEndOffset());
+            wrapper.setMessage(issue.getMessage());
+            wrapper.setKind(KotlinSeverityMapper.toKind(issue.getSeverity()));
+            if (wrapper.getKind() == null) return kotlin.Unit.INSTANCE;
+            diagnostics.add(wrapper);
+            editor.setDiagnostics(diagnostics);
+            return kotlin.Unit.INSTANCE;
+          });
     }
-   
   }
 }

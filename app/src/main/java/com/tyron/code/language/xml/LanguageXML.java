@@ -12,10 +12,12 @@ import com.tyron.builder.project.api.Module;
 // import com.tyron.completion.model.CompletionItem;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.BaseTextmateAnalyzer;
+import com.tyron.code.event.EventManager;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 // new
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.completion.xml.lexer.XMLLexer;
+import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
 import com.tyron.editor.Editor;
 import com.tyron.language.api.CodeAssistLanguage;
 import io.github.rosemoe.sora.lang.Language;
@@ -38,8 +40,6 @@ import io.github.rosemoe.sora.util.MyCharacter;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import java.io.File;
 import java.util.List;
-import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
-import com.tyron.code.event.EventManager;
 
 public class LanguageXML extends EmptyTextMateLanguage implements Language, CodeAssistLanguage {
 
@@ -209,7 +209,8 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
       return;
     }
     EventManager eventManager = mEditor.getProject().getEventManager();
-        eventManager.dispatchEvent(new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
+    eventManager.dispatchEvent(
+        new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
     // AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
     //  try{ InjectResourcesTask.inject(mEditor.getProject());}catch(Exception e){}
     //  try{ InjectViewBindingTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}

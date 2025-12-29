@@ -6,6 +6,7 @@ import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableGraph;
 import com.tyron.builder.model.ProjectSettings;
+import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.impl.AndroidModuleImpl;
 import com.tyron.builder.project.mock.MockAndroidModule;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import com.tyron.builder.project.api.ContentRoot;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Project {
@@ -131,9 +131,9 @@ public class Project {
     return mSettings;
   }
 
- // public Module getModule(File file) {
- //   return getMainModule();
- // }
+  // public Module getModule(File file) {
+  //   return getMainModule();
+  // }
 
   public List<Module> getDependencies(Module module) {
     return ImmutableList.copyOf(mModules.values()).reverse();
@@ -145,17 +145,17 @@ public class Project {
 
   private void addEdges(MutableGraph<Module> graph, Module module) throws IOException {}
 
-   public Module getModule(File file) {
-      for (Module value : mModules.values()) {
-          for (ContentRoot contentRoot : value.getContentRoots()) {
-              for (File sourceDirectory : contentRoot.getSourceDirectories()) {
-                  if (directoryContainsFile(sourceDirectory, file)) {
-                      return value;
-                  }
-              }
+  public Module getModule(File file) {
+    for (Module value : mModules.values()) {
+      for (ContentRoot contentRoot : value.getContentRoots()) {
+        for (File sourceDirectory : contentRoot.getSourceDirectories()) {
+          if (directoryContainsFile(sourceDirectory, file)) {
+            return value;
           }
+        }
       }
-      return getMainModule();
+    }
+    return getMainModule();
   }
 
   public Module getModuleByName(String name) {

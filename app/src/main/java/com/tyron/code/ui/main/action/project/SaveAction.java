@@ -11,10 +11,13 @@ import com.tyron.actions.Presentation;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.FileManager;
 import com.tyron.builder.project.api.Module;
+import com.tyron.code.ApplicationLoader;
+import com.tyron.code.event.EventManager;
 import com.tyron.code.ui.editor.Savable;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;
 import com.tyron.completion.progress.ProgressManager;
+import com.tyron.fileeditor.api.FileDocumentManager;
 import com.tyron.fileeditor.api.FileEditor;
 import dev.mutwakil.codeassist.R;
 import java.io.File;
@@ -27,10 +30,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
-import com.tyron.code.ApplicationLoader;
-import com.tyron.fileeditor.api.FileDocumentManager;
-import com.tyron.fileeditor.api.FileEditor;
-import com.tyron.code.event.EventManager;
 
 public class SaveAction extends AnAction {
 
@@ -86,7 +85,7 @@ public class SaveAction extends AnAction {
                             .collect(Collectors.joining("\n\n")))
                     .show();
               }
-              doSave();    
+              doSave();
             });
   }
 
@@ -115,10 +114,10 @@ public class SaveAction extends AnAction {
     }
     return exceptions;
   }
-  
+
   public static void doSave() {
-        FileDocumentManager.getInstance().saveAllContents();
-        EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
-        eventManager.dispatchEvent(new SaveEvent());
+    FileDocumentManager.getInstance().saveAllContents();
+    EventManager eventManager = ApplicationLoader.getInstance().getEventManager();
+    eventManager.dispatchEvent(new SaveEvent());
   }
 }

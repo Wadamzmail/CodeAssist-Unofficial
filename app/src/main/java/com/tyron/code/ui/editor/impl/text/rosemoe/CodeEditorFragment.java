@@ -7,8 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +44,7 @@ import com.tyron.code.language.kotlin.KotlinLanguage;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.language.xml.LanguageXML;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
+import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.Savable;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
@@ -69,8 +70,12 @@ import com.tyron.language.api.CodeAssistLanguage;
 import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.event.ClickEvent;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
+import io.github.rosemoe.sora.event.EditorKeyEvent;
+import io.github.rosemoe.sora.event.Event;
+import io.github.rosemoe.sora.event.InterceptTarget;
 import io.github.rosemoe.sora.event.LongPressEvent;
 import io.github.rosemoe.sora.lang.Language;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.Cursor;
@@ -80,9 +85,9 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.Executors;
@@ -94,13 +99,7 @@ import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import java.lang.reflect.Field;
-import io.github.rosemoe.sora.event.EditorKeyEvent;
-import io.github.rosemoe.sora.event.Event;
-import io.github.rosemoe.sora.event.InterceptTarget;
-import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 
 // import com.tyron.editor.Content;
 
@@ -208,7 +207,7 @@ public class CodeEditorFragment extends Fragment
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, mCurrentFile);
-      
+
       mEditor.setDiagnostics(
           diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
     }
@@ -272,11 +271,13 @@ public class CodeEditorFragment extends Fragment
       if (scheme != null) {
         mEditor.setColorScheme(scheme);
         mEditor.openFile(mCurrentFile);
-        ProgressManager.getInstance().runLater(() ->{
-        initializeLanguage();
-        readOrWait();
-        },200);
-        
+        ProgressManager.getInstance()
+            .runLater(
+                () -> {
+                  initializeLanguage();
+                  readOrWait();
+                },
+                200);
       }
     } else {
       ListenableFuture<TextMateColorScheme> scheme = getScheme(schemeValue);
@@ -292,10 +293,13 @@ public class CodeEditorFragment extends Fragment
               ThemeRepository.putColorScheme(schemeValue, result);
               mEditor.setColorScheme(result);
               mEditor.openFile(mCurrentFile);
-              ProgressManager.getInstance().runLater(() ->{
-              initializeLanguage();
-              readOrWait();
-              },200);
+              ProgressManager.getInstance()
+                  .runLater(
+                      () -> {
+                        initializeLanguage();
+                        readOrWait();
+                      },
+                      200);
             }
 
             @Override
@@ -314,10 +318,13 @@ public class CodeEditorFragment extends Fragment
               }
               mEditor.setColorScheme(scheme);
               mEditor.openFile(mCurrentFile);
-              ProgressManager.getInstance().runLater(() ->{
-              initializeLanguage();
-              readOrWait();
-              },200);
+              ProgressManager.getInstance()
+                  .runLater(
+                      () -> {
+                        initializeLanguage();
+                        readOrWait();
+                      },
+                      200);
             }
           },
           ContextCompat.getMainExecutor(requireContext()));
@@ -375,34 +382,34 @@ public class CodeEditorFragment extends Fragment
           }
           return false;
         });
-        
-      mEditor.subscribeEvent(EditorKeyEvent.class, (event, unsubscribe) -> {
-            CodeAssistCompletionWindow window =
-                    (CodeAssistCompletionWindow) mEditor.getComponent(EditorAutoCompletion.class);
-            if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER ||
-                event.getKeyCode() == KeyEvent.KEYCODE_TAB) {
-                if (window.isShowing() && window.trySelect()) {
-                    event.setResult(true);
 
-                    // KeyEvent cannot be intercepted???
-                    // workaround
-                    Field mInterceptTargets =
-                            ReflectionUtil.findFieldInHierarchy(
-                               Event.class,
-                               field -> "mInterceptTargets".equals(field.getName())
-                    );    
-                    mInterceptTargets.setAccessible(true);
-                    try {
-                        mInterceptTargets.set(event, InterceptTarget.TARGET_EDITOR);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException("REFLECTION FAILED");
-                    }
+    mEditor.subscribeEvent(
+        EditorKeyEvent.class,
+        (event, unsubscribe) -> {
+          CodeAssistCompletionWindow window =
+              (CodeAssistCompletionWindow) mEditor.getComponent(EditorAutoCompletion.class);
+          if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+              || event.getKeyCode() == KeyEvent.KEYCODE_TAB) {
+            if (window.isShowing() && window.trySelect()) {
+              event.setResult(true);
 
-                    mEditor.requestFocus();
-                }
+              // KeyEvent cannot be intercepted???
+              // workaround
+              Field mInterceptTargets =
+                  ReflectionUtil.findFieldInHierarchy(
+                      Event.class, field -> "mInterceptTargets".equals(field.getName()));
+              mInterceptTargets.setAccessible(true);
+              try {
+                mInterceptTargets.set(event, InterceptTarget.TARGET_EDITOR);
+              } catch (IllegalAccessException e) {
+                throw new RuntimeException("REFLECTION FAILED");
+              }
+
+              mEditor.requestFocus();
             }
-        }); 
-         
+          }
+        });
+
     mEditor.subscribeEvent(
         LongPressEvent.class,
         (event, unsubscribe) -> {
@@ -438,22 +445,22 @@ public class CodeEditorFragment extends Fragment
     mEditor.subscribeEvent(
         ClickEvent.class,
         (event, unsubscribe) -> {
-        try{
-          Cursor cursor = mEditor.getCursor();
-          if (mEditor.getCursor().isSelected()) {
-            int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
-            int cursorLeft = cursor.getLeft();
-            int cursorRight = cursor.getRight();
-            if (!EditorUtil.isWhitespace(mEditor.getText().charAt(index) + "")
-                && index >= cursorLeft
-                && index <= cursorRight) {
-              mEditor.showSoftInput();
-              event.intercept();
+          try {
+            Cursor cursor = mEditor.getCursor();
+            if (mEditor.getCursor().isSelected()) {
+              int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
+              int cursorLeft = cursor.getLeft();
+              int cursorRight = cursor.getRight();
+              if (!EditorUtil.isWhitespace(mEditor.getText().charAt(index) + "")
+                  && index >= cursorLeft
+                  && index <= cursorRight) {
+                mEditor.showSoftInput();
+                event.intercept();
+              }
             }
+          } catch (Exception e) {
+            LOG.severe("Error ClickEvent" + ": " + e);
           }
-        }catch(Exception e){
-        LOG.severe("Error ClickEvent"+": "+e);
-        }
         });
     mEditor.subscribeEvent(
         ContentChangeEvent.class,

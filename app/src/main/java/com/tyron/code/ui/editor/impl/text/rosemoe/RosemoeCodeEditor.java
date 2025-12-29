@@ -7,12 +7,11 @@ import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.Module;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.project.ProjectManager;
+import com.tyron.editor.Content;
 import com.tyron.fileeditor.api.TextEditor;
 import java.io.File;
 import java.time.Instant;
 import java.util.Objects;
-import com.tyron.fileeditor.api.FileDocumentManager;
-import com.tyron.editor.Content;
 
 public class RosemoeCodeEditor implements TextEditor {
 
@@ -41,11 +40,11 @@ public class RosemoeCodeEditor implements TextEditor {
     }
     return mFragment;
   }
-  
-  @Override 
-  public Content getContent(){
-     return ((CodeEditorFragment)getFragment()).getEditor().getContent();
-  }   
+
+  @Override
+  public Content getContent() {
+    return ((CodeEditorFragment) getFragment()).getEditor().getContent();
+  }
 
   @Override
   public View getPreferredFocusedView() {
