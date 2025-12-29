@@ -215,13 +215,15 @@ data class KotlinEnvironment(
                     .mapNotNull { descriptor ->
                         completionVariantFor(prefix, descriptor)
                     }
-            //    if (items.size > 50) items.subList(0, 50) else items +
+              //  if (items.size > 50) items.subList(0, 50) else items +
                 //        keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
                  if (items.size > 50) 
-                     items.subList(0, 50) +
+                    items.subList(0, 50) +
                      keywordsCompletionVariants(KtTokens.KEYWORDS, prefix) 
-                 else items +
+                     + keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
+                else items +
                      keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                     + keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
                 
             }
                 ?: emptyList()
@@ -525,8 +527,7 @@ data class KotlinEnvironment(
                 "kotlin.coroutines.intrinsics",
                 "kotlin.coroutines.experimental.jvm.internal",
                 "kotlin.coroutines.jvm.internal",
-                "kotlin.reflect.jvm.internal",
-                "META-INF"
+                "kotlin.reflect.jvm.internal"
             )
 
         fun with(classpath: List<File>): KotlinEnvironment {

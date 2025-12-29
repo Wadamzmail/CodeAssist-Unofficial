@@ -178,7 +178,7 @@ public class ProjectManager {
       logger.warning("Failed to open project: " + exception.getMessage());
       shouldReturn = true;
     }
-  //  mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
+    mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
 
     if (shouldReturn) {
       mListener.onComplete(project, false, "Failed to open project.");
@@ -341,7 +341,7 @@ public class ProjectManager {
         }
     }
 
-    mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
+   // mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
     mCurrentProject.setIndexing(false);
     mListener.onComplete(project, true, "Index successful");
 
