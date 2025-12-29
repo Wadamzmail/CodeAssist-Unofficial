@@ -164,7 +164,7 @@ data class KotlinEnvironment(
             kotlinFiles[file.name] = this
 
             elementAt(line, character)?.let { element ->
-                val descriptorInfo = descriptorsFrom(element)
+                val descriptorInfo = descriptorsFrom(element,file)
                 val prefix = getPrefix(element)
                 descriptorInfo.descriptors.toMutableList().apply {
                     sortWith { a, b ->
@@ -239,9 +239,9 @@ data class KotlinEnvironment(
             }
         }
 
-    private fun descriptorsFrom(element: PsiElement): DescriptorInfo {
+    private fun descriptorsFrom(element: PsiElement,file: KotlinFile): DescriptorInfo {
         val files = kotlinFiles.values.map { it.kotlinFile }.toList()
-        val analysis = analysisOf(files)
+        val analysis = analysisOf(files,file)
         return with(analysis) {
             (referenceVariantsFrom(element)
                 ?: referenceVariantsFrom(element.parent))?.let { descriptors ->
@@ -282,7 +282,7 @@ data class KotlinEnvironment(
         }
     }
 
-      fun analysisOf(files: List<KtFile>): Analysis {
+      fun analysisOf(files: List<KtFile>, current: KtFile): Analysis {
         val trace = CliBindingTrace(kotlinEnvironment.project)
         val project = files.first().project
         val componentProvider = TopDownAnalyzerFacadeForJVM.createContainer(
@@ -311,7 +311,7 @@ data class KotlinEnvironment(
                 )
             val moduleDescriptor = componentProvider.getService(ModuleDescriptor::class.java)
             AnalysisHandlerExtension.getInstances(project)
-                .find { it.analysisCompleted(project, moduleDescriptor, trace, files) != null }
+                .find { it.analysisCompleted(project, moduleDescriptor, trace, listOf(current)) != null }
             return@logTime Analysis(
                 componentProvider,
                 AnalysisResult.success(trace.bindingContext, moduleDescriptor)
