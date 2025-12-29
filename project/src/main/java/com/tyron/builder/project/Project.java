@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import com.tyron.builder.project.api.ContentRoot;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Project {
@@ -48,7 +49,7 @@ public class Project {
     mModules = new LinkedHashMap<>();
     eventManager = new EventManager();
     mMainModule = new AndroidModuleImpl(new File(mRoot, mName));
-    mMainModule.setProject(this);
+    addModule(mMainModule);
     File codeassist = new File(root, ".idea");
     if (!codeassist.exists()) {
       if (!codeassist.mkdirs()) {}
@@ -130,9 +131,9 @@ public class Project {
     return mSettings;
   }
 
-  public Module getModule(File file) {
-    return getMainModule();
-  }
+ // public Module getModule(File file) {
+ //   return getMainModule();
+ // }
 
   public List<Module> getDependencies(Module module) {
     return ImmutableList.copyOf(mModules.values()).reverse();
@@ -144,7 +145,7 @@ public class Project {
 
   private void addEdges(MutableGraph<Module> graph, Module module) throws IOException {}
 
-  /* public Module getModule(File file) {
+   public Module getModule(File file) {
       for (Module value : mModules.values()) {
           for (ContentRoot contentRoot : value.getContentRoots()) {
               for (File sourceDirectory : contentRoot.getSourceDirectories()) {
@@ -155,7 +156,7 @@ public class Project {
           }
       }
       return getMainModule();
-  }*/
+  }
 
   public Module getModuleByName(String name) {
     return mModules.get(name);

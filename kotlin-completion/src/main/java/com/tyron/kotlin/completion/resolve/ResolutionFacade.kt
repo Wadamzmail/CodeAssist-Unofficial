@@ -1,34 +1,11 @@
-/*
- * This file is part of Cosmic IDE.
- * Cosmic IDE is a free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * Cosmic IDE is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with Cosmic IDE. If not, see <https://www.gnu.org/licenses/>.
- */
-
-/*
- *  This file is part of CodeAssist.
- *
- *  CodeAssist is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  CodeAssist is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *   along with CodeAssist.  If not, see <https://www.gnu.org/licenses/>.
- */
 package com.tyron.kotlin.completion.resolve
 
-import org.jetbrains.kotlin.com.intellij.openapi.project.Project
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import com.tyron.kotlin.completion.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.analyzer.ModuleInfo
 import org.jetbrains.kotlin.analyzer.ResolverForProject
+import org.jetbrains.kotlin.com.intellij.openapi.project.Project
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.idea.FrontendInternals
@@ -39,19 +16,12 @@ import org.jetbrains.kotlin.resolve.BindingContext
 interface ResolutionFacade {
     val project: Project
 
-    fun analyze(
-        element: KtElement,
-        bodyResolveMode: BodyResolveMode = BodyResolveMode.FULL
-    ): BindingContext
-
+    fun analyze(element: KtElement, bodyResolveMode: BodyResolveMode = BodyResolveMode.FULL): BindingContext
     fun analyze(elements: Collection<KtElement>, bodyResolveMode: BodyResolveMode): BindingContext
 
     fun analyzeWithAllCompilerChecks(elements: Collection<KtElement>): AnalysisResult
 
-    fun resolveToDescriptor(
-        declaration: KtDeclaration,
-        bodyResolveMode: BodyResolveMode = BodyResolveMode.FULL
-    ): DeclarationDescriptor
+    fun resolveToDescriptor(declaration: KtDeclaration, bodyResolveMode: BodyResolveMode = BodyResolveMode.FULL): DeclarationDescriptor
 
     val moduleDescriptor: ModuleDescriptor
 
@@ -75,5 +45,6 @@ interface ResolutionFacade {
 }
 
 @FrontendInternals
-inline fun <reified T : Any> ResolutionFacade.frontendService(): T =
-    this.getFrontendService(T::class.java)
+inline fun <reified T : Any> ResolutionFacade.frontendService(): T = this.getFrontendService(T::class.java)
+
+inline fun <reified T : Any> ResolutionFacade.ideService(): T = this.getIdeService(T::class.java)

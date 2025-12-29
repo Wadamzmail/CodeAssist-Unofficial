@@ -17,10 +17,8 @@ import com.tyron.editor.Editor;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
 
-
 import java.io.File;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import io.github.rosemoe.sora.lang.Language;
@@ -51,12 +49,11 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.common.SharedPreferenceKeys;
-import com.tyron.builder.model.DiagnosticWrapper;
-import dev.mutwakil.completion.kotlin.util.KotlinSeverityMapper;
 //test
 import android.widget.Toast;
 import com.tyron.code.MainActivity;
 import android.util.Log;
+
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
@@ -72,7 +69,6 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final DiagnosticsContainer container = new DiagnosticsContainer();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
-    private final List<DiagnosticWrapper> diagnostics = new ArrayList<>();
      
     
     private final Formatter formatter = new AsyncFormatter() {
@@ -112,7 +108,13 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     public KotlinLanguage(Editor editor) {
         this.editor = editor;
         delegate = LanguageManager.createTextMateLanguage(SCOPE_NAME);
-        safeEnv(()->{});
+        
+        Project project = ProjectManager.getInstance().getCurrentProject();
+        Module currentModule = project.getModule(editor.getCurrentFile());
+        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        if(isHighlightEnabled()){
+        initAnalysis();
+        }
     }
     
     private boolean isHighlightEnabled(){
@@ -140,37 +142,19 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
            
-            //diagnostics.clear();            
+            container.reset();                
             List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
             if (itemsList==null)return;
-           // Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(diagnostics));
+            Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
             itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
        }catch(Exception e){
-         
+           // kotlinEnvironment.analysis = null;
+           // Log.e(TAG,"Completion Canceled",e);
+             //ignore it 
+            throw new CompletionCancelledException(e.toString());
        }
-     //  safeEnv(()->kotlinEnvironment.analysis = null);
+     //  kotlinEnvironment.analysis = null;
 
-  }
-  
-  void safeEnv(Runnable runnable){
-    if(kotlinEnvironment == null){
-     Project project = ProjectManager.getInstance().getCurrentProject();
-     if(project==null)return;
-     Module currentModule = project.getModule(editor.getCurrentFile());
-     if(currentModule==null)return;
-     kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-     if(kotlinEnvironment==null)return;
-     if(runnable!=null)runnable.run();
-     if(isHighlightEnabled()){
-        if(!isAnalysis())initAnalysis();
-     }
-     }else{
-     if(runnable!=null)runnable.run();
-     }
-  }
-  
-  boolean isAnalysis(){
-    return analysisThread != null && analysisThread.isAlive();
   }
 
     @Override
@@ -207,7 +191,7 @@ public void destroy() {
 }
 
 private void destroyAnalysis(){
-      analysisRunning = false; 
+       analysisRunning = false; 
    if (analysisThread != null && analysisThread.isAlive()) {
         analysisThread.interrupt();  
         try {
@@ -223,20 +207,31 @@ private void destroyAnalysis(){
             if (!analysisRunning) return kotlin.Unit.INSTANCE;
             if (editor==null) return kotlin.Unit.INSTANCE;
             if (!isHighlightEnabled()) return kotlin.Unit.INSTANCE;
-            
-           DiagnosticWrapper wrapper = new DiagnosticWrapper();
-           wrapper.setStartPosition(issue.getStartOffset());
-           wrapper.setEndPosition(issue.getEndOffset());
-           wrapper.setMessage(issue.getMessage());
-           wrapper.setKind(
-               KotlinSeverityMapper.toKind(issue.getSeverity()));
-           if (wrapper.getKind()==null) return kotlin.Unit.INSTANCE;
-           diagnostics.add(wrapper);
+
+            short severity;
+            CompilerMessageSeverity s = issue.getSeverity();
+
+            if (s == CompilerMessageSeverity.ERROR) {
+                severity = DiagnosticRegion.SEVERITY_ERROR;
+            } else if (s == CompilerMessageSeverity.WARNING
+                    || s == CompilerMessageSeverity.STRONG_WARNING) {
+                severity = DiagnosticRegion.SEVERITY_WARNING;
+            } else {
+                return kotlin.Unit.INSTANCE;
+            }
             
            if (!analysisRunning) return kotlin.Unit.INSTANCE;
 
             Objects.requireNonNull((CodeEditorView) editor).post(() -> {
-               editor.setDiagnostics(diagnostics);
+                container.addDiagnostic(
+                        new DiagnosticRegion(
+                                issue.getStartOffset(),
+                                issue.getEndOffset(),
+                                severity, 
+                                0,
+                                new DiagnosticDetail("Info",issue.getMessage(),null,null)
+                        )
+                );
             });
             return kotlin.Unit.INSTANCE;
         });
@@ -254,7 +249,7 @@ private void destroyAnalysis(){
         try {
             if (!analysisRunning) return;
 
-            kotlinEnvironment.analysisOf(
+             kotlinEnvironment.analysisOf(
                     kotlinEnvironment.kotlinFiles.values().stream()
                             .map(it -> it.getKotlinFile())
                             .toList(),
@@ -264,12 +259,13 @@ private void destroyAnalysis(){
             if (!analysisRunning) return;
 
             Objects.requireNonNull((CodeEditorView) editor)
-                    .post(() -> ((CodeEditorView) editor).setDiagnostics(diagnostics));
+                    .post(() -> ((CodeEditorView) editor).setDiagnostics(container));
 
         } catch (Throwable e) {
             if (!(e instanceof InterruptedException)
                     && !(e instanceof ProcessCanceledException)) {
-                 Log.e(TAG, "Failed to analyze file", e);
+              //   Log.e(TAG, "Failed to analyze file", e);
+              // ignore it 
             }
         }
     });

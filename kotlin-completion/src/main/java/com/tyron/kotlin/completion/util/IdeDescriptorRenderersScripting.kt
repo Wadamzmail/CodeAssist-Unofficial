@@ -1,10 +1,6 @@
 package com.tyron.kotlin.completion.util
 
-import org.jetbrains.kotlin.renderer.AnnotationArgumentsRenderingPolicy
-import org.jetbrains.kotlin.renderer.ClassifierNamePolicy
-import org.jetbrains.kotlin.renderer.DescriptorRenderer
-import org.jetbrains.kotlin.renderer.DescriptorRendererModifier
-import org.jetbrains.kotlin.renderer.OverrideRenderingPolicy
+import org.jetbrains.kotlin.renderer.*
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.checker.NewCapturedTypeConstructor
 import org.jetbrains.kotlin.types.isDynamic
@@ -13,8 +9,7 @@ import org.jetbrains.kotlin.types.typeUtil.builtIns
 // Copy-pasted from IdeDescriptorRenderers in intellij-community
 object IdeDescriptorRenderersScripting {
     @JvmField
-    val APPROXIMATE_FLEXIBLE_TYPES: (KotlinType) -> KotlinType =
-        { it.approximateFlexibleTypes(preferNotNull = false) }
+    val APPROXIMATE_FLEXIBLE_TYPES: (KotlinType) -> KotlinType = { it.approximateFlexibleTypes(preferNotNull = false) }
 
     private fun unwrapAnonymousType(type: KotlinType): KotlinType {
         if (type.isDynamic()) return type

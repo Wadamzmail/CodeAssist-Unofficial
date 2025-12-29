@@ -1,10 +1,12 @@
 package com.tyron.kotlin.completion.util
 
-import kotlin.time.measureTime
+import java.time.Duration
+import java.time.Instant
 
 fun <T> logTime(name: String, block: () -> T): T {
-    var value: T
-    val duration = measureTime { value = block() }
-    println("$name: took $duration ms")
+    val start = Instant.now()
+    val value = block()
+    val duration = Duration.between(start, Instant.now())
+    println("$name: took ${duration.toMillis()} ms")
     return value
 }
