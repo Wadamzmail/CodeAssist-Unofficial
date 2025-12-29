@@ -446,7 +446,7 @@ public class CodeEditorFragment extends Fragment
             }
           }
         }catch(Exception e){
-        LOG.severe("Error ClickEvent",e);
+        LOG.severe("Error ClickEvent"+": "+e);
         }
         });
     mEditor.subscribeEvent(
