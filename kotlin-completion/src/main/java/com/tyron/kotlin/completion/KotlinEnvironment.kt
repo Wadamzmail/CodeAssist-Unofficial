@@ -164,7 +164,7 @@ data class KotlinEnvironment(
             kotlinFiles[file.name] = this
 
             elementAt(line, character)?.let { element ->
-                val descriptorInfo = descriptorsFrom(element,file)
+                val descriptorInfo = descriptorsFrom(element,file.kotlinFile)
                 val prefix = getPrefix(element)
                 descriptorInfo.descriptors.toMutableList().apply {
                     sortWith { a, b ->
@@ -239,9 +239,9 @@ data class KotlinEnvironment(
             }
         }
 
-    private fun descriptorsFrom(element: PsiElement,file: KotlinFile): DescriptorInfo {
+    private fun descriptorsFrom(element: PsiElement, current: KtFile): DescriptorInfo {
         val files = kotlinFiles.values.map { it.kotlinFile }.toList()
-        val analysis = analysisOf(files,file)
+        val analysis = analysisOf(files,current)
         return with(analysis) {
             (referenceVariantsFrom(element)
                 ?: referenceVariantsFrom(element.parent))?.let { descriptors ->
