@@ -48,12 +48,11 @@ import java.util.*
 import kotlin.collections.set
 import com.tyron.completion.util.CompletionUtils
 import com.tyron.completion.DefaultInsertHandler
-import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments 
 import org.jetbrains.kotlin.config.AnalysisFlags
-import org.jetbrains.kotlin.cli.common.CLIConfigurationKeys
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
+import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
 
 data class KotlinEnvironment(
     val classpath: List<File>,
@@ -434,7 +433,7 @@ data class KotlinEnvironment(
             setIdeaIoUseFallback()
             setupIdeaStandaloneExecution()
             return KotlinEnvironment(classpath, KotlinCoreEnvironment.createForProduction(
-                parentDisposable = {},
+                projectDisposable = {},
                 configFiles = EnvironmentConfigFiles.JVM_CONFIG_FILES,
                 configuration = CompilerConfiguration().apply {
                     addJvmClasspathRoots(classpath.filter { it.exists() && it.isFile && it.extension == "jar" })

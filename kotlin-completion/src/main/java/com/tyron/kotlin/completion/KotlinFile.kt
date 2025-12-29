@@ -25,7 +25,7 @@ class KotlinFile(val name: String, val kotlinFile: KtFile) {
         } else this
     }
 
-    private fun offsetFor(line: Int, character: Int) = (kotlinFile.viewProvider.document?.getLineStartOffset(line) ?: 0) + character
+    fun offsetFor(line: Int, character: Int) = (kotlinFile.viewProvider.document?.getLineStartOffset(line) ?: 0) + character
 
     private tailrec fun expressionFor(element: PsiElement): PsiElement =
         if (element is KtExpression) element else expressionFor(element.parent)
