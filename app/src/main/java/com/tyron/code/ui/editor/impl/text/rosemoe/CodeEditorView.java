@@ -48,6 +48,7 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
@@ -127,6 +128,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
     mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
     replaceComponent(EditorAutoCompletion.class, mCompletionWindow);
     replaceComponent(EditorTextActionWindow.class, new NoOpTextActionWindow(this));
+    setDiagnostics(new DiagnosticsContainer());
   }
 
   @Override
@@ -140,6 +142,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
+    if(diagnostics==null)return;
     mStopConv = true;
     mDiagnostics = diagnostics;
 
@@ -503,7 +506,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
               return DiagnosticRegion.SEVERITY_NONE;
           }
         };
-
+    if(getDiagnostics()==null) setDiagnostics(new DiagnosticsContainer());
     getDiagnostics().reset();
     mStopConv = false;
 

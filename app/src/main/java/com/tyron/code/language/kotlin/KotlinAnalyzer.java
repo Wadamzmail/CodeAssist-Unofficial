@@ -71,12 +71,12 @@ public class KotlinAnalyzer extends DiagnosticTextmateAnalyzer {
 
         if (ApplicationLoader.getDefaultPreferences()
             .getBoolean(SharedPreferenceKeys.KOTLIN_HIGHLIGHTING, true)) {
+            diagnostics.clear(); 
           ProgressManager.getInstance()
               .runLater(
                   () -> {
                     try {
-                      mEditor.setAnalyzing(true);
-                      diagnostics.clear();                            
+                      mEditor.setAnalyzing(true);                           
                       doAnalysis();          
                     } catch (Exception e) {
                       Log.e(TAG, "Analysis failed", e);    

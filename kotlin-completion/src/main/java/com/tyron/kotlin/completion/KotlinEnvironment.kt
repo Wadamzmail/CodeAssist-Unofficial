@@ -192,9 +192,9 @@ data class KotlinEnvironment(
         currentItemCount = 0
         var list: List<CompletionItem>
         val originalFile = file.kotlinFile
-      //  CoroutineScope(Dispatchers.IO).launch {
-      //      analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
-      //  }
+        CoroutineScope(Dispatchers.IO).launch {
+            analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
+        }
 
         with(file.insert(COMPLETION_SUFFIX, line, character)) {
             kotlinFiles[originalFile.name] = this

@@ -43,18 +43,18 @@ public class EditorUtil {
         RawTheme setting = (RawTheme) settings.iterator().next();
         setting = (RawTheme) setting.getSetting();
 
-        Object blockLine = setting.get(KEY_BLOCK_LINE);
-        if (blockLine != null) {
-          scheme.setColor(EditorColorScheme.BLOCK_LINE, getColor(blockLine));
-        }
+      //  Object blockLine = setting.get(KEY_BLOCK_LINE);
+      //  if (blockLine != null) {
+      //    scheme.setColor(EditorColorScheme.BLOCK_LINE, getColor(blockLine));
+      //  }
 
-        Object currBlockLine = setting.get(KEY_CURRENT_BLOCK_LINE);
-        if (currBlockLine == null) {
-          currBlockLine = blockLine;
-        }
-        if (currBlockLine != null) {
-          scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, getColor(currBlockLine));
-        }
+      //  Object currBlockLine = setting.get(KEY_CURRENT_BLOCK_LINE);
+      //  if (currBlockLine == null) {
+      //    currBlockLine = blockLine;
+      //  }
+      //  if (currBlockLine != null) {
+      //    scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, getColor(currBlockLine));
+      //  }
 
         Object completionWindowBackground = setting.get(KEY_COMPLETION_WINDOW_BACKGROUND);
         if (completionWindowBackground == null) {

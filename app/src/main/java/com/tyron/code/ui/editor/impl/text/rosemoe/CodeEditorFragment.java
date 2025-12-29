@@ -205,12 +205,10 @@ public class CodeEditorFragment extends Fragment
     if (language instanceof KotlinLanguage) return;
     if (language instanceof LanguageXML) return;
 
-    mEditor.getDiagnosticsList().clear();
-
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
       List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, mCurrentFile);
-
+      
       mEditor.setDiagnostics(
           diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
     }
@@ -434,6 +432,7 @@ public class CodeEditorFragment extends Fragment
     mEditor.subscribeEvent(
         ClickEvent.class,
         (event, unsubscribe) -> {
+        try{
           Cursor cursor = mEditor.getCursor();
           if (mEditor.getCursor().isSelected()) {
             int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
@@ -446,6 +445,9 @@ public class CodeEditorFragment extends Fragment
               event.intercept();
             }
           }
+        }catch(Exception e){
+        LOG.severe("Error ClickEvent",e);
+        }
         });
     mEditor.subscribeEvent(
         ContentChangeEvent.class,
