@@ -544,7 +544,7 @@ data class KotlinEnvironment(
                                 CommonConfigurationKeys.MODULE_NAME,
                                 JvmProtoBufUtil.DEFAULT_MODULE_NAME
                             )
-                            put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, false)
+                            put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
                            // put(JVMConfigurationKeys.VALIDATE_IR, false)
                             put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, true)
                             put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
