@@ -60,8 +60,18 @@ public class RosemoeCodeEditor implements TextEditor {
 
   @Override
   public boolean isModified() {
-    FileDocumentManager instance = FileDocumentManager.getInstance();
-        return instance.isContentUnsaved(getContent());
+    Project project = ProjectManager.getInstance().getCurrentProject();
+    if (project != null) {
+      Module module = project.getModule(mFile);
+      if (module != null) {
+        Instant diskModified = Instant.ofEpochMilli(mFile.lastModified());
+        Instant lastModified = module.getFileManager().getLastModified(mFile);
+        if (lastModified != null) {
+          return lastModified.isAfter(diskModified);
+        }
+      }
+    }
+    return false;
   }
 
   @Override
