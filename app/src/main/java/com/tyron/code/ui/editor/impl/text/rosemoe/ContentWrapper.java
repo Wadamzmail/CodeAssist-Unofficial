@@ -18,7 +18,9 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
 
   private boolean hasCalledSuper = false;
 
-  public ContentWrapper() {}
+  public ContentWrapper() {
+    this("");
+  }
 
   public ContentWrapper(CharSequence text) {
     super(text, true);
@@ -170,6 +172,6 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
 
   @Override
   public void tryUndo() {
-    undo();
+    super.undo();
   }
 }
