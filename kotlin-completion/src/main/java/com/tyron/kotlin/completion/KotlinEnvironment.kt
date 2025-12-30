@@ -166,7 +166,7 @@ data class KotlinEnvironment(
             elementAt(line, character)?.let { element ->
                 val descriptorInfo = descriptorsFrom(element,file.kotlinFile)
                 val prefix = getPrefix(element)
-                descriptorInfo.descriptors.toMutableList().apply {
+                val list = descriptorInfo.descriptors.toMutableList().apply {
                     sortWith { a, b ->
                         val (a1, a2) = a.presentableName()
                         val (b1, b2) = b.presentableName()
@@ -180,6 +180,7 @@ data class KotlinEnvironment(
                 } + keywordsCompletionVariants(
                     KtTokens.KEYWORDS, prefix
                 ) + keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
+                if (list.size > 50) list.subList(0, 50) else list
             } ?: emptyList()
         }
 
