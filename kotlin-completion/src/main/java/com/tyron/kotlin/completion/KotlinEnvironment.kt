@@ -449,7 +449,7 @@ data class KotlinEnvironment(
     companion object {
         private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
 
-        private const val MAX_ITEMS_COUNT = Prefs.prefs.getInt(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,50)
+        private  val MAX_ITEMS_COUNT = Prefs.prefs.getInt(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,50)
 
         val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
@@ -495,7 +495,7 @@ data class KotlinEnvironment(
                         languageVersionSettings
                     )
                     put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_PSI_CLASS_FILES_READING,true))
-                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.prefs.getBoolen(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
+                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
                     put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                     put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                     put(CommonConfigurationKeys.USE_FIR, true)
@@ -509,10 +509,10 @@ data class KotlinEnvironment(
                 }
             )
 
-            kotlinCoreEnvironment.projectEnvironment.registerProjectExtensionPoint(
-                DocumentWriteAccessGuard.EP_NAME,
-                DocumentWriteAccessGuard::class.java
-            )
+           // kotlinCoreEnvironment.projectEnvironment.registerProjectExtensionPoint(
+           //     DocumentWriteAccessGuard.EP_NAME,
+           //     DocumentWriteAccessGuard::class.java
+           // )
 
             return KotlinEnvironment(classpath, kotlinCoreEnvironment)
         }
