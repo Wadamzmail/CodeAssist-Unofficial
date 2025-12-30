@@ -50,6 +50,30 @@
             android:key="kotlin_completion"
             app:iconSpaceReserved="false"
             android:title="@string/settings_code_completions"/>
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:dialogTitle="@string/kotlin_max_items_count_title"
+            android:defaultValue="50"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            android:title="@string/kotlin_max_items_count_title"
+            android:summary="@string/kotlin_max_items_count_summary"
+            android:key="kotlin_max_items_count"
+            android:dialogMessage="@string/kotlin_max_items_count_message"
+            android:negativeButtonText="@android:string/cancel"
+            android:positiveButtonText="@android:string/ok"/>
+        <EditTextPreference
+            app:iconSpaceReserved="false"
+            android:dialogTitle="@string/parallel_backend_threads_title"
+            android:defaultValue="10"
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            android:title="@string/parallel_backend_threads_title"
+            android:summary="@string/parallel_backend_threads_summary"
+            android:key="parallel_backend_threads"
+            android:dialogMessage="@string/parallel_backend_threads_message"
+            android:negativeButtonText="@android:string/cancel"
+            android:positiveButtonText="@android:string/ok"/>
     </PreferenceCategory>
     <PreferenceCategory
         app:iconSpaceReserved="false"

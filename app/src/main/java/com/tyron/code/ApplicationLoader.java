@@ -56,6 +56,7 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
 import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import com.tyron.common.Prefs;
 
 public class ApplicationLoader extends Application {
 
@@ -110,6 +111,7 @@ public class ApplicationLoader extends Application {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Prefs.init(getDefaultPreferences());
     runStartup();
   }
 

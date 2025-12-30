@@ -2,10 +2,11 @@
 
 package com.tyron.kotlin.completion
 
-import com.tyron.builder.project.api.KotlinModule
 import com.tyron.builder.project.api.Module
 import com.tyron.builder.project.impl.AndroidModuleImpl
+import com.tyron.completion.DefaultInsertHandler
 import com.tyron.completion.model.CompletionItem
+import com.tyron.completion.model.CompletionList
 import com.tyron.completion.model.DrawableKind
 import com.tyron.kotlin.completion.codeInsight.ReferenceVariantsHelper
 import com.tyron.kotlin.completion.model.Analysis
@@ -17,6 +18,7 @@ import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.common.environment.setIdeaIoUseFallback
 import org.jetbrains.kotlin.cli.jvm.compiler.*
 import org.jetbrains.kotlin.cli.jvm.config.addJvmClasspathRoots
+import org.jetbrains.kotlin.com.intellij.openapi.editor.impl.DocumentWriteAccessGuard
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet
@@ -27,14 +29,12 @@ import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import org.jetbrains.kotlin.idea.FrontendInternals
 import org.jetbrains.kotlin.lexer.KtKeywordToken
-import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.renderer.ClassifierNamePolicy
 import org.jetbrains.kotlin.renderer.ParameterNameRenderingPolicy
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.LazyTopDownAnalyzer
-import org.jetbrains.kotlin.resolve.TopDownAnalysisContext
 import org.jetbrains.kotlin.resolve.TopDownAnalysisMode
 import org.jetbrains.kotlin.resolve.calls.smartcasts.DataFlowInfo
 import org.jetbrains.kotlin.resolve.jvm.extensions.AnalysisHandlerExtension
@@ -47,19 +47,22 @@ import java.io.File
 import java.util.*
 import kotlin.collections.set
 import com.tyron.completion.util.CompletionUtils
-import com.tyron.completion.DefaultInsertHandler
 import org.jetbrains.kotlin.config.AnalysisFlags
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
+import com.tyron.common.Prefs
+import com.tyron.common.SharedPreferenceKeys
 
 data class KotlinEnvironment(
     val classpath: List<File>,
     val kotlinEnvironment: KotlinCoreEnvironment
 ) {
-     @JvmField
-     val kotlinFiles = mutableMapOf<String, KotlinFile>()
+    @JvmField
+    val kotlinFiles = mutableMapOf<String, KotlinFile>()
+
+    var currentItemCount = 0
 
     fun updateKotlinFile(name: String, contents: String): KotlinFile {
         val kotlinFile = KotlinFile.from(kotlinEnvironment.project, name, contents)
@@ -69,6 +72,10 @@ data class KotlinEnvironment(
 
     fun removeKotlinFile(name: String) {
         kotlinFiles.remove(name)
+    }
+
+    fun getKotlinFile(name: String): KotlinFile? {
+        return kotlinFiles[name]
     }
 
     private data class DescriptorInfo(
@@ -139,7 +146,7 @@ data class KotlinEnvironment(
         )
     }
     @JvmField
-    var analysis: TopDownAnalysisContext? = null    
+    var analysis: TopDownAnalysisContext? = null 
 
     fun getPrefix(element: PsiElement): String {
         var text = (element as? KtSimpleNameExpression)?.text
@@ -161,12 +168,13 @@ data class KotlinEnvironment(
 
     fun complete(file: KotlinFile, line: Int, character: Int) =
         with(file.insert("$COMPLETION_SUFFIX ", line, character)) {
+            currentItemCount = 0
             kotlinFiles[file.name] = this
 
             elementAt(line, character)?.let { element ->
                 val descriptorInfo = descriptorsFrom(element,file.kotlinFile)
                 val prefix = getPrefix(element)
-                val list = descriptorInfo.descriptors.toMutableList().apply {
+                descriptorInfo.descriptors.toMutableList().apply {
                     sortWith { a, b ->
                         val (a1, a2) = a.presentableName()
                         val (b1, b2) = b.presentableName()
@@ -180,9 +188,9 @@ data class KotlinEnvironment(
                 } + keywordsCompletionVariants(
                     KtTokens.KEYWORDS, prefix
                 ) + keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
-                if (list.size > 50) list.subList(0, 50) else list
             } ?: emptyList()
-        }
+            
+    }
 
     private fun completionVariantFor(
         prefix: String,
@@ -200,18 +208,18 @@ data class KotlinEnvironment(
         position = completionText.indexOf(":")
         if (position != -1) completionText = completionText.substring(0, position - 1)
         return if (prefix.isEmpty() || fullName.startsWith(prefix)) {
-            CompletionItem.create(
-                    fullName,
-                    tail,
-                    completionText,
-                    iconFrom(descriptor)
-              ).apply {
-                    position = commitText.length
-                    cursorOffset = commitText.length
-                    setInsertHandler(
-                      DefaultInsertHandler(CompletionUtils.JAVA_PREDICATE, this)
+            CompletionItem(fullName).apply {
+                iconKind = iconFrom(descriptor)
+                detail = tail
+                commitText = completionText
+                position = commitText.length
+                sortText = fullName
+                setInsertHandler(
+                    DefaultInsertHandler(
+                        this
                     )
-              }
+                )
+            }
         } else null
     }
 
@@ -234,7 +242,14 @@ data class KotlinEnvironment(
     private fun keywordsCompletionVariants(keywords: TokenSet, prefix: String) =
         keywords.types.mapNotNull {
             if (it is KtKeywordToken && it.value.startsWith(prefix)) {
-                CompletionItem(it.value, "Keyword", it.value, DrawableKind.Keyword)
+                CompletionItem(it.value, "Keyword", it.value, DrawableKind.Keyword).apply {
+                    setInsertHandler(
+                        DefaultInsertHandler(
+                            this
+                        )
+                    )
+                    addFilterText(it.value)
+                }
             } else {
                 null
             }
@@ -244,46 +259,49 @@ data class KotlinEnvironment(
         val files = kotlinFiles.values.map { it.kotlinFile }.toList()
         val analysis = analysisOf(files,current)
         return with(analysis) {
-            (referenceVariantsFrom(element)
-                ?: referenceVariantsFrom(element.parent))?.let { descriptors ->
-                DescriptorInfo(true, descriptors)
-            } ?: element.parent.let { parent ->
-                DescriptorInfo(
-                    isTipsManagerCompletion = false,
-                    descriptors = when (parent) {
-                        is KtQualifiedExpression -> {
-                            analysisResult.bindingContext.get(
-                                BindingContext.EXPRESSION_TYPE_INFO,
-                                parent.receiverExpression
-                            )?.type?.let { expressionType ->
+            logTime("referenceVariants") {
+                (referenceVariantsFrom(element)
+                    ?: referenceVariantsFrom(element.parent))?.let { descriptors ->
+                    DescriptorInfo(true, descriptors)
+                } ?: element.parent.let { parent ->
+                    DescriptorInfo(
+                        isTipsManagerCompletion = false,
+                        descriptors = when (parent) {
+                            is KtQualifiedExpression -> {
                                 analysisResult.bindingContext.get(
-                                    BindingContext.LEXICAL_SCOPE,
+                                    BindingContext.EXPRESSION_TYPE_INFO,
                                     parent.receiverExpression
-                                )?.let {
-                                    expressionType.memberScope.getContributedDescriptors(
-                                        DescriptorKindFilter.ALL,
-                                        MemberScope.ALL_NAME_FILTER
-                                    )
-                                }
-                            }?.toList() ?: emptyList()
-                        }
+                                )?.type?.let { expressionType ->
+                                    analysisResult.bindingContext.get(
+                                        BindingContext.LEXICAL_SCOPE,
+                                        parent.receiverExpression
+                                    )?.let {
+                                        expressionType.memberScope.getContributedDescriptors(
+                                            DescriptorKindFilter.ALL,
+                                            MemberScope.ALL_NAME_FILTER
+                                        )
+                                    }
+                                }?.toList() ?: emptyList()
+                            }
 
-                        else -> analysisResult.bindingContext.get(
-                            BindingContext.LEXICAL_SCOPE,
-                            element as KtExpression
-                        )
-                            ?.getContributedDescriptors(
-                                DescriptorKindFilter.ALL,
-                                MemberScope.ALL_NAME_FILTER
+                            else -> analysisResult.bindingContext.get(
+                                BindingContext.LEXICAL_SCOPE,
+                                element as KtExpression
                             )
-                            ?.toList() ?: emptyList()
-                    }
-                )
+                                ?.getContributedDescriptors(
+                                    DescriptorKindFilter.ALL,
+                                    MemberScope.ALL_NAME_FILTER
+                                )
+                                ?.toList() ?: emptyList()
+                        }
+                    )
+                }
+
             }
         }
     }
 
-      fun analysisOf(files: List<KtFile>, current: KtFile): Analysis {
+    private fun analysisOf(files: List<KtFile>,current: KtFile): Analysis {
         val trace = CliBindingTrace(kotlinEnvironment.project)
         val project = files.first().project
         val componentProvider = TopDownAnalyzerFacadeForJVM.createContainer(
@@ -331,6 +349,7 @@ data class KotlinEnvironment(
         )
         val inDescriptor: DeclarationDescriptor =
             elementKt.getResolutionScope(bindingContext, resolutionFacade).ownerDescriptor
+
         return when (element) {
             is KtSimpleNameExpression -> ReferenceVariantsHelper(
                 analysisResult.bindingContext,
@@ -383,13 +402,22 @@ data class KotlinEnvironment(
     // This code is a fragment of org.jetbrains.kotlin.idea.completion.CompletionSession from Kotlin IDE Plugin
     // with a few simplifications which were possible because webdemo has very restricted environment (and well,
     // because requirements on compeltion' quality in web-demo are lower)
-    private inner class VisibilityFilter(
+    private inner class VisibilityFilter    (
         private val inDescriptor: DeclarationDescriptor,
         private val bindingContext: BindingContext,
         private val element: KtElement,
         private val resolutionFacade: KotlinResolutionFacade
     ) : (DeclarationDescriptor) -> Boolean {
         override fun invoke(descriptor: DeclarationDescriptor): Boolean {
+            if (currentItemCount >= MAX_ITEMS_COUNT) {
+                println("MAX COUNT EXCEEDED")
+                return false
+            }
+
+            val a = "a"
+
+            currentItemCount++
+
             if (descriptor is TypeParameterDescriptor && !isTypeParameterVisible(descriptor)) return false
 
             if (descriptor is DeclarationDescriptorWithVisibility) {
@@ -419,7 +447,10 @@ data class KotlinEnvironment(
     companion object {
         private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
 
+        private const val MAX_ITEMS_COUNT = Prefs.prefs.getInt(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,50)
+
         val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
+
 
         private val excludedFromCompletion: List<String> = listOf(
             "kotlin.jvm.internal",
@@ -433,13 +464,14 @@ data class KotlinEnvironment(
         fun with(classpath: List<File>): KotlinEnvironment {
             setIdeaIoUseFallback()
             setupIdeaStandaloneExecution()
-            return KotlinEnvironment(classpath, KotlinCoreEnvironment.createForProduction(
+
+            val kotlinCoreEnvironment = KotlinCoreEnvironment.createForProduction(
                 projectDisposable = {},
                 configFiles = EnvironmentConfigFiles.JVM_CONFIG_FILES,
                 configuration = CompilerConfiguration().apply {
                     addJvmClasspathRoots(classpath.filter { it.exists() && it.isFile && it.extension == "jar" })
-                    //put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, LoggingMessageCollector)
-                    //put(CommonConfigurationKeys.MODULE_NAME, UUID.randomUUID().toString())
+                   // put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, LoggingMessageCollector)
+                   // put(CommonConfigurationKeys.MODULE_NAME, UUID.randomUUID().toString())
                     put(CommonConfigurationKeys.MODULE_NAME,JvmProtoBufUtil.DEFAULT_MODULE_NAME)
 
                     val langFeatures = mutableMapOf<LanguageFeature, LanguageFeature.State>()
@@ -460,20 +492,27 @@ data class KotlinEnvironment(
                         CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
                         languageVersionSettings
                     )
-                    put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true)
-                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true)
+                    put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_PSI_CLASS_FILES_READING,true))
+                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.prefs.getBoolen(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
                     put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                     put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                     put(CommonConfigurationKeys.USE_FIR, true)
                     put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
-                    put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 10)
+                    put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, Prefs.prefs.getInt(SharedPreferenceKeys.PARALLEL_BACKEND_THREADS,10))
 
                     with(K2JVMCompilerArguments()) {
                         put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
                         put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, noCallAssertions)
                     }
                 }
-            ))
+            )
+
+            kotlinCoreEnvironment.projectEnvironment.registerProjectExtensionPoint(
+                DocumentWriteAccessGuard.EP_NAME,
+                DocumentWriteAccessGuard::class.java
+            )
+
+            return KotlinEnvironment(classpath, kotlinCoreEnvironment)
         }
 
         fun get(module: Module): KotlinEnvironment? {

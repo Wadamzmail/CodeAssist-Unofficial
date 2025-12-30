@@ -44,6 +44,9 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 // import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
 import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONObject;
+import com.tyron.common.Prefs;
+import com.tyron.common.SharedPreferenceKeys;
+import org.jetbrains.kotlin.config.*
 
 public class IncrementalKotlinCompiler extends Task<AndroidModule> {
 
@@ -202,8 +205,8 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.setReportPerf(false);
         args.setReportOutputFiles(false);
         args.setDumpPerf(null);
-        args.setLanguageVersion("2.1");
-        args.setUseFastJarFileSystem(true);
+        args.setLanguageVersion(LanguageVersion.LATEST_STABLE);
+        args.setUseFastJarFileSystem(Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true));
         args.setJvmTarget(jvm_target);
 
         args.setUseJavac(false);

@@ -25,5 +25,8 @@ public class SharedPreferenceKeys {
   public static final String SSH_KEY_NAME = "ssh_key_name";
   public static final String SAVED_PROJECT_ROOT_NAME = "root_name";
   public static final String SAVED_PROJECT_PATH = "project_path";
-  public static final String FAST_JAR_FILE_SYSTEM = "use_fast_jar_file_system";
+  public static final String USE_FAST_JAR_FILE_SYSTEM = "use_fast_jar_file_system";
+  public static final String KOTLIN_MAX_ITEMS_COUNT = "kotlin_max_items_count";
+  public static final String USE_PSI_CLASS_FILES_READING = "use_psi_class_files_reading";
+  public static final String PARALLEL_BACKEND_THREADS = "parallel_backend_threads";
 }

@@ -20,6 +20,10 @@ import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import com.tyron.completion.java.compiler.JavaCompilerService;
+import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.completion.java.compiler.CompilerContainer;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.util.TreePath;
 
 public class JavaDataContextUtil {
 
@@ -42,13 +46,28 @@ public class JavaDataContextUtil {
           }
         }
       }
-      // added removed codes
+         // added removed codes
       Module currentModule = project.getModule(file);
       if (!(currentModule instanceof JavaModule)) return;
       JavaCompilerProvider service =
           CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
       JavaCompilerService compiler = service.getCompiler(project, (JavaModule) currentModule);
-      context.putData(CommonJavaContextKeys.COMPILER, compiler);
+      CompilerContainer cachedContainer = compiler.getCachedContainer();
+        // don't block the ui thread
+        if (!cachedContainer.isWriting()) {
+          cachedContainer.run(
+              task -> {
+                if (task != null) {
+                  CompilationUnitTree root = task.root(file);
+                  if (root != null) {
+                    FindCurrentPath findCurrentPath = new FindCurrentPath(task.task);
+                    TreePath currentPath = findCurrentPath.scan(root, cursor);
+                    context.putData(CommonJavaContextKeys.CURRENT_PATH, currentPath);
+                  }
+                }
+              });
+        }
+      context.putData(CommonJavaContextKeys.COMPILER, compiler); 
     }
   }
 }
