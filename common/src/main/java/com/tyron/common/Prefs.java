@@ -6,9 +6,9 @@ public class Prefs{
 public static SharedPreferences prefs;
 private Prefs(){}
 
-public static void init(SharedPreferences prefs){
+public static void init(SharedPreferences preferences){
   if(prefs==null)return;
-  this.prefs = prefs;
+  prefs = preferences;
 }
 
 }

@@ -54,6 +54,8 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
 import com.tyron.common.Prefs
 import com.tyron.common.SharedPreferenceKeys
+import org.jetbrains.kotlin.lexer.KtTokens
+import org.jetbrains.kotlin.resolve.TopDownAnalysisContext
 
 data class KotlinEnvironment(
     val classpath: List<File>,
