@@ -206,7 +206,7 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.setReportOutputFiles(false);
         args.setDumpPerf(null);
         args.setLanguageVersion(LanguageVersion.LATEST_STABLE.getVersionString());
-        args.setUseFastJarFileSystem(Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true));
+        args.setUseFastJarFileSystem(Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true));
         args.setJvmTarget(jvm_target);
 
         args.setUseJavac(false);

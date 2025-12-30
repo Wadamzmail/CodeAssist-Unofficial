@@ -449,7 +449,7 @@ data class KotlinEnvironment(
     companion object {
         private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
 
-        private  val MAX_ITEMS_COUNT = Prefs.prefs.getInt(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,50)
+        private  val MAX_ITEMS_COUNT = Prefs.get().getInt(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,50)
 
         val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
@@ -494,13 +494,13 @@ data class KotlinEnvironment(
                         CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS,
                         languageVersionSettings
                     )
-                    put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_PSI_CLASS_FILES_READING,true))
-                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.prefs.getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
+                    put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, Prefs.get().getBoolean(SharedPreferenceKeys.USE_PSI_CLASS_FILES_READING,true))
+                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
                     put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                     put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                     put(CommonConfigurationKeys.USE_FIR, true)
                     put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
-                    put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, Prefs.prefs.getInt(SharedPreferenceKeys.PARALLEL_BACKEND_THREADS,10))
+                    put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, Prefs.get().getInt(SharedPreferenceKeys.PARALLEL_BACKEND_THREADS,10))
 
                     with(K2JVMCompilerArguments()) {
                         put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, noParamAssertions)
