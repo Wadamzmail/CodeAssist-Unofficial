@@ -26,6 +26,7 @@ import com.tyron.completion.model.CompletionList;
 import java.io.File;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
+import com.tyron.completion.java.provider.ImportCompletionProvider;
 
 public class JavaCompletionProvider extends CompletionProvider {
 
@@ -144,6 +145,12 @@ public class JavaCompletionProvider extends CompletionProvider {
       case MEMBER_REFERENCE:
         new MemberReferenceCompletionProvider(null)
             .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
+      case IMPORT:
+        new ImportCompletionProvider(null)
+            .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
+        break;
+      case STRING_LITERAL:
+        break;          
       case VARIABLE:
         if (!parameters.getPrefix().isEmpty()) {
           new VariableNameCompletionProvider(null)
