@@ -46,7 +46,7 @@ import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONObject;
 import com.tyron.common.Prefs;
 import com.tyron.common.SharedPreferenceKeys;
-import org.jetbrains.kotlin.config.*
+import org.jetbrains.kotlin.config.*;
 
 public class IncrementalKotlinCompiler extends Task<AndroidModule> {
 
