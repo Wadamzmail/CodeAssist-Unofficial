@@ -18,7 +18,7 @@ import com.tyron.kotlin.completion.util.getResolutionScope
 import com.tyron.kotlin.completion.util.importableFqName
 import com.tyron.kotlin.completion.util.isVisible
 import com.tyron.kotlin.completion.util.logTime
-import com.tyron.kotlin_completion.util.PsiUtils
+import com.tyron.kotlin_completion.util.PsiUtilsKt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -174,7 +174,7 @@ data class KotlinEnvironment(
     private fun getPrefix(element: PsiElement): String {
         var text = (element as? KtSimpleNameExpression)?.text
         if (text == null) {
-            val type = PsiUtils.findParent(element)
+            val type = PsiUtilsKt.findParent(element)
             if (type != null) {
                 text = type.text
             }
