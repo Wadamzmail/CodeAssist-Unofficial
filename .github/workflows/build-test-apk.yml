@@ -36,39 +36,46 @@ jobs:
       - name: Build Debug APKs
         run: ./gradlew assembleDebug -Penable-updater
 
+      # ===== Print APK list (IMPORTANT) =====
+      - name: List generated APK files
+        run: |
+          echo "===== APK files ====="
+          ls -lh app/build/outputs/apk/debug/
+          echo "====================="
+
       # ===== Upload APKs (each ABI separately) =====
 
       - name: Upload ARM64 APK
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-arm64-v8a
-          path: app/build/outputs/apk/debug/app-debug-arm64-v8a.apk
+          path: app/build/outputs/apk/debug/*arm64-v8a*.apk
           if-no-files-found: ignore
 
       - name: Upload ARMv7 APK
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-armeabi-v7a
-          path: app/build/outputs/apk/debug/app-debug-armeabi-v7a.apk
+          path: app/build/outputs/apk/debug/*armeabi-v7a*.apk
           if-no-files-found: ignore
 
       - name: Upload x86 APK
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-x86
-          path: app/build/outputs/apk/debug/app-debug-x86.apk
+          path: app/build/outputs/apk/debug/*-x86.apk
           if-no-files-found: ignore
 
       - name: Upload x86_64 APK
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-x86_64
-          path: app/build/outputs/apk/debug/app-debug-x86_64.apk
+          path: app/build/outputs/apk/debug/*-x86_64.apk
           if-no-files-found: ignore
 
       - name: Upload Universal APK
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-universal
-          path: app/build/outputs/apk/debug/app-debug-universal.apk
+          path: app/build/outputs/apk/debug/*universal*.apk
           if-no-files-found: ignore
