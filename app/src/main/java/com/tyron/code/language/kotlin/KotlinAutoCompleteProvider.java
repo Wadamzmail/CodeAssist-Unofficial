@@ -16,6 +16,7 @@ import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
 import java.util.List;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
+import com.tyron.completion.java.provider.JavaSortCategory;
 
 public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
@@ -67,10 +68,10 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
             mEditor.getCurrentFile().getAbsolutePath(), mEditor.getContent().toString());
     List<CompletionItem> itemList = kotlinEnvironment.complete(updatedFile, line, column);
 
-    // for (CompletionItem completionItem : itemList) {
-    //    completionItem.addFilterText(completionItem.commitText);
-    //    completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
-    //  }
+     for (CompletionItem completionItem : itemList) {
+        completionItem.addFilterText(completionItem.commitText);
+        completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
+      }
 
     return CompletionList.builder(prefix).addItems(itemList).build();
   }
@@ -112,10 +113,10 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
     // try{ kotlinEnvironment.analysis = null;}catch(Exception e){e.printStackTrace();}
 
-    // for (CompletionItem completionItem : itemList) {
-    //    completionItem.addFilterText(completionItem.commitText);
-    //    completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
-    //  }
+     for (CompletionItem completionItem : itemList) {
+        completionItem.addFilterText(completionItem.commitText);
+        completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
+      }
 
     return itemList;
   }

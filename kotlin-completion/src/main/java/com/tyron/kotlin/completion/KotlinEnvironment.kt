@@ -243,7 +243,12 @@ data class KotlinEnvironment(
 
     private fun keywordsCompletionVariants(keywords: TokenSet, prefix: String) =
         keywords.types.mapNotNull {
+        if (currentItemCount >= MAX_ITEMS_COUNT) {
+                println("MAX COUNT EXCEEDED")
+                return@mapNotNull null
+        }
             if (it is KtKeywordToken && it.value.startsWith(prefix)) {
+                currentItemCount++
                 CompletionItem(it.value, "Keyword", it.value, DrawableKind.Keyword).apply {
                     setInsertHandler(
                         DefaultInsertHandler(
@@ -475,6 +480,8 @@ data class KotlinEnvironment(
                    // put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, LoggingMessageCollector)
                    // put(CommonConfigurationKeys.MODULE_NAME, UUID.randomUUID().toString())
                     put(CommonConfigurationKeys.MODULE_NAME,JvmProtoBufUtil.DEFAULT_MODULE_NAME)
+                    put(JVMConfigurationKeys.NO_JDK, true)
+                    put(JVMConfigurationKeys.NO_REFLECT, true)
 
                     val langFeatures = mutableMapOf<LanguageFeature, LanguageFeature.State>()
                     for (langFeature in LanguageFeature.values()) {
