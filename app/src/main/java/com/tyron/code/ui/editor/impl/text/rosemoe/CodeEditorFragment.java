@@ -270,9 +270,10 @@ public class CodeEditorFragment extends Fragment
       TextMateColorScheme scheme = ThemeRepository.getColorScheme(schemeValue);
       if (scheme != null) {
         mEditor.setColorScheme(scheme);
-        mEditor.openFile(mCurrentFile);
+        mEditor.openFile(mCurrentFile);   
         initializeLanguage();
-        readOrWait();                
+        readOrWait();   
+                     
       }
     } else {
       ListenableFuture<TextMateColorScheme> scheme = getScheme(schemeValue);
@@ -290,6 +291,7 @@ public class CodeEditorFragment extends Fragment
               mEditor.openFile(mCurrentFile);
               initializeLanguage();
               readOrWait();
+                 
             }
 
             @Override
@@ -307,9 +309,10 @@ public class CodeEditorFragment extends Fragment
                 ThemeRepository.putColorScheme(key, scheme);
               }
               mEditor.setColorScheme(scheme);
-              mEditor.openFile(mCurrentFile);
+              mEditor.openFile(mCurrentFile);  
               initializeLanguage();
               readOrWait();
+                  
             }
           },
           ContextCompat.getMainExecutor(requireContext()));
