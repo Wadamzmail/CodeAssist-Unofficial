@@ -148,8 +148,6 @@ public class JavaCompletionProvider extends CompletionProvider {
       case IMPORT:
         new ImportCompletionProvider(null)
             .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
-        break;
-      case STRING_LITERAL:
         break;          
       case VARIABLE:
         if (!parameters.getPrefix().isEmpty()) {

@@ -199,7 +199,7 @@ data class KotlinEnvironment(
             analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
         }
 
-        with(file.insert("$COMPLETION_SUFFIX ", line, character)) {
+        with(file.insert(COMPLETION_SUFFIX, line, character)) {
             kotlinFiles[originalFile.name] = this
             val position = elementAt(line, character)
             val prefix = position?.let { getPrefix(it) } ?: ""
@@ -218,8 +218,7 @@ data class KotlinEnvironment(
                     .mapNotNull { descriptor ->
                         completionVariantFor(prefix, descriptor)
                     }
-                if (items.size > MAX_ITEMS_COUNT) items.subList(0, MAX_ITEMS_COUNT) else items +
-                        keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                    + keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
             }
                 ?: emptyList()
         }
@@ -254,10 +253,9 @@ data class KotlinEnvironment(
         return if (name.startsWith(prefix)) {
             CompletionItem(name).apply {
                 iconKind = iconFrom(descriptor)
-                detail = tail
+                detail = tailName
                 commitText = completionText
                 cursorOffset = commitText.length
-                sortText = name
                 setInsertHandler(
                     DefaultInsertHandler(
                         this
@@ -300,7 +298,6 @@ data class KotlinEnvironment(
                             this
                         )
                     )
-                    addFilterText(token.value)
                     }
                 )
             }
@@ -520,7 +517,8 @@ data class KotlinEnvironment(
     }
 
     companion object {
-        private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
+       // private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
+        private const val COMPLETION_SUFFIX = "æ"
 
         private  val MAX_ITEMS_COUNT = Prefs.get().getString(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,"50")?.toIntOrNull()?:50
 
@@ -572,6 +570,8 @@ data class KotlinEnvironment(
                             put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
                             put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
+                            put(CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS,false)
+                            put(CommonConfigurationKeys.VERIFY_IR,false)
 
                             // enable all language features
                             val langFeatures =
@@ -586,6 +586,7 @@ data class KotlinEnvironment(
                                 languageVersion,
                                 ApiVersion.createByLanguageVersion(languageVersion),
                                 mapOf(
+                                    AnalysisFlags.extendedCompilerChecks to false,
                                     AnalysisFlags.ideMode to true,
                                     AnalysisFlags.skipMetadataVersionCheck to true,
                                     AnalysisFlags.skipPrereleaseCheck to true,

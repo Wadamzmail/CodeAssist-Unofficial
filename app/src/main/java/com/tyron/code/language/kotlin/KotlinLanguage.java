@@ -148,20 +148,14 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             if (itemsList==null)return;
             Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
             itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
-          // CompletionList completionList = provider.getCompletionList(identifierPart,
-          //      position.getLine(),
-          //      position.getColumn());
-          // if (completionList == null)return;
-          // Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
-          // completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem); 
-       }catch(Exception e){
-           // kotlinEnvironment.analysis = null;
-           // Log.e(TAG,"Completion Canceled",e);
-             //ignore it 
-            throw new CompletionCancelledException(e.toString());
+       }catch(Exception ignore){
+        if (!(e instanceof InterruptedException)
+                    && !(e instanceof ProcessCanceledException)) {
+                 Log.e(TAG, "Completion failed", e);
+              throw new CompletionCancelledException(e.toString());
+        }
        }
        kotlinEnvironment.analysis = null;
-
   }
 
     @Override
@@ -203,7 +197,7 @@ private void destroyAnalysis(){
         analysisThread.interrupt();  
         try {
             analysisThread.join();  
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignore) {}
     }
 }
     
@@ -271,8 +265,7 @@ private void destroyAnalysis(){
         } catch (Throwable e) {
             if (!(e instanceof InterruptedException)
                     && !(e instanceof ProcessCanceledException)) {
-              //   Log.e(TAG, "Failed to analyze file", e);
-              // ignore it 
+                 Log.e(TAG, "Failed to analyze file", e);
             }
         }
     });

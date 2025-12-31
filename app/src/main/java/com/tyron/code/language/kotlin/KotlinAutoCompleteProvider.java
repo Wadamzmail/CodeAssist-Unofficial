@@ -104,8 +104,7 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
     KotlinFile updatedFile =
         kotlinEnvironment.updateKotlinFile(
             mEditor.getCurrentFile().getAbsolutePath(), mEditor.getContent().toString());
-    List<CompletionItem> itemList = kotlinEnvironment.complete(updatedFile, line, column);
 
-    return itemList;
+    return kotlinEnvironment.complete(updatedFile, line, column);
   }
 }
