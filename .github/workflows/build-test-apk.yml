@@ -63,14 +63,14 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-x86
-          path: app/build/outputs/apk/debug/*-x86.apk
+          path: app/build/outputs/apk/debug/*-x86-*.apk
           if-no-files-found: ignore
 
       - name: Upload x86_64 APK
         uses: actions/upload-artifact@v5
         with:
           name: app-debug-x86_64
-          path: app/build/outputs/apk/debug/*-x86_64.apk
+          path: app/build/outputs/apk/debug/*-x86_64*.apk
           if-no-files-found: ignore
 
       - name: Upload Universal APK
