@@ -70,6 +70,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import dev.mutwakil.javac.*;
 
 public class OverrideInheritedMethodsAction extends AnAction {
 
@@ -220,7 +221,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
                                             TreePath currentPath) {
         CompilerContainer container = compiler.compile(Collections.singletonList(file));
         return container.get(task -> {
-            Trees trees = Trees.instance(task.task);
+            Trees trees = MTrees.instance(task.task);
             Element classElement = trees.getElement(currentPath);
             Elements elements = task.task.getElements();
             List<MethodPtr> methodPtrs = new ArrayList<>();

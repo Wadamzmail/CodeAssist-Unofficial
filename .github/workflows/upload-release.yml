@@ -31,4 +31,4 @@ jobs:
         generate_release_notes: true
         prerelease: false
         files: |
-             app/build/outputs/apk/debug/app-debug.apk
+             app/build/outputs/apk/debug/*.apk
