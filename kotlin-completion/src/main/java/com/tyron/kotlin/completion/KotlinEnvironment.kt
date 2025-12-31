@@ -218,7 +218,7 @@ data class KotlinEnvironment(
                     .mapNotNull { descriptor ->
                         completionVariantFor(prefix, descriptor)
                     }
-                    + keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                    items + keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
             }
                 ?: emptyList()
         }
