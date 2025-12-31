@@ -90,6 +90,7 @@ import com.tyron.common.SharedPreferenceKeys
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
+import org.jetbrains.kotlin.config.IrVerificationMode
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -571,7 +572,7 @@ data class KotlinEnvironment(
                             put(CommonConfigurationKeys.USE_FIR, true)
                             put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
                             put(CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS,false)
-                            put(CommonConfigurationKeys.VERIFY_IR,false)
+                            put(CommonConfigurationKeys.VERIFY_IR,IrVerificationMode.NONE)
 
                             // enable all language features
                             val langFeatures =
