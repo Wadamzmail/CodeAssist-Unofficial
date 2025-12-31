@@ -1,7 +1,7 @@
 package com.tyron.kotlin.completion
 
-import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
+import org.jetbrains.kotlin.com.intellij.openapi.project.Project
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import com.tyron.kotlin.completion.resolve.ResolutionFacade
 import com.tyron.kotlin.completion.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.analyzer.AnalysisResult
