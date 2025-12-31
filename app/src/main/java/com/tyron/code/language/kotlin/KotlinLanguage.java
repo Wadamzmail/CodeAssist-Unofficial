@@ -144,10 +144,10 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                 new KotlinAutoCompleteProvider(editor);
            
             container.reset();                
-           // List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
-           // if (itemsList==null)return;
-           // Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
-           // itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
+          //  List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
+          //  if (itemsList==null)return;
+          //  Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
+          //  itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
            CompletionList completionList = provider.getCompletionList(identifierPart,
                 position.getLine(),
                 position.getColumn());
@@ -160,7 +160,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
              //ignore it 
             throw new CompletionCancelledException(e.toString());
        }
-     //  kotlinEnvironment.analysis = null;
+       kotlinEnvironment.analysis = null;
 
   }
 

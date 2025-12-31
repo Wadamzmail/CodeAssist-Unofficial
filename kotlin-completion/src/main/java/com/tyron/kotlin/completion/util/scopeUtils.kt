@@ -1,8 +1,8 @@
 package com.tyron.kotlin.completion.util
 
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import com.tyron.kotlin.completion.resolve.ResolutionFacade
 import com.tyron.kotlin.completion.resolve.frontendService
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.ClassDescriptorWithResolutionScopes
 import org.jetbrains.kotlin.idea.FrontendInternals
 import org.jetbrains.kotlin.psi.KtClassBody
@@ -21,7 +21,8 @@ fun PsiElement.getResolutionScope(bindingContext: BindingContext): LexicalScope?
         }
 
         if (parent is KtClassBody) {
-            val classDescriptor = bindingContext[BindingContext.CLASS, parent.getParent()] as? ClassDescriptorWithResolutionScopes
+            val classDescriptor =
+                bindingContext[BindingContext.CLASS, parent.getParent()] as? ClassDescriptorWithResolutionScopes
             if (classDescriptor != null) {
                 return classDescriptor.scopeForMemberDeclarationResolution
             }
@@ -36,7 +37,7 @@ fun PsiElement.getResolutionScope(bindingContext: BindingContext): LexicalScope?
 
 fun PsiElement.getResolutionScope(
     bindingContext: BindingContext,
-    resolutionFacade: ResolutionFacade/*TODO: get rid of this parameter*/
+    resolutionFacade: ResolutionFacade
 ): LexicalScope = getResolutionScope(bindingContext) ?: when (containingFile) {
     is KtFile -> resolutionFacade.getFileResolutionScope(containingFile as KtFile)
     else -> error("Not in KtFile")

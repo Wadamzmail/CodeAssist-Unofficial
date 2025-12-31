@@ -2,13 +2,22 @@ package com.tyron.kotlin.completion.util
 
 import org.jetbrains.kotlin.builtins.jvm.JavaToKotlinClassMapper
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.types.*
+import org.jetbrains.kotlin.types.AbbreviatedType
+import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.types.KotlinTypeFactory
+import org.jetbrains.kotlin.types.RawType
+import org.jetbrains.kotlin.types.SimpleType
+import org.jetbrains.kotlin.types.TypeUtils
+import org.jetbrains.kotlin.types.asFlexibleType
 import org.jetbrains.kotlin.types.error.ErrorScopeKind
 import org.jetbrains.kotlin.types.error.ErrorType
 import org.jetbrains.kotlin.types.error.ErrorUtils
+import org.jetbrains.kotlin.types.isDynamic
+import org.jetbrains.kotlin.types.isFlexible
 import org.jetbrains.kotlin.types.typeUtil.TypeNullability
 import org.jetbrains.kotlin.types.typeUtil.nullability
 import org.jetbrains.kotlin.types.typeUtil.substitute
+import org.jetbrains.kotlin.types.unwrapEnhancement
 
 // Copy-pasted from Kotlin plugin in intellij-community
 fun KotlinType.approximateFlexibleTypes(
@@ -51,10 +60,15 @@ private fun KotlinType.approximateNonDynamicFlexibleTypes(
 
         approximation = approximation.approximateNonDynamicFlexibleTypes()
 
-        approximation = if (nullability() == TypeNullability.NOT_NULL) approximation.makeNullableAsSpecified(false) else approximation
+        approximation =
+            if (nullability() == TypeNullability.NOT_NULL) approximation.makeNullableAsSpecified(
+                false
+            ) else approximation
 
         if (approximation.isMarkedNullable && !lowerBound
-                .isMarkedNullable && TypeUtils.isTypeParameter(approximation) && TypeUtils.hasNullableSuperType(approximation)
+                .isMarkedNullable && TypeUtils.isTypeParameter(approximation) && TypeUtils.hasNullableSuperType(
+                approximation
+            )
         ) {
             approximation = approximation.makeNullableAsSpecified(false)
         }
@@ -63,7 +77,10 @@ private fun KotlinType.approximateNonDynamicFlexibleTypes(
     }
 
     (unwrap() as? AbbreviatedType)?.let {
-        return AbbreviatedType(it.expandedType, it.abbreviation.approximateNonDynamicFlexibleTypes(preferNotNull))
+        return AbbreviatedType(
+            it.expandedType,
+            it.abbreviation.approximateNonDynamicFlexibleTypes(preferNotNull)
+        )
     }
 
 

@@ -68,11 +68,6 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
             mEditor.getCurrentFile().getAbsolutePath(), mEditor.getContent().toString());
     List<CompletionItem> itemList = kotlinEnvironment.complete(updatedFile, line, column);
 
-     for (CompletionItem completionItem : itemList) {
-        completionItem.addFilterText(completionItem.commitText);
-        completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
-      }
-
     return CompletionList.builder(prefix).addItems(itemList).build();
   }
 
@@ -110,13 +105,6 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
         kotlinEnvironment.updateKotlinFile(
             mEditor.getCurrentFile().getAbsolutePath(), mEditor.getContent().toString());
     List<CompletionItem> itemList = kotlinEnvironment.complete(updatedFile, line, column);
-
-    // try{ kotlinEnvironment.analysis = null;}catch(Exception e){e.printStackTrace();}
-
-     for (CompletionItem completionItem : itemList) {
-        completionItem.addFilterText(completionItem.commitText);
-        completionItem.setSortText(JavaSortCategory.DIRECT_MEMBER.toString());
-      }
 
     return itemList;
   }

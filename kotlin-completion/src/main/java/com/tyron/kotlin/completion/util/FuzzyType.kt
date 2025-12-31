@@ -1,4 +1,5 @@
 @file:JvmName("FuzzyTypeUtils")
+
 package com.tyron.kotlin.completion.util
 
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
@@ -7,47 +8,27 @@ import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
 import org.jetbrains.kotlin.resolve.calls.inference.CallHandle
 import org.jetbrains.kotlin.resolve.calls.inference.ConstraintSystemBuilderImpl
 import org.jetbrains.kotlin.resolve.calls.inference.constraintPosition.ConstraintPositionKind
-import org.jetbrains.kotlin.types.*
-import org.jetbrains.kotlin.types.checker.StrictEqualityTypeChecker
+import org.jetbrains.kotlin.types.DelegatedTypeSubstitution
+import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.types.TypeConstructor
+import org.jetbrains.kotlin.types.TypeConstructorSubstitution
+import org.jetbrains.kotlin.types.TypeProjection
+import org.jetbrains.kotlin.types.TypeProjectionImpl
+import org.jetbrains.kotlin.types.TypeSubstitutor
+import org.jetbrains.kotlin.types.Variance
 import org.jetbrains.kotlin.types.error.ErrorUtils.containsErrorType
-import org.jetbrains.kotlin.types.typeUtil.*
+import org.jetbrains.kotlin.types.isError
+import org.jetbrains.kotlin.types.typeUtil.isSubtypeOf
+import org.jetbrains.kotlin.types.typeUtil.nullability
 
-fun CallableDescriptor.fuzzyReturnType() = returnType?.toFuzzyType(typeParameters)
-fun CallableDescriptor.fuzzyExtensionReceiverType() = extensionReceiverParameter?.type?.toFuzzyType(typeParameters)
+fun CallableDescriptor.fuzzyExtensionReceiverType() =
+    extensionReceiverParameter?.type?.toFuzzyType(typeParameters)
 
-fun FuzzyType.makeNotNullable() = type.makeNotNullable().toFuzzyType(freeParameters)
-fun FuzzyType.makeNullable() = type.makeNullable().toFuzzyType(freeParameters)
 fun FuzzyType.nullability() = type.nullability()
 
-fun FuzzyType.isAlmostEverything(): Boolean {
-    if (freeParameters.isEmpty()) return false
-    val typeParameter = type.constructor.declarationDescriptor as? TypeParameterDescriptor ?: return false
-    if (typeParameter !in freeParameters) return false
-    return typeParameter.upperBounds.singleOrNull()?.isAnyOrNullableAny() ?: false
-}
 
-
-/**
- * Replaces free parameters inside the type with corresponding type parameters of the class (when possible)
- */
-fun FuzzyType.presentationType(): KotlinType {
-    if (freeParameters.isEmpty()) return type
-
-    val map = HashMap<TypeConstructor, TypeProjection>()
-    for ((argument, typeParameter) in type.arguments.zip(type.constructor.parameters)) {
-        if (argument.projectionKind == Variance.INVARIANT) {
-            val equalToFreeParameter = freeParameters.firstOrNull {
-                StrictEqualityTypeChecker.strictEqualTypes(it.defaultType, argument.type.unwrap())
-            } ?: continue
-
-            map[equalToFreeParameter.typeConstructor] = createProjection(typeParameter.defaultType, Variance.INVARIANT, null)
-        }
-    }
-    val substitutor = TypeSubstitutor.create(map)
-    return substitutor.substitute(type, Variance.INVARIANT)!!
-}
-
-fun KotlinType.toFuzzyType(freeParameters: Collection<TypeParameterDescriptor>) = FuzzyType(this, freeParameters)
+fun KotlinType.toFuzzyType(freeParameters: Collection<TypeParameterDescriptor>) =
+    FuzzyType(this, freeParameters)
 
 class FuzzyType(
     val type: KotlinType,
@@ -58,10 +39,12 @@ class FuzzyType(
     init {
         if (freeParameters.isNotEmpty()) {
             // we allow to pass type parameters from another function with the same original in freeParameters
-            val usedTypeParameters = HashSet<TypeParameterDescriptor>().apply { addUsedTypeParameters(type) }
+            val usedTypeParameters =
+                HashSet<TypeParameterDescriptor>().apply { addUsedTypeParameters(type) }
             if (usedTypeParameters.isNotEmpty()) {
                 val originalFreeParameters = freeParameters.map { it.toOriginal() }.toSet()
-                this.freeParameters = usedTypeParameters.filter { it.toOriginal() in originalFreeParameters }.toSet()
+                this.freeParameters =
+                    usedTypeParameters.filter { it.toOriginal() in originalFreeParameters }.toSet()
             } else {
                 this.freeParameters = emptySet()
             }
@@ -74,12 +57,14 @@ class FuzzyType(
     @Suppress("USELESS_ELVIS")
     private fun TypeParameterDescriptor.toOriginal(): TypeParameterDescriptor {
         val callableDescriptor = containingDeclaration as? CallableMemberDescriptor ?: return this
-        val original = callableDescriptor.original ?: error("original = null for $callableDescriptor")
+        val original =
+            callableDescriptor.original ?: error("original = null for $callableDescriptor")
         val typeParameters = original.typeParameters ?: error("typeParameters = null for $original")
         return typeParameters[index]
     }
 
-    override fun equals(other: Any?) = other is FuzzyType && other.type == type && other.freeParameters == freeParameters
+    override fun equals(other: Any?) =
+        other is FuzzyType && other.type == type && other.freeParameters == freeParameters
 
     override fun hashCode() = type.hashCode()
 
@@ -96,33 +81,19 @@ class FuzzyType(
         }
     }
 
-    fun checkIsSubtypeOf(otherType: FuzzyType): TypeSubstitutor? = matchedSubstitutor(otherType,
-        MatchKind.IS_SUBTYPE
+    private fun checkIsSuperTypeOf(otherType: FuzzyType): TypeSubstitutor? = matchedSubstitutor(
+        otherType
     )
 
-    fun checkIsSuperTypeOf(otherType: FuzzyType): TypeSubstitutor? = matchedSubstitutor(otherType,
-        MatchKind.IS_SUPERTYPE
-    )
+    fun checkIsSuperTypeOf(otherType: KotlinType): TypeSubstitutor? =
+        checkIsSuperTypeOf(otherType.toFuzzyType(emptyList()))
 
-    fun checkIsSubtypeOf(otherType: KotlinType): TypeSubstitutor? = checkIsSubtypeOf(otherType.toFuzzyType(emptyList()))
-
-    fun checkIsSuperTypeOf(otherType: KotlinType): TypeSubstitutor? = checkIsSuperTypeOf(otherType.toFuzzyType(emptyList()))
-
-    private enum class MatchKind {
-        IS_SUBTYPE,
-        IS_SUPERTYPE
-    }
-
-    private fun matchedSubstitutor(otherType: FuzzyType, matchKind: MatchKind): TypeSubstitutor? {
+    private fun matchedSubstitutor(otherType: FuzzyType): TypeSubstitutor? {
         if (type.isError) return null
         if (otherType.type.isError) return null
-        if (otherType.type.isUnit() && matchKind == MatchKind.IS_SUBTYPE) return TypeSubstitutor.EMPTY
 
         fun KotlinType.checkInheritance(otherType: KotlinType): Boolean {
-            return when (matchKind) {
-                MatchKind.IS_SUBTYPE -> this.isSubtypeOf(otherType)
-                MatchKind.IS_SUPERTYPE -> otherType.isSubtypeOf(this)
-            }
+            return otherType.isSubtypeOf(this)
         }
 
         if (freeParameters.isEmpty() && otherType.freeParameters.isEmpty()) {
@@ -130,17 +101,20 @@ class FuzzyType(
         }
 
         val builder = ConstraintSystemBuilderImpl()
-        val typeVariableSubstitutor = builder.registerTypeVariables(CallHandle.NONE, freeParameters + otherType.freeParameters)
+        val typeVariableSubstitutor = builder.registerTypeVariables(
+            CallHandle.NONE,
+            freeParameters + otherType.freeParameters
+        )
 
         val typeInSystem = typeVariableSubstitutor.substitute(type, Variance.INVARIANT)
-        val otherTypeInSystem = typeVariableSubstitutor.substitute(otherType.type, Variance.INVARIANT)
+        val otherTypeInSystem =
+            typeVariableSubstitutor.substitute(otherType.type, Variance.INVARIANT)
 
-        when (matchKind) {
-            MatchKind.IS_SUBTYPE ->
-                builder.addSubtypeConstraint(typeInSystem, otherTypeInSystem, ConstraintPositionKind.RECEIVER_POSITION.position())
-            MatchKind.IS_SUPERTYPE ->
-                builder.addSubtypeConstraint(otherTypeInSystem, typeInSystem, ConstraintPositionKind.RECEIVER_POSITION.position())
-        }
+        builder.addSubtypeConstraint(
+            otherTypeInSystem,
+            typeInSystem,
+            ConstraintPositionKind.RECEIVER_POSITION.position()
+        )
 
         builder.fixVariables()
 
@@ -153,40 +127,32 @@ class FuzzyType(
         val substitutor = constraintSystem.resultingSubstitutor
         val substitutedType = substitutor.substitute(type, Variance.INVARIANT) ?: return null
         if (substitutedType.isError) return TypeSubstitutor.EMPTY
-        val otherSubstitutedType = substitutor.substitute(otherType.type, Variance.INVARIANT) ?: return null
+        val otherSubstitutedType =
+            substitutor.substitute(otherType.type, Variance.INVARIANT) ?: return null
         if (otherSubstitutedType.isError) return TypeSubstitutor.EMPTY
         if (!substitutedType.checkInheritance(otherSubstitutedType)) return null
 
-        val substitutorToKeepCapturedTypes = object : DelegatedTypeSubstitution(substitutor.substitution) {
-            override fun approximateCapturedTypes() = false
-        }.buildSubstitutor()
+        val substitutorToKeepCapturedTypes =
+            object : DelegatedTypeSubstitution(substitutor.substitution) {
+                override fun approximateCapturedTypes() = false
+            }.buildSubstitutor()
 
         val substitutionMap: Map<TypeConstructor, TypeProjection> = constraintSystem.typeVariables
             .map { it.originalTypeParameter }
             .associateBy(
                 keySelector = { it.typeConstructor },
-                valueTransform = {
-                    val typeProjection = TypeProjectionImpl(Variance.INVARIANT, it.defaultType)
-                    val substitutedProjection = substitutorToKeepCapturedTypes.substitute(typeProjection)
-                    substitutedProjection?.takeUnless { containsErrorType(it.type) } ?: typeProjection
+                valueTransform = { descriptor ->
+                    val typeProjection =
+                        TypeProjectionImpl(Variance.INVARIANT, descriptor.defaultType)
+                    val substitutedProjection =
+                        substitutorToKeepCapturedTypes.substitute(typeProjection)
+                    substitutedProjection?.takeUnless { containsErrorType(it.type) }
+                        ?: typeProjection
                 })
-        return TypeConstructorSubstitution.createByConstructorsMap(substitutionMap, approximateCapturedTypes = true).buildSubstitutor()
+        return TypeConstructorSubstitution.createByConstructorsMap(
+            substitutionMap,
+            approximateCapturedTypes = true
+        ).buildSubstitutor()
     }
 }
 
-fun TypeSubstitution.hasConflictWith(other: TypeSubstitution, freeParameters: Collection<TypeParameterDescriptor>): Boolean {
-    return freeParameters.any { parameter ->
-        val type = parameter.defaultType
-        val substituted1 = this[type] ?: return@any false
-        val substituted2 = other[type] ?: return@any false
-        !StrictEqualityTypeChecker.strictEqualTypes(
-            substituted1.type.unwrap(),
-            substituted2.type.unwrap()
-        ) || substituted1.projectionKind != substituted2.projectionKind
-    }
-}
-
-fun TypeSubstitutor.combineIfNoConflicts(other: TypeSubstitutor, freeParameters: Collection<TypeParameterDescriptor>): TypeSubstitutor? {
-    if (this.substitution.hasConflictWith(other.substitution, freeParameters)) return null
-    return TypeSubstitutor.createChainedSubstitutor(this.substitution, other.substitution)
-}

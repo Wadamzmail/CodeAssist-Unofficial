@@ -28,7 +28,12 @@ fun SmartCastManager.getSmartCastVariantsWithLessSpecificExcluded(
         dataFlowValueFactory
     )
     return variants.filter { type ->
-        variants.all { another -> another === type || chooseMoreSpecific(type, another).let { it == null || it === type } }
+        variants.all { another ->
+            another === type || chooseMoreSpecific(
+                type,
+                another
+            ).let { it == null || it === type }
+        }
     }
 }
 
@@ -41,15 +46,15 @@ private fun chooseMoreSpecific(type1: KotlinType, type2: KotlinType): KotlinType
 
         type2IsSubtype && !type1IsSubtype -> return type2
 
-        !type1IsSubtype && !type2IsSubtype -> return null
+        !type1IsSubtype -> return null
 
-        else -> { // type1IsSubtype && type2IsSubtype
+        else -> {
             val flexible1 = type1.unwrap() as? FlexibleType
             val flexible2 = type2.unwrap() as? FlexibleType
             return when {
                 flexible1 != null && flexible2 == null -> type2
                 flexible2 != null && flexible1 == null -> type1
-                else -> null //TODO?
+                else -> null // TODO?
             }
         }
     }
