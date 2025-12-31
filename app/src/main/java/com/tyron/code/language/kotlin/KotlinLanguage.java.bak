@@ -148,7 +148,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
             if (itemsList==null)return;
             Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
             itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
-       }catch(Exception e){
+       }catch(Exception ignore){
         if (!(e instanceof InterruptedException)
                     && !(e instanceof ProcessCanceledException)) {
                  Log.e(TAG, "Completion failed", e);
