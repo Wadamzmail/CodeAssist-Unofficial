@@ -51,7 +51,7 @@ public class BuildModule {
     return sLambdaStubs;
   }
 
-  public static File getKotlinc() {
+  /*public static File getKotlinc() {
     if (sKotlincZip == null) {
       sKotlincZip = new File(BuildModule.getContext().getFilesDir(), "kotlinc.jar");
 
@@ -61,7 +61,7 @@ public class BuildModule {
       }
     }
     return sKotlincZip;
-  }
+  }*/
 
   public static File getJavac() {
     if (sJavacZip == null) {

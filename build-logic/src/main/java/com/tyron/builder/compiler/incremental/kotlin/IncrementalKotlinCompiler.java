@@ -104,11 +104,11 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
 
       String jvm_target = buildSettingsJson.optJSONObject("kotlin").optString("jvmTarget", "1.8");
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        BuildModule.getKotlinc().setReadOnly();
-      }
+      //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      //  BuildModule.getKotlinc().setReadOnly();
+      //}
 
-      if (!isCompilerEnabled) {
+      //if (!isCompilerEnabled) {
 
         File api_files = new File(getModule().getRootFile(), "/build/libraries/api_files/libs");
         File api_libs = new File(getModule().getRootFile(), "/build/libraries/api_libs");
@@ -266,8 +266,9 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         if (mCollector.hasErrors()) {
           throw new CompilationFailedException("Compilation failed, see logs for more details");
         }
-      } else {
-
+          
+      // } else {
+      /*
         File api_files = new File(getModule().getRootFile(), "/build/libraries/api_files/libs");
         File api_libs = new File(getModule().getRootFile(), "/build/libraries/api_libs");
         File kotlinOutputDir = new File(getModule().getBuildDirectory(), "bin/kotlin/classes");
@@ -430,7 +431,8 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
             throw new CompilationFailedException("Compilation failed, see logs for more details");
           }
         }
-      }
+        */
+     // }
 
     } catch (Exception e) {
       throw new CompilationFailedException(Throwables.getStackTraceAsString(e));
