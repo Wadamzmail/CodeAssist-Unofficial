@@ -75,6 +75,9 @@ import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
 import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.tyron.common.Prefs;
+import com.tyron.common.SharedPreferenceKeys;
+import org.jetbrains.kotlin.config.*;
 
 public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
@@ -1043,16 +1046,16 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       // String language_version =
       //     buildSettingsJson.optJSONObject("kotlin").optString("languageVersion", "2.1");
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        BuildModule.getKotlinc().setReadOnly();
-      }
+     // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      //  BuildModule.getKotlinc().setReadOnly();
+     // }
 
       if (isSkipKotlinTask) {
         getLogger().debug("> Task :" + name + ":" + "compileKotlin SKIPPED");
         return;
       }
 
-      if (!isCompilerEnabled) {
+      //if (!isCompilerEnabled) {
 
         List<File> mFilesToCompile = new ArrayList<>();
 
@@ -1118,6 +1121,13 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
             javaSourceRoots.stream().map(File::getAbsolutePath).toArray(String[]::new));
         // args.setKotlinHome(mKotlinHome.getAbsolutePath());
         args.setDestination(out.getAbsolutePath());
+        //new 
+        args.setReportPerf(false);
+        args.setReportOutputFiles(false);
+        args.setDumpPerf(null);
+        args.setLanguageVersion(LanguageVersion.LATEST_STABLE.getVersionString());
+        args.setUseFastJarFileSystem(Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true));
+        args.setJvmTarget(jvm_target);
 
         List<File> plugins = getPlugins();
         getLogger().debug("Loading kotlin compiler plugins: " + plugins);
@@ -1165,8 +1175,8 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
         } else {
           getLogger().debug("> Task :" + name + ":" + "classes");
         }
-      } else {
-
+     // } else {
+       /*
         List<File> mFilesToCompile = new ArrayList<>();
 
         mClassCache = getModule().getCache(CACHE_KEY, new Cache<>());
@@ -1291,7 +1301,8 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
             throw new CompilationFailedException("Compilation failed, see logs for more details");
           }
         }
-      }
+        */
+      //}
 
     } catch (Exception e) {
       throw new CompilationFailedException(Throwables.getStackTraceAsString(e));
