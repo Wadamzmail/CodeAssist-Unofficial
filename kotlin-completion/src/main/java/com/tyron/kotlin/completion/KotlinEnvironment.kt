@@ -232,7 +232,7 @@ data class KotlinEnvironment(
             iconKind = iconFrom(descriptor)
             detail = tail
             commitText = completionText
-            this.position = commitText.length
+            cursorOffset = commitText.length
             sortText = fullName
             setInsertHandler(DefaultInsertHandler(this))
         }
