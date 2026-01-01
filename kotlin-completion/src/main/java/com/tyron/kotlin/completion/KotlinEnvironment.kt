@@ -418,7 +418,7 @@ data class KotlinEnvironment(
 
            val range = diagnostic.textRanges.firstOrNull() ?: return@forEach
 
-           val location = CompilerMessageSourceLocation.create(
+           val location = CompilerMessageLocation.create(
                ktFile.virtualFilePath,
                range.startOffset,
                range.endOffset, 
