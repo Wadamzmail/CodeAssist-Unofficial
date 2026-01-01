@@ -58,6 +58,7 @@ import com.tyron.common.SharedPreferenceKeys
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.resolve.TopDownAnalysisContext
 import org.jetbrains.kotlin.diagnostics.Severity
+import org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport
 
 data class KotlinEnvironment(
     val classpath: List<File>,
@@ -310,7 +311,11 @@ data class KotlinEnvironment(
         }
     }
 
-    fun analysisOf(files: List<KtFile>,current: KtFile): Analysis {
+    private val analyzerWithCompilerReport =
+        AnalyzerWithCompilerReport(kotlinEnvironment.configuration)
+        
+        
+    /*fun analysisOf(files: List<KtFile>,current: KtFile): Analysis {
         val trace = CliBindingTrace(kotlinEnvironment.project)
         val project = files.first().project
         val componentProvider = TopDownAnalyzerFacadeForJVM.createContainer(
@@ -346,6 +351,57 @@ data class KotlinEnvironment(
                 AnalysisResult.success(trace.bindingContext, moduleDescriptor)
             )
         }
+    }*/
+    
+    fun analysisOf(files: List<KtFile>, current: KtFile): Analysis {
+        val project = files.first().project
+        val bindingTrace = CliBindingTrace(kotlinEnvironment.project)
+        var componentProvider: ComponentProvider? = null
+        analyzerWithCompilerReport.analyzeAndReport(files) {
+            componentProvider = logTime("componentProvider") {
+                TopDownAnalyzerFacadeForJVM.createContainer(
+                    kotlinEnvironment.project,
+                    files,
+                    bindingTrace,
+                    kotlinEnvironment.configuration,
+                    kotlinEnvironment::createPackagePartProvider,
+                    { storageManager, _ ->
+                        FileBasedDeclarationProviderFactory(
+                            storageManager,
+                            files
+                        )
+                    },
+                    sourceModuleSearchScope = TopDownAnalyzerFacadeForJVM.newModuleSearchScope(
+                      project,
+                       files
+                    ) 
+                )
+            }
+            logTime("analyzeDeclarations") {
+                analysis = componentProvider!!
+                    .getService(LazyTopDownAnalyzer::class.java)
+                    .analyzeDeclarations(TopDownAnalysisMode.TopLevelDeclarations, DataFlowInfo.EMPTY )
+            }
+
+            val moduleDescriptor = componentProvider!!.getService(ModuleDescriptor::class.java)
+            AnalysisHandlerExtension.getInstances(project).find {
+                it.analysisCompleted(
+                    project,
+                    moduleDescriptor,
+                    bindingTrace,
+                    listOf(current)
+                ) != null
+            }
+
+            return@analyzeAndReport AnalysisResult.success(
+                bindingTrace.bindingContext,
+                componentProvider!!.getService(ModuleDescriptor::class.java)
+            )
+        }
+        return Analysis(
+            componentProvider!!,
+            analyzerWithCompilerReport.analysisResult
+        )
     }
 
     private fun Analysis.referenceVariantsFrom(element: PsiElement): List<DeclarationDescriptor>? {

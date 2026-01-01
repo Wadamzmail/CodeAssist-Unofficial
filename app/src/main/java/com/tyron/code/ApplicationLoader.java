@@ -102,8 +102,7 @@ public class ApplicationLoader extends Application {
         .showRestartButton(true)
         .logErrorOnRestart(true)
         .trackActivities(true)
-        .apply();
-	Cras	
+        .apply();	
 
     FileProviderRegistry.getInstance()
         .addFileProvider(new AssetsFileResolver(applicationContext.getAssets()));
