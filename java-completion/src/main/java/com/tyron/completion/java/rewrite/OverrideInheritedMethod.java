@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import dev.mutwakil.javac.*;
 
 public class OverrideInheritedMethod implements JavaRewrite {
 
@@ -85,7 +86,7 @@ public class OverrideInheritedMethod implements JavaRewrite {
                 : compiler.compile(Collections.singletonList(sourceFileObject));
         return container.get(task -> {
             Types types = task.task.getTypes();
-            Trees trees = Trees.instance(task.task);
+            Trees trees = MTrees.instance(task.task);
             ExecutableElement superMethod = FindHelper.findMethod(task, superClassName,
                     methodName, erasedParameterTypes);
             if (superMethod == null) {
@@ -163,7 +164,7 @@ public class OverrideInheritedMethod implements JavaRewrite {
     }
 
     private Position nextMember(ParseTask task, ClassTree parent) {
-        SourcePositions pos = Trees.instance(task.task).getSourcePositions();
+        SourcePositions pos = MTrees.instance(task.task).getSourcePositions();
         if (parent != null) {
             for (Tree member : parent.getMembers()) {
                 long start = pos.getStartPosition(task.root, member);
