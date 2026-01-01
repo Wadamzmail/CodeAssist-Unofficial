@@ -1,10 +1,6 @@
 package com.tyron.kotlin.completion.util
 
-import org.jetbrains.kotlin.descriptors.ClassifierDescriptor
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
-import org.jetbrains.kotlin.descriptors.FunctionDescriptor
-import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
-import org.jetbrains.kotlin.descriptors.VariableDescriptor
+import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.incremental.components.LookupLocation
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.scopes.BaseImportingScope
@@ -12,13 +8,11 @@ import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.utils.Printer
 import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstanceOrNull
 
-class ExplicitImportsScope(private val descriptors: Collection<DeclarationDescriptor>) :
-    BaseImportingScope(null) {
+class ExplicitImportsScope(private val descriptors: Collection<DeclarationDescriptor>) : BaseImportingScope(null) {
     override fun getContributedClassifier(name: Name, location: LookupLocation) =
         descriptors.filter { it.name == name }.firstIsInstanceOrNull<ClassifierDescriptor>()
 
-    override fun getContributedPackage(name: Name) =
-        descriptors.filter { it.name == name }.firstIsInstanceOrNull<PackageViewDescriptor>()
+    override fun getContributedPackage(name: Name) = descriptors.filter { it.name == name }.firstIsInstanceOrNull<PackageViewDescriptor>()
 
     override fun getContributedVariables(name: Name, location: LookupLocation) =
         descriptors.filter { it.name == name }.filterIsInstance<VariableDescriptor>()

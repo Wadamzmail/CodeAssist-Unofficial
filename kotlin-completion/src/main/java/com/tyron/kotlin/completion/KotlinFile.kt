@@ -1,10 +1,13 @@
 package com.tyron.kotlin.completion
 
 import org.jetbrains.kotlin.com.intellij.openapi.project.Project
+import org.jetbrains.kotlin.com.intellij.openapi.vfs.CharsetToolkit
+import org.jetbrains.kotlin.com.intellij.psi.PsiDocumentManager
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.com.intellij.psi.PsiManager
+import org.jetbrains.kotlin.com.intellij.psi.PsiFileFactory
+import org.jetbrains.kotlin.com.intellij.psi.impl.PsiFileFactoryImpl
 import org.jetbrains.kotlin.com.intellij.testFramework.LightVirtualFile
-import org.jetbrains.kotlin.idea.KotlinFileType
+import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.psi.KtExpression
 import org.jetbrains.kotlin.psi.KtFile
 
@@ -12,10 +15,6 @@ class KotlinFile(val name: String, val kotlinFile: KtFile) {
 
     fun elementAt(line: Int, character: Int): PsiElement? =
         kotlinFile.findElementAt(offsetFor(line, character))?.let { expressionFor(it) }
-
-
-    fun elementAt(offset: Int): PsiElement? =
-        kotlinFile.findElementAt(offset)?.let { expressionFor(it) }
 
     fun insert(content: String, atLine: Int, atCharacter: Int): KotlinFile {
         val caretPositionOffset = offsetFor(atLine, atCharacter)
@@ -36,12 +35,22 @@ class KotlinFile(val name: String, val kotlinFile: KtFile) {
         if (element is KtExpression) element else expressionFor(element.parent)
 
     companion object {
-        fun from(project: Project, name: String, content: String) =
-            KotlinFile(
-                name, PsiManager.getInstance(project)
-                    .findFile(
-                        LightVirtualFile(name, KotlinFileType.INSTANCE, content)
-                    ) as KtFile
-            )
+        fun from(project: Project, name: String, content: String): KotlinFile {
+            val psiFactory = (PsiFileFactory.getInstance(project) as PsiFileFactoryImpl)
+            val ktFile = psiFactory.trySetupPsiForFile(
+                LightVirtualFile(
+                    if (name.endsWith(".kt")) name else "$name.kt",
+                    KotlinLanguage.INSTANCE,
+                    content
+                ).apply { charset = CharsetToolkit.UTF8_CHARSET },
+                KotlinLanguage.INSTANCE, true, false
+            ) as KtFile
+
+            val instance = PsiDocumentManager.getInstance(project)
+            instance.addListener { document, psiFile ->
+
+            }
+            return KotlinFile(name, ktFile)
+        }
     }
 }
