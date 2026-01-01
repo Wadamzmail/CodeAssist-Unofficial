@@ -340,7 +340,7 @@ data class KotlinEnvironment(
             val moduleDescriptor = componentProvider.getService(ModuleDescriptor::class.java)
             AnalysisHandlerExtension.getInstances(project)
                 .find { it.analysisCompleted(project, moduleDescriptor, trace, listOf(current)) != null }
-                reportDiagnostics(trace, messageCollector)
+               // reportDiagnostics(trace, messageCollector)
             return@logTime Analysis(
                 componentProvider,
                 AnalysisResult.success(trace.bindingContext, moduleDescriptor)
