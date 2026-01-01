@@ -381,7 +381,7 @@ data class KotlinEnvironment(
             logTime("analyzeDeclarations") {
                 analysis = componentProvider!!
                     .getService(LazyTopDownAnalyzer::class.java)
-                    .analyzeDeclarations(TopDownAnalysisMode.TopLevelDeclarations,files, DataFlowInfo.EMPTY )
+                    .analyzeDeclarations(TopDownAnalysisMode.TopLevelDeclarations)
             }
 
             val moduleDescriptor = componentProvider!!.getService(ModuleDescriptor::class.java)
