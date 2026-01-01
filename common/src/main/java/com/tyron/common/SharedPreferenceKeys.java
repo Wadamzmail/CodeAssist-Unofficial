@@ -29,4 +29,5 @@ public class SharedPreferenceKeys {
   public static final String KOTLIN_MAX_ITEMS_COUNT = "kotlin_max_items_count";
   public static final String USE_PSI_CLASS_FILES_READING = "use_psi_class_files_reading";
   public static final String PARALLEL_BACKEND_THREADS = "parallel_backend_threads";
+  public static final String USE_FIR = "use_fir";
 }

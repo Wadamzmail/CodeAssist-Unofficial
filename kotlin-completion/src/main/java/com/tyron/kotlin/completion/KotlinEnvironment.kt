@@ -56,6 +56,7 @@ import com.tyron.common.Prefs
 import com.tyron.common.SharedPreferenceKeys
 import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.resolve.TopDownAnalysisContext
+import org.jetbrains.kotlin.diagnostics.Severity
 
 data class KotlinEnvironment(
     val classpath: List<File>,
@@ -420,7 +421,8 @@ data class KotlinEnvironment(
            val location = CompilerMessageSourceLocation.create(
                ktFile.virtualFilePath,
                range.startOffset,
-               range.endOffset
+               range.endOffset, 
+               null
            )
 
            messageCollector.report(
@@ -429,6 +431,13 @@ data class KotlinEnvironment(
                location
            )
        }
+    }
+    
+    private fun Severity.toCompilerSeverity(): CompilerMessageSeverity =
+    when (this) {
+        Severity.ERROR -> CompilerMessageSeverity.ERROR
+        Severity.WARNING -> CompilerMessageSeverity.WARNING
+        Severity.INFO -> CompilerMessageSeverity.INFO
     }
 
 
@@ -532,8 +541,8 @@ data class KotlinEnvironment(
                     put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
                     put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
                     put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
-                    put(CommonConfigurationKeys.USE_FIR, true)
-                    put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
+                    put(CommonConfigurationKeys.USE_FIR, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FIR,true))
+                    put(CommonConfigurationKeys.USE_LIGHT_TREE, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FIR,true))
                     put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, Prefs.get().getString(SharedPreferenceKeys.PARALLEL_BACKEND_THREADS,"10")?.toIntOrNull()?:10)
                     put(CommonConfigurationKeys.VERIFY_IR, IrVerificationMode.NONE);
                     put(CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS,false)                    
