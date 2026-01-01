@@ -50,6 +50,7 @@ import com.tyron.completion.util.CompletionUtils
 import org.jetbrains.kotlin.config.AnalysisFlags
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation
+org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
 import com.tyron.common.Prefs
