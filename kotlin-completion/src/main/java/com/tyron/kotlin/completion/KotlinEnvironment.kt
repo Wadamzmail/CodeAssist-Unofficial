@@ -202,9 +202,20 @@ data class KotlinEnvironment(
                     .toList()
 
                  // Combine with keywords (optimized to not exceed max count)
-                 descriptors + keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                 //descriptors + keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                 if (!isAfterDot(element)) {
+                     descriptors + keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
+                    } else {
+                  descriptors
+                 } 
                  
             } ?: emptyList()
+    }
+    
+    private fun isAfterDot(element: PsiElement): Boolean {
+    val parent = element.parent
+    return parent is KtQualifiedExpression &&
+           parent.selectorExpression == element
     }
 
     private fun completionVariantFor(
