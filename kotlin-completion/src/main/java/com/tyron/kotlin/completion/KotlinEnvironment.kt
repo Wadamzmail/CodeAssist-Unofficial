@@ -552,7 +552,7 @@ data class KotlinEnvironment(
                     put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 4) // Lower threads for mobile context to avoid CPU starvation
                     put(CommonConfigurationKeys.VERIFY_IR, IrVerificationMode.NONE)
                     put(CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS, false)
-                    put(CLIConfigurationKeys.INTELLIJ_PLUGIN_ROOT, ".")
+                   // put(CLIConfigurationKeys.INTELLIJ_PLUGIN_ROOT, ".")
 
                     with(K2JVMCompilerArguments()) {
                         put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, true)
