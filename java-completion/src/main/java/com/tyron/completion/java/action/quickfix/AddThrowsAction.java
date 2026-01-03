@@ -29,6 +29,12 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
 public class AddThrowsAction extends ExceptionsQuickFix {
 
   public static final String ID = "javaAddThrowsQuickFix";
@@ -47,9 +53,18 @@ public class AddThrowsAction extends ExceptionsQuickFix {
     if (diagnostic == null) {
       return;
     }
+    
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     TreePath surroundingPath =
-        ActionUtil.findSurroundingPath(event.getData(CommonJavaContextKeys.CURRENT_PATH));
+        ActionUtil.findSurroundingPath(currentPath);
     if (surroundingPath == null) {
       return;
     }
@@ -71,26 +86,31 @@ public class AddThrowsAction extends ExceptionsQuickFix {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
-    JavaCompilerService compiler = e.getData(CommonJavaContextKeys.COMPILER);
     Diagnostic<?> diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
-    TreePath currentPath = e.getData(CommonJavaContextKeys.CURRENT_PATH);
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
     String exceptionName =
         DiagnosticUtil.extractExceptionName(diagnostic.getMessage(Locale.ENGLISH));
 
     ThreadUtil.runOnBackgroundThread(
         () -> {
-          CompilerContainer container = compiler.getCachedContainer();
-          AtomicReference<JavaRewrite> rewrite = new AtomicReference<>();
-          container.run(task -> rewrite.set(performInternal(task, exceptionName, diagnostic)));
-          JavaRewrite r = rewrite.get();
+          AtomicReference<JavaRewrite2> rewrite = new AtomicReference<>();
+           rewrite.set(performInternal(task, exceptionName, diagnostic));
+          JavaRewrite2 r = rewrite.get();
           if (r != null) {
-            RewriteUtil.performRewrite(editor, file, compiler, r);
+            RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), r);
           }
         });
   }
 
-  private JavaRewrite performInternal(
-      CompileTask task, String exceptionName, Diagnostic<?> diagnostic) {
+  private JavaRewrite2 performInternal(
+      JavacUtilitiesProvider task, String exceptionName, Diagnostic<?> diagnostic) {
     if (task == null) {
       return null;
     }
@@ -99,7 +119,7 @@ public class AddThrowsAction extends ExceptionsQuickFix {
     Element classElement = needsThrow.method.getEnclosingElement();
     TypeElement classTypeElement = (TypeElement) classElement;
     TypeMirror superclass = classTypeElement.getSuperclass();
-    TypeElement superClassElement = (TypeElement) task.task.getTypes().asElement(superclass);
+    TypeElement superClassElement = (TypeElement) task.getTypes().asElement(superclass);
     if (!ElementUtil.isMemberOf(task, needsThrow.method, superClassElement)) {
       return new AddException(
           needsThrow.className,

@@ -19,6 +19,12 @@ import com.tyron.editor.Editor;
 import java.io.File;
 import javax.tools.Diagnostic;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
 public class ImplementAbstractMethodsFix extends AnAction {
 
   public static final String ID = "javaImplementAbstractMethodsFix";
@@ -49,10 +55,8 @@ public class ImplementAbstractMethodsFix extends AnAction {
       return;
     }
 
-    JavaCompilerService compiler = event.getData(CommonJavaContextKeys.COMPILER);
-    if (compiler == null) {
-      return;
-    }
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    if (compilationInfo == null) return;       
 
     presentation.setVisible(true);
     presentation.setText(
@@ -63,15 +67,23 @@ public class ImplementAbstractMethodsFix extends AnAction {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
-    JavaCompilerService compiler = e.getData(CommonJavaContextKeys.COMPILER);
     Diagnostic<?> diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
     ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
         DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
     if (diagnosticSourceUnwrapper == null) {
       return;
     }
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+        
     JCDiagnostic jcDiagnostic = diagnosticSourceUnwrapper.d;
-    JavaRewrite rewrite = new ImplementAbstractMethods(jcDiagnostic);
-    RewriteUtil.performRewrite(editor, file, compiler, rewrite);
+    JavaRewrite2 rewrite = new ImplementAbstractMethods(jcDiagnostic);
+    RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), rewrite);
   }
 }

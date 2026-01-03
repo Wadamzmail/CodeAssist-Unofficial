@@ -59,6 +59,6 @@ public class AddException implements JavaRewrite2 {
           }
           TextEdit insertThrows = new TextEdit(new Range(startBody - 1, startBody - 1), insertText);
           return ImmutableMap.of(file, new TextEdit[] {insertThrows});
-        });
+       
   }
 }

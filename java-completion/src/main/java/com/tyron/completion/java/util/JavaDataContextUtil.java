@@ -19,6 +19,9 @@ import java.util.List;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
+import com.tyron.builder.project.api.JavaModule;
+import com.tyron.builder.project.api.Module;
+
 public class JavaDataContextUtil {
 
     public static void addEditorKeys(DataContext context, Project project, File file, int cursor) {
@@ -38,6 +41,7 @@ public class JavaDataContextUtil {
                         context.putData(CommonDataKeys.DIAGNOSTIC, new DiagnosticWrapper(diagnostic));
                     }
                 }
+                  
             }
         }
     }

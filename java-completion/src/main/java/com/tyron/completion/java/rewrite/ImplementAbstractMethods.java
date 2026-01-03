@@ -83,7 +83,7 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
       return Collections.emptyMap();
     }
 
-    return rewriteInternal task, file);
+    return rewriteInternal(task, file);
        
   }
 
@@ -148,7 +148,7 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
     for (String type : typesToImport) {
       String fqn = ActionUtil.removeDiamond(type);
       if (!ActionUtil.hasImport(task.root(), fqn)) {
-                        JavaRewrite addImport = new AddImport(file.toFile(), fqn);
+                        JavaRewrite2 addImport = new AddImport(file.toFile(), fqn);
                         Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
                         TextEdit[] textEdits = rewrite.get(file);
                         if (textEdits != null) {

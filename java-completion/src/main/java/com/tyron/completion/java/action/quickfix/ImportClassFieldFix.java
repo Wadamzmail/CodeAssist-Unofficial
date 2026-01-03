@@ -24,6 +24,15 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.tools.Diagnostic;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
+import com.tyron.builder.project.api.JavaModule;
+import com.tyron.builder.project.api.Module;
+
 public class ImportClassFieldFix extends AnAction {
 
   public static final String ID = "javaImportClassFieldFix";
@@ -43,6 +52,11 @@ public class ImportClassFieldFix extends AnAction {
     if (diagnostic == null) {
       return;
     }
+    
+    Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
+    if(editor==null)return;
+    Project project = editor.getProject();
+    if(project==null)return;
 
     ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
         DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
@@ -54,14 +68,18 @@ public class ImportClassFieldFix extends AnAction {
       return;
     }
 
-    JavaCompilerService compiler = event.getData(CommonJavaContextKeys.COMPILER);
-    if (compiler == null) {
-      return;
-    }
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[0]);
     List<String> classNames = new ArrayList<>();
-    for (String qualifiedName : compiler.publicTopLevelTypes()) {
+    for (String qualifiedName : publicTopLevelTypes(project,editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         classNames.add(qualifiedName);
       }
@@ -98,8 +116,16 @@ public class ImportClassFieldFix extends AnAction {
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
     JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
     String simpleName = String.valueOf(d.getArgs()[0]);
-    JavaCompilerService compiler = e.getRequiredData(CommonJavaContextKeys.COMPILER);
+     Project project = editor.getProject();
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     boolean isField = simpleName.contains(".");
     String searchName = simpleName;
@@ -107,8 +133,8 @@ public class ImportClassFieldFix extends AnAction {
       searchName = searchName.substring(0, searchName.indexOf('.'));
     }
 
-    Map<String, JavaRewrite> map = new TreeMap<>();
-    for (String qualifiedName : compiler.publicTopLevelTypes()) {
+    Map<String, JavaRewrite2> map = new TreeMap<>();
+    for (String qualifiedName : publicTopLevelTypes(project,editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         if (qualifiedName.endsWith("." + searchName)) {
           if (isField) {
@@ -133,11 +159,23 @@ public class ImportClassFieldFix extends AnAction {
           .setItems(
               titles,
               (di, w) -> {
-                JavaRewrite rewrite = map.get(titles[w]);
-                RewriteUtil.performRewrite(editor, file.toFile(), compiler, rewrite);
+                JavaRewrite2 rewrite = map.get(titles[w]);
+                RewriteUtil.performRewrite(editor, file.toFile(), new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), rewrite);
               })
           .setNegativeButton(android.R.string.cancel, null)
           .show();
     }
   }
+  
+  public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {
+    Set<String> classes = new HashSet<>();
+    Module currentModule = project.getModule(editor.getCurrentFile());
+    for (Module module : mProject.getDependencies(mCurrentModule)) {
+      if (module instanceof JavaModule) {
+        classes.addAll(((JavaModule) module).getAllClasses());
+      }
+    }
+    return classes;
+  }
+  
 }

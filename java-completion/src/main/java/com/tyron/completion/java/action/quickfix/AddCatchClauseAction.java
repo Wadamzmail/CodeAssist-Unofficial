@@ -24,6 +24,12 @@ import java.io.File;
 import java.util.Locale;
 import javax.tools.Diagnostic;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
 public class AddCatchClauseAction extends ExceptionsQuickFix {
 
   public static final String ID = "javaAddCatchClauseQuickFix";
@@ -42,9 +48,21 @@ public class AddCatchClauseAction extends ExceptionsQuickFix {
     if (diagnostic == null) {
       return;
     }
+    
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+    
+
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+       if (unit == null) return;
+
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     TreePath surroundingPath =
-        ActionUtil.findSurroundingPath(event.getData(CommonJavaContextKeys.CURRENT_PATH));
+        ActionUtil.findSurroundingPath(currentPath);
     if (surroundingPath == null) {
       return;
     }
@@ -63,9 +81,15 @@ public class AddCatchClauseAction extends ExceptionsQuickFix {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
-    JavaCompilerService compiler = e.getData(CommonJavaContextKeys.COMPILER);
     Diagnostic<?> diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
-    TreePath currentPath = e.getData(CommonJavaContextKeys.CURRENT_PATH);
+     CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
     TreePath surroundingPath = ActionUtil.findSurroundingPath(currentPath);
     String exceptionName =
         DiagnosticUtil.extractExceptionName(diagnostic.getMessage(Locale.ENGLISH));
@@ -76,8 +100,8 @@ public class AddCatchClauseAction extends ExceptionsQuickFix {
 
     ThreadUtil.runOnBackgroundThread(
         () -> {
-          JavaRewrite r = performInternal(file, exceptionName, surroundingPath);
-          RewriteUtil.performRewrite(editor, file, compiler, r);
+          JavaRewrite2 r = performInternal(file, exceptionName, surroundingPath);
+          RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), r);
         });
   }
 

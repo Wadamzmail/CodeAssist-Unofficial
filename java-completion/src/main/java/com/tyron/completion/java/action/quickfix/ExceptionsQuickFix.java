@@ -10,6 +10,12 @@ import com.tyron.completion.java.action.CommonJavaContextKeys;
 import com.tyron.editor.Editor;
 import javax.tools.Diagnostic;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
 public abstract class ExceptionsQuickFix extends AnAction {
 
   public static final String ERROR_CODE =
@@ -32,7 +38,15 @@ public abstract class ExceptionsQuickFix extends AnAction {
       return;
     }
 
-    TreePath currentPath = event.getData(CommonJavaContextKeys.CURRENT_PATH);
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+        
     if (currentPath == null) {
       return;
     }

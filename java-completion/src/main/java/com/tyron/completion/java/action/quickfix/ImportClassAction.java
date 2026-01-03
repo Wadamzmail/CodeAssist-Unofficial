@@ -23,6 +23,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.tools.Diagnostic;
+import java.util.Set;
+import java.util.HashSet;
+
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
+import com.tyron.builder.project.Project;
+import com.tyron.builder.project.api.JavaModule;
+import com.tyron.builder.project.api.Module;
 
 public class ImportClassAction extends AnAction {
 
@@ -55,15 +67,18 @@ public class ImportClassAction extends AnAction {
         && !ERROR_CODE_RETURN_TYPE.equals(diagnostic.getCode())) {
       return;
     }
+    
+    Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
+    if(editor==null)return;
+    Project project = editor.getProject();
+    if(project==null)return;
 
-    JavaCompilerService compiler = event.getData(CommonJavaContextKeys.COMPILER);
-    if (compiler == null) {
-      return;
-    }
-
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    if (compilationInfo == null) return;
+ 
     String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[1]);
     List<String> classNames = new ArrayList<>();
-    for (String qualifiedName : compiler.publicTopLevelTypes()) {
+    for (String qualifiedName : publicTopLevelTypes(project,editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         classNames.add(qualifiedName);
       }
@@ -100,21 +115,29 @@ public class ImportClassAction extends AnAction {
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
     JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
     String simpleName = String.valueOf(d.getArgs()[1]);
-    JavaCompilerService compiler = e.getRequiredData(CommonJavaContextKeys.COMPILER);
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
+    Project project = editor.getProject();
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
-    Map<String, JavaRewrite> map = new TreeMap<>();
-    for (String qualifiedName : compiler.publicTopLevelTypes()) {
+    Map<String, JavaRewrite2> map = new TreeMap<>();
+    for (String qualifiedName : publicTopLevelTypes(project,editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         String title = e.getDataContext().getString(R.string.import_class_name, qualifiedName);
-        //                JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
-        //                map.put(title, addImport);
+           //             JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
+            //            map.put(title, addImport);
         throw new UnsupportedOperationException();
       }
     }
 
     if (map.size() == 1) {
-      RewriteUtil.performRewrite(editor, file.toFile(), compiler, map.values().iterator().next());
+      RewriteUtil.performRewrite(editor, file.toFile(), new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), map.values().iterator().next());
     } else {
       String[] titles = map.keySet().toArray(new String[0]);
       new AlertDialog.Builder(e.getDataContext())
@@ -122,11 +145,23 @@ public class ImportClassAction extends AnAction {
           .setItems(
               titles,
               (di, w) -> {
-                JavaRewrite rewrite = map.get(titles[w]);
-                RewriteUtil.performRewrite(editor, file.toFile(), compiler, rewrite);
+                JavaRewrite2 rewrite = map.get(titles[w]);
+                RewriteUtil.performRewrite(editor, file.toFile(), new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), rewrite);
               })
           .setNegativeButton(android.R.string.cancel, null)
           .show();
     }
   }
+  
+  public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {
+    Set<String> classes = new HashSet<>();
+    Module currentModule = project.getModule(editor.getCurrentFile());
+    for (Module module : mProject.getDependencies(mCurrentModule)) {
+      if (module instanceof JavaModule) {
+        classes.addAll(((JavaModule) module).getAllClasses());
+      }
+    }
+    return classes;
+  }
+  
 }
