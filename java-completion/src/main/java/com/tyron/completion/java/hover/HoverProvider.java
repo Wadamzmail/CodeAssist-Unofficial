@@ -77,8 +77,8 @@ public class HoverProvider {
       Tree tree = FindHelper.findMethod(parse, className, methodName, erasedParameterTypes);
       return docs(parse, tree);
     } else {
-      return "";
-    }*/
+      return "";*/
+    }
   }
 
   private String docs(JavacUtilitiesProvider task, Tree tree) {
