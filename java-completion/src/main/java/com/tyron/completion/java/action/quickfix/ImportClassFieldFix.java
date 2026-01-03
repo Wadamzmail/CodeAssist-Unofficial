@@ -25,7 +25,7 @@ import java.util.TreeMap;
 import javax.tools.Diagnostic;
 import java.util.HashSet;
 import java.util.Set;
-import Java.io.File;
+import java.io.File;
 
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.api.JavacTaskImpl;

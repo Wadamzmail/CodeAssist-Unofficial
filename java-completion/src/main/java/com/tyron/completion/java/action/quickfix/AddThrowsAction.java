@@ -112,7 +112,7 @@ public class AddThrowsAction extends ExceptionsQuickFix {
   }
 
   private JavaRewrite2 performInternal(
-      JavacUtilitiesProvider task, String exceptionName, Diagnostic<?> diagnostic) {
+      JavacTaskImpl task, String exceptionName, Diagnostic<?> diagnostic) {
     if (task == null) {
       return null;
     }

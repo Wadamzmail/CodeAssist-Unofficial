@@ -26,6 +26,7 @@ import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.sun.tools.javac.api.JavacTaskImpl;
 
 public class DiagnosticUtil {
 
@@ -56,7 +57,7 @@ public class DiagnosticUtil {
     public String[] erasedParameterTypes;
     public ExecutableElement method;
 
-    public MethodPtr(JavacUtilitiesProvider task, ExecutableElement method) {
+    public MethodPtr(JavacTaskImpl task, ExecutableElement method) {
       this.method = method;
       Types types = task.getTypes();
       TypeElement parent = (TypeElement) method.getEnclosingElement();

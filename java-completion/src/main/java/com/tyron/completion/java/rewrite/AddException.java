@@ -32,7 +32,7 @@ public class AddException implements JavaRewrite2 {
 
   @Override
   public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-     
+     Path file = new File("none/none/none").toPath();
           CompilationUnitTree root = task.root();
           if (root == null) {
             return CANCELLED;
