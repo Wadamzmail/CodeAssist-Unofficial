@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.Trees;
-import dev.mutwakil.javac.JavacTreesUtil;
+import dev.mutwakil.javac.*;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Path;
@@ -24,7 +24,7 @@ public class CompileTask implements AutoCloseable {
   public CompileTask(CompileBatch batch) {
     mCompileBatch = batch;
     this.task = batch.task;
-    this.trees = JavacTreesUtil.instance(task);
+    this.trees = MTrees.instance(task);
 
     this.roots = batch.roots;
     this.diagnostics = batch.parent.getDiagnostics();

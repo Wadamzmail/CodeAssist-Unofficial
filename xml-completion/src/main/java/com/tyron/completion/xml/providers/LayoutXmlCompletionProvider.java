@@ -119,23 +119,23 @@ public class LayoutXmlCompletionProvider extends CompletionProvider {
         AndroidXmlTagUtils.addTagItems(repository, prefix, builder);
         break;
       case ATTRIBUTE:
-        AndroidAttributeUtils.addLayoutAttributes(
-            builder, repository.getRepository(), parsed.findNodeAt((int) index), namespace);
+       // AndroidAttributeUtils.addLayoutAttributes(
+       //     builder, repository.getRepository(), parsed.findNodeAt((int) index), namespace);
         break;
       case ATTRIBUTE_VALUE:
-        DOMAttr attr = parsed.findAttrAt((int) index);
-        String uri = DOMUtils.lookupPrefix(attr);
-        ResourceNamespace resourceNamespace = ResourceNamespace.fromNamespaceUri(uri);
-        AttributeValueUtils.addValueItems(
-            project,
-            module,
-            prefix,
-            (int) index,
-            repository,
-            attr,
-            resourceNamespace,
-            namespace,
-            builder);
+       // DOMAttr attr = parsed.findAttrAt((int) index);
+      //  String uri = DOMUtils.lookupPrefix(attr);
+      //  ResourceNamespace resourceNamespace = ResourceNamespace.fromNamespaceUri(uri);
+       // AttributeValueUtils.addValueItems(
+          // project,
+          // module,
+          //  prefix,
+          //  (int) index,
+          //  repository,
+          //  attr,
+          //  resourceNamespace,
+          //  namespace,
+          //  builder);
     }
     return builder;
   }

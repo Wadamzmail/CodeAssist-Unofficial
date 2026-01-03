@@ -308,28 +308,26 @@ public class ProjectManager {
         mListener.onTaskStarted("Indexing");
         try {
           if(indexFiles.containsKey(JAVA)){
-              JavaCompilerProvider provider =
-                  CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
-              JavaCompilerService service = provider.get(project, module);
+          //    JavaCompilerProvider provider =
+          //        CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
+          //    JavaCompilerService service = provider.get(project, module);
               if (res.exists()&&indexFiles.containsKey(INJECT_RES)) {
                 if (module instanceof AndroidModule) {
                   String packageName = getApplicationId(((AndroidModule) module));
                   if (packageName != null) {
-                    //new 
-                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null));
-                    //
                     InjectResourcesTask.inject(project, (AndroidModule) module);
                     InjectViewBindingTask.inject(project, (AndroidModule) module);
+                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null)); 
                     logger.debug(
                         "> Task :" + module.getRootFile().getName() + ":" + "injectingResources");
                   }
                 }
               }
-              Collection<File> files = javaModule.getJavaFiles().values();
-              File first = files.size()>0?((File)files.toArray()[0]):null;//CollectionsKt.firstOrNull(files);
-              if (first != null) {
-                service.compile(first.toPath());
-              }
+          //    Collection<File> files = javaModule.getJavaFiles().values();
+          //    File first = files.size()>0?((File)files.toArray()[0]):null;//CollectionsKt.firstOrNull(files);
+          //    if (first != null) {
+          //      service.compile(first.toPath());
+          //    }
 
               //new instead of the upper ^
               indexModule(module);
