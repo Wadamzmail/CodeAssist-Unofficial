@@ -103,7 +103,7 @@ public class AddThrowsAction extends ExceptionsQuickFix {
     ThreadUtil.runOnBackgroundThread(
         () -> {
           AtomicReference<JavaRewrite2> rewrite = new AtomicReference<>();
-           rewrite.set(performInternal(javacTask, exceptionName, diagnostic));
+           rewrite.set(performInternal(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), exceptionName, diagnostic));
           JavaRewrite2 r = rewrite.get();
           if (r != null) {
             RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), r);
@@ -112,7 +112,7 @@ public class AddThrowsAction extends ExceptionsQuickFix {
   }
 
   private JavaRewrite2 performInternal(
-      JavacTaskImpl task, String exceptionName, Diagnostic<?> diagnostic) {
+      JavacUtilitiesProvider task, String exceptionName, Diagnostic<?> diagnostic) {
     if (task == null) {
       return null;
     }

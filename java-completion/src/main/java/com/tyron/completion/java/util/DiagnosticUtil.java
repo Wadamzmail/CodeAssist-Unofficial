@@ -57,7 +57,7 @@ public class DiagnosticUtil {
     public String[] erasedParameterTypes;
     public ExecutableElement method;
 
-    public MethodPtr(JavacTaskImpl task, ExecutableElement method) {
+    public MethodPtr(JavacUtilitiesProvider task, ExecutableElement method) {
       this.method = method;
       Types types = task.getTypes();
       TypeElement parent = (TypeElement) method.getEnclosingElement();
@@ -199,7 +199,7 @@ public class DiagnosticUtil {
   @NonNull
   public static MethodPtr findMethod(JavacUtilitiesProvider task, long position) {
     Trees trees = task.getTrees();
-    Tree tree = new FindMethodDeclarationAt(task.getTrees()).scan(task.root(), position);
+    Tree tree = new FindMethodDeclarationAt(trees).scan(task.root(), position);
     TreePath path = trees.getPath(task.root(), tree);
     ExecutableElement method = (ExecutableElement) trees.getElement(path);
     return new MethodPtr(task, method);

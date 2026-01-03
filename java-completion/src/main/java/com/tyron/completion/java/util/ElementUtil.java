@@ -19,6 +19,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+
 
 public class ElementUtil {
 
@@ -100,7 +102,7 @@ public class ElementUtil {
    * <p>This is a hack, since ExecutableElement does not override equals and hashCode, i manually
    * checked the necessary information to determine on whether the two methods are equal.
    */
-  public static boolean isMemberOf(JavacTaskImpl task, ExecutableElement method, TypeElement aClass) {
+  public static boolean isMemberOf(JavacUtilitiesProvider task, ExecutableElement method, TypeElement aClass) {
     if (aClass == null) {
       return false;
     }

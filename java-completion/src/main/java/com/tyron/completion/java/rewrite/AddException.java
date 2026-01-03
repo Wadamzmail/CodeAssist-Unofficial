@@ -11,6 +11,7 @@ import com.tyron.completion.model.TextEdit;
 import dev.mutwakil.javac.*;
 import java.nio.file.Path;
 import java.util.Map;
+import java.io.File;
 import javax.lang.model.element.ExecutableElement;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.tools.javac.api.JavacTaskImpl;
