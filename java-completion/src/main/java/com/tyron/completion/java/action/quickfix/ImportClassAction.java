@@ -35,6 +35,7 @@ import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
+import com.tyron.completion.java.action.FindCurrentPath;
 
 public class ImportClassAction extends AnAction {
 
@@ -68,10 +69,12 @@ public class ImportClassAction extends AnAction {
       return;
     }
     
-    Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
+    Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
     if(editor==null)return;
     Project project = editor.getProject();
     if(project==null)return;
+    File file = event.getRequiredData(CommonDataKeys.FILE);
+    if(file==null)return;
 
     CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
     if (compilationInfo == null) return;
@@ -117,7 +120,7 @@ public class ImportClassAction extends AnAction {
     String simpleName = String.valueOf(d.getArgs()[1]);
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
     Project project = editor.getProject();
-    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
         JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
         if (unit == null) return;

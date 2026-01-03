@@ -32,6 +32,7 @@ import com.tyron.completion.java.rewrite.JavaRewrite2;
 
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
+import com.tyron.completion.java.action.FindCurrentPath;
 
 public class ImportClassFieldFix extends AnAction {
 
@@ -53,10 +54,12 @@ public class ImportClassFieldFix extends AnAction {
       return;
     }
     
-    Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
+    Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
     if(editor==null)return;
     Project project = editor.getProject();
     if(project==null)return;
+    File file = event.getRequiredData(CommonDataKeys.FILE);
+    if(file==null) return ;
 
     ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
         DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
@@ -118,7 +121,7 @@ public class ImportClassFieldFix extends AnAction {
     String simpleName = String.valueOf(d.getArgs()[0]);
      Project project = editor.getProject();
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
-    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
         JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
         if (unit == null) return;

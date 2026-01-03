@@ -30,6 +30,7 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
+import com.tyron.completion.java.action.FindCurrentPath;
 
 public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
 
@@ -49,6 +50,11 @@ public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
     if (diagnostic == null) {
       return;
     }
+    
+    Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+        if(editor==null) return;
+        File file = event.getRequiredData(CommonDataKeys.FILE);
+        if(file==null) return;
     
     CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
@@ -82,7 +88,7 @@ public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
     File file = e.getRequiredData(CommonDataKeys.FILE);
     Diagnostic<?> diagnostic = e.getRequiredData(CommonDataKeys.DIAGNOSTIC);
-    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
         JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
         if (unit == null) return;

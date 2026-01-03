@@ -3,10 +3,6 @@ package com.tyron.completion.java.hover;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import com.tyron.completion.java.CompilerProvider;
-import com.tyron.completion.java.compiler.CompileTask;
-import com.tyron.completion.java.compiler.CompilerContainer;
-import com.tyron.completion.java.compiler.ParseTask;
 import com.tyron.completion.java.provider.FindHelper;
 import dev.mutwakil.javac.*;
 import java.nio.file.Path;
@@ -21,22 +17,20 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 public class HoverProvider {
 
-  final CompilerProvider compiler;
+  final JavacUtilitiesProvider task;
 
   public static final List<String> NOT_SUPPORTED = Collections.emptyList();
 
-  public HoverProvider(CompilerProvider provider) {
-    compiler = provider;
+  public HoverProvider(JavacUtilitiesProvider provider) {
+    task = provider;
   }
 
   public List<String> hover(Path file, int offset) {
-    CompilerContainer container = compiler.compile(file);
-    return container.get(
-        task -> {
-          Element element = new FindHoverElement(task.task).scan(task.root(), (long) offset);
+          Element element = new FindHoverElement(task).scan(task.root(), (long) offset);
           if (element == null) {
             return NOT_SUPPORTED;
           }
@@ -48,16 +42,18 @@ public class HoverProvider {
             list.add(docs);
           }
           return list;
-        });
+ 
   }
 
-  public String docs(CompileTask task, Element element) {
+  public String docs(JavacUtilitiesProvider task, Element element) {
     if (element instanceof TypeElement) {
       TypeElement type = (TypeElement) element;
       String className = type.getQualifiedName().toString();
-      Optional<JavaFileObject> file = compiler.findAnywhere(className);
-      if (!file.isPresent()) return "";
-      ParseTask parse = compiler.parse(file.get());
+     // TODO
+     // Optional<JavaFileObject> file = compiler.findAnywhere(className);
+     //  if (!file.isPresent()) return "";
+     return "";
+    /*  ParseTask parse = compiler.parse(file.get());
       Tree tree = FindHelper.findType(parse, className);
       return docs(parse, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
@@ -82,12 +78,12 @@ public class HoverProvider {
       return docs(parse, tree);
     } else {
       return "";
-    }
+    }*/
   }
 
-  private String docs(ParseTask task, Tree tree) {
-    TreePath path = MTrees.instance(task.task).getPath(task.root, tree);
-    DocCommentTree docTree = MDocTrees.instance(task.task).getDocCommentTree(path);
+  private String docs(JavacUtilitiesProvider task, Tree tree) {
+    TreePath path = task.getTrees().getPath(task.root(), tree);
+    DocCommentTree docTree = MDocTrees.instance(task.getContext()).getDocCommentTree(path);
     if (docTree == null) return "";
     // TODO: format this
     return docTree.toString();

@@ -63,9 +63,9 @@ public class ViewJavaDocAction extends AnAction {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
-    JavaCompilerService compiler = e.getData(CommonJavaContextKeys.COMPILER);
+     
 
-    HoverProvider hoverProvider = new HoverProvider(compiler);
+    /*HoverProvider hoverProvider = new HoverProvider(compiler);
     List<String> strings = hoverProvider.hover(file.toPath(), editor.getCaret().getStart());
 
     String title = e.getDataContext().getString(R.string.menu_action_view_javadoc_title);
@@ -74,6 +74,6 @@ public class ViewJavaDocAction extends AnAction {
         .setTitle(title)
         .setMessage(strings.get(0))
         .setPositiveButton(R.string.menu_close, null)
-        .show();
+        .show();*/
   }
 }

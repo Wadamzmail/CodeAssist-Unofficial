@@ -4,14 +4,15 @@ import com.sun.source.tree.*;
 import com.sun.source.util.*;
 import dev.mutwakil.javac.*;
 import javax.lang.model.element.Element;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 /** Class that searches where the current cursor is and returns the element corresponding to it */
 public class FindHoverElement extends TreePathScanner<Element, Long> {
 
-  private final JavacTask task;
+  private final JavacUtilitiesProvider task;
   private CompilationUnitTree root;
 
-  public FindHoverElement(JavacTask task) {
+  public FindHoverElement(JavacUtilitiesProvider task) {
     this.task = task;
   }
 
@@ -23,33 +24,33 @@ public class FindHoverElement extends TreePathScanner<Element, Long> {
 
   @Override
   public Element visitIdentifier(IdentifierTree t, Long find) {
-    SourcePositions pos = MTrees.instance(task).getSourcePositions();
+    SourcePositions pos = task.getTrees().getSourcePositions();
     long start = pos.getStartPosition(root, t);
     long end = pos.getEndPosition(root, t);
     if (start <= find && find < end) {
-      return MTrees.instance(task).getElement(getCurrentPath());
+      return task.getTrees().getElement(getCurrentPath());
     }
     return super.visitIdentifier(t, find);
   }
 
   @Override
   public Element visitMemberSelect(MemberSelectTree t, Long find) {
-    SourcePositions pos = MTrees.instance(task).getSourcePositions();
+    SourcePositions pos = task.getTrees().getSourcePositions();
     long start = pos.getEndPosition(root, t.getExpression()) + 1;
     long end = pos.getEndPosition(root, t);
     if (start <= find && find < end) {
-      return MTrees.instance(task).getElement(getCurrentPath());
+      return task.getTrees().getElement(getCurrentPath());
     }
     return super.visitMemberSelect(t, find);
   }
 
   @Override
   public Element visitMemberReference(MemberReferenceTree t, Long find) {
-    SourcePositions pos = MTrees.instance(task).getSourcePositions();
+    SourcePositions pos = task.getTrees().getSourcePositions();
     long start = pos.getStartPosition(root, t.getQualifierExpression()) + 2;
     long end = pos.getEndPosition(root, t);
     if (start <= find && find < end) {
-      return MTrees.instance(task).getElement(getCurrentPath());
+      return task.getTrees().getElement(getCurrentPath());
     }
     return super.visitMemberReference(t, find);
   }

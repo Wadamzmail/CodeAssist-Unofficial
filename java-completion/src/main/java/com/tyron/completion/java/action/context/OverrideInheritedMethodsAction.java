@@ -75,6 +75,7 @@ import com.sun.tools.javac.api.JavacTaskImpl;
 import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
+import com.tyron.completion.java.action.FindCurrentPath;
 
 public class OverrideInheritedMethodsAction extends AnAction {
 
@@ -88,6 +89,12 @@ public class OverrideInheritedMethodsAction extends AnAction {
         if (!ActionPlaces.EDITOR.equals(event.getPlace())) {
             return;
         }
+        
+        Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+        if(editor==null) return;
+        File file = event.getRequiredData(CommonDataKeys.FILE);
+        if(file==null) return;
+        
         
         CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
@@ -117,7 +124,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
         Activity activity = e.getRequiredData(CommonDataKeys.ACTIVITY);
         File file = e.getRequiredData(CommonDataKeys.FILE);
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-        CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
         JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
         if (unit == null) return;
