@@ -145,7 +145,7 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
     private Position insertNearCursor(JavacUtilitiesProvider task) {
         
         ClassTree parent = new FindTypeDeclarationAt(task.getTrees().scan(task.root(),
-                (long) insertPosition);
+                (long) insertPosition));
         if (parent == null) {
             parent = new FindNewTypeDeclarationAt(task.getTrees(), task.root()).scan(task.root(), (long) insertPosition);
         }
