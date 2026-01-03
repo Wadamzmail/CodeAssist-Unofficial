@@ -18,6 +18,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.sun.source.util.DocTrees;
 
 public class HoverProvider {
 
@@ -83,7 +84,7 @@ public class HoverProvider {
 
   private String docs(JavacUtilitiesProvider task, Tree tree) {
     TreePath path = task.getTrees().getPath(task.root(), tree);
-    DocCommentTree docTree = MDocTrees.instance(task.getContext()).getDocCommentTree(path);
+    DocCommentTree docTree = (DocTrees) task.getTrees().getDocCommentTree(path);
     if (docTree == null) return "";
     // TODO: format this
     return docTree.toString();

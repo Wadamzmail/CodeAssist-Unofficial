@@ -82,7 +82,7 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
 
             Types types = task.getTypes();
             Trees trees =  task.getTrees();
-            ExecutableElement superMethod = FindHelper.findMethod(task, superClassName,
+            ExecutableElement superMethod = FindHelper.findMethod2(task, superClassName,
                     methodName, erasedParameterTypes);
             if (superMethod == null) {
                 return CANCELLED;
@@ -101,13 +101,13 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
             ExecutableType parameterizedType =
                     (ExecutableType) types.asMemberOf((DeclaredType) thisClass.asType(),
                             superMethod);
-            int indent = EditHelper.indent(task.getContext(), root, thisTree) + 1;
+            int indent = EditHelper.indent(task, root, thisTree) + 1;
 
             Set<String> typesToImport = ActionUtil.getTypesToImport(parameterizedType);
           
           // TODO: get The Method from Source File if exist
           //  Optional<JavaFileObject> sourceFile = compiler.findAnywhere(superClassName);
-          //  String text;
+            String text;
           //  if (sourceFile.isPresent()) {
           //      MethodTree source = FindHelper.findMethod(task, superClassName, methodName,
           //              erasedParameterTypes);
@@ -144,8 +144,8 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
 
     private Position insertNearCursor(JavacUtilitiesProvider task) {
         
-        ClassTree parent = new FindTypeDeclarationAt(task.getTrees().scan(task.root(),
-                (long) insertPosition));
+        ClassTree parent = new FindTypeDeclarationAt(task.getTrees()).scan(task.root(),
+                (long) insertPosition);
         if (parent == null) {
             parent = new FindNewTypeDeclarationAt(task.getTrees(), task.root()).scan(task.root(), (long) insertPosition);
         }
@@ -153,7 +153,7 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
         if (next != Position.NONE) {
             return next;
         }
-        return EditHelper.insertAtEndOfClass(task.getContext(), task.root(), parent);
+        return EditHelper.insertAtEndOfClass(task, task.root(), parent);
     }
 
     private Position nextMember(JavacUtilitiesProvider task, ClassTree parent) {

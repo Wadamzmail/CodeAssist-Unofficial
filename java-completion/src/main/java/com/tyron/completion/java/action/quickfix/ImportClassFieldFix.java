@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import javax.tools.Diagnostic;
+import java.util.HashSet;
+import java.util.Set;
+import Java.io.File;
 
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -33,6 +36,8 @@ import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.builder.project.Project;
+import com.sun.source.util.TreePath;
 
 public class ImportClassFieldFix extends AnAction {
 
@@ -123,7 +128,7 @@ public class ImportClassFieldFix extends AnAction {
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
     CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toFile().toURI());
         if (unit == null) return;
         int left = editor.getCaret().getStart();
         int right = editor.getCaret().getEnd();
@@ -154,7 +159,7 @@ public class ImportClassFieldFix extends AnAction {
     }
 
     if (map.size() == 1) {
-      RewriteUtil.performRewrite(editor, file.toFile(), compiler, map.values().iterator().next());
+      RewriteUtil.performRewrite(editor, file.toFile(), new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), map.values().iterator().next());
     } else {
       String[] titles = map.keySet().toArray(new String[0]);
       new AlertDialog.Builder(e.getDataContext())
@@ -172,7 +177,7 @@ public class ImportClassFieldFix extends AnAction {
   
   public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {
     Set<String> classes = new HashSet<>();
-    Module currentModule = project.getModule(editor.getCurrentFile());
+    Module mCurrentModule = mProject.getModule(editor.getCurrentFile());
     for (Module module : mProject.getDependencies(mCurrentModule)) {
       if (module instanceof JavaModule) {
         classes.addAll(((JavaModule) module).getAllClasses());

@@ -40,7 +40,7 @@ public class AddException implements JavaRewrite2 {
 
           Trees trees = task.getTrees();
           ExecutableElement methodElement =
-              FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
+              FindHelper.findMethod2(task, className, methodName, erasedParameterTypes);
           MethodTree methodTree = trees.getTree(methodElement);
           SourcePositions pos = trees.getSourcePositions();
           long startBody = pos.getStartPosition(root, methodTree.getBody());

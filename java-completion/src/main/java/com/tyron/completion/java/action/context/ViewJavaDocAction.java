@@ -47,13 +47,13 @@ public class ViewJavaDocAction extends AnAction {
       return;
     }
 
-    HoverProvider hoverProvider = new HoverProvider(compiler);
-    List<String> strings =
-        hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
-
-    if (strings.isEmpty()) {
-      return;
-    }
+  //  HoverProvider hoverProvider = new HoverProvider(compiler);
+ //   List<String> strings =
+   //     hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
+   //see you again
+   // if (strings.isEmpty()) {
+   //   return;
+   // }
 
     presentation.setVisible(true);
     presentation.setText(event.getDataContext().getString(R.string.menu_action_view_javadoc_title));

@@ -25,6 +25,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 public class DiagnosticUtil {
 
@@ -55,7 +56,7 @@ public class DiagnosticUtil {
     public String[] erasedParameterTypes;
     public ExecutableElement method;
 
-    public MethodPtr(JavacTask task, ExecutableElement method) {
+    public MethodPtr(JavacUtilitiesProvider task, ExecutableElement method) {
       this.method = method;
       Types types = task.getTypes();
       TypeElement parent = (TypeElement) method.getEnclosingElement();
@@ -195,12 +196,12 @@ public class DiagnosticUtil {
   }
 
   @NonNull
-  public static MethodPtr findMethod(CompileTask task, long position) {
-    Trees trees = MTrees.instance(task.task);
-    Tree tree = new FindMethodDeclarationAt(task.task).scan(task.root(), position);
+  public static MethodPtr findMethod(JavacUtilitiesProvider task, long position) {
+    Trees trees = task.getTrees();
+    Tree tree = new FindMethodDeclarationAt(task.getTrees()).scan(task.root(), position);
     TreePath path = trees.getPath(task.root(), tree);
     ExecutableElement method = (ExecutableElement) trees.getElement(path);
-    return new MethodPtr(task.task, method);
+    return new MethodPtr(task, method);
   }
 
   @NonNull

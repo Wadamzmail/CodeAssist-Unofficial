@@ -35,6 +35,7 @@ import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 public class AddThrowsAction extends ExceptionsQuickFix {
 
@@ -78,11 +79,6 @@ public class AddThrowsAction extends ExceptionsQuickFix {
       return;
     }
 
-    Editor editor = event.getData(CommonDataKeys.EDITOR);
-    if (editor == null) {
-      return;
-    }
-
     presentation.setEnabled(true);
     presentation.setVisible(true);
     presentation.setText(event.getDataContext().getString(R.string.menu_quickfix_add_throws_title));
@@ -107,7 +103,7 @@ public class AddThrowsAction extends ExceptionsQuickFix {
     ThreadUtil.runOnBackgroundThread(
         () -> {
           AtomicReference<JavaRewrite2> rewrite = new AtomicReference<>();
-           rewrite.set(performInternal(task, exceptionName, diagnostic));
+           rewrite.set(performInternal(javacTask, exceptionName, diagnostic));
           JavaRewrite2 r = rewrite.get();
           if (r != null) {
             RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), r);

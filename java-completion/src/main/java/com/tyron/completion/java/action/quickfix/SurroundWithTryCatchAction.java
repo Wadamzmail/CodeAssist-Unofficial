@@ -111,7 +111,7 @@ public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
         });
   }
 
-  private JavaRewrite performInternal(File file, String exceptionName, TreePath surroundingPath) {
+  private JavaRewrite2 performInternal(File file, String exceptionName, TreePath surroundingPath) {
     Tree leaf = surroundingPath.getLeaf();
     JCTree tree = (JCTree) leaf;
 

@@ -178,7 +178,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
                 }
                 OverrideInheritedMethodsAction.this.onSuccess(pointers, showLoadingRunnable, e,
                                                               sourceFileObject, file, editor,
-                                                              javacTask);
+                                                              javacTask,unit);
             }
 
             @Override
@@ -200,7 +200,8 @@ public class OverrideInheritedMethodsAction extends AnAction {
                            SourceFileObject sourceFileObject,
                            File file,
                            Editor editor,
-                           JavacTaskImpl javacTask) {
+                           JavacTaskImpl javacTask,
+                           JCTree.JCCompilationUnit unit) {
         ProgressManager.getInstance()
                 .cancelRunLater(showLoadingRunnable);
 
@@ -238,7 +239,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
     }
 
     @WorkerThread
-    private List<MethodPtr> performInternal(JavacTaskImpl javacTask,
+    private List<MethodPtr> performInternal(JavacTaskImpl task,
                                             SourceFileObject file,
                                             TreePath currentPath) {
         

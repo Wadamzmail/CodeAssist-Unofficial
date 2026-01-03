@@ -36,7 +36,7 @@ public class FindHelper {
     return erasedParameterTypes;
   }
 
-  public static String[] erasedParameterTypes(JavacUtilitiesProvider task, ExecutableElement method) {
+  public static String[] erasedParameterTypes2(JavacUtilitiesProvider task, ExecutableElement method) {
     Types types = task.getTypes();
     String[] erasedParameterTypes = new String[method.getParameters().size()];
     for (int i = 0; i < erasedParameterTypes.length; i++) {
@@ -74,7 +74,7 @@ public class FindHelper {
     return new FindTypeDeclarationNamed().scan(task.root(), className);
   }
 
-  public static ExecutableElement findMethod(
+  public static ExecutableElement findMethod2(
       JavacUtilitiesProvider task, String className, String methodName, String[] erasedParameterTypes) {
     TypeElement type = task.getElements().getTypeElement(className);
     for (Element member : type.getEnclosedElements()) {

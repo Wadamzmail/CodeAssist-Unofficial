@@ -16,6 +16,7 @@ import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.action.FindCurrentPath;
+import java.io.File;
 
 public abstract class ExceptionsQuickFix extends AnAction {
 
@@ -54,11 +55,6 @@ public abstract class ExceptionsQuickFix extends AnAction {
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
         
     if (currentPath == null) {
-      return;
-    }
-
-    Editor editor = event.getData(CommonDataKeys.EDITOR);
-    if (editor == null) {
       return;
     }
 

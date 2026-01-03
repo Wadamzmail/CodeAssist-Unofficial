@@ -25,6 +25,7 @@ import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.action.FindCurrentPath;    
+import com.sun.source.util.TreePath;
 
 public class ImplementAbstractMethodsFix extends AnAction {
 

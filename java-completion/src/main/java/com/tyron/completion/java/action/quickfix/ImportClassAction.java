@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import javax.tools.Diagnostic;
 import java.util.Set;
 import java.util.HashSet;
+import java.io.File;
 
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
@@ -36,6 +37,7 @@ import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.completion.java.action.FindCurrentPath;
+import com.sun.source.util.TreePath;
 
 public class ImportClassAction extends AnAction {
 
@@ -122,7 +124,7 @@ public class ImportClassAction extends AnAction {
     Project project = editor.getProject();
     CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toFile().toURI());
         if (unit == null) return;
         int left = editor.getCaret().getStart();
         int right = editor.getCaret().getEnd();
@@ -158,7 +160,7 @@ public class ImportClassAction extends AnAction {
   
   public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {
     Set<String> classes = new HashSet<>();
-    Module currentModule = project.getModule(editor.getCurrentFile());
+    Module mCurrentModule = mProject.getModule(editor.getCurrentFile());
     for (Module module : mProject.getDependencies(mCurrentModule)) {
       if (module instanceof JavaModule) {
         classes.addAll(((JavaModule) module).getAllClasses());

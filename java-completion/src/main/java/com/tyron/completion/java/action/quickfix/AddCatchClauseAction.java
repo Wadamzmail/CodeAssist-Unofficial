@@ -111,7 +111,7 @@ public class AddCatchClauseAction extends ExceptionsQuickFix {
         });
   }
 
-  private JavaRewrite performInternal(File file, String exceptionName, TreePath surroundingPath) {
+  private JavaRewrite2 performInternal(File file, String exceptionName, TreePath surroundingPath) {
     CompilationUnitTree root = surroundingPath.getCompilationUnit();
     JCTree.JCCompilationUnit compilationUnit = (JCTree.JCCompilationUnit) root;
     EndPosTable endPositions = compilationUnit.endPositions;

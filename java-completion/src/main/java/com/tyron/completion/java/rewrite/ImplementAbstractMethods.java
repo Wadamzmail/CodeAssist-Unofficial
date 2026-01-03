@@ -78,12 +78,12 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
 
   @Override
   public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-    Path file = compiler.findTypeDeclaration(mClassFile);
-    if (file == JavaCompilerService.NOT_FOUND) {
-      return Collections.emptyMap();
-    }
-
-    return rewriteInternal(task, file);
+  //  Path file = compiler.findTypeDeclaration(mClassFile);
+  //  if (file == JavaCompilerService.NOT_FOUND) {
+  //    return Collections.emptyMap();
+  //  }
+  // see you again 
+  //  return rewriteInternal(task, file);
        
   }
 
