@@ -4,10 +4,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.google.common.base.Strings;
 import com.tyron.builder.model.SourceFileObject;
 import com.tyron.completion.java.FindNewTypeDeclarationAt;
-import com.tyron.completion.java.compiler.CompilerContainer;
-import com.tyron.completion.java.CompilerProvider;
 import com.tyron.completion.java.FindTypeDeclarationAt;
-import com.tyron.completion.java.compiler.ParseTask;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.JavaParserUtil;
 import com.tyron.completion.java.util.PrintHelper;
@@ -42,8 +39,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import dev.mutwakil.javac.*;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.sun.tools.javac.api.JavacTaskImpl;
 
-public class OverrideInheritedMethod implements JavaRewrite {
+public class OverrideInheritedMethod implements JavaRewrite2 {
 
     final String superClassName, methodName;
     final String[] erasedParameterTypes;
@@ -72,21 +71,17 @@ public class OverrideInheritedMethod implements JavaRewrite {
     }
 
     @Override
-    public Map<Path, TextEdit[]> rewrite(CompilerProvider compiler) {
+    public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
 
         List<TextEdit> edits = new ArrayList<>();
-        Position insertPoint = insertNearCursor(compiler);
+        Position insertPoint = insertNearCursor(task);
 
         if (insertPoint == Position.NONE) {
             return CANCELLED;
         }
 
-        CompilerContainer container = sourceFileObject == null
-                ? compiler.compile(file)
-                : compiler.compile(Collections.singletonList(sourceFileObject));
-        return container.get(task -> {
-            Types types = task.task.getTypes();
-            Trees trees = MTrees.instance(task.task);
+            Types types = task.getTypes();
+            Trees trees =  task.getTrees();
             ExecutableElement superMethod = FindHelper.findMethod(task, superClassName,
                     methodName, erasedParameterTypes);
             if (superMethod == null) {
@@ -98,7 +93,7 @@ public class OverrideInheritedMethod implements JavaRewrite {
                 return CANCELLED;
             }
 
-            ClassTree thisTree = new FindTypeDeclarationAt(task.task).scan(root,
+            ClassTree thisTree = new FindTypeDeclarationAt(task.getTrees()).scan(root,
                     (long) insertPosition);
             TreePath thisPath = trees.getPath(root, thisTree);
 
@@ -106,24 +101,24 @@ public class OverrideInheritedMethod implements JavaRewrite {
             ExecutableType parameterizedType =
                     (ExecutableType) types.asMemberOf((DeclaredType) thisClass.asType(),
                             superMethod);
-            int indent = EditHelper.indent(task.task, root, thisTree) + 1;
+            int indent = EditHelper.indent(task.getContext(), root, thisTree) + 1;
 
             Set<String> typesToImport = ActionUtil.getTypesToImport(parameterizedType);
-
-            Optional<JavaFileObject> sourceFile = compiler.findAnywhere(superClassName);
-            String text;
-            if (sourceFile.isPresent()) {
-                ParseTask parse = compiler.parse(sourceFile.get());
-                MethodTree source = FindHelper.findMethod(parse, superClassName, methodName,
-                        erasedParameterTypes);
-                if (source == null) {
-                    text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
-                } else {
-                    text = PrintHelper.printMethod(superMethod, parameterizedType, source);
-                }
-            } else {
+          
+          // TODO: get The Method from Source File if exist
+          //  Optional<JavaFileObject> sourceFile = compiler.findAnywhere(superClassName);
+          //  String text;
+          //  if (sourceFile.isPresent()) {
+          //      MethodTree source = FindHelper.findMethod(task, superClassName, methodName,
+          //              erasedParameterTypes);
+          //      if (source == null) {
+          //          text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
+          //      } else {
+          //          text = PrintHelper.printMethod(superMethod, parameterizedType, source);
+          //      }
+          //  } else {
                 text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
-            }
+          //  }
 
             String tabs = Strings.repeat("\t", indent);
             text = tabs + text.replace("\n", "\n" + tabs) + "\n\n";
@@ -135,41 +130,39 @@ public class OverrideInheritedMethod implements JavaRewrite {
                     : Objects.requireNonNull(sourceFileObject).mFile.toFile();
             for (String s : typesToImport) {
                 if (!ActionUtil.hasImport(root, s)) {
-//                    JavaRewrite addImport = new AddImport(source, s);
-//                    Map<Path, TextEdit[]> rewrite = addImport.rewrite(compiler);
-//                    TextEdit[] textEdits = rewrite.get(source.toPath());
-//                    if (textEdits != null) {
-//                        Collections.addAll(edits, textEdits);
-//                    }
+                    JavaRewrite2 addImport = new AddImport(source, s);
+                    Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+                    TextEdit[] textEdits = rewrite.get(source.toPath());
+                    if (textEdits != null) {
+                        Collections.addAll(edits, textEdits);
+                    }
                 }
             }
             return Collections.singletonMap(source.toPath(), edits.toArray(new TextEdit[0]));
-        });
+ 
     }
 
-    private Position insertNearCursor(CompilerProvider compiler) {
-        ParseTask task = file != null
-                ? compiler.parse(file)
-                : compiler.parse(sourceFileObject);
-        ClassTree parent = new FindTypeDeclarationAt(task.task).scan(task.root,
+    private Position insertNearCursor(JavacUtilitiesProvider task) {
+        
+        ClassTree parent = new FindTypeDeclarationAt(task.getTrees().scan(task.root(),
                 (long) insertPosition);
         if (parent == null) {
-            parent = new FindNewTypeDeclarationAt(task.task, task.root).scan(task.root, (long) insertPosition);
+            parent = new FindNewTypeDeclarationAt(task.getTrees(), task.root()).scan(task.root(), (long) insertPosition);
         }
         Position next = nextMember(task, parent);
         if (next != Position.NONE) {
             return next;
         }
-        return EditHelper.insertAtEndOfClass(task.task, task.root, parent);
+        return EditHelper.insertAtEndOfClass(task.getContext(), task.root(), parent);
     }
 
-    private Position nextMember(ParseTask task, ClassTree parent) {
-        SourcePositions pos = MTrees.instance(task.task).getSourcePositions();
+    private Position nextMember(JavacUtilitiesProvider task, ClassTree parent) {
+        SourcePositions pos = task.getTrees().getSourcePositions();
         if (parent != null) {
             for (Tree member : parent.getMembers()) {
-                long start = pos.getStartPosition(task.root, member);
+                long start = pos.getStartPosition(task.root(), member);
                 if (start > insertPosition) {
-                    int line = (int) task.root.getLineMap().getLineNumber(start);
+                    int line = (int) task.root().getLineMap().getLineNumber(start);
                     return new Position(line - 1, 0);
                 }
             }

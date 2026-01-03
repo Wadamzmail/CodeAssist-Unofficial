@@ -12,10 +12,6 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.completion.java.CompilerProvider;
 import com.tyron.completion.java.FindNewTypeDeclarationAt;
 import com.tyron.completion.java.FindTypeDeclarationAt;
-import com.tyron.completion.java.compiler.CompileTask;
-import com.tyron.completion.java.compiler.CompilerContainer;
-import com.tyron.completion.java.compiler.JavaCompilerService;
-import com.tyron.completion.java.compiler.ParseTask;
 import com.tyron.completion.java.provider.FindHelper;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.JavaParserUtil;
@@ -43,7 +39,10 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 
-public class ImplementAbstractMethods implements JavaRewrite {
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.sun.tools.javac.api.JavacTaskImpl;
+
+public class ImplementAbstractMethods implements JavaRewrite2 {
 
   private static final String TAG = ImplementAbstractMethods.class.getSimpleName();
 
@@ -78,34 +77,31 @@ public class ImplementAbstractMethods implements JavaRewrite {
   }
 
   @Override
-  public Map<Path, TextEdit[]> rewrite(CompilerProvider compiler) {
+  public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
     Path file = compiler.findTypeDeclaration(mClassFile);
     if (file == JavaCompilerService.NOT_FOUND) {
       return Collections.emptyMap();
     }
 
-    CompilerContainer container = compiler.compile(file);
-    return container.get(
-        task -> {
-          return rewriteInternal(compiler, task, file);
-        });
+    return rewriteInternal task, file);
+       
   }
 
   private Map<Path, TextEdit[]> rewriteInternal(
-      CompilerProvider compiler, CompileTask task, Path file) {
-    Elements elements = task.task.getElements();
-    Types types = task.task.getTypes();
-    Trees trees = MTrees.instance(task.task);
+      JavacUtilitiesProvider task, Path file) {
+    Elements elements = task.getElements();
+    Types types = task.getTypes();
+    Trees trees = task.getTrees();
     List<TextEdit> edits = new ArrayList<>();
     List<TextEdit> importEdits = new ArrayList<>();
     Set<String> typesToImport = new HashSet<>();
 
     TypeElement thisClass = elements.getTypeElement(mClassName);
-    ClassTree thisTree = getClassTree(task, file);
+    ClassTree thisTree = getClassTree(task);
     if (thisTree == null) {
       thisTree = trees.getTree(thisClass);
     }
-    CompilationUnitTree root = task.root(file);
+    CompilationUnitTree root = task.root();
     if (root == null) {
       return CANCELLED;
     }
@@ -116,7 +112,7 @@ public class ImplementAbstractMethods implements JavaRewrite {
 
     StringJoiner insertText = new StringJoiner("\n");
 
-    int indent = EditHelper.indent(task.task, task.root(), thisTree) + 1;
+    int indent = EditHelper.indent(task, task.root(), thisTree) + 1;
     String tabs = Strings.repeat("\t", indent);
 
     for (Element member : elements.getAllMembers(thisClass)) {
@@ -126,7 +122,7 @@ public class ImplementAbstractMethods implements JavaRewrite {
         ExecutableType parameterizedType = (ExecutableType) types.asMemberOf(thisType, method);
         typesToImport.addAll(ActionUtil.getTypesToImport(parameterizedType));
 
-        MethodTree source = findSource(compiler, task, method);
+        MethodTree source = findSource(task, method);
         MethodDeclaration methodDeclaration;
         if (source != null) {
           methodDeclaration = EditHelper.printMethod(method, parameterizedType, source);
@@ -144,7 +140,7 @@ public class ImplementAbstractMethods implements JavaRewrite {
       }
     }
 
-    Position insert = EditHelper.insertAtEndOfClass(task.task, task.root(), thisTree);
+    Position insert = EditHelper.insertAtEndOfClass(task, task.root(), thisTree);
     insert.line -= 1;
     edits.add(new TextEdit(new Range(insert, insert), insertText + "\n"));
     edits.addAll(importEdits);
@@ -152,12 +148,12 @@ public class ImplementAbstractMethods implements JavaRewrite {
     for (String type : typesToImport) {
       String fqn = ActionUtil.removeDiamond(type);
       if (!ActionUtil.hasImport(task.root(), fqn)) {
-        //                JavaRewrite addImport = new AddImport(file.toFile(), fqn);
-        //                Map<Path, TextEdit[]> rewrite = addImport.rewrite(compiler);
-        //                TextEdit[] textEdits = rewrite.get(file);
-        //                if (textEdits != null) {
-        //                    Collections.addAll(edits, textEdits);
-        //                }
+                        JavaRewrite addImport = new AddImport(file.toFile(), fqn);
+                        Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+                        TextEdit[] textEdits = rewrite.get(file);
+                        if (textEdits != null) {
+                            Collections.addAll(edits, textEdits);
+                        }
       }
     }
 
@@ -165,30 +161,26 @@ public class ImplementAbstractMethods implements JavaRewrite {
   }
 
   @Nullable
-  private ClassTree getClassTree(CompileTask task, Path file) {
+  private ClassTree getClassTree(JavacUtilitiesProvider task) {
     ClassTree thisTree = null;
-    CompilationUnitTree root = task.root(file);
+    CompilationUnitTree root = task.root();
     if (root == null) {
       return null;
     }
     if (mPosition != 0) {
-      thisTree = new FindTypeDeclarationAt(task.task).scan(root, mPosition);
+      thisTree = new FindTypeDeclarationAt(task.getTrees()).scan(root, mPosition);
     }
     if (thisTree == null) {
-      thisTree = new FindNewTypeDeclarationAt(task.task, root).scan(root, mPosition);
+      thisTree = new FindNewTypeDeclarationAt(task.getTrees(), root).scan(root, mPosition);
     }
     return thisTree;
   }
 
-  private MethodTree findSource(
-      CompilerProvider compiler, CompileTask task, ExecutableElement method) {
+  private MethodTree findSource( JavacUtilitiesProvider task, ExecutableElement method) {
     TypeElement superClass = (TypeElement) method.getEnclosingElement();
     String superClassName = superClass.getQualifiedName().toString();
     String methodName = method.getSimpleName().toString();
     String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
-    Optional<JavaFileObject> sourceFile = compiler.findAnywhere(superClassName);
-    if (!sourceFile.isPresent()) return null;
-    ParseTask parse = compiler.parse(sourceFile.get());
-    return FindHelper.findMethod(parse, superClassName, methodName, erasedParameterTypes);
+    return FindHelper.findMethod(task, superClassName, methodName, erasedParameterTypes);
   }
 }

@@ -7,14 +7,15 @@ import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
 import dev.mutwakil.javac.*;
+import com.sun.source.util.Trees;
 
 public class FindNewTypeDeclarationAt extends TreeScanner<ClassTree, Long> {
 
   private final SourcePositions pos;
   private final CompilationUnitTree root;
 
-  public FindNewTypeDeclarationAt(JavacTask task, CompilationUnitTree root) {
-    this.pos = MTrees.instance(task).getSourcePositions();
+  public FindNewTypeDeclarationAt(Trees trees, CompilationUnitTree root) {
+    this.pos = trees.getSourcePositions();
     this.root = root;
   }
 

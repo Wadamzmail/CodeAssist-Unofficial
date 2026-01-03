@@ -10,15 +10,16 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
 import dev.mutwakil.javac.*;
 import java.util.List;
+import com.sun.source.util.Trees;
 
 public class FindTypeDeclarationAt extends TreeScanner<ClassTree, Long> {
   private final SourcePositions pos;
   private final JavacTask task;
   private CompilationUnitTree root;
 
-  public FindTypeDeclarationAt(JavacTask task) {
-    this.task = task;
-    pos = MTrees.instance(task).getSourcePositions();
+  public FindTypeDeclarationAt(Trees trees) {
+    //this.task = task;
+    pos = trees.getSourcePositions();
   }
 
   @Override

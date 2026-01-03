@@ -5,8 +5,6 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.Trees;
-import com.tyron.completion.java.CompilerProvider;
-import com.tyron.completion.java.compiler.CompilerContainer;
 import com.tyron.completion.java.provider.FindHelper;
 import com.tyron.completion.model.Range;
 import com.tyron.completion.model.TextEdit;
@@ -14,8 +12,10 @@ import dev.mutwakil.javac.*;
 import java.nio.file.Path;
 import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.sun.tools.javac.api.JavacTaskImpl;
 
-public class AddException implements JavaRewrite {
+public class AddException implements JavaRewrite2 {
 
   private final String className;
   private final String methodName;
@@ -31,20 +31,14 @@ public class AddException implements JavaRewrite {
   }
 
   @Override
-  public Map<Path, TextEdit[]> rewrite(CompilerProvider compiler) {
-    Path file = compiler.findTypeDeclaration(className);
-    if (file == CompilerProvider.NOT_FOUND) {
-      return CANCELLED;
-    }
-    CompilerContainer container = compiler.compile(file);
-    return container.get(
-        task -> {
-          CompilationUnitTree root = task.root(file);
+  public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
+     
+          CompilationUnitTree root = task.root();
           if (root == null) {
             return CANCELLED;
           }
 
-          Trees trees = MTrees.instance(task.task);
+          Trees trees = task.getTrees();
           ExecutableElement methodElement =
               FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
           MethodTree methodTree = trees.getTree(methodElement);

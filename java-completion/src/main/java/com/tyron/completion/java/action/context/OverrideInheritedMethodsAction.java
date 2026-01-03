@@ -34,8 +34,6 @@ import com.tyron.common.ApplicationProvider;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.java.R;
 import com.tyron.completion.java.action.CommonJavaContextKeys;
-import com.tyron.completion.java.compiler.CompilerContainer;
-import com.tyron.completion.java.compiler.JavaCompilerService;
 import com.tyron.completion.java.drawable.CircleDrawable;
 import com.tyron.completion.java.rewrite.JavaRewrite;
 import com.tyron.completion.java.rewrite.OverrideInheritedMethod;
@@ -72,6 +70,12 @@ import java.util.Map;
 import java.util.Optional;
 import dev.mutwakil.javac.*;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+
 public class OverrideInheritedMethodsAction extends AnAction {
 
     public static final String ID = "javaOverrideInheritedMethodsAction";
@@ -84,19 +88,20 @@ public class OverrideInheritedMethodsAction extends AnAction {
         if (!ActionPlaces.EDITOR.equals(event.getPlace())) {
             return;
         }
+        
+        CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+    
 
-        TreePath currentPath = event.getData(CommonJavaContextKeys.CURRENT_PATH);
-        if (currentPath == null) {
-            return;
-        }
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+       if (unit == null) return;
+
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
         if (!(currentPath.getLeaf() instanceof ClassTree)) {
-            return;
-        }
-
-
-        JavaCompilerService compiler = event.getData(CommonJavaContextKeys.COMPILER);
-        if (compiler == null) {
             return;
         }
 
@@ -112,8 +117,15 @@ public class OverrideInheritedMethodsAction extends AnAction {
         Activity activity = e.getRequiredData(CommonDataKeys.ACTIVITY);
         File file = e.getRequiredData(CommonDataKeys.FILE);
         Project project = e.getRequiredData(CommonDataKeys.PROJECT);
-        JavaCompilerService compiler = e.getRequiredData(CommonJavaContextKeys.COMPILER);
-        TreePath currentPath = e.getRequiredData(CommonJavaContextKeys.CURRENT_PATH);
+        CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+        if (unit == null) return;
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+         
 
         Module module = project.getModule(file);
         if (module == null) {
@@ -135,7 +147,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
         ListenableFuture<List<MethodPtr>> future = ProgressManager.getInstance()
                 .computeNonCancelableAsync(() -> {
                     List<MethodPtr> pointers =
-                            performInternal(compiler, sourceFileObject, currentPath);
+                            performInternal(javacTask, sourceFileObject, currentPath);
                     Collections.reverse(pointers);
                     return Futures.immediateFuture(pointers);
                 });
@@ -159,7 +171,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
                 }
                 OverrideInheritedMethodsAction.this.onSuccess(pointers, showLoadingRunnable, e,
                                                               sourceFileObject, file, editor,
-                                                              compiler);
+                                                              javacTask);
             }
 
             @Override
@@ -181,7 +193,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
                            SourceFileObject sourceFileObject,
                            File file,
                            Editor editor,
-                           JavaCompilerService compiler) {
+                           JavacTaskImpl javacTask) {
         ProgressManager.getInstance()
                 .cancelRunLater(showLoadingRunnable);
 
@@ -205,25 +217,27 @@ public class OverrideInheritedMethodsAction extends AnAction {
 
                 OverrideNode value = node.getValue();
                 MethodPtr ptr = value.getMethodPtr();
-                JavaRewrite rewrite = new OverrideInheritedMethod(ptr.className, ptr.methodName,
+                JavaRewrite2 rewrite = new OverrideInheritedMethod(ptr.className, ptr.methodName,
                                                                   ptr.erasedParameterTypes,
                                                                   sourceFileObject, editor.getCaret()
                                                                           .getStart());
 
-                RewriteUtil.performRewrite(editor, file, compiler, rewrite);
+                RewriteUtil.performRewrite(editor,
+                 file,
+                  new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), 
+                  rewrite);
             }
         });
     }
 
     @WorkerThread
-    private List<MethodPtr> performInternal(JavaCompilerService compiler,
+    private List<MethodPtr> performInternal(JavacTaskImpl javacTask,
                                             SourceFileObject file,
                                             TreePath currentPath) {
-        CompilerContainer container = compiler.compile(Collections.singletonList(file));
-        return container.get(task -> {
-            Trees trees = MTrees.instance(task.task);
+        
+            Trees trees = MTrees.instance(task);
             Element classElement = trees.getElement(currentPath);
-            Elements elements = task.task.getElements();
+            Elements elements = task.getElements();
             List<MethodPtr> methodPtrs = new ArrayList<>();
             for (Element member : elements.getAllMembers((TypeElement) classElement)) {
                 if (member.getModifiers()
@@ -244,11 +258,11 @@ public class OverrideInheritedMethodsAction extends AnAction {
                     continue;
                 }
 
-                MethodPtr ptr = new MethodPtr(task.task, method);
+                MethodPtr ptr = new MethodPtr(task, method);
                 methodPtrs.add(ptr);
             }
             return methodPtrs;
-        });
+      
     }
 
     private static TreeNode<OverrideNode> buildTreeNode(List<MethodPtr> methodPtrs) {

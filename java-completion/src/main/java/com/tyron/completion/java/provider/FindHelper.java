@@ -26,8 +26,8 @@ import javax.lang.model.util.Types;
 /** Convenience class for common tasks with completions */
 public class FindHelper {
 
-  public static String[] erasedParameterTypes(CompileTask task, ExecutableElement method) {
-    Types types = task.task.getTypes();
+  public static String[] erasedParameterTypes(JavacUtilitiesProvider task, ExecutableElement method) {
+    Types types = task.getTypes();
     String[] erasedParameterTypes = new String[method.getParameters().size()];
     for (int i = 0; i < erasedParameterTypes.length; i++) {
       TypeMirror p = method.getParameters().get(i).asType();
@@ -36,8 +36,8 @@ public class FindHelper {
     return erasedParameterTypes;
   }
 
-  public static String[] erasedParameterTypes(ParseTask task, ExecutableElement method) {
-    Types types = task.task.getTypes();
+  public static String[] erasedParameterTypes(JavacUtilitiesProvider task, ExecutableElement method) {
+    Types types = task.getTypes();
     String[] erasedParameterTypes = new String[method.getParameters().size()];
     for (int i = 0; i < erasedParameterTypes.length; i++) {
       TypeMirror p = method.getParameters().get(i).asType();
@@ -47,7 +47,7 @@ public class FindHelper {
   }
 
   public static MethodTree findMethod(
-      ParseTask task, String className, String methodName, String[] erasedParameterTypes) {
+      JavacUtilitiesProvider task, String className, String methodName, String[] erasedParameterTypes) {
     ClassTree classTree = findType(task, className);
     for (Tree member : classTree.getMembers()) {
       if (member.getKind() != Tree.Kind.METHOD) continue;
@@ -59,7 +59,7 @@ public class FindHelper {
     return null;
   }
 
-  public static VariableTree findField(ParseTask task, String className, String memberName) {
+  public static VariableTree findField(JavacUtilitiesProvider task, String className, String memberName) {
     ClassTree classTree = findType(task, className);
     for (Tree member : classTree.getMembers()) {
       if (member.getKind() != Tree.Kind.VARIABLE) continue;
@@ -70,13 +70,13 @@ public class FindHelper {
     throw new RuntimeException("no variable");
   }
 
-  public static ClassTree findType(ParseTask task, String className) {
-    return new FindTypeDeclarationNamed().scan(task.root, className);
+  public static ClassTree findType(JavacUtilitiesProvider task, String className) {
+    return new FindTypeDeclarationNamed().scan(task.root(), className);
   }
 
   public static ExecutableElement findMethod(
-      CompileTask task, String className, String methodName, String[] erasedParameterTypes) {
-    TypeElement type = task.task.getElements().getTypeElement(className);
+      JavacUtilitiesProvider task, String className, String methodName, String[] erasedParameterTypes) {
+    TypeElement type = task.getElements().getTypeElement(className);
     for (Element member : type.getEnclosedElements()) {
       if (member.getKind() != ElementKind.METHOD) continue;
       ExecutableElement method = (ExecutableElement) member;
@@ -88,12 +88,12 @@ public class FindHelper {
   }
 
   private static boolean isSameMethod(
-      CompileTask task,
+      JavacUtilitiesProvider task,
       ExecutableElement method,
       String className,
       String methodName,
       String[] erasedParameterTypes) {
-    Types types = task.task.getTypes();
+    Types types = task.getTypes();
     TypeElement parent = (TypeElement) method.getEnclosingElement();
     if (!parent.getQualifiedName().contentEquals(className)) return false;
     if (!method.getSimpleName().contentEquals(methodName)) return false;
