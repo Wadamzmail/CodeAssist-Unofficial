@@ -151,9 +151,9 @@ dependencies {
     implementation project(path: ':treeview')
 
     // apis
-    api project(path: ':completion-api')
+    implementation project(path: ':completion-api')
     implementation project(path: ':actions-api')
-    api project(path: ':editor-api')
+    implementation project(path: ':editor-api')
     implementation project(path: ':fileeditor-api')
 
     // formatters    
@@ -200,6 +200,6 @@ dependencies {
      // Virtual File System
     implementation("org.apache.commons:commons-vfs2:2.9.0") {
     exclude group: "org.apache.commons", module: "commons-lang3"
-   }
+    }
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }

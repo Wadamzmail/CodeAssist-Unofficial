@@ -40,7 +40,6 @@ dependencies {
     implementation project(path: ':editor-api')
     implementation project(path: ':common')
     implementation project(path: ':language-api')
-	// https://mvnrepository.com/artifact/org.checkerframework/checker-qual
     implementation("org.checkerframework:checker-qual:3.50.0") 
 }
 
