@@ -166,7 +166,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         if (completionList == null) {
             return;
         }
-        completionList.getItems().forEach(publisher::addItem);
+        completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
   }
 
     @Override
