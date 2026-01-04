@@ -175,9 +175,9 @@ data class KotlinEnvironment(
 
 
     // PERFORMANCE OPTIMIZATION: Heavily optimized complete function
-    fun complete(file: KotlinFile, line: Int, character: Int) =
-        with(file.insert("$COMPLETION_SUFFIX ", line, character)) {
-            currentItemCount = 0
+    fun complete(file: KotlinFile, line: Int, character: Int) : CompletionList{
+         currentItemCount = 0
+      return  with(file.insert("$COMPLETION_SUFFIX ", line, character)) {
             kotlinFiles[file.name] = this
 
             elementAt(line, character)?.let { element ->
@@ -210,7 +210,16 @@ data class KotlinEnvironment(
                  } 
                  
             } ?: emptyList()
-    }
+      
+       val builder = CompletionList.builder(prefix)
+           builder.addItems(list)
+            if (currentItemCount >= MAX_ITEMS_COUNT) {
+                builder.incomplete()
+            }
+
+           builder.build()
+      }    
+   }  
     
     private fun isAfterDot(element: PsiElement): Boolean {
     val parent = element.parent

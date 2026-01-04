@@ -54,6 +54,7 @@ import android.widget.Toast;
 import com.tyron.code.MainActivity;
 import android.util.Log;
 import com.tyron.completion.model.CompletionList;
+import com.tyron.code.language.CachedAutoCompleteProvider;
 
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
@@ -70,6 +71,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final DiagnosticsContainer container = new DiagnosticsContainer();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
+    private final CachedAutoCompleteProvider autoCompleteProvider;
      
     
     private final Formatter formatter = new AsyncFormatter() {
@@ -113,6 +115,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         Project project = ProjectManager.getInstance().getCurrentProject();
         Module currentModule = project.getModule(editor.getCurrentFile());
         kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        autoCompleteProvider = new CachedAutoCompleteProvider(editor,
+                new KotlinAutoCompleteProvider(editor));
         if(isHighlightEnabled()){
         initAnalysis();
         }
@@ -138,7 +142,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
-     try{                             
+    /* try{                             
             String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
             KotlinAutoCompleteProvider provider =
                 new KotlinAutoCompleteProvider(editor);
@@ -155,7 +159,14 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
               throw new CompletionCancelledException(e.toString());
         }
        }
-       kotlinEnvironment.analysis = null;
+       kotlinEnvironment.analysis = null;*/
+       CompletionList completionList = autoCompleteProvider.getCompletionList(null,
+                position.getLine(),
+                position.getColumn());
+        if (completionList == null) {
+            return;
+        }
+        completionList.getItems().forEach(publisher::addItem);
   }
 
     @Override
