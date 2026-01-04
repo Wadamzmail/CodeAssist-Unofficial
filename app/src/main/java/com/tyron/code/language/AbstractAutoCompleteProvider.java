@@ -4,6 +4,7 @@ import com.tyron.completion.model.CompletionList;
 import io.github.rosemoe.sora.lang.completion.CompletionItem;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.tyron.editor.Editor;
 
 /** An auto complete provider that supports cancellation as the user types */
 public abstract class AbstractAutoCompleteProvider {
