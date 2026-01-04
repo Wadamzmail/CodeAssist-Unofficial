@@ -154,7 +154,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
         ListenableFuture<List<MethodPtr>> future = ProgressManager.getInstance()
                 .computeNonCancelableAsync(() -> {
                     List<MethodPtr> pointers =
-                            performInternal(javacTask, sourceFileObject, currentPath);
+                            performInternal(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), sourceFileObject, currentPath);
                     Collections.reverse(pointers);
                     return Futures.immediateFuture(pointers);
                 });
@@ -239,11 +239,11 @@ public class OverrideInheritedMethodsAction extends AnAction {
     }
 
     @WorkerThread
-    private List<MethodPtr> performInternal(JavacTaskImpl task,
+    private List<MethodPtr> performInternal(JavacUtilitiesProvider task,
                                             SourceFileObject file,
                                             TreePath currentPath) {
         
-            Trees trees = MTrees.instance(task);
+            Trees trees = task.getTrees();
             Element classElement = trees.getElement(currentPath);
             Elements elements = task.getElements();
             List<MethodPtr> methodPtrs = new ArrayList<>();

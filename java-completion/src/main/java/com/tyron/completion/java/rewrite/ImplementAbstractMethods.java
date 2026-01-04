@@ -84,7 +84,7 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
   //  }
   // see you again 
   //  return rewriteInternal(task, file);
-       
+       return CANCELLED;
   }
 
   private Map<Path, TextEdit[]> rewriteInternal(
