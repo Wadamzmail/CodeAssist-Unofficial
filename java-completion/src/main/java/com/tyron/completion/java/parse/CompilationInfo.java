@@ -34,6 +34,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class CompilationInfo {
 
@@ -56,6 +57,7 @@ public class CompilationInfo {
                     .flatMap(it -> it.getCompileJarFiles().stream())
                     .collect(Collectors.toList()));
       }
+      
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
@@ -67,6 +69,7 @@ public class CompilationInfo {
 
   public static CompilationInfo get(Project currentProject, File file) {
     final Module module = currentProject.getModule(file);
+    ProjectUtil.getInstance().setProject(currentProject).setModule(module); 
     return get(module);
   }
 

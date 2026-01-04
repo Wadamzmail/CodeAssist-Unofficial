@@ -135,9 +135,9 @@ public class ImportClassAction extends AnAction {
     for (String qualifiedName : publicTopLevelTypes(project,editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         String title = e.getDataContext().getString(R.string.import_class_name, qualifiedName);
-           //             JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
-            //            map.put(title, addImport);
-        throw new UnsupportedOperationException();
+                        JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
+                        map.put(title, addImport);
+       // throw new UnsupportedOperationException();
       }
     }
 

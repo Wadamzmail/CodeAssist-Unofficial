@@ -398,29 +398,45 @@ public class CodeEditorFragment extends Fragment
           }
         });
 
-    mEditor.subscribeEvent(
+        MEditor.subscribeEvent(
         LongPressEvent.class,
         (event, unsubscribe) -> {
           event.intercept();
 
           updateFile(mEditor.getText());
           Cursor cursor = mEditor.getCursor();
+          
+          CharSequence text = mEditor.getText();
+          int textLength = text.length();
+
           if (cursor.isSelected()) {
             int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
-            int cursorLeft = cursor.getLeft();
-            int cursorRight = cursor.getRight();
-            char c = mEditor.getText().charAt(index);
-            if (Character.isWhitespace(c)) {
-              mEditor.setSelection(event.getLine(), event.getColumn());
-            } else if (index < cursorLeft || index > cursorRight) {
-              EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
+            
+            if (index >= 0 && index < textLength) {
+                int cursorLeft = cursor.getLeft();
+                int cursorRight = cursor.getRight();
+                char c = text.charAt(index);
+                
+                if (Character.isWhitespace(c)) {
+                  mEditor.setSelection(event.getLine(), event.getColumn());
+                } else if (index < cursorLeft || index > cursorRight) {
+                  EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
+                }
+            } else {
+                mEditor.setSelection(event.getLine(), event.getColumn());
             }
           } else {
-            char c = mEditor.getText().charAt(event.getIndex());
-            if (!Character.isWhitespace(c)) {
-              EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
+            int index = event.getIndex();
+            
+            if (index >= 0 && index < textLength) {
+                char c = text.charAt(index);
+                if (!Character.isWhitespace(c)) {
+                  EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
+                } else {
+                  mEditor.setSelection(event.getLine(), event.getColumn());
+                }
             } else {
-              mEditor.setSelection(event.getLine(), event.getColumn());
+                mEditor.setSelection(event.getLine(), event.getColumn());
             }
           }
 
@@ -430,6 +446,7 @@ public class CodeEditorFragment extends Fragment
                     showPopupMenu(event);
                   });
         });
+
     mEditor.subscribeEvent(
         ClickEvent.class,
         (event, unsubscribe) -> {

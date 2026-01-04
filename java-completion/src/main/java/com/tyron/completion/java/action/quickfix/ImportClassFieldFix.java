@@ -150,10 +150,10 @@ public class ImportClassFieldFix extends AnAction {
             qualifiedName += simpleName;
           }
           String name = e.getDataContext().getString(R.string.import_class_name, qualifiedName);
-          //                    JavaRewrite2 addImport = new AddImport(file.toFile(),
-          // qualifiedName);
-          //                    map.put(name, addImport);
-          throw new UnsupportedOperationException();
+                              JavaRewrite2 addImport = new AddImport(file.toFile(),
+           qualifiedName);
+                              map.put(name, addImport);
+         // throw new UnsupportedOperationException();
         }
       }
     }
