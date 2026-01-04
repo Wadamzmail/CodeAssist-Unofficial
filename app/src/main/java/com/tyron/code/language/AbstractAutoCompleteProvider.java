@@ -18,5 +18,5 @@ public abstract class AbstractAutoCompleteProvider {
   }
 
   public abstract CompletionList getCompletionList(String prefix, int line, int column);
-  // public abstract String getPrefix( Editor editor, int line, int column);
+   public abstract String getPrefix( Editor editor, int line, int column);
 }

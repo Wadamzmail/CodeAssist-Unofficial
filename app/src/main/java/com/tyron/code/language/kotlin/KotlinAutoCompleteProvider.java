@@ -17,6 +17,7 @@ import com.tyron.kotlin.completion.KotlinFile;
 import java.util.List;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
 import com.tyron.completion.java.provider.JavaSortCategory;
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 
 public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
@@ -107,4 +108,35 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
     return kotlinEnvironment.complete(updatedFile, line, column);
   }
+  
+  @Override
+    public String getPrefix(Editor editor, int line, int column) {
+        Project project = ProjectManager.getInstance().getCurrentProject();
+        if (project == null) {
+            return null;
+        }
+
+        Module currentModule = project.getModule(mEditor.getCurrentFile());
+
+        if (!(currentModule instanceof AndroidModule)) {
+            return null;
+        }
+
+        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        if (kotlinEnvironment == null) {
+            return null;
+        }
+
+        KotlinFile kotlinFile =
+                kotlinEnvironment.getKotlinFile(editor.getCurrentFile().getAbsolutePath());
+        if (kotlinFile == null) {
+            return null;
+        }
+
+        PsiElement psiElement = kotlinFile.elementAt(line, column);
+        if (psiElement == null) {
+            return null;
+        }
+        return kotlinEnvironment.getPrefix(psiElement);
+    }
 }

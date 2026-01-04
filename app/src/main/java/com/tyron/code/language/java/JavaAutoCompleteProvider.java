@@ -13,6 +13,8 @@ import com.tyron.completion.main.CompletionEngine;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.editor.Editor;
 import java.util.Optional;
+import com.tyron.legacyEditor.Content;
+import io.github.rosemoe.sora.util.MyCharacter;
 
 public class JavaAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
@@ -58,4 +60,15 @@ public class JavaAutoCompleteProvider extends AbstractAutoCompleteProvider {
     }
     return null;
   }
+  
+  @Override
+    public String getPrefix(Editor editor, int line, int column) {
+        Content content = editor.getContent();
+        int end = editor.getCharIndex(line, column);
+        int start = end;
+        while (start > 0 && MyCharacter.isJavaIdentifierPart(content.charAt(start - 1))) {
+            start--;
+        }
+        return content.subSequence(start, end).toString();
+    }
 }
