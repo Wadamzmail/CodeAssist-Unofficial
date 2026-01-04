@@ -80,6 +80,7 @@ public class HoverProvider {
     } else {
       return "";*/
     }
+    return "";
   }
 
   private String docs(JavacUtilitiesProvider task, Tree tree) {
