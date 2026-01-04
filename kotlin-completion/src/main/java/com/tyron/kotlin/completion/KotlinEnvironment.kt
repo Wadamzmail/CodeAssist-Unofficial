@@ -549,20 +549,16 @@ data class KotlinEnvironment(
                     )
                     put(CommonConfigurationKeys.LANGUAGE_VERSION_SETTINGS, languageVersionSettings)
                     
-                    // Optimized I/O Settings
-                    put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, true) // Force true for speed
-                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, true) // Force true for speed
-                    
+                    put(JVMConfigurationKeys.USE_PSI_CLASS_FILES_READING, Prefs.get().getBoolean(SharedPreferenceKeys.USE_PSI_CLASS_FILES_READING,true))
+                    put(JVMConfigurationKeys.USE_FAST_JAR_FILE_SYSTEM, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true))
                     put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, true)
-                    put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, false) // False for single-file analysis can be faster
-                    put(CommonConfigurationKeys.USE_FIR, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FIR, true))
-                    
-                    // Light tree is faster for parsing
-                    put(CommonConfigurationKeys.USE_LIGHT_TREE, true) 
-                    
-                    put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, 4) // Lower threads for mobile context to avoid CPU starvation
-                    put(CommonConfigurationKeys.VERIFY_IR, IrVerificationMode.NONE)
-                    put(CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS, false)
+                    put(CommonConfigurationKeys.INCREMENTAL_COMPILATION, true)
+                    put(CommonConfigurationKeys.USE_FIR, Prefs.get().getBoolean(SharedPreferenceKeys.USE_FIR,true))
+                    put(CommonConfigurationKeys.USE_LIGHT_TREE, true)
+                    put(CommonConfigurationKeys.PARALLEL_BACKEND_THREADS, Prefs.get().getString(SharedPreferenceKeys.PARALLEL_BACKEND_THREADS,"10")?.toIntOrNull()?:10)
+                    put(CommonConfigurationKeys.VERIFY_IR, IrVerificationMode.NONE);
+                    put(CommonConfigurationKeys.USE_FIR_EXTRA_CHECKERS,false)  
+                                    
                    // put(CLIConfigurationKeys.INTELLIJ_PLUGIN_ROOT, ".")
 
                     with(K2JVMCompilerArguments()) {

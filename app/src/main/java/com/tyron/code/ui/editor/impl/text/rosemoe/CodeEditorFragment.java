@@ -340,6 +340,7 @@ public class CodeEditorFragment extends Fragment
     editor.setDiagnostics(new DiagnosticsContainer());
     editor.setHighlightCurrentBlock(true);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
+    editor.setUndoEnabled(true);
     editor.openFile(mCurrentFile);
     editor.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
     editor.setInputType(
@@ -398,7 +399,7 @@ public class CodeEditorFragment extends Fragment
           }
         });
 
-        MEditor.subscribeEvent(
+        mEditor.subscribeEvent(
         LongPressEvent.class,
         (event, unsubscribe) -> {
           event.intercept();

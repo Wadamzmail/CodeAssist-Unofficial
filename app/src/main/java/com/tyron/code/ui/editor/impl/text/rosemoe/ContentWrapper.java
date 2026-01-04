@@ -24,7 +24,7 @@ public class ContentWrapper extends Content implements com.tyron.editor.Content 
 
   public ContentWrapper(CharSequence text) {
     super(text, true);
-
+    setUndoEnabled(true);
     hasCalledSuper = true;
   }
 

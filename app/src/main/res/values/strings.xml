@@ -191,10 +191,10 @@
     <string name="font_size_message">Set editor font size</string>
     <string name="font_size_summary">Specify the default font size of the editor</string>
     <string name="kotlin_max_items_count_title">Kotlin max Suggestions count</string>
-    <string name="kotlin_max_items_count_message">Set the max count of Kotlin Suggestions</string>
+    <string name="kotlin_max_items_count_message">Set the max count of Kotlin Suggestions (Default = 50)</string>
     <string name="kotlin_max_items_count_summary">Specify the default kotlin suggestions list limit, every Decreased means performance++</string>
     <string name="parallel_backend_threads_title">Parallel Backend Threads</string>
-    <string name="parallel_backend_threads_message">Set Number of Kotlin Completion Threads</string>
+    <string name="parallel_backend_threads_message">Set Number of Kotlin Completion Threads (Default = 10)</string>
     <string name="parallel_backend_threads_summary">Specify the default threads number, be careful</string>
     <string name="keyboard_settings_title">Keyboard</string>
     <string name="keyboard_enable_suggestions_description">Enable keyboard suggestions</string>
