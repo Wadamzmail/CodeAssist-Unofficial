@@ -73,7 +73,7 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
    // return CompletionList.builder(prefix).addItems(itemList).build();
   }
 
-  @Nullable
+/*  @Nullable
   public List<CompletionItem> getCompletionItems(String prefix, int line, int column) {
     if (!mPreferences.getBoolean(SharedPreferenceKeys.KOTLIN_COMPLETIONS, false)) {
       return null;
@@ -109,7 +109,7 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
     return kotlinEnvironment.complete(updatedFile, line, column);
   }
-  
+  */
   @Override
     public String getPrefix(Editor editor, int line, int column) {
         Project project = ProjectManager.getInstance().getCurrentProject();
