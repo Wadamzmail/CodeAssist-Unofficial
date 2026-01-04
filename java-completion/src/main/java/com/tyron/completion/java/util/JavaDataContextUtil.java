@@ -40,9 +40,10 @@ public class JavaDataContextUtil {
                     if (diagnostic != null) {
                         context.putData(CommonDataKeys.DIAGNOSTIC, new DiagnosticWrapper(diagnostic));
                     }
-                }
-                  
+                }          
             }
         }
+        if(project==null)return;
+        ProjectUtil.getInstance().setProject(project).setModule(project.getModule(file));
     }
 }

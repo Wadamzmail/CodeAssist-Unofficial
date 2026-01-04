@@ -31,6 +31,8 @@ public class KeywordCompletionProvider extends BaseCompletionProvider {
     "@interface",
     "extends",
     "implements",
+    "record",
+    "enum" 
   };
 
   private static final String[] CLASS_BODY_KEYWORDS = {
@@ -52,7 +54,9 @@ public class KeywordCompletionProvider extends BaseCompletionProvider {
     "float",
     "double",
     "implements",
-    "extends"
+    "extends",
+    "record",
+    "enum"
   };
 
   private static final String[] METHOD_BODY_KEYWORDS = {
@@ -93,7 +97,9 @@ public class KeywordCompletionProvider extends BaseCompletionProvider {
     "interface",
     "@interface",
     "extends",
-    "implements"
+    "implements",
+    "record",
+    "enum" 
   };
 
   public KeywordCompletionProvider(JavaCompilerService service) {

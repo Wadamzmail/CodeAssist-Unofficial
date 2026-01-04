@@ -37,6 +37,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
@@ -54,7 +55,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     checkCanceled();
 
     Set<String> names = new HashSet<>();
-    for (String className : getCompiler().publicTopLevelTypes()) {
+    for (String className : ProjectUtil.getInstance().publicTopLevelTypes()) {
       if (className.startsWith(path)) {
         int start = path.lastIndexOf('.');
         int end = className.indexOf('.', path.length());
@@ -80,7 +81,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
   }
 
-  public List<CompletionItem> addAnonymous(CompileTask task, TreePath path, String partial) {
+  public List<CompletionItem> addAnonymous(JavacUtilitiesProvider task, TreePath path, String partial) {
     checkCanceled();
 
     List<CompletionItem> items = new ArrayList<>();
@@ -90,7 +91,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
 
     if (path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
-      Trees trees = MTrees.instance(task.task);
+      Trees trees = task.getTrees();
       MethodInvocationTree method =
           (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf();
       Element element = trees.getElement(path.getParentPath().getParentPath());
