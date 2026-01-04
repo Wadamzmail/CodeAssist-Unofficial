@@ -13,7 +13,7 @@ import com.tyron.completion.main.CompletionEngine;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.editor.Editor;
 import java.util.Optional;
-import com.tyron.legacyEditor.Content;
+import com.tyron.editor.Content;
 import io.github.rosemoe.sora.util.MyCharacter;
 
 public class JavaAutoCompleteProvider extends AbstractAutoCompleteProvider {
