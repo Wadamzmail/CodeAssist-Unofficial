@@ -57,7 +57,6 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.metadata.jvm.deserialization.JvmProtoBufUtil
 import com.tyron.common.Prefs
 import com.tyron.common.SharedPreferenceKeys
-import org.jetbrains.kotlin.lexer.KtTokens
 import org.jetbrains.kotlin.resolve.TopDownAnalysisContext
 import org.jetbrains.kotlin.diagnostics.Severity
 import org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport
@@ -352,6 +351,9 @@ data class KotlinEnvironment(
         }
     }*/
     
+    private val analyzerWithCompilerReport =
+        AnalyzerWithCompilerReport(kotlinEnvironment.configuration)
+    
     fun analysisOf(files: List<KtFile>, current: KtFile): Analysis {
         val project = files.first().project
         val bindingTrace = CliBindingTrace(kotlinEnvironment.project)
@@ -531,17 +533,12 @@ data class KotlinEnvironment(
             setupIdeaStandaloneExecution()
 
             val kotlinCoreEnvironment = KotlinCoreEnvironment.createForProduction(
-                parentDisposable = {},
+                projectDisposable = {},
                 configFiles = EnvironmentConfigFiles.JVM_CONFIG_FILES,
                 configuration = CompilerConfiguration().apply {
                     addJvmClasspathRoots(classpath.filter { it.exists() && it.isFile && it.extension == "jar" })
                    // put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, messageCollector)
                     put(CommonConfigurationKeys.MODULE_NAME, UUID.randomUUID().toString())
-
-                    val langFeatures = mutableMapOf<LanguageFeature, LanguageFeature.State>()
-                    for (langFeature in LanguageFeature.values()) {
-                        langFeatures[langFeature] = LanguageFeature.State.ENABLED
-                    }
                     
                     put(JVMConfigurationKeys.NO_JDK, true)
                     put(JVMConfigurationKeys.NO_REFLECT, true)
