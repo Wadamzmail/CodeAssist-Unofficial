@@ -151,9 +151,9 @@ dependencies {
     implementation project(path: ':treeview')
 
     // apis
-    implementation project(path: ':completion-api')
+    api project(path: ':completion-api')
     implementation project(path: ':actions-api')
-    implementation project(path: ':editor-api')
+    api project(path: ':editor-api')
     implementation project(path: ':fileeditor-api')
 
     // formatters    
