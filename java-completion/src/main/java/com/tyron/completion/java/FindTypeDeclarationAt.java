@@ -14,7 +14,7 @@ import com.sun.source.util.Trees;
 
 public class FindTypeDeclarationAt extends TreeScanner<ClassTree, Long> {
   private final SourcePositions pos;
-  private final JavacTask task;
+  //private final JavacTask task;
   private CompilationUnitTree root;
 
   public FindTypeDeclarationAt(Trees trees) {
