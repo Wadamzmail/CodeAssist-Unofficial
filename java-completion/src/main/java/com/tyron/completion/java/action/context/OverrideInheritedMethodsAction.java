@@ -76,6 +76,7 @@ import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 public class OverrideInheritedMethodsAction extends AnAction {
 
