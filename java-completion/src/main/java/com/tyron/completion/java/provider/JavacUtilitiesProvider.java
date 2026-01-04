@@ -6,9 +6,12 @@ import com.sun.tools.javac.util.Context;
 import com.tyron.builder.project.Project;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import com.sun.tools.javac.api.JavacTaskImpl;
 
 public interface JavacUtilitiesProvider {
-
+   
+  JavacTaskImpl getTask();
+   
   Context getContext();
 
   Trees getTrees();

@@ -198,7 +198,7 @@ public class DiagnosticUtil {
 
   @NonNull
   public static MethodPtr findMethod(JavacUtilitiesProvider task, long position) {
-    Trees trees = task.getTrees();
+    Trees trees = MTrees.instance(task.getTask());
     Tree tree = new FindMethodDeclarationAt(trees).scan(task.root(), position);
     TreePath path = trees.getPath(task.root(), tree);
     ExecutableElement method = (ExecutableElement) trees.getElement(path);

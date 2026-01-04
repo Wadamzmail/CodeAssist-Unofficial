@@ -108,7 +108,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
         int right = editor.getCaret().getEnd();
         JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
-
+        if(currentPath ==null) return;
         if (!(currentPath.getLeaf() instanceof ClassTree)) {
             return;
         }
@@ -244,7 +244,7 @@ public class OverrideInheritedMethodsAction extends AnAction {
                                             SourceFileObject file,
                                             TreePath currentPath) {
         
-            Trees trees = task.getTrees();
+            Trees trees = MTrees.instance(task.getTask());
             Element classElement = trees.getElement(currentPath);
             Elements elements = task.getElements();
             List<MethodPtr> methodPtrs = new ArrayList<>();

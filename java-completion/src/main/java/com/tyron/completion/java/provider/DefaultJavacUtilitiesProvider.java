@@ -21,6 +21,11 @@ public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider {
     this.root = root;
     this.project = project;
   }
+  
+  @Override
+  public JavacTaskImpl getTask(){
+    return task;
+  }
 
   @Override
   public Context getContext() {

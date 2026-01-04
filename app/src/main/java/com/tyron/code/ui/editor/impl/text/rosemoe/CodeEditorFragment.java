@@ -387,6 +387,7 @@ public class CodeEditorFragment extends Fragment
               Field mInterceptTargets =
                   ReflectionUtil.findFieldInHierarchy(
                       Event.class, field -> "mInterceptTargets".equals(field.getName()));
+                 if(mInterceptTargets==null)return;   
               mInterceptTargets.setAccessible(true);
               try {
                 mInterceptTargets.set(event, InterceptTarget.TARGET_EDITOR);
