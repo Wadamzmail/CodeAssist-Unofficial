@@ -38,6 +38,7 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.completion.java.action.FindCurrentPath;
 import com.tyron.builder.project.Project;
 import com.sun.source.util.TreePath;
+import com.tyron.completion.java.rewrite.AddImport;
 
 public class ImportClassFieldFix extends AnAction {
 
