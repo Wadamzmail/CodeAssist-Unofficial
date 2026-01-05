@@ -47,6 +47,7 @@ import javax.management.loading.ClassLoaderRepository;
 //import sun.management.Util;
 //import sun.management.spi.PlatformMBeanProvider;
 //import sun.management.spi.PlatformMBeanProvider.PlatformComponent;
+import java.util.ArrayList;
 
 public class ManagementFactory {
     public static final String CLASS_LOADING_MXBEAN_NAME = "java.lang:type=ClassLoading";
@@ -392,8 +393,9 @@ public class ManagementFactory {
 //        return getPlatformMXBeans(MemoryManagerMXBean.class);
 //    }
 //
-    public static List<Object> getGarbageCollectorMXBeans() {
-        return Collections.emptyList();
+    public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
+        //return Collections.emptyList();
+        return new ArrayList<GarbageCollectorMXBean>();
     }
 
     public static synchronized MBeanServer getPlatformMBeanServer() {
