@@ -169,7 +169,7 @@ public class ImportClassAction extends AnAction {
   
   public Set<String> publicTopLevelTypes( Editor editor) {
     Set<String> classes = new HashSet<>();
-    Module mCurrentModule = mProject.getModule(editor.getCurrentFile());
+    Module mCurrentModule = editor.getProject().getModule(editor.getCurrentFile());
     for (Module module : editor.getProject().getDependencies(mCurrentModule)) {
       if (module instanceof JavaModule) {
         classes.addAll(((JavaModule) module).getAllClasses());
