@@ -198,13 +198,11 @@ data class KotlinEnvironment(
                         prefix,
                         descriptor
                     )
-                } + keywordsCompletionVariants(
-                    KtTokens.KEYWORDS, prefix
-                ) + keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
+                }
             } ?: emptyList()
 
             val builder = CompletionList.builder(prefix)
-            builder.addItems(list)
+            builder.addItems(if (isAfterDot(position)) list else list + keywordsList(prefix))
             if (currentItemCount >= MAX_ITEMS_COUNT) {
                 builder.incomplete()
             }
@@ -212,6 +210,20 @@ data class KotlinEnvironment(
             builder.build()
         }
     }
+    
+    fun keywordsList(prefix: String): List<CompletionItem> = 
+       keywordsCompletionVariants(KtTokens.KEYWORDS, prefix) + 
+       keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
+    
+    private fun isAfterDot(element: PsiElement): Boolean {
+       val prev = element.prevSibling
+       if (prev?.text == ".") return true
+
+       val parent = element.parent
+       return parent is KtQualifiedExpression &&
+              parent.selectorExpression == element
+    }
+
 
     private fun completionVariantFor(
         prefix: String,

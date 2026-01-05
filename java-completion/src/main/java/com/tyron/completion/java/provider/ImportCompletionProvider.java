@@ -41,6 +41,8 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.builder.project.api.Module;
+import com.tyron.builder.project.api.JavaModule;
+import com.tyron.builder.project.util.PackageTrie;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
@@ -48,7 +50,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     super(service);
   }
 
-  @Override
+@Override
 public void complete(
     CompletionList.Builder builder,
     JavacUtilitiesProvider task,
@@ -62,42 +64,67 @@ public void complete(
   File file = new File(root.getSourceFile().toUri());
 
   Module module = task.getProject().getModule(file);
-  if (module == null) return;
+  if (!(module instanceof JavaModule)) return;
 
-  ShortNamesCache cache = ShortNamesCache.getInstance(module);
-  String[] allClasses = cache.getAllClassNames();
+  JavaModule javaModule = (JavaModule) module;
+  PackageTrie trie = javaModule.getClassIndex();
+
+  boolean endsWithDot = path.endsWith(".");
+  String query = endsWithDot ? path.substring(0, path.length() - 1) : path;
+
+  int lastDot = query.lastIndexOf('.');
+  String parentPackage = lastDot == -1 ? "" : query.substring(0, lastDot);
+  String prefix = lastDot == -1 ? query : query.substring(lastDot + 1);
 
   Set<String> added = new HashSet<>();
 
-  for (String fqName : allClasses) {
-    if (!fqName.startsWith(path)) continue;
+  if (parentPackage.isEmpty() && !endsWithDot) {
+    for (String top : trie.getTopLevelNonLeafNodes()) {
+      if (!top.startsWith(prefix)) continue;
+      if (!added.add(top)) continue;
 
-    int lastDot = path.lastIndexOf('.');
-    int nextDot = fqName.indexOf('.', path.length());
-    if (nextDot == -1) nextDot = fqName.length();
+      CompletionItem item = packageItem(top);
+      item.addFilterText(top);
+      builder.addItem(item);
+    }
+    return;
+  }
 
-    String segment = fqName.substring(lastDot + 1, nextDot);
+  String basePackage = endsWithDot ? query : parentPackage;
+
+  List<String> matches = trie.getMatchingPackages(basePackage);
+
+  for (String fqn : matches) {
+    checkCanceled();
+
+    if (!fqn.startsWith(basePackage)) continue;
+
+    String remaining =
+        fqn.length() == basePackage.length()
+            ? ""
+            : fqn.substring(basePackage.length() + 1);
+
+    if (remaining.isEmpty()) continue;
+
+    int dot = remaining.indexOf('.');
+    String segment = dot == -1 ? remaining : remaining.substring(0, dot);
+
+    if (!segment.startsWith(prefix)) continue;
     if (!added.add(segment)) continue;
 
-    boolean isClass = fqName.endsWith(segment);
-
     CompletionItem item;
-    if (isClass) {
-      item = importClassItem(fqName);
+    if (dot == -1) {
+      item = importClassItem(fqn);
     } else {
       item = packageItem(segment);
     }
 
     item.addFilterText(segment);
-    if (lastDot != -1) {
-      item.addFilterText(path.substring(0, lastDot) + "." + segment);
-    }
-
     builder.addItem(item);
 
     if (builder.getItemCount() >= Completions.MAX_COMPLETION_ITEMS) {
       builder.incomplete();
-      break;
+      return;
     }
   }
 }
