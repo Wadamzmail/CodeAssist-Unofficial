@@ -85,7 +85,7 @@ public class ImportClassAction extends AnAction {
  
     String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[1]);
     List<String> classNames = new ArrayList<>();
-    for (String qualifiedName : getAllClassNames(editor)) {
+    for (String qualifiedName : publicTopLevelTypes(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         classNames.add(qualifiedName);
       }
@@ -134,7 +134,7 @@ public class ImportClassAction extends AnAction {
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     Map<String, JavaRewrite2> map = new TreeMap<>();
-    for (String qualifiedName : getAllClassNames(editor)) {
+    for (String qualifiedName : publicTopLevelTypes(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         String title = e.getDataContext().getString(R.string.import_class_name, qualifiedName);
                         JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
@@ -167,10 +167,10 @@ public class ImportClassAction extends AnAction {
     return allClasses;
   }
   
-  public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {
+  public Set<String> publicTopLevelTypes( Editor editor) {
     Set<String> classes = new HashSet<>();
     Module mCurrentModule = mProject.getModule(editor.getCurrentFile());
-    for (Module module : mProject.getDependencies(mCurrentModule)) {
+    for (Module module : editor.getProject().getDependencies(mCurrentModule)) {
       if (module instanceof JavaModule) {
         classes.addAll(((JavaModule) module).getAllClasses());
       }

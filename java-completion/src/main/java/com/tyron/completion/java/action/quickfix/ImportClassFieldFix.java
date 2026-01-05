@@ -89,7 +89,7 @@ public class ImportClassFieldFix extends AnAction {
 
     String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[0]);
     List<String> classNames = new ArrayList<>();
-    for (String qualifiedName : getAllClassNames(editor)) {
+    for (String qualifiedName : publicTopLevelTypes(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         classNames.add(qualifiedName);
       }
@@ -144,7 +144,7 @@ public class ImportClassFieldFix extends AnAction {
     }
 
     Map<String, JavaRewrite2> map = new TreeMap<>();
-    for (String qualifiedName : getAllClassNames(editor)) {
+    for (String qualifiedName : publicTopLevelTypes(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         if (qualifiedName.endsWith("." + searchName)) {
           if (isField) {
@@ -184,10 +184,10 @@ public class ImportClassFieldFix extends AnAction {
     return allClasses;
   }
   
-  public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {
+  public Set<String> publicTopLevelTypes(Editor editor) {
     Set<String> classes = new HashSet<>();
     Module mCurrentModule = mProject.getModule(editor.getCurrentFile());
-    for (Module module : mProject.getDependencies(mCurrentModule)) {
+    for (Module module : editor.getProject().getDependencies(mCurrentModule)) {
       if (module instanceof JavaModule) {
         classes.addAll(((JavaModule) module).getAllClasses());
       }

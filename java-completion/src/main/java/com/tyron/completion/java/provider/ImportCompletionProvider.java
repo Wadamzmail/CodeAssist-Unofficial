@@ -22,13 +22,11 @@ import com.tyron.completion.java.compiler.JavaCompilerService;
 import com.tyron.completion.model.CompletionItem;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.completion.model.DrawableKind;
-import dev.mutwakil.javac.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.io.File;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -38,6 +36,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
+import dev.mutwakil.javac.*;
 import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.builder.project.api.Module;
@@ -50,84 +49,41 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     super(service);
   }
 
-@Override
-public void complete(
-    CompletionList.Builder builder,
-    JavacUtilitiesProvider task,
-    TreePath treePath,
-    String path,
-    boolean endsWithParen) {
-
-  checkCanceled();
-
-  CompilationUnitTree root = task.root();
-  File file = new File(root.getSourceFile().toUri());
-
-  Module module = task.getProject().getModule(file);
-  if (!(module instanceof JavaModule)) return;
-
-  JavaModule javaModule = (JavaModule) module;
-  PackageTrie trie = javaModule.getClassIndex();
-
-  boolean endsWithDot = path.endsWith(".");
-  String query = endsWithDot ? path.substring(0, path.length() - 1) : path;
-
-  int lastDot = query.lastIndexOf('.');
-  String parentPackage = lastDot == -1 ? "" : query.substring(0, lastDot);
-  String prefix = lastDot == -1 ? query : query.substring(lastDot + 1);
-
-  Set<String> added = new HashSet<>();
-
-  if (parentPackage.isEmpty() && !endsWithDot) {
-    for (String top : trie.getTopLevelNonLeafNodes()) {
-      if (!top.startsWith(prefix)) continue;
-      if (!added.add(top)) continue;
-
-      CompletionItem item = packageItem(top);
-      item.addFilterText(top);
-      builder.addItem(item);
-    }
-    return;
-  }
-
-  String basePackage = endsWithDot ? query : parentPackage;
-
-  List<String> matches = trie.getMatchingPackages(basePackage);
-
-  for (String fqn : matches) {
+  @Override
+  public void complete(
+      CompletionList.Builder builder,
+      JavacUtilitiesProvider task,
+      TreePath treePath,
+      String path,
+      boolean endsWithParen) {
     checkCanceled();
 
-    if (!fqn.startsWith(basePackage)) continue;
+    Set<String> names = new HashSet<>();
+    for (String className : ProjectUtil.getInstance().publicTopLevelTypes()) {
+      if (className.startsWith(path)) {
+        int start = path.lastIndexOf('.');
+        int end = className.indexOf('.', path.length());
+        if (end == -1) end = className.length();
+        String segment = className.substring(start + 1, end);
+        if (names.contains(segment)) continue;
+        names.add(segment);
+        boolean isClass = className.endsWith(segment);
 
-    String remaining =
-        fqn.length() == basePackage.length()
-            ? ""
-            : fqn.substring(basePackage.length() + 1);
+        CompletionItem item;
+        if (isClass) {
+          item = importClassItem(className);
+        } else {
+          item = packageItem(segment);
+        }
 
-    if (remaining.isEmpty()) continue;
-
-    int dot = remaining.indexOf('.');
-    String segment = dot == -1 ? remaining : remaining.substring(0, dot);
-
-    if (!segment.startsWith(prefix)) continue;
-    if (!added.add(segment)) continue;
-
-    CompletionItem item;
-    if (dot == -1) {
-      item = importClassItem(fqn);
-    } else {
-      item = packageItem(segment);
-    }
-
-    item.addFilterText(segment);
-    builder.addItem(item);
-
-    if (builder.getItemCount() >= Completions.MAX_COMPLETION_ITEMS) {
-      builder.incomplete();
-      return;
+        item.addFilterText(segment);
+        if (path.contains(".")) {
+          item.addFilterText(path.substring(0, path.lastIndexOf('.')) + "." + segment);
+        }
+        builder.addItem(item);
+      }
     }
   }
-}
 
   public List<CompletionItem> addAnonymous(JavacUtilitiesProvider task, TreePath path, String partial) {
     checkCanceled();
