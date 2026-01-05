@@ -354,15 +354,36 @@ public class ManagementFactory {
             }
         };
     }
-//
-//    public static CompilationMXBean getCompilationMXBean() {
-//        return (CompilationMXBean)getPlatformMXBean(CompilationMXBean.class);
-//    }
-//
+
+    public static CompilationMXBean getCompilationMXBean() {
+        return new CompilationMXBean(){
+          
+          @Override
+          public java.lang.String getName(){
+           return "";
+          }
+          
+          @Override
+          public boolean isCompilationTimeMonitoringSupported(){
+            return false;
+          }
+          
+          @Override 
+          public long getTotalCompilationTime(){
+            return 0;
+          }
+          @Override
+          public ObjectName getObjectName(){
+            return null;
+          }
+        
+        };
+    }
+
 //    public static OperatingSystemMXBean getOperatingSystemMXBean() {
 //        return (OperatingSystemMXBean)getPlatformMXBean(OperatingSystemMXBean.class);
 //    }
-//
+
 //    public static List<MemoryPoolMXBean> getMemoryPoolMXBeans() {
 //        return getPlatformMXBeans(MemoryPoolMXBean.class);
 //    }
