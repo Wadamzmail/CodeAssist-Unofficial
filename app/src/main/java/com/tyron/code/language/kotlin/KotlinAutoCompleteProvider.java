@@ -138,6 +138,7 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
         if (psiElement == null) {
             return null;
         }
+        System.out.println("Prefix:"+psiElement.toString());
         return kotlinEnvironment.getPrefix(psiElement);
     }
 }

@@ -51,7 +51,7 @@ class CachedAutoCompleteProvider(
     }
 
     override fun getPrefix(editor: Editor?, line: Int, column: Int): String {
-        return provider.getPrefix(editor, line, column)
+        return provider.getPrefix(editor, line, column) ?: ""
     }
 
     private fun isIncrementalCompletion(
