@@ -38,6 +38,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import com.tyron.completion.java.util.ProjectUtil;
+import com.tyron.completion.java.ShortNamesCache;
+import com.tyron.builder.project.api.Module;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
@@ -46,40 +48,58 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
   }
 
   @Override
-  public void complete(
-      CompletionList.Builder builder,
-      JavacUtilitiesProvider task,
-      TreePath treePath,
-      String path,
-      boolean endsWithParen) {
-    checkCanceled();
+public void complete(
+    CompletionList.Builder builder,
+    JavacUtilitiesProvider task,
+    TreePath treePath,
+    String path,
+    boolean endsWithParen) {
 
-    Set<String> names = new HashSet<>();
-    for (String className : ProjectUtil.getInstance().publicTopLevelTypes()) {
-      if (className.startsWith(path)) {
-        int start = path.lastIndexOf('.');
-        int end = className.indexOf('.', path.length());
-        if (end == -1) end = className.length();
-        String segment = className.substring(start + 1, end);
-        if (names.contains(segment)) continue;
-        names.add(segment);
-        boolean isClass = className.endsWith(segment);
+  checkCanceled();
 
-        CompletionItem item;
-        if (isClass) {
-          item = importClassItem(className);
-        } else {
-          item = packageItem(segment);
-        }
+  CompilationUnitTree root = task.root();
+  File file = new File(root.getSourceFile().toUri());
 
-        item.addFilterText(segment);
-        if (path.contains(".")) {
-          item.addFilterText(path.substring(0, path.lastIndexOf('.')) + "." + segment);
-        }
-        builder.addItem(item);
-      }
+  Module module = task.getProject().getModule(file);
+  if (module == null) return;
+
+  ShortNamesCache cache = ShortNamesCache.getInstance(module);
+  String[] allClasses = cache.getAllClassNames();
+
+  Set<String> added = new HashSet<>();
+
+  for (String fqName : allClasses) {
+    if (!fqName.startsWith(path)) continue;
+
+    int lastDot = path.lastIndexOf('.');
+    int nextDot = fqName.indexOf('.', path.length());
+    if (nextDot == -1) nextDot = fqName.length();
+
+    String segment = fqName.substring(lastDot + 1, nextDot);
+    if (!added.add(segment)) continue;
+
+    boolean isClass = fqName.endsWith(segment);
+
+    CompletionItem item;
+    if (isClass) {
+      item = importClassItem(fqName);
+    } else {
+      item = packageItem(segment);
+    }
+
+    item.addFilterText(segment);
+    if (lastDot != -1) {
+      item.addFilterText(path.substring(0, lastDot) + "." + segment);
+    }
+
+    builder.addItem(item);
+
+    if (builder.getItemCount() >= Completions.MAX_COMPLETION_ITEMS) {
+      builder.incomplete();
+      break;
     }
   }
+}
 
   public List<CompletionItem> addAnonymous(JavacUtilitiesProvider task, TreePath path, String partial) {
     checkCanceled();

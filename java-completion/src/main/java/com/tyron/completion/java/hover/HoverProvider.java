@@ -51,6 +51,9 @@ public class HoverProvider {
       TypeElement type = (TypeElement) element;
       String className = type.getQualifiedName().toString();
      // TODO
+     // NOTE:
+     // Source lookup outside current CompilationUnit requires JavaCompilerService
+     // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
      // Optional<JavaFileObject> file = compiler.findAnywhere(className);
      //  if (!file.isPresent()) return "";
      return "";

@@ -39,6 +39,7 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.completion.java.action.FindCurrentPath;
 import com.sun.source.util.TreePath;
 import com.tyron.completion.java.rewrite.AddImport;
+import com.tyron.completion.java.ShortNamesCache;
 
 public class ImportClassAction extends AnAction {
 
@@ -84,7 +85,7 @@ public class ImportClassAction extends AnAction {
  
     String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[1]);
     List<String> classNames = new ArrayList<>();
-    for (String qualifiedName : publicTopLevelTypes(project,editor)) {
+    for (String qualifiedName : getAllClassNames(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         classNames.add(qualifiedName);
       }
@@ -133,7 +134,7 @@ public class ImportClassAction extends AnAction {
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     Map<String, JavaRewrite2> map = new TreeMap<>();
-    for (String qualifiedName : publicTopLevelTypes(project,editor)) {
+    for (String qualifiedName : getAllClassNames(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         String title = e.getDataContext().getString(R.string.import_class_name, qualifiedName);
                         JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
@@ -157,6 +158,13 @@ public class ImportClassAction extends AnAction {
           .setNegativeButton(android.R.string.cancel, null)
           .show();
     }
+  }
+  
+  public String[] getAllClassNames(Editor editor){
+    Module module = editor.getProject().getModule(editor.getCurrentFile());
+    ShortNamesCache cache = ShortNamesCache.getInstance(module);
+    String[] allClasses = cache.getAllClassNames();
+    return allClasses;
   }
   
   public Set<String> publicTopLevelTypes(Project mProject, Editor editor) {

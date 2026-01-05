@@ -77,16 +77,18 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
   }
 
   @Override
-  public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-  //TODO: 
-  //  Path file = compiler.findTypeDeclaration(mClassFile);
-  //  if (file == JavaCompilerService.NOT_FOUND) {
-  //    return Collections.emptyMap();
-  //  }
-  // see you again 
-  //  return rewriteInternal(task, file);
-       return CANCELLED;
-  }
+public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
+   // NOTE:
+   // Source lookup outside current CompilationUnit requires JavaCompilerService
+   // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
+   //CompilationUnitTree root = task.root();
+   // if (root == null || root.getSourceFile() == null) {
+    return CANCELLED;
+   //  }
+
+   // Path file = Path.of(root.getSourceFile().toUri());
+   // return rewriteInternal(task, file);
+}
 
   private Map<Path, TextEdit[]> rewriteInternal(
       JavacUtilitiesProvider task, Path file) {
