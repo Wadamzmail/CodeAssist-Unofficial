@@ -29,6 +29,7 @@ class CachedAutoCompleteProvider(
                 return copy
             }
         }
+        print("Kotlin CachedCompletion : not chached")
 
         val result = kotlin.runCatching {
             provider.getCompletionList(prefix, line, column)
