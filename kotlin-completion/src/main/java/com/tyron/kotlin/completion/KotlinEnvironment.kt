@@ -514,7 +514,7 @@ data class KotlinEnvironment(
     companion object {
         private const val COMPLETION_SUFFIX = "IntellijIdeaRulezzz"
 
-        private const val MAX_ITEMS_COUNT = 50
+        private const val MAX_ITEMS_COUNT = Prefs.get().getString(SharedPreferenceKeys.KOTLIN_MAX_ITEMS_COUNT,"50")?.toIntOrNull()?:50
 
         val ENVIRONMENT_KEY = Key.create<KotlinEnvironment>("kotlinEnvironmentKey")
 
@@ -553,7 +553,7 @@ data class KotlinEnvironment(
                         mapOf(                
                        // AnalysisFlags.extendedCompilerChecks to false,
                         AnalysisFlags.ideMode to true,
-                        AnalysisFlags.skipMetadataVersionCheck to true
+                        AnalysisFlags.skipMetadataVersionCheck to true,
                         AnalysisFlags.skipPrereleaseCheck to true 
                         ),
                         langFeatures
