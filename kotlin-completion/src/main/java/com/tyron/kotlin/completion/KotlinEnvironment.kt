@@ -560,7 +560,8 @@ data class KotlinEnvironment(
                     for (langFeature in LanguageFeature.values()) {
                         langFeatures[langFeature] = LanguageFeature.State.ENABLED
                     }
-                    var langV = LanguageVersion.fromVersionString("2.5")!!
+                  //  var langV = LanguageVersion.fromVersionString("2.5")!!
+                    var langV = LanguageVersion.LATEST_STABLE
                     val languageVersionSettings = LanguageVersionSettingsImpl(
                         langV,
                         ApiVersion.createByLanguageVersion(langV),

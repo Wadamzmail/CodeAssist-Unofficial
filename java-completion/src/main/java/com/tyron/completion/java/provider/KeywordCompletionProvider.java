@@ -31,7 +31,8 @@ public class KeywordCompletionProvider extends BaseCompletionProvider {
     "@interface",
     "extends",
     "implements",
-    "record",
+//TODO: after support java17
+//    "record",
     "enum" 
   };
 
@@ -55,7 +56,7 @@ public class KeywordCompletionProvider extends BaseCompletionProvider {
     "double",
     "implements",
     "extends",
-    "record",
+//    "record",
     "enum"
   };
 

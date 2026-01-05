@@ -179,7 +179,7 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
                 .map(File::getAbsolutePath)
                 .collect(Collectors.joining(File.pathSeparator)));
         arguments.add("-Xskip-metadata-version-check");
-        arguments.add("-jvm-default=all");
+        arguments.add("-jvm-default=enable");
 
         File javaDir = new File(getModule().getRootFile() + "/src/main/java");
         File kotlinDir = new File(getModule().getRootFile() + "/src/main/kotlin");
@@ -205,8 +205,8 @@ public class IncrementalKotlinCompiler extends Task<AndroidModule> {
         args.setReportPerf(false);
         args.setReportOutputFiles(false);
         args.setDumpPerf(null);
-        //args.setLanguageVersion(LanguageVersion.LATEST_STABLE.getVersionString());
-        args.setLanguageVersion("2.5");
+        args.setLanguageVersion(LanguageVersion.LATEST_STABLE.getVersionString());
+        //args.setLanguageVersion("2.5");
         args.setUseFastJarFileSystem(Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true));
         args.setJvmTarget(jvm_target);
 
