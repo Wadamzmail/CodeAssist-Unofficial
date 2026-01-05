@@ -215,13 +215,14 @@ data class KotlinEnvironment(
        keywordsCompletionVariants(KtTokens.KEYWORDS, prefix) + 
        keywordsCompletionVariants(KtTokens.SOFT_KEYWORDS, prefix)
     
-    private fun isAfterDot(element: PsiElement): Boolean {
+    private fun isAfterDot(element: PsiElement?): Boolean {
+       if (element == null) return false
        val prev = element.prevSibling
        if (prev?.text == ".") return true
 
        val parent = element.parent
        return parent is KtQualifiedExpression &&
-              parent.selectorExpression == element
+                    parent.selectorExpression == element
     }
 
 
