@@ -109,6 +109,7 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
           //  Optional<JavaFileObject> sourceFile = compiler.findAnywhere(superClassName);
             String text;
           //  if (sourceFile.isPresent()) {
+             if(true){
                 MethodTree source = FindHelper.findMethod(task, superClassName, methodName,
                         erasedParameterTypes);
                 if (source == null) {
@@ -116,6 +117,7 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
                 } else {
                     text = PrintHelper.printMethod(superMethod, parameterizedType, source);
                 }
+             }  
           //  } else {
           //      text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
           //  }
