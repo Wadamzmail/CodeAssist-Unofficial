@@ -551,9 +551,9 @@ data class KotlinEnvironment(
                         LanguageVersion.LATEST_STABLE,
                         ApiVersion.createByLanguageVersion(LanguageVersion.LATEST_STABLE),
                         mapOf(                
-                        AnalysisFlags.extendedCompilerChecks to false,
+                       // AnalysisFlags.extendedCompilerChecks to false,
                         AnalysisFlags.ideMode to true,
-                        AnalysisFlags.skipMetadataVersionCheck to true,
+                        AnalysisFlags.skipMetadataVersionCheck to true
                         AnalysisFlags.skipPrereleaseCheck to true 
                         ),
                         langFeatures
