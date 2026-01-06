@@ -608,7 +608,7 @@ data class KotlinEnvironment(
 
             val jars = androidModule.codeAssistLibraries.map {
                 it.sourceFile
-            }.filter(File::exists)
+            }.filter(File::exists).toMutableList()
             jars.add(BuildModule.getLambdaStubs())
             jars.add(BuildModule.getAndroidJar()) 
             val environment = with(jars)
