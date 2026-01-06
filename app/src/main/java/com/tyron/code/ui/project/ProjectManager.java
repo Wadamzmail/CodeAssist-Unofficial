@@ -216,7 +216,7 @@ public class ProjectManager {
                     File file = event.getFile();
                     Module module2;
                     if (file == null) {
-                        //module2 = mCurrentProject.getModuleByName(":app");
+                       // module2 = mCurrentProject.getModuleByName(":app");
                         module2 = mCurrentProject.getMainModule();
                     } else {
                         module2 = mCurrentProject.getModule(file);
@@ -224,6 +224,8 @@ public class ProjectManager {
                     if (module2 instanceof AndroidModule && indexFiles.containsKey(RES)) {
                         try {
                             InjectResourcesTask.inject(mCurrentProject, (AndroidModule) module2);
+                            //InjectResourcesTask.inject(project, (AndroidModule) module);
+                            InjectViewBindingTask.inject(mCurrentProject, (AndroidModule) module2);
                         } catch (IOException e) {
                             IdeLog.getLogger().severe(e.getMessage());
                         }
@@ -308,9 +310,6 @@ public class ProjectManager {
         mListener.onTaskStarted("Indexing");
         try {
           if(indexFiles.containsKey(JAVA)){
-          //    JavaCompilerProvider provider =
-          //        CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
-          //    JavaCompilerService service = provider.get(project, module);
               if (res.exists()&&indexFiles.containsKey(INJECT_RES)) {
                 if (module instanceof AndroidModule) {
                   String packageName = getApplicationId(((AndroidModule) module));
@@ -323,13 +322,6 @@ public class ProjectManager {
                   }
                 }
               }
-          //    Collection<File> files = javaModule.getJavaFiles().values();
-          //    File first = files.size()>0?((File)files.toArray()[0]):null;//CollectionsKt.firstOrNull(files);
-          //    if (first != null) {
-          //      service.compile(first.toPath());
-          //    }
-
-              //new instead of the upper ^
               indexModule(module);
           }
         } catch (Throwable e) {

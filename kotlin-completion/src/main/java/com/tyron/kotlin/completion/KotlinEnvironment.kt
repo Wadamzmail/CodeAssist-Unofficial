@@ -61,6 +61,7 @@ import org.jetbrains.kotlin.resolve.TopDownAnalysisContext
 import org.jetbrains.kotlin.diagnostics.Severity
 import org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport
 import org.jetbrains.kotlin.container.ComponentProvider
+import com.tyron.builder.BuildModule;
 
 data class KotlinEnvironment(
     val classpath: List<File>,
@@ -608,6 +609,8 @@ data class KotlinEnvironment(
             val jars = androidModule.codeAssistLibraries.map {
                 it.sourceFile
             }.filter(File::exists)
+            jars.add(BuildModule.getLambdaStubs())
+            jars.add(BuildModule.getAndroidJar()) 
             val environment = with(jars)
             androidModule.kotlinFiles.values.forEach {
                 environment.updateKotlinFile(it.absolutePath, it.readText())
