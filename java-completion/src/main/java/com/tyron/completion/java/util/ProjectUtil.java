@@ -53,6 +53,12 @@ public class ProjectUtil {
  }
  
  public ProjectUtil setProject(Project project){
+ if(mProject==null){
+  mProject = project;
+  updateDocs();
+  updateSFM();
+  return instance;
+ }
  if(mProject.equals(project))return instance;
   this.mProject = project;
   updateDocs();
@@ -63,6 +69,11 @@ public class ProjectUtil {
  public ProjectUtil setModule(Module module){
 
   if (module instanceof JavaModule) {
+  if(mCurrentModule==null){
+  mCurrentModule = (JavaModule) module;
+      updateDocs();
+      return instance;
+  }
   if(mCurrentModule.equals((JavaModule)module))return instance;
       mCurrentModule = (JavaModule) module;
       updateDocs();
@@ -82,6 +93,7 @@ public class ProjectUtil {
  }
  
  public ProjectUtil setDocsPath(Set<File> docPath){
+   if(docPath==null)return instance;
    if(docPath.equals(this.docPath))return instance;
   this.docPath = docPath;
   return updateDocs(docPath);
