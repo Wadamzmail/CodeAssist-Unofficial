@@ -5,7 +5,7 @@ import com.tyron.code.ui.editor.shortcuts.ShortcutItem;
 import com.tyron.editor.Editor;
 import io.github.rosemoe.sora.text.Content;
 import com.tyron.code.ui.editor.impl.text.rosemoe.ContentWrapper;
-com.tyron.code.ui.editor.impl.text.rosemoe.ContentWrapper
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 public class UndoAction implements ShortcutAction {
 
