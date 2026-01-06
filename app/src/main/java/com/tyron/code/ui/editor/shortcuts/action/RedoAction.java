@@ -5,6 +5,7 @@ import com.tyron.code.ui.editor.shortcuts.ShortcutItem;
 import com.tyron.editor.Editor;
 import io.github.rosemoe.sora.text.Content;
 import com.tyron.code.ui.editor.impl.text.rosemoe.ContentWrapper;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 public class RedoAction implements ShortcutAction {
 
@@ -17,9 +18,10 @@ public class RedoAction implements ShortcutAction {
 
   @Override
   public void apply(Editor editor, ShortcutItem item) {
-    Content content = (Content)new ContentWrapper(editor.getContent());
-    if (content.canRedo()) {
-      content.redo();
+    //Content content = (Content)new ContentWrapper(editor.getContent());
+    CodeEditorView ce = (CodeEditorView)editor;
+    if (ce.canRedo()) {
+      ce.redo();
     }
   }
 }

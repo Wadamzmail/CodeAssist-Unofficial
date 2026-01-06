@@ -338,7 +338,8 @@ public class CodeEditorFragment extends Fragment
     editor.getComponent(EditorAutoCompletion.class).setLayout(new CodeAssistCompletionLayout());
     editor.setLigatureEnabled(true);
     editor.setDiagnostics(new DiagnosticsContainer());
-    editor.setHighlightCurrentBlock(true);
+    editor.setHighlightCurrentBlock(false);
+    editor.setHighlightBracketPair(false); 
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.setUndoEnabled(true);
     editor.openFile(mCurrentFile);
