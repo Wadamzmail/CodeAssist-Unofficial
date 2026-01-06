@@ -160,13 +160,14 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         }
        }
        kotlinEnvironment.analysis = null;*/
-       Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
+       container.reset();     
        CompletionList completionList = autoCompleteProvider.getCompletionList(null,
                 position.getLine(),
                 position.getColumn());
         if (completionList == null) {
             return;
         }
+        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container)); 
         completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
   }
 

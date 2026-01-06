@@ -35,7 +35,7 @@ public class AddException implements JavaRewrite2 {
   @Override
   public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
       //return CANCELLED; 
-      Path file = ProjectUtil.getInstance().findTypeDeclaration(className);
+      Path file = ProjectUtil.getInstance().findTypeDeclaration(className,task.root());
     if (file == ProjectUtil.NOT_FOUND) {
       return CANCELLED;
     }

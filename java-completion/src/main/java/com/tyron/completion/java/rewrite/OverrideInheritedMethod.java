@@ -107,7 +107,7 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
             Set<String> typesToImport = ActionUtil.getTypesToImport(parameterizedType);
           
           // TODO: get The Method from Source File if exist
-            Optional<JavaFileObject> sourceFile = ProjectUtil.getInstance().findAnywhere(superClassName);
+            Optional<JavaFileObject> sourceFile = ProjectUtil.getInstance().findAnywhere(superClassName,task.root());
             String text;
             if (sourceFile.isPresent()) {  
                 MethodTree source = FindHelper.findMethod(task, superClassName, methodName,

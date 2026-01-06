@@ -55,7 +55,7 @@ public class HoverProvider {
      // NOTE:
      // Source lookup outside current CompilationUnit requires JavaCompilerService
      // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
        if (!file.isPresent()) return "";
      return "";
       Tree tree = FindHelper.findType(task, className);
@@ -64,7 +64,7 @@ public class HoverProvider {
       VariableElement field = (VariableElement) element;
       TypeElement type = (TypeElement) field.getEnclosingElement();
       String className = type.getQualifiedName().toString();
-      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
       if (!file.isPresent()) return "";
       Tree tree = FindHelper.findType(task, className);
       return docs(task, tree);
@@ -74,7 +74,7 @@ public class HoverProvider {
       String className = type.getQualifiedName().toString();
       String methodName = method.getSimpleName().toString();
       String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
-      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
       if (!file.isPresent()) return "";
       Tree tree = FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
       return docs(task, tree);

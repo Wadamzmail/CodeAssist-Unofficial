@@ -457,7 +457,7 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
               .runLater(
                   () -> {
                    IndexServiceConnection.restoreFileEditors(project, mMainViewModel);
-                  },150);
+                  },50);
     
     Intent intent = new Intent(requireContext(), IndexService.class);
     requireActivity().startService(intent);

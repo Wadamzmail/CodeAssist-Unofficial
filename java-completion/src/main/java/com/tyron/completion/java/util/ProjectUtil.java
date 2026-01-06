@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 import com.tyron.completion.java.FindTypeDeclarations;
 import com.tyron.common.util.Cache;
 import com.sun.source.tree.CompilationUnitTree;
+import com.tyron.common.util.StringSearch; 
+import java.util.ArrayList;
 
 /*
 * @author Wadamzmail
