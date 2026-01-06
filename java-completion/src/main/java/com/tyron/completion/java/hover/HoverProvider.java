@@ -58,29 +58,26 @@ public class HoverProvider {
       Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
        if (!file.isPresent()) return "";
      return "";
-      ParseTask parse = compiler.parse(file.get());
-      Tree tree = FindHelper.findType(parse, className);
-      return docs(parse, tree);
+      Tree tree = FindHelper.findType(task, className);
+      return docs(task, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
       VariableElement field = (VariableElement) element;
       TypeElement type = (TypeElement) field.getEnclosingElement();
       String className = type.getQualifiedName().toString();
-      Optional<JavaFileObject> file = compiler.findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
-      ParseTask parse = compiler.parse(file.get());
-      Tree tree = FindHelper.findType(parse, className);
-      return docs(parse, tree);
+      Tree tree = FindHelper.findType(task, className);
+      return docs(task, tree);
     } else if (element instanceof ExecutableElement) {
       ExecutableElement method = (ExecutableElement) element;
       TypeElement type = (TypeElement) method.getEnclosingElement();
       String className = type.getQualifiedName().toString();
       String methodName = method.getSimpleName().toString();
       String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
-      Optional<JavaFileObject> file = compiler.findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
-      ParseTask parse = compiler.parse(file.get());
-      Tree tree = FindHelper.findMethod(parse, className, methodName, erasedParameterTypes);
-      return docs(parse, tree);
+      Tree tree = FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
+      return docs(task, tree);
     } else {
       return "";
     }

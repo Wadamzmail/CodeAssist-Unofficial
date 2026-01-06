@@ -21,6 +21,11 @@ import java.io.IOException;
 import com.tyron.builder.model.SourceFileObject;
 import javax.tools.StandardLocation;
 import com.tyron.completion.java.compiler.SourceFileManager;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import com.tyron.completion.java.FindTypeDeclarations;
+import com.tyron.common.util.Cache;
+import com.sun.source.tree.CompilationUnitTree;
 
 /*
 * @author Wadamzmail
@@ -32,7 +37,7 @@ public class ProjectUtil {
  private static ProjectUtil instance;
  private Docs docs;
  private Set<File> docPath = Collections.emptySet();
- public static final File NOT_FOUND = new File("");
+ public static final Path NOT_FOUND = Paths.get("");
  public SourceFileManager mSourceFileManager;
  
  public static ProjectUtil getInstance(){
@@ -119,13 +124,13 @@ public class ProjectUtil {
    * @return Optional of type JavaFileObject that may be empty if the file is not found
    */
   @SuppressLint("NewApi")
-  public Optional<JavaFileObject> findAnywhere(String className) {
+  public Optional<JavaFileObject> findAnywhere(String className, CompilationUnitTree root) {
     Optional<JavaFileObject> fromDocs = findPublicTypeDeclarationInDocPath(className);
     if (fromDocs.isPresent()) {
       return fromDocs;
     }
 
-    Path fromSource = findTypeDeclaration(className);
+    Path fromSource = findTypeDeclaration(className,root);
     if (fromSource != NOT_FOUND) {
       return Optional.of(new SourceFileObject(fromSource, mCurrentModule));
     }
@@ -151,8 +156,8 @@ public class ProjectUtil {
   }
   
   
-  public Path findTypeDeclaration(String className) {
-    Path fastFind = findPublicTypeDeclaration(className);
+  public Path findTypeDeclaration(String className,CompilationUnitTree root) {
+    Path fastFind = findPublicTypeDeclaration(className,root);
     if (fastFind != NOT_FOUND) {
       return fastFind;
     }
@@ -162,7 +167,7 @@ public class ProjectUtil {
     String simpleName = simpleName(className);
 
     for (Module dependency : dependencies) {
-      Path path = findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className);
+      Path path = findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className,root);
       if (path != NOT_FOUND) {
         return path;
       }
@@ -172,9 +177,9 @@ public class ProjectUtil {
   }
 
   private Path findPublicTypeDeclarationInModule(
-      Module module, String packageName, String simpleName, String className) {
+      Module module, String packageName, String simpleName, String className,CompilationUnitTree root) {
     for (File file : SourceFileManager.list(module, packageName)) {
-      if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className)) {
+      if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className,root)) {
         if (file.getName().endsWith(".java")) {
           return file.toPath();
         }
@@ -183,7 +188,7 @@ public class ProjectUtil {
     return NOT_FOUND;
   }
 
-  private Path findPublicTypeDeclaration(String className) {
+  private Path findPublicTypeDeclaration(String className, CompilationUnitTree root) {
     JavaFileObject source;
     try {
       source =
@@ -199,13 +204,14 @@ public class ProjectUtil {
       return NOT_FOUND;
     }
     Path file = Paths.get(source.toUri());
-    if (!containsType(file, className)) {
+    if (!containsType(file, className,root)) {
       return NOT_FOUND;
     }
     return file;
   }
 
   public Optional<JavaFileObject> findPublicTypeDeclarationInJdk(String className) {
+     JavaFileObject source;
     try {
       source =
           mSourceFileManager.getJavaFileForInput(
@@ -214,6 +220,47 @@ public class ProjectUtil {
       throw new RuntimeException(e);
     }
     return Optional.ofNullable(source);
+  }
+  
+  private static final Pattern PACKAGE_EXTRACTOR =
+      Pattern.compile("^([a-z][_a-zA-Z0-9]*\\.)*[a-z][_a-zA-Z0-9]*");
+
+  private String packageName(String className) {
+    Matcher m = PACKAGE_EXTRACTOR.matcher(className);
+    if (m.find()) {
+      return m.group();
+    }
+    return "";
+  }
+
+  private static final Pattern SIMPLE_EXTRACTOR = Pattern.compile("[A-Z][_a-zA-Z0-9]*$");
+
+  private String simpleName(String className) {
+    Matcher m = SIMPLE_EXTRACTOR.matcher(className);
+    if (m.find()) {
+      return m.group();
+    }
+    return "";
+  }
+
+  private static final Cache<String, Boolean> cacheContainsWord = new Cache<>();
+
+  private boolean containsWord(Path file, String word) {
+    if (cacheContainsWord.needs(file, word)) {
+      cacheContainsWord.load(file, word, StringSearch.containsWord(file, word));
+    }
+    return cacheContainsWord.get(file, word);
+  }
+
+  private static final Cache<Void, List<String>> cacheContainsType = new Cache<>();
+
+  private boolean containsType(Path file, String className, CompilationUnitTree root) {
+    if (cacheContainsType.needs(file, null)) {
+      List<String> types = new ArrayList<>();
+      new FindTypeDeclarations().scan(root, types);
+      cacheContainsType.load(file, null, types);
+    }
+    return cacheContainsType.get(file, null).contains(className);
   }
   
 }

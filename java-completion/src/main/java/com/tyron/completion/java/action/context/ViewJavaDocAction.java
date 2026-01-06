@@ -44,11 +44,7 @@ public class ViewJavaDocAction extends AnAction {
     if (editor == null) {
       return;
     }
-
-    File file = event.getRequiredData(CommonDataKeys.FILE);
-        if(file==null) return;
-        
-        
+       
         CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
     
