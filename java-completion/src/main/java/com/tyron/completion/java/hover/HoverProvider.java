@@ -19,6 +19,7 @@ import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.source.util.DocTrees;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class HoverProvider {
 
@@ -54,10 +55,10 @@ public class HoverProvider {
      // NOTE:
      // Source lookup outside current CompilationUnit requires JavaCompilerService
      // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-     // Optional<JavaFileObject> file = compiler.findAnywhere(className);
-     //  if (!file.isPresent()) return "";
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
+       if (!file.isPresent()) return "";
      return "";
-    /*  ParseTask parse = compiler.parse(file.get());
+      ParseTask parse = compiler.parse(file.get());
       Tree tree = FindHelper.findType(parse, className);
       return docs(parse, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
@@ -81,9 +82,8 @@ public class HoverProvider {
       Tree tree = FindHelper.findMethod(parse, className, methodName, erasedParameterTypes);
       return docs(parse, tree);
     } else {
-      return "";*/
+      return "";
     }
-    return "";
   }
 
   private String docs(JavacUtilitiesProvider task, Tree tree) {

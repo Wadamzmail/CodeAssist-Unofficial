@@ -15,6 +15,7 @@ import java.io.File;
 import javax.lang.model.element.ExecutableElement;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class AddException implements JavaRewrite2 {
 
@@ -33,9 +34,13 @@ public class AddException implements JavaRewrite2 {
 
   @Override
   public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-      return CANCELLED; 
+      //return CANCELLED; 
+      Path file = ProjectUtil.getInstance().findTypeDeclaration(className);
+    if (file == ProjectUtil.NOT_FOUND) {
+      return CANCELLED;
+    }
      //TODO: get file
-    /* Path file = new File("none/none/none").toPath();
+    // Path file = new File("none/none/none").toPath();
        
           CompilationUnitTree root = task.root();
           if (root == null) {
@@ -63,6 +68,6 @@ public class AddException implements JavaRewrite2 {
           }
           TextEdit insertThrows = new TextEdit(new Range(startBody - 1, startBody - 1), insertText);
           return ImmutableMap.of(file, new TextEdit[] {insertThrows});
-       */
+       
   }
 }

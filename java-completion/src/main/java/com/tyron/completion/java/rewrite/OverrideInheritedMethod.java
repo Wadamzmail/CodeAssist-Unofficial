@@ -41,6 +41,7 @@ import java.util.Set;
 import dev.mutwakil.javac.*;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class OverrideInheritedMethod implements JavaRewrite2 {
 
@@ -106,10 +107,9 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
             Set<String> typesToImport = ActionUtil.getTypesToImport(parameterizedType);
           
           // TODO: get The Method from Source File if exist
-          //  Optional<JavaFileObject> sourceFile = compiler.findAnywhere(superClassName);
+            Optional<JavaFileObject> sourceFile = ProjectUtil.getInstance().findAnywhere(superClassName);
             String text;
-          //  if (sourceFile.isPresent()) {
-             if(true){
+            if (sourceFile.isPresent()) {  
                 MethodTree source = FindHelper.findMethod(task, superClassName, methodName,
                         erasedParameterTypes);
                 if (source == null) {
@@ -117,10 +117,10 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
                 } else {
                     text = PrintHelper.printMethod(superMethod, parameterizedType, source);
                 }
-             }  
-          //  } else {
-          //      text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
-          //  }
+              
+            } else {
+                text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
+            }
 
             String tabs = Strings.repeat("\t", indent);
             text = tabs + text.replace("\n", "\n" + tabs) + "\n\n";

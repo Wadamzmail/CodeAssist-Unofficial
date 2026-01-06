@@ -16,6 +16,14 @@ import com.tyron.editor.Editor;
 import java.io.File;
 import java.util.List;
 
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
+import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+
 public class ViewJavaDocAction extends AnAction {
 
   @Override
@@ -37,23 +45,30 @@ public class ViewJavaDocAction extends AnAction {
       return;
     }
 
-    TreePath currentPath = event.getData(CommonJavaContextKeys.CURRENT_PATH);
-    if (currentPath == null) {
+    File file = event.getRequiredData(CommonDataKeys.FILE);
+        if(file==null) return;
+        
+        
+        CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+    
+
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+       if (unit == null) return;
+
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+        if(currentPath ==null) return;
+
+    HoverProvider hoverProvider = new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()),);
+    List<String> strings =
+    hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
+   
+    if (strings.isEmpty()) {
       return;
     }
-
-    JavaCompilerService compiler = event.getData(CommonJavaContextKeys.COMPILER);
-    if (compiler == null) {
-      return;
-    }
-
-  //  HoverProvider hoverProvider = new HoverProvider(compiler);
- //   List<String> strings =
-   //     hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
-   //see you again
-   // if (strings.isEmpty()) {
-   //   return;
-   // }
 
     presentation.setVisible(true);
     presentation.setText(event.getDataContext().getString(R.string.menu_action_view_javadoc_title));
@@ -63,9 +78,21 @@ public class ViewJavaDocAction extends AnAction {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
+        CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
+        if (compilationInfo == null) return;
+    
+
+        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+       if (unit == null) return;
+
+        int left = editor.getCaret().getStart();
+        int right = editor.getCaret().getEnd();
+        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+        if(currentPath ==null) return;
      
 
-    /*HoverProvider hoverProvider = new HoverProvider(compiler);
+    HoverProvider hoverProvider = new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()));
     List<String> strings = hoverProvider.hover(file.toPath(), editor.getCaret().getStart());
 
     String title = e.getDataContext().getString(R.string.menu_action_view_javadoc_title);
@@ -74,6 +101,6 @@ public class ViewJavaDocAction extends AnAction {
         .setTitle(title)
         .setMessage(strings.get(0))
         .setPositiveButton(R.string.menu_close, null)
-        .show();*/
+        .show();
   }
 }

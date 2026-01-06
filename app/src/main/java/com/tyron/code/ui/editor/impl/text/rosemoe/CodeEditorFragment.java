@@ -450,26 +450,32 @@ public class CodeEditorFragment extends Fragment
                   });
         });
 
-    mEditor.subscribeEvent(
-        ClickEvent.class,
-        (event, unsubscribe) -> {
-          try {
-            Cursor cursor = mEditor.getCursor();
-            if (mEditor.getCursor().isSelected()) {
-              int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
-              int cursorLeft = cursor.getLeft();
-              int cursorRight = cursor.getRight();
-              if (!EditorUtil.isWhitespace(mEditor.getText().charAt(index) + "")
-                  && index >= cursorLeft
-                  && index <= cursorRight) {
-                mEditor.showSoftInput();
-                event.intercept();
-              }
+      mEditor.subscribeEvent(
+       ClickEvent.class,
+       (event, unsubscribe) -> {
+        try {
+        Cursor cursor = mEditor.getCursor();
+        if (cursor != null && cursor.isSelected()) {
+          int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
+          String text = mEditor.getText().toString();
+
+          if (index >= 0 && index < text.length()) {
+            int cursorLeft = cursor.getLeft();
+            int cursorRight = cursor.getRight();
+
+            if (!EditorUtil.isWhitespace(text.charAt(index) + "")
+                && index >= cursorLeft
+                && index <= cursorRight) {
+              mEditor.showSoftInput();
+              event.intercept();
             }
-          } catch (Exception e) {
-            LOG.severe("Error ClickEvent" + ": " + e);
           }
-        });
+        }
+      } catch (Exception e) {
+        LOG.severe("Error ClickEvent: " + e.getMessage());
+      }
+    });
+
     mEditor.subscribeEvent(
         ContentChangeEvent.class,
         (event, unsubscribe) -> {
