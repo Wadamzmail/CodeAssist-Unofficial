@@ -284,16 +284,16 @@ public class ProjectManager {
             //new 
             ResourceRepositoryManager.getProjectResources((AndroidModule)module);
 
-            XmlIndexProvider index = CompilerService.getInstance().getIndex(XmlIndexProvider.KEY);
-            index.clear();
+//            XmlIndexProvider index = CompilerService.getInstance().getIndex(XmlIndexProvider.KEY);
+//            index.clear();
 
-            XmlRepository xmlRepository = index.get(project, module);
+//            XmlRepository xmlRepository = index.get(project, module);
             try {
               String packageName = getApplicationId(((AndroidModule) module));
               if (packageName != null) {
                 logger.debug(
                     "> Task :" + module.getRootFile().getName() + ":" + "indexingResources");
-                xmlRepository.initialize((AndroidModule) module);
+//                xmlRepository.initialize((AndroidModule) module);
 
               }
             } catch (IOException e) {
