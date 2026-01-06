@@ -62,7 +62,7 @@ public class ViewJavaDocAction extends AnAction {
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
         if(currentPath ==null) return;
 
-    HoverProvider hoverProvider = new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()),);
+    HoverProvider hoverProvider = new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()));
     List<String> strings =
     hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
    
