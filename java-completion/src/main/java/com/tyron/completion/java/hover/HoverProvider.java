@@ -57,7 +57,6 @@ public class HoverProvider {
      // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
       Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
        if (!file.isPresent()) return "";
-     return "";
       Tree tree = FindHelper.findType(task, className);
       return docs(task, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
