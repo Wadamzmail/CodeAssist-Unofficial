@@ -82,7 +82,7 @@ public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
    // NOTE:
    // Source lookup outside current CompilationUnit requires JavaCompilerService
    // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-   Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile);
+   Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile,task.root());
     if (file == ProjectUtil.NOT_FOUND) {
       return Collections.emptyMap();
     }
