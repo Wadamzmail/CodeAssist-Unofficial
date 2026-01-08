@@ -41,67 +41,109 @@ import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.api.JavaModule;
-import com.tyron.builder.project.util.PackageTrie;
+import com.tyron.builder.project.util.PackageTrie; 
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
   public ImportCompletionProvider(JavaCompilerService service) {
     super(service);
   }
+  
+  
+@Override
+public void complete(
+    CompletionList.Builder builder,
+    JavacUtilitiesProvider task,
+    TreePath treePath,
+    String path,
+    boolean endsWithParen
+) {
+  checkCanceled();
 
-  @Override
-  public void complete(
-      CompletionList.Builder builder,
-      JavacUtilitiesProvider task,
-      TreePath treePath,
-      String path,
-      boolean endsWithParen) {
-    checkCanceled();
-
-    if (treePath.getLeaf() instanceof MemberSelectTree) {
-      MemberSelectTree select = (MemberSelectTree) treePath.getLeaf();
-      String parentExpression = select.getExpression().toString();
-      
-      if (!path.startsWith(parentExpression)) {
-         path = parentExpression + "." + path;
-      }
-    }
-
-    Set<String> names = new HashSet<>();
-    ShortNamesCache snc = ShortNamesCache.getInstance(ProjectUtil.getInstance().getModule());
-    
-    for (String className : snc.getAllClassNames()) {
-      if (className.startsWith(path)) {
-        int start = path.lastIndexOf('.');
-        
-        int end = className.indexOf('.', path.length());
-        
-        if (end == -1) end = className.length();
-        
-        String segment = className.substring(start + 1, end);
-        
-        if (names.contains(segment)) continue;
-        names.add(segment);
-        
-        boolean isClass = className.endsWith(segment);
-
-        CompletionItem item;
-        if (isClass) {
-          item = importClassItem(className);
-        } else {
-          item = packageItem(segment);
-        }
-        
-        item.addFilterText(segment);
-        if (path.contains(".")) {
-
-          item.addFilterText(path.substring(0, path.lastIndexOf('.')) + "." + segment);
-        }
-        builder.addItem(item);
-      }
-    }
+  Module moduleBase = ProjectUtil.getInstance().getModule();
+  if (!(moduleBase instanceof JavaModule)) {
+    return;
   }
 
+  JavaModule module = (JavaModule) moduleBase;
+  PackageTrie trie = module.getClassIndex();
+  if (trie == null) {
+    return;
+  }
+
+  // -----------------------------------
+  // 1) split import path
+  // -----------------------------------
+  String parent;
+  String incomplete;
+
+  int lastDot = path.lastIndexOf('.');
+  if (lastDot == -1) {
+    parent = "";
+    incomplete = path;
+  } else {
+    parent = path.substring(0, lastDot);
+    incomplete = path.substring(lastDot + 1);
+  }
+
+  Set<String> added = new HashSet<>();
+
+  // -----------------------------------
+  // 2) top-level packages (import ja|)
+  // -----------------------------------
+  if (parent.isEmpty()) {
+    for (String top : trie.getTopLevelNonLeafNodes()) {
+      checkCanceled();
+
+      if (!StringSearch.matchesPartialName(top, incomplete)) {
+        continue;
+      }
+
+      if (!added.add(top)) {
+        continue;
+      }
+
+      CompletionItem item = packageItem(top);
+      item.addFilterText(top);
+      builder.addItem(item);
+    }
+    return;
+  }
+
+  // -----------------------------------
+  // 3) complete after dot (import java.ut|)
+  // -----------------------------------
+  List<String> matches = trie.getMatchingPackages(parent);
+
+  for (String fqn : matches) {
+    checkCanceled();
+
+    int idx = fqn.lastIndexOf('.');
+    String segment = idx == -1 ? fqn : fqn.substring(idx + 1);
+
+    if (!StringSearch.matchesPartialName(segment, incomplete)) {
+      continue;
+    }
+
+    if (!added.add(segment)) {
+      continue;
+    }
+
+    CompletionItem item;
+
+    // leaf = class
+    if (fqn.equals(parent + "." + segment)) {
+      item = importClassItem(fqn);
+    } else {
+      item = packageItem(segment);
+    }
+
+    item.addFilterText(segment);
+    item.addFilterText(parent + "." + segment);
+
+    builder.addItem(item);
+  }
+}
 
   public List<CompletionItem> addAnonymous(JavacUtilitiesProvider task, TreePath path, String partial) {
     checkCanceled();
@@ -113,7 +155,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
 
     if (path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
-      Trees trees = task.getTrees();//MTrees.instance(task.getTask());
+      Trees trees = MTrees.instance(task.getTask());
       MethodInvocationTree method =
           (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf();
       Element element = trees.getElement(path.getParentPath().getParentPath());
@@ -166,7 +208,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
       CompletionList.Builder list) {
     checkCanceled();
 
-    Trees trees = task.getTrees();//MTrees.instance(task.getTask());
+    Trees trees = MTrees.instance(task.getTask());
     HashMap<String, List<ExecutableElement>> methods = new HashMap<>();
     for (ImportTree i : root.getImports()) {
       if (!i.isStatic()) continue;

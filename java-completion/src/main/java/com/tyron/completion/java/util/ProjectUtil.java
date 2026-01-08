@@ -28,6 +28,7 @@ import com.tyron.common.util.Cache;
 import com.sun.source.tree.CompilationUnitTree;
 import com.tyron.common.util.StringSearch; 
 import java.util.ArrayList;
+import com.tyron.builder.project.util.PackageTrie;
 
 /*
 * @author Wadamzmail
@@ -130,6 +131,32 @@ public class ProjectUtil {
     return classes;
   }
   
+  public Set<String> findClasses(String packageName) {
+    Set<String> classes = new HashSet<>();
+    for (Module module : mProject.getDependencies(mCurrentModule)) {
+      if (module instanceof JavaModule) {
+        PackageTrie classIndex = ((JavaModule) module).getClassIndex();
+        classes.addAll(classIndex.getMatchingPackages(packageName));
+      }
+    }
+    return classes;
+  }
+
+  /** For suggesting the first import typed where the package names are not yet correct */
+  public Set<String> getTopLevelNonLeafPackages(Predicate<String> filter) {
+    Set<String> packages = new HashSet<>();
+    for (Module module : mProject.getDependencies(mCurrentModule)) {
+      if (module instanceof JavaModule) {
+        PackageTrie classIndex = ((JavaModule) module).getClassIndex();
+        for (String node : classIndex.getTopLevelNonLeafNodes()) {
+          if (filter.test(node)) {
+            packages.add(node);
+          }
+        }
+      }
+    }
+    return packages;
+  }
   
     /**
    * Finds all the occurrences of a class in javadocs, and source files
