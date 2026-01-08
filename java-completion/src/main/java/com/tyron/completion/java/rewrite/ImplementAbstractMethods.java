@@ -41,6 +41,7 @@ import javax.tools.JavaFileObject;
 
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class ImplementAbstractMethods implements JavaRewrite2 {
 
@@ -81,13 +82,11 @@ public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
    // NOTE:
    // Source lookup outside current CompilationUnit requires JavaCompilerService
    // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-   //CompilationUnitTree root = task.root();
-   // if (root == null || root.getSourceFile() == null) {
-    return CANCELLED;
-   //  }
-
-   // Path file = Path.of(root.getSourceFile().toUri());
-   // return rewriteInternal(task, file);
+   Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile);
+    if (file == ProjectUtil.NOT_FOUND) {
+      return Collections.emptyMap();
+    }
+    return rewriteInternal(task, file);
 }
 
   private Map<Path, TextEdit[]> rewriteInternal(

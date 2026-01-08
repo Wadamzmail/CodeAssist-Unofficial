@@ -145,6 +145,7 @@ public class JavaCompletionProvider extends CompletionProvider {
       case MEMBER_REFERENCE:
         new MemberReferenceCompletionProvider(null)
             .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
+        break;   
       case IMPORT:
         new ImportCompletionProvider(null)
             .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);

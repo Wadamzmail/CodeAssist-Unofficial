@@ -14,7 +14,7 @@ class CachedAutoCompleteProvider(
 
     override fun getCompletionList(prefix: String?, line: Int, column: Int): CompletionList? {
         val newPrefix = getPrefix(editor, line, column)
-         print("newPrefix: $newPrefix")
+          
         val incremental = isIncrementalCompletion(
             cachedCompletion,
             newPrefix,
@@ -29,8 +29,7 @@ class CachedAutoCompleteProvider(
                 return copy
             }
         }
-        print("Kotlin CachedCompletion : not chached")
-
+         
         val result = kotlin.runCatching {
             provider.getCompletionList(prefix, line, column)
         }

@@ -58,15 +58,31 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
       boolean endsWithParen) {
     checkCanceled();
 
+    if (treePath.getLeaf() instanceof MemberSelectTree) {
+      MemberSelectTree select = (MemberSelectTree) treePath.getLeaf();
+      String parentExpression = select.getExpression().toString();
+      
+      if (!path.startsWith(parentExpression)) {
+         path = parentExpression + "." + path;
+      }
+    }
+
     Set<String> names = new HashSet<>();
-    for (String className : ProjectUtil.getInstance().publicTopLevelTypes()) {
+    ShortNamesCache snc = ShortNamesCache.getInstance(ProjectUtil.getInstance().getModule());
+    
+    for (String className : snc.getAllClassNames()) {
       if (className.startsWith(path)) {
         int start = path.lastIndexOf('.');
+        
         int end = className.indexOf('.', path.length());
+        
         if (end == -1) end = className.length();
+        
         String segment = className.substring(start + 1, end);
+        
         if (names.contains(segment)) continue;
         names.add(segment);
+        
         boolean isClass = className.endsWith(segment);
 
         CompletionItem item;
@@ -75,15 +91,17 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
         } else {
           item = packageItem(segment);
         }
-
+        
         item.addFilterText(segment);
         if (path.contains(".")) {
+
           item.addFilterText(path.substring(0, path.lastIndexOf('.')) + "." + segment);
         }
         builder.addItem(item);
       }
     }
   }
+
 
   public List<CompletionItem> addAnonymous(JavacUtilitiesProvider task, TreePath path, String partial) {
     checkCanceled();
@@ -95,7 +113,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
 
     if (path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
-      Trees trees = MTrees.instance(task.getTask());
+      Trees trees = task.getTrees();//MTrees.instance(task.getTask());
       MethodInvocationTree method =
           (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf();
       Element element = trees.getElement(path.getParentPath().getParentPath());
@@ -148,7 +166,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
       CompletionList.Builder list) {
     checkCanceled();
 
-    Trees trees = MTrees.instance(task.getTask());
+    Trees trees = task.getTrees();//MTrees.instance(task.getTask());
     HashMap<String, List<ExecutableElement>> methods = new HashMap<>();
     for (ImportTree i : root.getImports()) {
       if (!i.isStatic()) continue;
