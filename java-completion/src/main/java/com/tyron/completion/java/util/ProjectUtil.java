@@ -29,6 +29,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.tyron.common.util.StringSearch; 
 import java.util.ArrayList;
 import com.tyron.builder.project.util.PackageTrie;
+import java.util.function.Predicate;
 
 /*
 * @author Wadamzmail
