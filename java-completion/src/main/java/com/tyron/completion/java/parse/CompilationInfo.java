@@ -40,7 +40,7 @@ import com.tyron.completion.java.util.ProjectUtil;
 public class CompilationInfo {
 
   public static final Key<CompilationInfo> COMPILATION_INFO_KEY = Key.create("compilationInfo");
-  private Set<File> mCachedPaths = new HashSet<>();
+  private static Set<File> mCachedPaths = new HashSet<>();
 
   public static CompilationInfo get(Module module) {
     if (!(module instanceof JavaModule)) {
@@ -65,21 +65,21 @@ public class CompilationInfo {
                     .collect(Collectors.toList()));
                 File buildGenDir = new File(module.getRootFile() + "/build/gen");
                 File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
-                paths.add(
+                libraries.add(
                 new File(
                    module.getRootFile(),
                    "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar"));
                 if (buildGenDir.exists()) libraries.addAll(getFiles(buildGenDir, ".java"));
                 if (viewBindingDir.exists()) libraries.addAll(getFiles(viewBindingDir, ".java"));
       }
-     if (info == null || changed(mCachedPaths, paths)) {
+     if (info == null || changed(mCachedPaths, libraries)) {
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
                   new JavacParser(), null, null, libraries, Collections.emptyList(), null, null));
       module.putUserData(COMPILATION_INFO_KEY, info);
       mCachedPaths.clear();
-      mCachedPaths.addAll(paths);
+      mCachedPaths.addAll(libraries);
     }
     return info;
   }
@@ -290,7 +290,7 @@ public class CompilationInfo {
     return false;
   }
   
-  public Set<File> getFiles(File dir, String ext) {
+  public static Set<File> getFiles(File dir, String ext) {
     Set<File> Files = new HashSet<>();
 
     File[] files = dir.listFiles();
