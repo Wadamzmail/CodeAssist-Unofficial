@@ -147,8 +147,15 @@ public class JavaCompletionProvider extends CompletionProvider {
             .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
         break;   
       case IMPORT:
+        String modifiedPartial = parameters.getPrefix();
+        modifiedPartial = StringSearch.qualifiedPartialIdentifier(contents, (int) cursor);
+              if (modifiedPartial.endsWith(FileContentFixer.INJECTED_IDENT)) {
+                modifiedPartial =
+                    modifiedPartial.substring(
+                        0, modifiedPartial.length() - FileContentFixer.INJECTED_IDENT.length());
+              }
         new ImportCompletionProvider(null)
-            .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
+            .complete(builder, javacUtilities, scanned, modifiedPartial, false);
         break;          
       case VARIABLE:
         if (!parameters.getPrefix().isEmpty()) {

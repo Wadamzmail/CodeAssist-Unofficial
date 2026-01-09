@@ -49,6 +49,7 @@ public class FindHelper {
   public static MethodTree findMethod(
       JavacUtilitiesProvider task, String className, String methodName, String[] erasedParameterTypes) {
     ClassTree classTree = findType(task, className);
+    if(classTree==null) return null;
     for (Tree member : classTree.getMembers()) {
       if (member.getKind() != Tree.Kind.METHOD) continue;
       MethodTree method = (MethodTree) member;
