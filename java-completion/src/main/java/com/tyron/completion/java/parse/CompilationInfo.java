@@ -49,7 +49,7 @@ public class CompilationInfo {
     JavaModule javaModule = (JavaModule) module;
     CompilationInfo info = module.getUserData(COMPILATION_INFO_KEY);
     
-      List<File> libraries = new ArrayList<>();
+      Set<File> libraries = new HashSet<>();
       if (module instanceof JavaModule) {
         libraries.addAll(((JavaModule) module).getJavaFiles().values());
         libraries.addAll(((JavaModule) module).getLibraries());
@@ -76,7 +76,7 @@ public class CompilationInfo {
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
-                  new JavacParser(), null, null, libraries, Collections.emptyList(), null, null));
+                  new JavacParser(), null, null, new ArrayList<>(libraries), Collections.emptyList(), null, null));
       module.putUserData(COMPILATION_INFO_KEY, info);
       mCachedPaths.clear();
       mCachedPaths.addAll(libraries);
