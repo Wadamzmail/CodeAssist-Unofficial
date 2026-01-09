@@ -298,7 +298,7 @@ public class ProjectManager {
                 repo.initialize((AndroidModule) module);
 
               }
-            } catch (Exception e) {
+            } catch (IOException e) {
               String message =
                   "Unable to initialize resource repository. "
                       + "Resource code completion might be incomplete or unavailable. \n"
