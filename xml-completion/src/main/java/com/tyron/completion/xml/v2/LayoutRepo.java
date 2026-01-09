@@ -52,7 +52,7 @@ public class LayoutRepo {
 
   private boolean mInitialized = false;
   
-  private static final Key LAYOUT_REPO_KEY = Key.create<LayoutRepo>("layoutRepo_key");
+  private static final Key<LayoutRepo> LAYOUT_REPO_KEY = Key.create("layoutRepo_key");
   
   public LayoutRepo() {}
 
@@ -136,7 +136,7 @@ public class LayoutRepo {
   }
        
   public static LayoutRepo get( AndroidModule module) {
-     LayoutRepo repo = module.getUserData(LAYOUT_REPO_KEY);
+     LayoutRepo repo = (LayoutRepo)module.getUserData(LAYOUT_REPO_KEY);
      if(repo!=null)return repo;
      repo = new LayoutRepo();
      repo.initialize(module);
