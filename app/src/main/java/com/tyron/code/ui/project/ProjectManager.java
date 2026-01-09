@@ -57,7 +57,7 @@ import com.tyron.completion.java.compiler.Parser;
 import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.completion.java.provider.PruneMethodBodies;
-
+import com.tyron.completion.xml.v2.LayoutRepo;
 
 public class ProjectManager {
 
@@ -288,12 +288,14 @@ public class ProjectManager {
 //            index.clear();
 
 //            XmlRepository xmlRepository = index.get(project, module);
+            LayoutRepo repo = LayoutRepo.get((AndroidModule)module);
             try {
               String packageName = getApplicationId(((AndroidModule) module));
               if (packageName != null) {
                 logger.debug(
                     "> Task :" + module.getRootFile().getName() + ":" + "indexingResources");
 //                xmlRepository.initialize((AndroidModule) module);
+                repo.initialize((AndroidModule) module);
 
               }
             } catch (Exception e) {

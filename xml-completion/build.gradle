@@ -63,6 +63,7 @@ dependencies {
     implementation project(path: ':common')
     implementation project(path: ':java-completion')
     compileOnly project(path: ':javac')
+    implementation project(':kotlinc')
 
     implementation project(path: ':project')
     implementation project(path: ':manifmerger')

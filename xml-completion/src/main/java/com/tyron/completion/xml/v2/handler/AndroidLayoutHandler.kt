@@ -18,6 +18,8 @@ import com.tyron.xml.completion.util.DOMUtils
 import org.eclipse.lemminx.dom.DOMElement
 import org.eclipse.lemminx.dom.DOMParser
 import org.eclipse.lemminx.uriresolver.URIResolverExtensionManager
+import com.tyron.completion.xml.v2.LayoutRepo
+import com.tyron.completion.xml.util.AndroidXmlTagUtils
 
 private const val UNKNOWN_TAG = "\$__UnknownTag__\$"
 
@@ -43,7 +45,8 @@ fun handleLayout(
 
     when (completionType) {
         XmlCompletionType.TAG -> {
-
+          LayoutRepo.get(params.mModule);
+          AndroidXmlTagUtils.addTagItems(repository, prefix, completionBuilder)
         }
         XmlCompletionType.ATTRIBUTE -> {
             val nodeAt = parsedNode.findNodeAt(params.index.toInt()) as DOMElement

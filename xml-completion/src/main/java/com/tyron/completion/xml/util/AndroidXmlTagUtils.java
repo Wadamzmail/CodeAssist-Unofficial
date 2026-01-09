@@ -10,6 +10,7 @@ import com.tyron.completion.xml.insert.LayoutTagInsertHandler;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.bcel.classfile.JavaClass;
+import com.tyron.completion.xml.v2.LayoutRepo;
 
 public class AndroidXmlTagUtils {
 
@@ -124,4 +125,40 @@ public class AndroidXmlTagUtils {
       builder.addItem(item);
     }
   }
+  public static void addTagItems(
+      @NonNull LayoutRepo repository,
+      @NonNull String prefix,
+      @NonNull CompletionList.Builder builder) {
+    for (Map.Entry<String, JavaClass> entry : repository.getJavaViewClasses().entrySet()) {
+      CompletionItem item = new CompletionItem();
+      String commitPrefix = "<";
+      if (prefix.startsWith("</")) {
+        commitPrefix = "</";
+      }
+      boolean useFqn = prefix.contains(".");
+      if (!entry.getKey().startsWith("android.widget")) {
+        useFqn = true;
+      }
+      String simpleName = StyleUtils.getSimpleName(entry.getKey());
+      item.label = simpleName;
+      item.detail = entry.getValue().getPackageName();
+      item.iconKind = DrawableKind.Class;
+      item.commitText =
+          commitPrefix
+              + (useFqn
+                  ? entry.getValue().getClassName()
+                  : StyleUtils.getSimpleName(entry.getValue().getClassName()));
+      item.cursorOffset = item.commitText.length();
+      item.setInsertHandler(new LayoutTagInsertHandler(entry.getValue(), item));
+      item.setSortText("");
+      item.addFilterText(entry.getKey());
+      item.addFilterText("<" + entry.getKey());
+      item.addFilterText("</" + entry.getKey());
+      item.addFilterText(simpleName);
+      item.addFilterText("<" + simpleName);
+      item.addFilterText("</" + simpleName);
+      builder.addItem(item);
+    }
+  }
+  
 }
