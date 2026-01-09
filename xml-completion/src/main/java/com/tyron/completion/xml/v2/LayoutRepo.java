@@ -135,7 +135,7 @@ public class LayoutRepo {
     }
   }
        
-  public static LayoutRepo get( AndroidModule module) {
+  public static LayoutRepo get( AndroidModule module) throws IOException{
      LayoutRepo repo = (LayoutRepo)module.getUserData(LAYOUT_REPO_KEY);
      if(repo!=null)return repo;
      repo = new LayoutRepo();

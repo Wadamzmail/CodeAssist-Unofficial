@@ -27,9 +27,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       if: github.ref_type == 'tag'
       with:
-      prerelease: false
-      body_path: changelogs/${{ github.ref_name }}/changelog.md
-      files: |
+        prerelease: false
+        body_path: changelogs/${{ github.ref_name }}/changelog.md
+        files: |
            app/build/outputs/apk/debug/*arm64-v8a*.apk
            app/build/outputs/apk/debug/*armeabi-v7a*.apk
            app/build/outputs/apk/debug/*-x86-*.apk
