@@ -43,7 +43,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-import org.jetbrains.kotlin.com.intellij.openapi.util.Key
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import com.tyron.completion.xml.BytecodeScanner;
 
 public class LayoutRepo {
@@ -52,7 +52,7 @@ public class LayoutRepo {
 
   private boolean mInitialized = false;
   
-  private static final Key LAYOUT_REPO_KEY Key.create<LayoutRepo>("layoutRepo_key");
+  private static final Key LAYOUT_REPO_KEY = Key.create<LayoutRepo>("layoutRepo_key");
   
   public LayoutRepo() {}
 
