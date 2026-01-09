@@ -16,6 +16,10 @@ import javax.lang.model.element.ExecutableElement;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.tyron.completion.java.util.ProjectUtil;
+import com.tyron.completion.java.util.ActionUtil;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddException implements JavaRewrite2 {
 
@@ -34,19 +38,18 @@ public class AddException implements JavaRewrite2 {
 
   @Override
   public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-      //return CANCELLED; 
-      Path file = ProjectUtil.getInstance().findTypeDeclaration(className,task.root());
-    if (file == ProjectUtil.NOT_FOUND) {
-      return CANCELLED;
-    }
-     //TODO: get file
-    // Path file = new File("none/none/none").toPath();
        
+      List<TextEdit> edits = new ArrayList<>();
+       
+      Path file = ProjectUtil.getInstance().findTypeDeclaration(className,task.root());
+      if (file == ProjectUtil.NOT_FOUND) {
+        return CANCELLED;
+      }       
           CompilationUnitTree root = task.root();
           if (root == null) {
             return CANCELLED;
           }
-
+      
           Trees trees = task.getTrees();
           ExecutableElement methodElement =
               FindHelper.findMethod2(task, className, methodName, erasedParameterTypes);
@@ -66,8 +69,19 @@ public class AddException implements JavaRewrite2 {
           } else {
             insertText = ", " + simpleName + " ";
           }
+          
+            if (!ActionUtil.hasImport(task.root(), simpleName)) {
+                AddImport addImport = new AddImport(file.toFile(), simpleName);
+                Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+                TextEdit[] imports = rewrite.get(file);
+                if (imports != null) {
+                    Collections.addAll(edits, imports);
+                }
+            }
+          
           TextEdit insertThrows = new TextEdit(new Range(startBody - 1, startBody - 1), insertText);
-          return ImmutableMap.of(file, new TextEdit[] {insertThrows});
+           edits.add(insertThrows);
+          return ImmutableMap.of(file, edits.toArray(new TextEdit[0]));
        
   }
 }

@@ -88,8 +88,8 @@ public class AboutUsFragment extends MaterialAboutFragment {
             context,
             getDrawable(R.drawable.ic_baseline_menu_book_24),
             getString(R.string.app_name),
-            "2025",
-            "Tyron 2022, Deenu 2023, Mutwakil Suliman (Wadamzmail) 2025",
+            "2022",
+            "Tyron , Deenu 2023, Mutwakil Suliman (Wadamzmail) 2025",
             OpenSourceLicense.GNU_GPL_3);
 
     return new MaterialAboutList.Builder()

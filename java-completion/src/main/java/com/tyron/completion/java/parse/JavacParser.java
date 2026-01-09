@@ -56,7 +56,19 @@ public class JavacParser {
 //    Collections.addAll(options, "--release", "17");
 //    Collections.addAll(options, "-target", "17", "-source", "17");       
     Collections.addAll(options, "-target", "1.8", "-source", "1.8");
-    Collections.addAll(options, "-cp", joinPath(cpInfo));
+    Collections.addAll(options, "-cp", joinPath(cpInfo));   
+    Collections.addAll(options, "-proc:none");
+    Collections.addAll(
+        options,
+        "-Xlint:cast",
+        "-Xlint:deprecation",
+        "-Xlint:empty",
+        "-Xlint" + ":fallthrough",
+        "-Xlint:finally",
+        "-Xlint:path",
+        "-Xlint:unchecked",
+        "-Xlint" + ":varargs",
+        "-Xlint:static");  
 
     JavacTool tool = JavacTool.create();
     JavacFileManager standardFileManager =

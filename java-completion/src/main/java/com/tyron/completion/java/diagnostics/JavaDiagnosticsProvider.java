@@ -21,11 +21,11 @@ public class JavaDiagnosticsProvider implements DiagnosticProvider {
       return Collections.emptyList();
     }
     
-    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+   // JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
 
     return NBLog.instance(compilationInfo.impl.getJavacTask().getContext())
-        .getDiagnostics(file.toURI()).stream()
-        .map( d ->DiagnosticUtil.modifyDiagnostic(new DefaultJavacUtilitiesProvider(compilationInfo.impl.getJavacTask(), unit, null), d))
-        .collect(Collectors.toList());
+        .getDiagnostics(file.toURI());//.stream()
+        //.map( d ->DiagnosticUtil.modifyDiagnostic(new DefaultJavacUtilitiesProvider(compilationInfo.impl.getJavacTask(), unit, null), d))
+        //.collect(Collectors.toList());
   }
 }
