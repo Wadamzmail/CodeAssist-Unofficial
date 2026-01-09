@@ -948,6 +948,7 @@ public class CodeEditorFragment extends Fragment
     if (currentProject != null && mLanguage instanceof JavaLanguage) {
       JavaDataContextUtil.addEditorKeys(
           dataContext, currentProject, mCurrentFile, mEditor.getCursor().getLeft());
+          return dataContext;
     }
 
     DiagnosticWrapper diagnosticWrapper =
