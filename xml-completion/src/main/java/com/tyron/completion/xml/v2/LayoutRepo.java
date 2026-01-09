@@ -135,11 +135,11 @@ public class LayoutRepo {
     }
   }
        
-  public static LayoutRepo get( AndroidModule module) throws IOException{
+  public static LayoutRepo get( AndroidModule module) {
      LayoutRepo repo = (LayoutRepo)module.getUserData(LAYOUT_REPO_KEY);
      if(repo!=null)return repo;
      repo = new LayoutRepo();
-     repo.initialize(module);
+    try{ repo.initialize(module);}catch(IOException e){e.printStackTrace();}
      module.putUserData(LAYOUT_REPO_KEY,repo);
     return repo;
   }
