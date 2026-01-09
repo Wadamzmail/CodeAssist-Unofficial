@@ -101,6 +101,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
     this.mEditor = editor;
     delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
     // mAnalyzer = JavaAnalyzer.create(editor, this);
+    onContentChange(editor.getCurrentFile(),editor.getContent());
   }
 
   public boolean isAutoCompleteChar(char p1) {

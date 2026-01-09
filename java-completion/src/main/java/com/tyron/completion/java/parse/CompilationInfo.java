@@ -17,6 +17,7 @@ import com.tyron.completion.java.compiler.services.NBEnter;
 import com.tyron.completion.java.compiler.services.NBLog;
 import dev.mutwakil.javac.MJavacTrees;
 import java.io.File;
+import java.nio.file.Files;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,6 +40,7 @@ import com.tyron.completion.java.util.ProjectUtil;
 public class CompilationInfo {
 
   public static final Key<CompilationInfo> COMPILATION_INFO_KEY = Key.create("compilationInfo");
+  private Set<File> mCachedPaths = new HashSet<>();
 
   public static CompilationInfo get(Module module) {
     if (!(module instanceof JavaModule)) {
@@ -46,8 +48,13 @@ public class CompilationInfo {
     }
     JavaModule javaModule = (JavaModule) module;
     CompilationInfo info = module.getUserData(COMPILATION_INFO_KEY);
-    if (info == null) {
-      List<File> libraries = new ArrayList<>(javaModule.getLibraries());
+    
+      List<File> libraries = new ArrayList<>();
+      if (module instanceof JavaModule) {
+        libraries.addAll(((JavaModule) module).getJavaFiles().values());
+        libraries.addAll(((JavaModule) module).getLibraries());
+        libraries.addAll(((JavaModule) module).getInjectedClasses().values());
+      }
       if (module instanceof AndroidModuleImpl) {
         libraries.addAll(
             ((AndroidModuleImpl) module)
@@ -56,13 +63,23 @@ public class CompilationInfo {
                     .map(it -> (CodeAssistAndroidLibrary) it)
                     .flatMap(it -> it.getCompileJarFiles().stream())
                     .collect(Collectors.toList()));
+                File buildGenDir = new File(module.getRootFile() + "/build/gen");
+                File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
+                paths.add(
+                new File(
+                   module.getRootFile(),
+                   "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar"));
+                if (buildGenDir.exists()) libraries.addAll(getFiles(buildGenDir, ".java"));
+                if (viewBindingDir.exists()) libraries.addAll(getFiles(viewBindingDir, ".java"));
       }
-      
+     if (info == null || changed(mCachedPaths, paths)) {
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
                   new JavacParser(), null, null, libraries, Collections.emptyList(), null, null));
       module.putUserData(COMPILATION_INFO_KEY, info);
+      mCachedPaths.clear();
+      mCachedPaths.addAll(paths);
     }
     return info;
   }
@@ -252,4 +269,46 @@ public class CompilationInfo {
   public CompilationUnitTree getCompilationUnit() {
     return impl.getCompilationUnit();
   }
+  
+  private synchronized boolean changed(Set<File> oldFiles, Set<File> newFiles) {
+    if (oldFiles.size() != newFiles.size()) {
+      return true;
+    }
+
+    for (File oldFile : oldFiles) {
+      if (!newFiles.contains(oldFile)) {
+        return true;
+      }
+    }
+
+    for (File newFile : newFiles) {
+      if (!oldFiles.contains(newFile)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+  
+  public Set<File> getFiles(File dir, String ext) {
+    Set<File> Files = new HashSet<>();
+
+    File[] files = dir.listFiles();
+    if (files == null) {
+      return Collections.emptySet();
+    }
+
+    for (File file : files) {
+      if (file.isDirectory()) {
+        Files.addAll(getFiles(file, ext));
+      } else {
+        if (file.getName().endsWith(ext)) {
+          Files.add(file);
+        }
+      }
+    }
+
+    return Files;
+  }
+  
 }
