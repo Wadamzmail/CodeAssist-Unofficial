@@ -27,6 +27,11 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.util.ErrorCodes;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.util.SourcePositions;
+import com.sun.source.tree.BlockTree;
+import com.sun.tools.javac.api.JavacTaskImpl;
 
 public class DiagnosticUtil {
 
@@ -217,4 +222,53 @@ public class DiagnosticUtil {
     }
     return group;
   }
+  
+  private DiagnosticWrapper modifyDiagnostic(
+      JavacUtilitiesProvider task, Diagnostic<? extends JavaFileObject> diagnostic) {
+    DiagnosticWrapper wrapped = new DiagnosticWrapper(diagnostic);
+
+    if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
+      Trees trees = MTrees.instance(task.getTask());
+      SourcePositions positions = trees.getSourcePositions();
+
+      JCDiagnostic jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
+      JCDiagnostic.DiagnosticPosition diagnosticPosition = jcDiagnostic.getDiagnosticPosition();
+      JCTree tree = diagnosticPosition.getTree();
+
+      if (tree != null) {
+        TreePath treePath = trees.getPath(task.root(), tree);
+        if (treePath == null) {
+          return wrapped;
+        }
+        String code = jcDiagnostic.getCode();
+
+        long start = diagnostic.getStartPosition();
+        long end = diagnostic.getEndPosition();
+        switch (code) {
+          case ErrorCodes.MISSING_RETURN_STATEMENT:
+            TreePath block = TreeUtil.findParentOfType(treePath, BlockTree.class);
+            if (block != null) {
+              // show error span only at the end parenthesis
+              end = positions.getEndPosition(task.root(), block.getLeaf()) + 1;
+              start = end - 2;
+            }
+            break;
+          case ErrorCodes.DEPRECATED:
+            if (treePath.getLeaf().getKind() == Tree.Kind.METHOD) {
+              MethodTree methodTree = (MethodTree) treePath.getLeaf();
+              if (methodTree.getBody() != null) {
+                start = positions.getStartPosition(task.root(), methodTree);
+                end = positions.getStartPosition(task.root(), methodTree.getBody());
+              }
+            }
+            break;
+        }
+
+        wrapped.setStartPosition(start);
+        wrapped.setEndPosition(end);
+      }
+    }
+    return wrapped;
+  } 
+  
 }

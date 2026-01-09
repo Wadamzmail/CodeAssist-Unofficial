@@ -7,7 +7,11 @@ import com.tyron.diagnostics.DiagnosticProvider;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.tools.Diagnostic;
+import com.tyron.completion.java.util.DiagnosticUtil;
+import com.sun.tools.javac.tree.JCTree;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 
 public class JavaDiagnosticsProvider implements DiagnosticProvider {
   @Override
@@ -16,8 +20,12 @@ public class JavaDiagnosticsProvider implements DiagnosticProvider {
     if (compilationInfo == null) {
       return Collections.emptyList();
     }
+    
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
 
     return NBLog.instance(compilationInfo.impl.getJavacTask().getContext())
-        .getDiagnostics(file.toURI());
+        .getDiagnostics(file.toURI()).stream()
+        .map( d ->DiagnosticUtil.modifyDiagnostic(new DefaultJavacUtilitiesProvider(compilationInfo.impl.getJavacTask(), unit, null), d))
+        .collect(Collectors.toList());
   }
 }
