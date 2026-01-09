@@ -32,6 +32,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.tree.BlockTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.tree.JCTree;
 
 public class DiagnosticUtil {
 
@@ -223,7 +224,7 @@ public class DiagnosticUtil {
     return group;
   }
   
-  private DiagnosticWrapper modifyDiagnostic(
+  public static DiagnosticWrapper modifyDiagnostic(
       JavacUtilitiesProvider task, Diagnostic<? extends JavaFileObject> diagnostic) {
     DiagnosticWrapper wrapped = new DiagnosticWrapper(diagnostic);
 
