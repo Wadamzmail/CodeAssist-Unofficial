@@ -142,7 +142,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
   }
 
   public static void addStaticImports(
-      CompileTask task,
+      JavacUtilitiesProvider task,
       CompilationUnitTree root,
       String partial,
       boolean endsWithParen,

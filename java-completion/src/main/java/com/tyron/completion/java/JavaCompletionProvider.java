@@ -148,7 +148,7 @@ public class JavaCompletionProvider extends CompletionProvider {
         break;   
       case IMPORT:
         String modifiedPartial = parameters.getPrefix();
-        modifiedPartial = StringSearch.qualifiedPartialIdentifier(contents, (int) cursor);
+        modifiedPartial = StringSearch.qualifiedPartialIdentifier(parameters.getContents(), (int) parameters.getIndex());
               if (modifiedPartial.endsWith(FileContentFixer.INJECTED_IDENT)) {
                 modifiedPartial =
                     modifiedPartial.substring(
