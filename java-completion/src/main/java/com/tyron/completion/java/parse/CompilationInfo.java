@@ -270,7 +270,7 @@ public class CompilationInfo {
     return impl.getCompilationUnit();
   }
   
-  private synchronized boolean changed(Set<File> oldFiles, Set<File> newFiles) {
+  private static synchronized boolean changed(Set<File> oldFiles, Set<File> newFiles) {
     if (oldFiles.size() != newFiles.size()) {
       return true;
     }
