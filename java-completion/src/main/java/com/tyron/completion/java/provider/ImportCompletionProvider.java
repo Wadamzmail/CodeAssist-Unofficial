@@ -60,7 +60,6 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
 
     Set<String> names = new HashSet<>();
     for (String className : ProjectUtil.getInstance().publicTopLevelTypes()) {
-      System.out.println(className);
       if (className.startsWith(path)) {
         int start = path.lastIndexOf('.');
         int end = className.indexOf('.', path.length());

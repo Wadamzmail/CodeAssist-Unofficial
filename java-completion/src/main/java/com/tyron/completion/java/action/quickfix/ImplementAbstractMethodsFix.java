@@ -40,6 +40,7 @@ public class ImplementAbstractMethodsFix extends AnAction {
 
     Diagnostic<?> diagnostic = event.getData(CommonDataKeys.DIAGNOSTIC);
     if (diagnostic == null) {
+    System.out.println("IAMA:diagnostic null");
       return;
     }
 
@@ -47,13 +48,15 @@ public class ImplementAbstractMethodsFix extends AnAction {
       return;
     }
 
-    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
-        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
-    if (diagnosticSourceUnwrapper == null) {
-      return;
-    }
+//    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
+//        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+//    if (diagnosticSourceUnwrapper == null) {
+//    System.out.println("IAMA: no unwrapped diagnostic");
+//      return;
+//    }
 
     if (!ERROR_CODE.equals(diagnostic.getCode())) {
+    System.out.println("IAMA:Code:"+diagnostic.getCode()+" is not equals:compiler.err.does.not.override.abstract");
       return;
     }
     
@@ -75,11 +78,11 @@ public class ImplementAbstractMethodsFix extends AnAction {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
     Diagnostic<?> diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
-    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
-        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
-    if (diagnosticSourceUnwrapper == null) {
-      return;
-    }
+//    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
+//        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+//    if (diagnosticSourceUnwrapper == null) {
+//      return;
+//    }
     CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
         if (compilationInfo == null) return;
         JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
@@ -89,7 +92,14 @@ public class ImplementAbstractMethodsFix extends AnAction {
         JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
         
-    JCDiagnostic jcDiagnostic = diagnosticSourceUnwrapper.d;
+    JCDiagnostic jcDiagnostic;
+    if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
+            jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
+          } else {
+            jcDiagnostic = (JCDiagnostic) diagnostic;
+      }    
+        
+  //  JCDiagnostic jcDiagnostic = diagnosticSourceUnwrapper.d;
     JavaRewrite2 rewrite = new ImplementAbstractMethods(jcDiagnostic);
     RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), rewrite);
   }

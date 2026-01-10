@@ -118,6 +118,7 @@ public class CompilationInfoImpl {
       final JCDiagnostic diagnostic;
           if (node.diag instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
             diagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) node.diag).d;
+            System.out.println("CompilationInfoImpl Yes it's instance of ClientCodeWrapper.DiagnosticSourceUnwrapper");
           } else {
             diagnostic = (JCDiagnostic) node.diag;
           } 
