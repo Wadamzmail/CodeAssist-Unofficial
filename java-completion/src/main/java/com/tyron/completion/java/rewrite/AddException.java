@@ -70,14 +70,14 @@ public class AddException implements JavaRewrite2 {
             insertText = ", " + simpleName + " ";
           }
           
-            if (!ActionUtil.hasImport(task.root(), simpleName)) {
-                AddImport addImport = new AddImport(file.toFile(), simpleName);
-                Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
-                TextEdit[] imports = rewrite.get(file);
-                if (imports != null) {
-                    Collections.addAll(edits, imports);
-                }
-            }
+//            if (!ActionUtil.hasImport(task.root(), simpleName)) {
+//                AddImport addImport = new AddImport(file.toFile(), simpleName);
+//                Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+//                TextEdit[] imports = rewrite.get(file);
+//                if (imports != null) {
+//                    Collections.addAll(edits, imports);
+//                }
+//            }
           
           TextEdit insertThrows = new TextEdit(new Range(startBody - 1, startBody - 1), insertText);
            edits.add(insertThrows);

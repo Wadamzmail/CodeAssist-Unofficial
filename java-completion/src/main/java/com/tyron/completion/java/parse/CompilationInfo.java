@@ -42,7 +42,7 @@ public class CompilationInfo {
   public static final Key<CompilationInfo> COMPILATION_INFO_KEY = Key.create("compilationInfo");
   private static Set<File> mCachedPaths = new HashSet<>();
 
-  public static CompilationInfo get(Module module) {
+  public static synchronized CompilationInfo get(Module module) {
     if (!(module instanceof JavaModule)) {
       return null;
     }
@@ -50,11 +50,10 @@ public class CompilationInfo {
     CompilationInfo info = module.getUserData(COMPILATION_INFO_KEY);
     
       Set<File> libraries = new HashSet<>();
-      if (module instanceof JavaModule) {
-        libraries.addAll(((JavaModule) module).getJavaFiles().values());
-        libraries.addAll(((JavaModule) module).getLibraries());
-        libraries.addAll(((JavaModule) module).getInjectedClasses().values());
-      }
+        libraries.addAll((javaModule).getJavaFiles().values());
+        libraries.addAll(javaModule).getLibraries());
+        libraries.addAll((javaModule).getInjectedClasses().values());
+     
       if (module instanceof AndroidModuleImpl) {
         libraries.addAll(
             ((AndroidModuleImpl) module)
@@ -84,7 +83,7 @@ public class CompilationInfo {
     return info;
   }
 
-  public static CompilationInfo get(Project currentProject, File file) {
+  public static synchronized CompilationInfo get(Project currentProject, File file) {
     final Module module = currentProject.getModule(file);
     ProjectUtil.getInstance().setProject(currentProject).setModule(module); 
     return get(module);

@@ -51,13 +51,10 @@ public class JavacParser {
     Collections.addAll(
         options,
         "-bootclasspath",
-        joinPath(Arrays.asList(BuildModule.getAndroidJar(), BuildModule.getLambdaStubs())));
-//TODO : fix duplicate class issue in java17
-//    Collections.addAll(options, "--release", "17");
-//    Collections.addAll(options, "-target", "17", "-source", "17");       
+        joinPath(Arrays.asList(BuildModule.getAndroidJar(), BuildModule.getLambdaStubs()))); 
     Collections.addAll(options, "-target", "1.8", "-source", "1.8");
-    Collections.addAll(options, "-cp", joinPath(cpInfo));   
-    Collections.addAll(options, "-proc:none");
+    Collections.addAll(options, "-cp", joinPath(cpInfo));  
+    Collections.addAll(options, "-proc:none", "-g");
     Collections.addAll(
         options,
         "-Xlint:cast",

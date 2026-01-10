@@ -20,6 +20,7 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import com.sun.tools.javac.api.ClientCodeWrapper;
 
 public class CompilationInfoImpl {
 
@@ -114,7 +115,13 @@ public class CompilationInfoImpl {
         Log.instance(javacTask.getContext()).getDiagnosticFormatter();
     DiagnosticListenerImpl.DiagNode node = errors.first;
     while (node != null) {
-      localErrors.add(RichDiagnostic.wrap(node.diag, formatter));
+      final JCDiagnostic diagnostic;
+          if (node.diag instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
+            diagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) node.diag).d;
+          } else {
+            diagnostic = (JCDiagnostic) node.diag;
+          } 
+      localErrors.add(RichDiagnostic.wrap(diagnostic, formatter));    
       node = node.next;
     }
 
