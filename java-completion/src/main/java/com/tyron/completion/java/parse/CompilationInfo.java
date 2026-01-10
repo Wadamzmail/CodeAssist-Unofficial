@@ -51,7 +51,7 @@ public class CompilationInfo {
     
       Set<File> libraries = new HashSet<>();
         libraries.addAll((javaModule).getJavaFiles().values());
-        libraries.addAll(javaModule).getLibraries());
+        libraries.addAll((javaModule).getLibraries());
         libraries.addAll((javaModule).getInjectedClasses().values());
      
       if (module instanceof AndroidModuleImpl) {
