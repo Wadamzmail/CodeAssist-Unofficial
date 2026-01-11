@@ -42,6 +42,7 @@ import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.util.PackageTrie; 
+import java.io.File;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
