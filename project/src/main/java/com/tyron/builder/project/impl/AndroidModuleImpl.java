@@ -85,38 +85,39 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   public void index() {
     super.index();
 
-    /*  Consumer<File> kotlinConsumer = this::addKotlinFile;
-
+    Consumer<File> kotlinConsumer = this::addKotlinFile;
+    
     if (getJavaDirectory().exists()) {
       FileUtils.iterateFiles(
               getJavaDirectory(), FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
           .forEachRemaining(kotlinConsumer);
-    }
-
+    } 
+    
     if (getKotlinDirectory().exists()) {
       FileUtils.iterateFiles(
               getKotlinDirectory(),
               FileFilterUtils.suffixFileFilter(".kt"),
               TrueFileFilter.INSTANCE)
-          .forEachRemaining(kotlinConsumer);
-    }*/
+          .forEachRemaining(kotlinConsumer); 
+        FileUtils.iterateFiles(
+                 javaDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+             .forEachRemaining(this::addJavaFile);      
+    } 
 
-    Consumer<File> kotlinConsumer = this::addKotlinFile;
-
-    for (ContentRoot contentRoot : getContentRoots()) {
-      if (contentRoot instanceof AndroidContentRoot) {
-        AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
-        for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
-          // java source root may contain kotlin files aswell
-          FileUtils.iterateFiles(
-                  javaDirectory, FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
-              .forEachRemaining(kotlinConsumer);
-          FileUtils.iterateFiles(
-                  javaDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
-              .forEachRemaining(this::addJavaFile);
-        }
-      }
-    }
+//    for (ContentRoot contentRoot : getContentRoots()) {
+//      if (contentRoot instanceof AndroidContentRoot) {
+//        AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
+//        for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
+//          // java source root may contain kotlin files aswell
+//          FileUtils.iterateFiles(
+//                  javaDirectory, FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
+//              .forEachRemaining(kotlinConsumer);
+//          FileUtils.iterateFiles(
+//                  javaDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+//              .forEachRemaining(this::addJavaFile);
+//        }
+//      }
+//    }
 
     // R.java files
     //        File gen = new File(getBuildDirectory(), "gen");
