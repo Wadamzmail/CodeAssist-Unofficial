@@ -70,7 +70,7 @@ public class CompilationInfo {
                    "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar");
                 if(kotlinJar.exists()){
                 libraries.add(kotlinJar);
-                javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar);
+                javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
                 } 
                 if (buildGenDir.exists()){ 
                 Set<File> buidGenSet = getFiles(buildGenDir, ".java");   
