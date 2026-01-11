@@ -100,6 +100,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import javax.tools.JavaFileObject;
 
 // import com.tyron.editor.Content;
 
@@ -206,7 +207,7 @@ public class CodeEditorFragment extends Fragment
 
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
-      List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, mCurrentFile);
+      List<? extends Diagnostic<? extends JavaFileObject>> diagnostics = provider.getDiagnostics(module, mCurrentFile);
 
       mEditor.setDiagnostics(
           diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));

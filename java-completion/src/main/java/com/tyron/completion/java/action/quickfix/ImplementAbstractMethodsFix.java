@@ -26,6 +26,7 @@ import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.action.FindCurrentPath;    
 import com.sun.source.util.TreePath;
+import com.tyron.builder.model.DiagnosticWrapper;
 
 public class ImplementAbstractMethodsFix extends AnAction {
 
@@ -38,11 +39,12 @@ public class ImplementAbstractMethodsFix extends AnAction {
     Presentation presentation = event.getPresentation();
     presentation.setVisible(false);
 
-    Diagnostic<?> diagnostic = event.getData(CommonDataKeys.DIAGNOSTIC);
+    DiagnosticWrapper diagnostic = event.getData(CommonDataKeys.DIAGNOSTIC);
     if (diagnostic == null) {
     System.out.println("IAMA:diagnostic null");
       return;
     }
+    System.out.println(diagnostic.toString());
 
     if (!ActionPlaces.EDITOR.equals(event.getPlace())) {
       return;
@@ -77,7 +79,7 @@ public class ImplementAbstractMethodsFix extends AnAction {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
-    Diagnostic<?> diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
+    DiagnosticWrapper diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
 //    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
 //        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
 //    if (diagnosticSourceUnwrapper == null) {
@@ -92,14 +94,16 @@ public class ImplementAbstractMethodsFix extends AnAction {
         JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
         TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
         
-    JCDiagnostic jcDiagnostic;
-    if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
-            jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
-          } else {
-            jcDiagnostic = (JCDiagnostic) diagnostic;
-      }    
+//    JCDiagnostic jcDiagnostic;
+//    if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
+//            jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
+//          } else {
+//            jcDiagnostic = (JCDiagnostic) diagnostic;
+//      }
+
+      JCDiagnostic jcDiagnostic = (JCDiagnostic) diagnostic.getExtra();
         
-  //  JCDiagnostic jcDiagnostic = diagnosticSourceUnwrapper.d;
+//    JCDiagnostic jcDiagnostic = diagnosticSourceUnwrapper.d;
     JavaRewrite2 rewrite = new ImplementAbstractMethods(jcDiagnostic);
     RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), rewrite);
   }
