@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import org.apache.bcel.Repository;
@@ -45,6 +46,9 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import com.tyron.completion.xml.BytecodeScanner;
+import com.tyron.builder.model.CodeAssistAndroidLibrary;
+import com.tyron.builder.model.CodeAssistLibrary;
+import com.tyron.builder.project.impl.AndroidModuleImpl;
 
 public class LayoutRepo {
 
@@ -65,8 +69,11 @@ public class LayoutRepo {
       return;
     }
     BytecodeScanner.scanBootstrapIfNeeded();
+    Set<File> libraries = new HashSet<>();
+    libraries.addAll(getAndroidLibs(module));
+    libraries.addAll(module.getLibraries());
 
-    for (File library : module.getLibraries()) {
+    for (File library : libraries) {
       File parent = library.getParentFile();
       if (parent == null) {
         continue;
@@ -81,7 +88,7 @@ public class LayoutRepo {
       }
     }
 
-    for (File library : module.getLibraries()) {
+    for (File library : libraries) {
       try {
         List<JavaClass> scan = BytecodeScanner.scan(library);
         for (JavaClass javaClass : scan) {
@@ -98,6 +105,18 @@ public class LayoutRepo {
     Repository.clearCache();
 
     mInitialized = true;
+  }
+  
+  Set<File> getAndroidLibs(AndroidModule module){
+  Set<File> libraries = new HashSet<>();
+    libraries.addAll(
+            ((AndroidModuleImpl) module)
+                .getCodeAssistLibraries().stream()
+                    .filter(it -> it instanceof CodeAssistAndroidLibrary)
+                    .map(it -> (CodeAssistAndroidLibrary) it)
+                    .flatMap(it -> it.getCompileJarFiles().stream())
+                    .collect(Collectors.toList()));
+     return libraries;             
   }
 
   private void addFrameworkViews() {

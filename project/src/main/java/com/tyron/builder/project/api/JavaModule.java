@@ -22,7 +22,7 @@ public interface JavaModule extends Module {
   void removeJavaFile(@NonNull String packageName);
 
   void addJavaFile(@NonNull File javaFile);
-
+  
   List<File> getLibraries();
 
   List<File> getNativeLibraries();

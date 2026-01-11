@@ -36,6 +36,7 @@ import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import com.tyron.completion.java.util.ProjectUtil;
+import com.tyron.builder.model.CodeAssistLibrary;
 
 public class CompilationInfo {
 
@@ -64,12 +65,28 @@ public class CompilationInfo {
                     .collect(Collectors.toList()));
                 File buildGenDir = new File(module.getRootFile() + "/build/gen");
                 File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
-                libraries.add(
-                new File(
+                File kotlinJar = new File(
                    module.getRootFile(),
-                   "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar"));
-                if (buildGenDir.exists()) libraries.addAll(getFiles(buildGenDir, ".java"));
-                if (viewBindingDir.exists()) libraries.addAll(getFiles(viewBindingDir, ".java"));
+                   "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar");
+                if(kotlinJar.exists()){
+                libraries.add(kotlinJar);
+                javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar);
+                } 
+                if (buildGenDir.exists()){ 
+                Set<File> buidGenSet = getFiles(buildGenDir, ".java");   
+                 for(File toAdd : buidGenSet){
+                   javaModule.addJavaFile(toAdd);
+                   libraries.add(toAdd);
+                 }
+               
+                } 
+                if (viewBindingDir.exists()){
+                 Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
+                 for(File toAdd : viewBindingSet){
+                 javaModule.addJavaFile(toAdd);
+                 libraries.add(toAdd);
+                 }
+                 }
       }
      if (info == null || changed(mCachedPaths, libraries)) {
       info =

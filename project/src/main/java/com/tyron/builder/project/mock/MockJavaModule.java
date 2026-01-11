@@ -66,7 +66,7 @@ public class MockJavaModule extends ModuleImpl implements JavaModule {
     }
     mJavaFiles.put(className, javaFile);
   }
-
+  
   @Override
   public List<File> getLibraries() {
     return Collections.emptyList();

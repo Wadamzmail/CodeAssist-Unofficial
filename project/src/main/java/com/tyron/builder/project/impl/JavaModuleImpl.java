@@ -85,7 +85,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     mJavaFiles.put(className, javaFile);
     mClassIndex.add(className);
   }
-
+  
   @Override
   public void putLibraryHashes(Map<String, CodeAssistLibrary> hashes) {
     mLibraryHashMap.putAll(hashes);

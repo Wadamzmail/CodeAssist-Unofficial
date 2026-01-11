@@ -59,7 +59,10 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     checkCanceled();
 
     Set<String> names = new HashSet<>();
-    for (String className : ProjectUtil.getInstance().publicTopLevelTypes()) {
+    File fileToComplete = new File(task.root().getSourceFile().toUri());
+    final Module module = task.getProject().getModule(fileToComplete);
+    ShortNamesCache cache = ShortNamesCache.getInstance(module);
+    for (String className : cache.getAllClassNames()) {
       if (className.startsWith(path)) {
         int start = path.lastIndexOf('.');
         int end = className.indexOf('.', path.length());
