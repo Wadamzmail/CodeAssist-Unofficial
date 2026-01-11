@@ -100,7 +100,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
               TrueFileFilter.INSTANCE)
           .forEachRemaining(kotlinConsumer); 
         FileUtils.iterateFiles(
-                 javaDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+                 getKotlinDirectory(), FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
              .forEachRemaining(this::addJavaFile);      
     } 
 
