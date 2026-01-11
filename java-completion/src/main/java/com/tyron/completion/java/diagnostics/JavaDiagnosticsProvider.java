@@ -12,10 +12,12 @@ import javax.tools.Diagnostic;
 import com.tyron.completion.java.util.DiagnosticUtil;
 import com.sun.tools.javac.tree.JCTree;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.sun.tools.javac.util.JCDiagnostic;
 
 public class JavaDiagnosticsProvider implements DiagnosticProvider {
   @Override
-  public List<? extends Diagnostic<?>> getDiagnostics(Module module, File file) {
+ // public List<? extends Diagnostic<?>> getDiagnostics(Module module, File file) {
+  public List<JCDiagnostic> getDiagnostics(Module module, File file) {
     CompilationInfo compilationInfo = CompilationInfo.get(module.getProject(), file);
     if (compilationInfo == null) {
       return Collections.emptyList();
