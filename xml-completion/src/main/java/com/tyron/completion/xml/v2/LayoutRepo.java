@@ -50,6 +50,8 @@ import com.tyron.builder.model.CodeAssistAndroidLibrary;
 import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.project.impl.AndroidModuleImpl;
 import java.util.stream.Collectors;
+import com.tyron.completion.java.util.FilesUtil;
+
 
 public class LayoutRepo {
 
@@ -59,13 +61,15 @@ public class LayoutRepo {
   
   private static final Key<LayoutRepo> LAYOUT_REPO_KEY = Key.create("layoutRepo_key");
   
+  private static Set<File> mCachedPaths = new HashSet<>();
+  
   public LayoutRepo() {}
 
   public Map<String, JavaClass> getJavaViewClasses() {
     return mJavaViewClasses;
   }
 
-  public void initialize(AndroidModule module) throws IOException {
+  public synchronized void initialize(AndroidModule module) throws IOException {
     if (mInitialized) {
       return;
     }
@@ -154,8 +158,14 @@ public class LayoutRepo {
       // ignored
     }
   }
+  
+  private static synchronized boolean wannaIndex(){
+    
+   
+    return false;
+  } 
        
-  public static LayoutRepo get( AndroidModule module) {
+  public static synchronized LayoutRepo get( AndroidModule module) {
      LayoutRepo repo = (LayoutRepo)module.getUserData(LAYOUT_REPO_KEY);
      if(repo!=null)return repo;
      repo = new LayoutRepo();

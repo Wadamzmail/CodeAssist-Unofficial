@@ -222,6 +222,7 @@ public class ProjectManager {
                         module2 = mCurrentProject.getModule(file);
                     }
                     if (module2 instanceof AndroidModule && indexFiles.containsKey(RES)) {
+                      System.out.println("module2 is not null");
                         try {
                             InjectResourcesTask.inject(mCurrentProject, (AndroidModule) module2);
                             //InjectResourcesTask.inject(project, (AndroidModule) module);
@@ -318,7 +319,7 @@ public class ProjectManager {
                   if (packageName != null) {
                     InjectResourcesTask.inject(project, (AndroidModule) module);
                     InjectViewBindingTask.inject(project, (AndroidModule) module);
-                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null)); 
+//                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null)); 
                     logger.debug(
                         "> Task :" + module.getRootFile().getName() + ":" + "injectingResources");
                   }
