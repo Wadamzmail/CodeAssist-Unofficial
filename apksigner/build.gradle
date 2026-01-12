@@ -27,8 +27,9 @@ android {
 }
 dependencies {
 	implementation project(path: ':common')
-    api "com.android.tools.build:apksig:8.6.0"   
-    api "org.bouncycastle:bcprov-jdk15on:1.70"
+    api "com.android.tools.build:apksig:8.13.2"
+  //  api "org.bouncycastle:bcprov-jdk15on:1.70"
+    api "org.bouncycastle:bcprov-jdk18on:1.83"
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_17

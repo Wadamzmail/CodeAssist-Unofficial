@@ -119,7 +119,7 @@ dependencies {
     // TODO: language processing should be on its own module
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
 	    
-    implementation 'com.google.code.gson:gson:2.11.0'
+    implementation 'com.google.code.gson:gson:2.13.2'
 	implementation 'org.antlr:antlr4-runtime:4.13.2'
     // TODO: completion providers should not be included on the main module
     implementation project(path: ':code-editor')

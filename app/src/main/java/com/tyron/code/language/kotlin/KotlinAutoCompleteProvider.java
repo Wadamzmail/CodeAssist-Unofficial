@@ -112,31 +112,32 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
   */
   @Override
     public String getPrefix(Editor editor, int line, int column) {
+        String empty = "";
         Project project = ProjectManager.getInstance().getCurrentProject();
         if (project == null) {
-            return null;
+            return empty;
         }
 
         Module currentModule = project.getModule(mEditor.getCurrentFile());
 
         if (!(currentModule instanceof AndroidModule)) {
-            return null;
+            return empty;
         }
 
         KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
         if (kotlinEnvironment == null) {
-            return null;
+            return empty;
         }
 
         KotlinFile kotlinFile =
                 kotlinEnvironment.getKotlinFile(editor.getCurrentFile().getAbsolutePath());
         if (kotlinFile == null) {
-            return null;
+            return empty;
         }
 
         PsiElement psiElement = kotlinFile.elementAt(line, column);
         if (psiElement == null) {
-            return null;
+            return empty;
         }
         return kotlinEnvironment.getPrefix(psiElement);
     }

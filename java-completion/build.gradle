@@ -47,9 +47,9 @@ dependencies {
     implementation project(':treeview')
     implementation project(':kotlin-completion')
 
-    api 'com.github.javaparser:javaparser-core:3.26.1'
+    api 'com.github.javaparser:javaparser-core:3.28.0'
 
-    implementation 'androidx.annotation:annotation:1.8.2'
+    implementation 'androidx.annotation:annotation:1.9.1'
 
     implementation project(':common')
     implementation project(':completion-api')
@@ -61,7 +61,7 @@ dependencies {
 
     api project(':build-logic')
 
-    compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.4.0'
     compileOnly project(':android-stubs')
     implementation("org.checkerframework:checker-qual:3.50.0")
 }

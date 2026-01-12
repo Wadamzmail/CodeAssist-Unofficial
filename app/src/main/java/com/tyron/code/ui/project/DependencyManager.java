@@ -185,7 +185,7 @@ public class DependencyManager {
     if (project instanceof AndroidModule) {
       if (androidModule.getViewBindingEnabled() && project.getRootFile().getName().equals(name)) {
         Dependency databindingDependency =
-            new Dependency("androidx.databinding", "viewbinding", "8.4.0-alpha13");
+            new Dependency("androidx.databinding", "viewbinding", "8.13.2");
         declaredImplementationDependencies.add(databindingDependency);
       }
     }
