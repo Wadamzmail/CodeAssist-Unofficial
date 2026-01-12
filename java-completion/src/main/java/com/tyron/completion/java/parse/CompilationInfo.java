@@ -43,13 +43,13 @@ public class CompilationInfo {
   public static final Key<CompilationInfo> COMPILATION_INFO_KEY = Key.create("compilationInfo");
   private static Set<File> mCachedPaths = new HashSet<>();
 
-  public static synchronized CompilationInfo get(Module module) {
+  public static synchronized CompilationInfo get(Module module, boolean reIndex) {
     if (!(module instanceof JavaModule)) {
       return null;
     }
     JavaModule javaModule = (JavaModule) module;
     CompilationInfo info = module.getUserData(COMPILATION_INFO_KEY);
-    
+    if (info == null || reIndex ) {
       Set<File> libraries = new HashSet<>();
         libraries.addAll((javaModule).getJavaFiles().values());
         libraries.addAll((javaModule).getLibraries());
@@ -88,22 +88,30 @@ public class CompilationInfo {
                  }
                  }
       }
-     if (info == null || changed(mCachedPaths, libraries)) {
+    // if (info == null || changed(mCachedPaths, libraries)) {
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
                   new JavacParser(), null, null, new ArrayList<>(libraries), Collections.emptyList(), null, null));
       module.putUserData(COMPILATION_INFO_KEY, info);
-      mCachedPaths.clear();
-      mCachedPaths.addAll(libraries);
+     // mCachedPaths.clear();
+     // mCachedPaths.addAll(libraries);
     }
     return info;
   }
+  
+  public static synchronized CompilationInfo get(Module module) {
+  return get(module,false);
+  }
 
   public static synchronized CompilationInfo get(Project currentProject, File file) {
+     return get(currentProject,file,false);
+  }
+  
+  public static synchronized CompilationInfo get(Project currentProject, File file, boolean reIndex) {
     final Module module = currentProject.getModule(file);
     ProjectUtil.getInstance().setProject(currentProject).setModule(module); 
-    return get(module);
+    return get(module,reIndex);
   }
 
   public final CompilationInfoImpl impl;

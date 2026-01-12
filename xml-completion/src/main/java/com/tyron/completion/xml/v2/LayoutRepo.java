@@ -69,8 +69,8 @@ public class LayoutRepo {
     return mJavaViewClasses;
   }
 
-  public synchronized void initialize(AndroidModule module) throws IOException {
-    if (mInitialized) {
+  public synchronized void initialize(AndroidModule module, boolean reIndex) throws IOException {
+    if (mInitialized && !reIndex) {
       return;
     }
     BytecodeScanner.scanBootstrapIfNeeded();
@@ -111,6 +111,10 @@ public class LayoutRepo {
 
     mInitialized = true;
   }
+  
+  public synchronized void initialize(AndroidModule module) throws IOException {
+      initialize(module,false);
+    } 
   
   Set<File> getAndroidLibs(AndroidModule module){
   Set<File> libraries = new HashSet<>();
@@ -158,12 +162,6 @@ public class LayoutRepo {
       // ignored
     }
   }
-  
-  private static synchronized boolean wannaIndex(){
-    
-   
-    return false;
-  } 
        
   public static synchronized LayoutRepo get( AndroidModule module) {
      LayoutRepo repo = (LayoutRepo)module.getUserData(LAYOUT_REPO_KEY);
@@ -173,4 +171,5 @@ public class LayoutRepo {
      module.putUserData(LAYOUT_REPO_KEY,repo);
     return repo;
   }
+  
 }

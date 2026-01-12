@@ -205,15 +205,17 @@ public class CodeEditorFragment extends Fragment
 
     if (language instanceof KotlinLanguage) return;
     if (language instanceof LanguageXML) return;
-
+    
+    ProgressManager.getInstance()
+              .runLater(
+                  () -> {
     ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
     for (DiagnosticProvider provider : providers) {
-   //   List<? extends Diagnostic<?>> diagnostics = provider.getDiagnostics(module, mCurrentFile);
-     List<JCDiagnostic> diagnostics = provider.getDiagnostics(module, mCurrentFile);
-
+      List<JCDiagnostic> diagnostics = provider.getDiagnostics(module, mCurrentFile);
       mEditor.setDiagnostics(
           diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));     
     }
+   },200);
   }
 
   public void hideEditorWindows() {

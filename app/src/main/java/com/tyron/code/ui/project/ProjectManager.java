@@ -296,7 +296,7 @@ public class ProjectManager {
                 logger.debug(
                     "> Task :" + module.getRootFile().getName() + ":" + "indexingResources");
 //                xmlRepository.initialize((AndroidModule) module);
-                repo.initialize((AndroidModule) module);
+                repo.initialize((AndroidModule) module,true);
 
               }
             } catch (IOException e) {
@@ -354,7 +354,7 @@ public class ProjectManager {
          if(!(module instanceof JavaModule))return;
         JavaModule javaModule = (JavaModule) module;
         for (File value : javaModule.getJavaFiles().values()) {
-            CompilationInfo info = CompilationInfo.get(module.getProject(), value);
+            CompilationInfo info = CompilationInfo.get(module.getProject(), value,true);
             if (info == null) {
                 continue;
             }
@@ -370,7 +370,7 @@ public class ProjectManager {
             });
         }
 
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module);
+        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module,true);
     }
 
   private void downloadLibraries(JavaModule project, TaskListener listener, ILogger logger)

@@ -598,11 +598,11 @@ data class KotlinEnvironment(
             return KotlinEnvironment(classpath, kotlinCoreEnvironment)
         }
 
-        fun get(module: Module): KotlinEnvironment? {
+        fun get(module: Module, reIndex : Boolean): KotlinEnvironment? {
             val androidModule = module as? AndroidModuleImpl ?: return null
 
             val existingEnvironment = androidModule.getUserData(ENVIRONMENT_KEY)
-            if (existingEnvironment != null) {
+            if (existingEnvironment != null || !reIndex) {
                 return existingEnvironment
             }
 
@@ -617,6 +617,10 @@ data class KotlinEnvironment(
             }
             androidModule.putUserData(ENVIRONMENT_KEY, environment)
             return environment
+        }
+        
+        fun get(module: Module): KotlinEnvironment? {
+          return get(module,false)
         }
     }
 }
