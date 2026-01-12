@@ -61,7 +61,7 @@ dependencies {
 
     api project(':build-logic')
 
-    compileOnly 'androidx.recyclerview:recyclerview:1.4.0'
+    compileOnly 'androidx.recyclerview:recyclerview:1.2.1'
     compileOnly project(':android-stubs')
     implementation("org.checkerframework:checker-qual:3.50.0")
 }
