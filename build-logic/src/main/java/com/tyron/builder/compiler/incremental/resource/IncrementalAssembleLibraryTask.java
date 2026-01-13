@@ -20,6 +20,7 @@ import com.tyron.builder.exception.CompilationFailedException;
 import com.tyron.builder.internal.jar.AssembleJar;
 import com.tyron.builder.log.ILogger;
 import com.tyron.builder.log.LogUtils;
+import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.model.ModuleSettings;
 import com.tyron.builder.project.Project;
@@ -70,10 +71,13 @@ import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation;
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector;
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler;
-import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
+// import org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunnerKt;
+import org.jetbrains.kotlin.incremental.CompilerRunnerUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.tyron.builder.model.CodeAssistLibrary;
+import com.tyron.common.Prefs;
+import com.tyron.common.SharedPreferenceKeys;
+import org.jetbrains.kotlin.config.*;
 
 public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
@@ -103,7 +107,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
   public void run() throws IOException, CompilationFailedException {
     List<String> projects = new ArrayList<>();
-    Collections.addAll(projects,getModule().getAllProjects(getModule().getGradleFile()));
+    projects.addAll(getModule().getAllProjects(getModule().getGradleFile()));
     try {
       initializeProjects(getModule().getProjectDir(), projects);
     } catch (JSONException e) {
@@ -126,7 +130,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
     }
     for (String projectName : rootProjects) {
       List<String> subProjects =
-         new ArrayList<>(getModule().getAllProjects(new File(directory, projectName + "/build.gradle")));
+          new ArrayList<>(getModule().getAllProjects(new File(directory, projectName + "/build.gradle")));
       int numSubProjects = subProjects.size();
       if (numSubProjects > 0) {
         maxInclusion = Math.max(maxInclusion, numSubProjects);
@@ -1042,16 +1046,16 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       // String language_version =
       //     buildSettingsJson.optJSONObject("kotlin").optString("languageVersion", "2.1");
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        BuildModule.getKotlinc().setReadOnly();
-      }
+     // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      //  BuildModule.getKotlinc().setReadOnly();
+     // }
 
       if (isSkipKotlinTask) {
         getLogger().debug("> Task :" + name + ":" + "compileKotlin SKIPPED");
         return;
       }
 
-      if (!isCompilerEnabled) {
+      //if (!isCompilerEnabled) {
 
         List<File> mFilesToCompile = new ArrayList<>();
 
@@ -1117,6 +1121,13 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
             javaSourceRoots.stream().map(File::getAbsolutePath).toArray(String[]::new));
         // args.setKotlinHome(mKotlinHome.getAbsolutePath());
         args.setDestination(out.getAbsolutePath());
+        //new 
+        args.setReportPerf(false);
+        args.setReportOutputFiles(false);
+        args.setDumpPerf(null);
+        args.setLanguageVersion(LanguageVersion.LATEST_STABLE.getVersionString());
+        args.setUseFastJarFileSystem(Prefs.get().getBoolean(SharedPreferenceKeys.USE_FAST_JAR_FILE_SYSTEM,true));
+        args.setJvmTarget(jvm_target);
 
         List<File> plugins = getPlugins();
         getLogger().debug("Loading kotlin compiler plugins: " + plugins);
@@ -1142,24 +1153,21 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
           fileList.add(kotlinDir);
         }
 
-        IncrementalJvmCompilerRunnerKt.makeIncrementally(
+        CompilerRunnerUtils.makeJvmIncrementally(
             cacheDir,
             Arrays.asList(fileList.toArray(new File[0])),
             args,
             mCollector,
             new ICReporterBase() {
               @Override
-                        public void reportCompileIteration(boolean b,
-                                                           @NotNull Collection<? extends File> collection,
-                                                           @NotNull ExitCode exitCode) {
+              public void reportCompileIteration(
+                  boolean b,
+                  @NotNull Collection<? extends File> collection,
+                  @NotNull ExitCode exitCode) {}
 
-                        }
-
-                        @Override
-                        public void report(@NotNull Function0<String> function0,
-                                           @NotNull ReportSeverity reportSeverity) {
-
-                        }
+              @Override
+              public void report(
+                  @NotNull Function0<String> function0, @NotNull ReportSeverity reportSeverity) {}
             });
 
         if (mCollector.hasErrors()) {
@@ -1167,8 +1175,8 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
         } else {
           getLogger().debug("> Task :" + name + ":" + "classes");
         }
-      } else {
-
+     // } else {
+       /*
         List<File> mFilesToCompile = new ArrayList<>();
 
         mClassCache = getModule().getCache(CACHE_KEY, new Cache<>());
@@ -1293,7 +1301,8 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
             throw new CompilationFailedException("Compilation failed, see logs for more details");
           }
         }
-      }
+        */
+      //}
 
     } catch (Exception e) {
       throw new CompilationFailedException(Throwables.getStackTraceAsString(e));
