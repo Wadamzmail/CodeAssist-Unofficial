@@ -163,7 +163,7 @@ public class Project {
   public Module getResModule(File file) {
     for (Module value : mModules.values()) {
        if(!(value instanceof AndroidModule))continue;
-      for (AndroidContentRoot contentRoot : ((AndroidModule)value).getContentRoots()) {
+      for (ContentRoot contentRoot : ((AndroidModuleImpl)value).getContentRoots()) {
         for (File sourceDirectory : ((AndroidContentRoot)contentRoot).getResourceDirectories()) {
           if (directoryContainsFile(sourceDirectory, file)) {
             return value;
