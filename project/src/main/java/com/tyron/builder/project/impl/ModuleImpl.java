@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -623,7 +624,7 @@ public class ModuleImpl implements Module {
   
     readString = readString.replaceAll("\\s*//.*", "");
     Set<String> projects = new HashSet<>();
-    matcher = API_PROJECT_PATH.matcher(readString);
+    Matcher matcher = API_PROJECT_PATH.matcher(readString);
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
