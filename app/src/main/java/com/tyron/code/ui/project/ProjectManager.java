@@ -219,10 +219,9 @@ public class ProjectManager {
                        // module2 = mCurrentProject.getModuleByName(":app");
                         module2 = mCurrentProject.getMainModule();
                     } else {
-                        module2 = mCurrentProject.getModule(file);
+                        module2 = mCurrentProject.getResModule(file);
                     }
                     if (module2 instanceof AndroidModule && indexFiles.containsKey(RES)) {
-                      System.out.println("module2 is not null");
                         try {
                             InjectResourcesTask.inject(mCurrentProject, (AndroidModule) module2);
                             //InjectResourcesTask.inject(project, (AndroidModule) module);
@@ -348,7 +347,7 @@ public class ProjectManager {
     }
   }
 
-  private void indexModule(Module module) throws IOException {
+  private synchronized void indexModule(Module module) throws IOException {
         module.open();
         module.index();
          if(!(module instanceof JavaModule))return;

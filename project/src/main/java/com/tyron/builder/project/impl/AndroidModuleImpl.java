@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +49,11 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
     mKotlinFiles = new HashMap<>();
     mResourceClasses = new HashMap<>(1);
+    File contentRootDirectory = new File(getRootFile(), "src/main");
+    AndroidContentRoot contentRoot = new AndroidContentRoot(contentRootDirectory);
+    contentRoot.setJavaDirectories(Arrays.asList(getJavaDirectory(),getKotlinDirectory()));
+    contentRoot.setResourceDirectories(Collections.singletonList(getAndroidResourcesDirectory()));
+    addContentRoot(contentRoot);
   }
 
   @Override
@@ -774,6 +781,26 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
       throw new Error(e);
     }
   }
+  
+    public void addModuleDependency(String targetModuleName) {
+        moduleDependencies.add(targetModuleName);
+    }
+
+    @Override
+    public Set<String> getModuleDependencies() {
+        //return moduleDependencies;
+       return getAllProjects();
+    }
+  
+  @Override
+    public void addContentRoot(ContentRoot contentRoot) {
+        contentRoots.add(contentRoot);
+    }
+
+    @Override
+    public Set<ContentRoot> getContentRoots() {
+        return contentRoots;
+    }
 
   @Override
   public String getPackageName() {

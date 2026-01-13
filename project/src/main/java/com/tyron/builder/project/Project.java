@@ -9,6 +9,8 @@ import com.tyron.builder.model.ProjectSettings;
 import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.impl.AndroidModuleImpl;
+import com.tyron.builder.project.api.AndroidModule;
+import com.tyron.builder.project.api.AndroidContentRoot;
 import com.tyron.builder.project.mock.MockAndroidModule;
 import com.tyron.code.event.EventManager;
 import java.io.File;
@@ -149,6 +151,20 @@ public class Project {
     for (Module value : mModules.values()) {
       for (ContentRoot contentRoot : value.getContentRoots()) {
         for (File sourceDirectory : contentRoot.getSourceDirectories()) {
+          if (directoryContainsFile(sourceDirectory, file)) {
+            return value;
+          }
+        }
+      }
+    }
+    return getMainModule();
+  }
+  
+  public Module getResModule(File file) {
+    for (Module value : mModules.values()) {
+       if(!(value instanceof AndroidModule))continue;
+      for (AndroidContentRoot contentRoot : ((AndroidModule)value).getContentRoots()) {
+        for (File sourceDirectory : contentRoot.getResourceDirectories()) {
           if (directoryContainsFile(sourceDirectory, file)) {
             return value;
           }

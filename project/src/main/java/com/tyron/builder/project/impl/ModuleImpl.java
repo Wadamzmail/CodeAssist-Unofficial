@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -193,13 +194,23 @@ public class ModuleImpl implements Module {
   }
 
   @Override
-  public List<String> getAllProjects() {
+  public Set<String> getAllProjects() {
     return parseAllProjects(getGradleFile());
   }
 
   @Override
-  public List<String> getAllProjects(File gradleFile) {
+  public Set<String> getAllProjects(File gradleFile) {
     return parseAllProjects(gradleFile);
+  }
+  
+  @Override
+  public Set<String> getApiProjects() {
+    return parseApiProjects(getGradleFile());
+  }
+  
+  @Override 
+  public Set<String> getApiProjects(File gradleFile) {
+    return parseApiProjects(gradleFile);
   }
 
   @Override
@@ -402,11 +413,12 @@ public class ModuleImpl implements Module {
       String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
       return parseProjects(readString);
     } catch (IOException e) {
+    e.printStackTrace();
     }
     return null;
   }
 
-  public static List<String> parseProjects(String readString) throws IOException {
+  private static List<String> parseProjects(String readString) throws IOException {
     final Pattern PROJECT_PATTERN =
         Pattern.compile("implementation project\\(path:\\s*['\"]([^'\"]+)['\"]\\)");
     final Pattern PROJECT_PATTERN_QUOT =
@@ -434,7 +446,7 @@ public class ModuleImpl implements Module {
     return projects;
   }
 
-  private List<String> parseAllProjects(File gradleFile) {
+  private Set<String> parseAllProjects(File gradleFile) {
     try {
       String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
       return parseAllProjects(readString);
@@ -443,7 +455,7 @@ public class ModuleImpl implements Module {
     return null;
   }
 
-  public static List<String> parseAllProjects(String readString) throws IOException {
+  public static Set<String> parseAllProjects(String readString) throws IOException {
     final Pattern IMPLEMENTATION_PROJECT_PATH =
         Pattern.compile("implementation project\\(path:\\s*['\"]([^'\"]+)['\"]\\)");
     final Pattern IMPLEMENTATION_PROJECT =
@@ -470,7 +482,7 @@ public class ModuleImpl implements Module {
         Pattern.compile("runtimeOnlyApi project\\(\\s*['\"]([^'\"]+)['\"]\\)");
 
     readString = readString.replaceAll("\\s*//.*", "");
-    List<String> projects = new ArrayList<>();
+    Set<String> projects = new HashSet<>();
 
     Matcher matcher = IMPLEMENTATION_PROJECT_PATH.matcher(readString);
     while (matcher.find()) {
@@ -591,6 +603,46 @@ public class ModuleImpl implements Module {
     }
     return null;
   }
+  
+  
+  
+  private Set<String> parseApiProjects(File gradleFile) {
+    try {
+      String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
+      return parseApiProjects(readString);
+    } catch (IOException e) {
+    }
+    return null;
+  } 
+  
+  public static Set<String> parseApiProjects(String readString) throws IOException {
+     
+    final Pattern API_PROJECT_PATH =
+        Pattern.compile("api project\\(path:\\s*['\"]([^'\"]+)['\"]\\)");
+    final Pattern API_PROJECT = Pattern.compile("api project\\(\\s*['\"]([^'\"]+)['\"]\\)");
+  
+    readString = readString.replaceAll("\\s*//.*", "");
+    Set<String> projects = new HashSet<>();
+    matcher = API_PROJECT_PATH.matcher(readString);
+    while (matcher.find()) {
+      String declaration = matcher.group(1);
+      if (declaration != null) {
+        declaration = declaration.replaceAll(":", "/");
+        projects.add(declaration);
+      }
+    }
+
+    matcher = API_PROJECT.matcher(readString);
+    while (matcher.find()) {
+      String declaration = matcher.group(1);
+      if (declaration != null) {
+        declaration = declaration.replaceAll(":", "/");
+        projects.add(declaration);
+      }
+    }
+    
+    return projects;
+  } 
 
   public static List<String> parseIncludedProjects(String readString) throws IOException {
     final Pattern INCLUDE = Pattern.compile("\\s*include\\s*(?:'|\\\")([\\w./:-]+)(?:'|\\\")");
