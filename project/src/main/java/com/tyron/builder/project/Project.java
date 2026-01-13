@@ -164,7 +164,7 @@ public class Project {
     for (Module value : mModules.values()) {
        if(!(value instanceof AndroidModule))continue;
       for (AndroidContentRoot contentRoot : ((AndroidModule)value).getContentRoots()) {
-        for (File sourceDirectory : contentRoot.getResourceDirectories()) {
+        for (File sourceDirectory : ((AndroidContentRoot)contentRoot).getResourceDirectories()) {
           if (directoryContainsFile(sourceDirectory, file)) {
             return value;
           }

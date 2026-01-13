@@ -798,7 +798,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     }
 
     @Override
-    public Set<AndroidContentRoot> getContentRoots() {
+    public Set<ContentRoot> getContentRoots() {
         return contentRoots;
     }
 
