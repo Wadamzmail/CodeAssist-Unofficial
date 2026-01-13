@@ -137,8 +137,8 @@ public class DependencyManager {
         project.getGradleFile(),
         project.getRootFile().getName());
 
-    Set<String> projects = new HashSet<>();
-    Collections.addAll(projects,project.getAllProjects(project.getGradleFile()));
+    List<String> projects = new ArrayList<>();
+    projects.addAll(new ArrayList<>(project.getAllProjects(project.getGradleFile())));
     Set<String> resolvedProjects = new HashSet<>();
     while (!projects.isEmpty()) {
       String include = projects.remove(0);
@@ -148,9 +148,9 @@ public class DependencyManager {
       resolvedProjects.add(include);
       File gradleFile = new File(project.getProjectDir(), include + "/build.gradle");
       if (gradleFile.exists()) {
-        List<String> includedInBuildGradle = project.getAllProjects(gradleFile);
+        List<String> includedInBuildGradle = new ArrayList<>(project.getAllProjects(gradleFile));
         if (!includedInBuildGradle.isEmpty()) {
-          Collections.addAll(projects,includedInBuildGradle);
+          projects.addAll(includedInBuildGradle);
         }
         File includeName = new File(project.getProjectDir(), include);
         String root = include.replaceFirst("/", "").replaceAll("/", ":");
