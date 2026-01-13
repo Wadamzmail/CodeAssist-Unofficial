@@ -27,6 +27,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +63,8 @@ public class CheckLibrariesTask extends Task<JavaModule> {
         getModule().getGradleFile(),
         getModule().getRootFile().getName());
 
-    Set<String> projects = new HashSet<>();
-    projects.addAll(getModule().getAllProjects(getModule().getGradleFile()));
+    List<String> projects = new ArrayList<>();
+    Collections.addAll(projects,getModule().getAllProjects(getModule().getGradleFile()));
     Set<String> resolvedProjects = new HashSet<>();
     while (!projects.isEmpty()) {
       String include = projects.remove(0);
@@ -73,7 +74,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       resolvedProjects.add(include);
       File gradleFile = new File(getModule().getProjectDir(), include + "/build.gradle");
       if (gradleFile.exists()) {
-        Set<String> includedInBuildGradle = getModule().getAllProjects(gradleFile);
+        List<String> includedInBuildGradle = new ArrayList<>(getModule().getAllProjects(gradleFile) );
         if (!includedInBuildGradle.isEmpty()) {
           projects.addAll(includedInBuildGradle);
         }
@@ -162,8 +163,8 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       throws IOException {
 
     Set<CodeAssistLibrary> libraries = new HashSet<>();
-    Map<String, CodeAssistLibrary> fileLibsHashes = new HashMap<>();
-    Map<String, CodeAssistLibrary> md5Map = new HashMap<>();
+    Map<String,CodeAssistLibrary> fileLibsHashes = new HashMap<>();
+    Map<String,CodeAssistLibrary> md5Map = new HashMap<>();
 
     AbstractMap.SimpleEntry<ArrayList<String>, ArrayList<String>> result =
         project.extractListDirAndIncludes(gradleFile, scope);
@@ -226,15 +227,11 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     libraries.clear();
   }
 
-  public Map<String, CodeAssistLibrary> checkDirLibraries(
-      Map<String, CodeAssistLibrary> fileLibsHashes,
-      ILogger logger,
-      File dir,
-      String include,
-      String scope) {
+  public Map<String,CodeAssistLibrary> checkDirLibraries(
+      Map<String,CodeAssistLibrary> fileLibsHashes, ILogger logger, File dir, String include, String scope) {
     try {
       ZipFile zipFile = new ZipFile(new File(dir, include));
-      CodeAssistLibrary library = new CodeAssistLibrary();
+     CodeAssistLibrary library = new CodeAssistLibrary();
       library.setSourceFile(new File(dir, include));
       fileLibsHashes.put(calculateMD5(new File(dir, include)), library);
     } catch (IOException e) {
@@ -244,8 +241,8 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     return fileLibsHashes;
   }
 
-  public Map<String, CodeAssistLibrary> checkDirIncludeLibraries(
-      Map<String, CodeAssistLibrary> fileLibsHashes,
+  public Map<String,CodeAssistLibrary> checkDirIncludeLibraries(
+      Map<String,CodeAssistLibrary> fileLibsHashes,
       ILogger logger,
       File dir,
       ArrayList<String> includes,
@@ -256,7 +253,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
         for (File fileLibrary : fileLibraries) {
           try {
             ZipFile zipFile = new ZipFile(fileLibrary);
-            CodeAssistLibrary library = new CodeAssistLibrary();
+           CodeAssistLibrary library = new CodeAssistLibrary();
             library.setSourceFile(fileLibrary);
             fileLibsHashes.put(calculateMD5(fileLibrary), library);
           } catch (IOException e) {
@@ -269,14 +266,12 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     return fileLibsHashes;
   }
 
-  public Set<CodeAssistLibrary> parseLibraries(
-      Set<CodeAssistLibrary> libraries, File file, String scope) {
+  public Set<CodeAssistLibrary> parseLibraries(Set<CodeAssistLibrary> libraries, File file, String scope) {
     ModuleSettings myModuleSettings = new ModuleSettings(file);
     String librariesString = myModuleSettings.getString(scope + "_libraries", "[]");
     try {
       List<CodeAssistLibrary> parsedLibraries =
-          new Gson()
-              .fromJson(librariesString, new TypeToken<List<CodeAssistLibrary>>() {}.getType());
+          new Gson().fromJson(librariesString, new TypeToken<List<CodeAssistLibrary>>() {}.getType());
       if (parsedLibraries != null) {
         /*for (CodeAssistLibrary parsedLibrary : parsedLibraries) {
         if (!libraries.contains(parsedLibrary)) {
@@ -292,10 +287,10 @@ public class CheckLibrariesTask extends Task<JavaModule> {
     return libraries;
   }
 
-  public Map<String, CodeAssistLibrary> checkLibraries(
-      Map<String, CodeAssistLibrary> md5Map,
+  public Map<String,CodeAssistLibrary> checkLibraries(
+      Map<String,CodeAssistLibrary> md5Map,
       Set<CodeAssistLibrary> libraries,
-      Map<String, CodeAssistLibrary> fileLibsHashes,
+      Map<String,CodeAssistLibrary> fileLibsHashes,
       File libs)
       throws IOException {
     libraries.forEach(it -> md5Map.put(calculateMD5(it.getSourceFile()), it));
@@ -321,18 +316,18 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       File libs,
       File file,
       String scope,
-      Map<String, CodeAssistLibrary> libraries,
-      Map<String, CodeAssistLibrary> fileLibraries)
+      Map<String,CodeAssistLibrary> libraries,
+      Map<String,CodeAssistLibrary> fileLibraries)
       throws IOException {
-    Map<String, CodeAssistLibrary> combined = new HashMap<>();
+    Map<String,CodeAssistLibrary> combined = new HashMap<>();
     combined.putAll(libraries);
     combined.putAll(fileLibraries);
 
     getModule().putLibraryHashes(combined);
 
-    for (Map.Entry<String, CodeAssistLibrary> entry : combined.entrySet()) {
+    for (Map.Entry<String,CodeAssistLibrary> entry : combined.entrySet()) {
       String hash = entry.getKey();
-      CodeAssistLibrary library = entry.getValue();
+     CodeAssistLibrary library = entry.getValue();
 
       File libraryDir = new File(libs, hash);
       if (!libraryDir.exists()) {
