@@ -64,7 +64,8 @@ public class CheckLibrariesTask extends Task<JavaModule> {
         getModule().getRootFile().getName());
 
     List<String> projects = new ArrayList<>();
-    Collections.addAll(projects,getModule().getAllProjects(getModule().getGradleFile()));
+    projects.addAll(
+    getModule().getAllProjects(new ArrayList<>(getModule().getGradleFile())));
     Set<String> resolvedProjects = new HashSet<>();
     while (!projects.isEmpty()) {
       String include = projects.remove(0);
