@@ -311,7 +311,7 @@ public class TreeFileManagerFragment extends Fragment {
                   } else {
 
                     boolean isLibraryExists = false;
-                    List<String> implementationProjects = javaModule.getAllProjects();
+                    List<String> implementationProjects = new ArrayList<>(javaModule.getAllProjects());
 
                     for (String implementationProject : implementationProjects) {
                       if (implementationProject.contains(name)) {
@@ -347,7 +347,7 @@ public class TreeFileManagerFragment extends Fragment {
                     button.setEnabled(false);
                   } else {
                     boolean isLibraryExists = false;
-                    List<String> implementationProjects = javaModule.getAllProjects();
+                    List<String> implementationProjects =new ArrayList<>(javaModule.getAllProjects());
 
                     for (String implementationProject : implementationProjects) {
                       if (implementationProject.contains(name)) {
@@ -531,7 +531,7 @@ public class TreeFileManagerFragment extends Fragment {
 
     projectPath.setText(pr);
 
-    List<String> implementationProjects = javaModule.getAllProjects();
+    List<String> implementationProjects =new ArrayList<>(javaModule.getAllProjects());
     List<String> included = javaModule.getIncludedProjects();
 
     String implementationText =
