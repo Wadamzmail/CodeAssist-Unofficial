@@ -62,7 +62,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
         getModule().getGradleFile(),
         getModule().getRootFile().getName());
 
-    List<String> projects = new ArrayList<>();
+    Set<String> projects = new HashSet<>();
     projects.addAll(getModule().getAllProjects(getModule().getGradleFile()));
     Set<String> resolvedProjects = new HashSet<>();
     while (!projects.isEmpty()) {
@@ -73,7 +73,7 @@ public class CheckLibrariesTask extends Task<JavaModule> {
       resolvedProjects.add(include);
       File gradleFile = new File(getModule().getProjectDir(), include + "/build.gradle");
       if (gradleFile.exists()) {
-        List<String> includedInBuildGradle = getModule().getAllProjects(gradleFile);
+        Set<String> includedInBuildGradle = getModule().getAllProjects(gradleFile);
         if (!includedInBuildGradle.isEmpty()) {
           projects.addAll(includedInBuildGradle);
         }

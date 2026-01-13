@@ -106,10 +106,10 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
   }
 
   public void run() throws IOException, CompilationFailedException {
-    List<String> projects = new ArrayList<>();
+    Set<String> projects = new HashSet<>();
     projects.addAll(getModule().getAllProjects(getModule().getGradleFile()));
     try {
-      initializeProjects(getModule().getProjectDir(), projects);
+      initializeProjects(getModule().getProjectDir(), new ArrayList<>(projects));
     } catch (JSONException e) {
     }
   }
@@ -119,7 +119,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
     Map<Integer, List<String>> projectsByInclusion = new HashMap<>();
     int maxInclusion = 0;
     for (String projectName : rootProjects) {
-      List<String> subProjects =
+      HashSet<String> subProjects =
           getModule().getAllProjects(new File(directory, projectName + "/build.gradle"));
       int numSubProjects = subProjects.size();
       if (numSubProjects == 0) {
@@ -129,7 +129,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
       }
     }
     for (String projectName : rootProjects) {
-      List<String> subProjects =
+      Set<String> subProjects =
           getModule().getAllProjects(new File(directory, projectName + "/build.gradle"));
       int numSubProjects = subProjects.size();
       if (numSubProjects > 0) {
@@ -142,7 +142,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
     for (int i = 0; i <= maxInclusion; i++) {
       if (projectsByInclusion.containsKey(i)) {
         List<String> projects = projectsByInclusion.get(i);
-        processProjects(directory, projects);
+        processProjects(directory, new ArrayList<>(projects));
       }
     }
   }
@@ -166,7 +166,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
     File gradleFile = new File(projectDir, name + "/build.gradle");
 
-    List<String> subProjects = getModule().getAllProjects(gradleFile);
+    Set<String> subProjects = getModule().getAllProjects(gradleFile);
 
     while (!subProjects.isEmpty()) {
       String subProject = subProjects.remove(0);
@@ -181,7 +181,7 @@ public class IncrementalAssembleLibraryTask extends Task<AndroidModule> {
 
       File sub_libraries = new File(projectDir, subName + "/build/libraries");
 
-      List<String> sub =
+      Set<String> sub =
           getModule().getAllProjects(new File(projectDir, subName + "/build.gradle"));
 
       for (String projectName : sub) {
