@@ -194,6 +194,10 @@ public class CodeEditorFragment extends Fragment
   }
 
   private void onContentChange(com.tyron.editor.Content content) {
+  
+   if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
+      return;
+    }
     Language language = mEditor.getEditorLanguage();
 
     Module module = ProjectManager.getInstance().getCurrentProject().getModule(mCurrentFile);

@@ -101,7 +101,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
     this.mEditor = editor;
     delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
     // mAnalyzer = JavaAnalyzer.create(editor, this);
-    onContentChange(editor.getCurrentFile(),editor.getContent());
+   // onContentChange(editor.getCurrentFile(),editor.getContent());
   }
 
   public boolean isAutoCompleteChar(char p1) {
@@ -187,6 +187,9 @@ public class JavaLanguage extends EmptyTextMateLanguage
   public void onContentChange(File file, CharSequence content) {
     Project project = mEditor.getProject();
     if (project == null) {
+      return;
+    }
+   if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
       return;
     }
     CompilationInfo compilationInfo = CompilationInfo.get(project, mEditor.getCurrentFile());
