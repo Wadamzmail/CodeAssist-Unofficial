@@ -51,8 +51,8 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     mResourceClasses = new HashMap<>(1);
     File contentRootDirectory = new File(getRootFile(), "src/main");
     AndroidContentRoot contentRoot = new AndroidContentRoot(contentRootDirectory);
-    contentRoot.setJavaDirectories(Arrays.asList("src/main/java","src/main/kotlin"));
-    contentRoot.setResourceDirectories(Collections.singletonList("src/main/res"));
+    contentRoot.setJavaDirectories(Arrays.asList(new File("src/main/java"),new File"src/main/kotlin")));
+    contentRoot.setResourceDirectories(Collections.singletonList(new File("src/main/res")));
     addContentRoot(contentRoot);
   }
 
