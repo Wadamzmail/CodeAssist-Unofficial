@@ -47,7 +47,7 @@ public class ModuleImpl implements Module {
   public ModuleImpl(File root) {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
-    try{this.open();}catch(IOException e){e.printStackTrace();}
+   // try{this.open();}catch(IOException e){e.printStackTrace();}
   }
 
   @Override
