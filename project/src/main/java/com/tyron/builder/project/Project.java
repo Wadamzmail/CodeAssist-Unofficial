@@ -150,6 +150,7 @@ public class Project {
     List<String> moduleNames = SettingsGradleParser.parseModules(mRoot);
 
     for (String name : moduleNames) {
+      if (name.equals(module.getModuleName())) continue;
       File moduleDir = new File(mRoot, name);
       Module mModule = new AndroidModuleImpl(moduleDir);
 
