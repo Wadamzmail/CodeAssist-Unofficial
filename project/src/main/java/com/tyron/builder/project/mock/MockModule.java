@@ -1,4 +1,4 @@
-package com.tyron.builder.project.impl;
+package com.tyron.builder.project.mock;
 
 import androidx.annotation.Nullable;
 import com.tyron.builder.model.ModuleSettings;
@@ -34,29 +34,20 @@ import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ModuleImpl implements Module {
+public class MockModule implements Module {
 
   /** Concurrent writes to this field are via CASes only, using the {@link #updater} */
   @NotNull private volatile KeyFMap myUserMap = KeyFMap.EMPTY_MAP;
 
   private final File mRoot;
-  private ModuleSettings myModuleSettings;
+  private final ModuleSettings mockSettings = new MockModuleSettings();
   private FileManager mFileManager;
   private List<String> excludedClassPaths = new ArrayList<>();
 
-  public ModuleImpl(File root) {
+  public MockModule(File root) {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
-    try{
-    File codeassist = new File(getProjectDir(), ".idea");
-    if (!codeassist.exists()) {
-      if (!codeassist.mkdirs()) {}
-    }
-    myModuleSettings =
-        new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
-   }catch(Exception e){
-   e.printStackTrace();
-   }
+    
    // try{this.open();}catch(IOException e){e.printStackTrace();}
   }
 
@@ -162,7 +153,7 @@ public class ModuleImpl implements Module {
 
   @Override
   public ModuleSettings getSettings() {
-    return myModuleSettings;
+    return mockSettings;
   }
 
   @Override
@@ -359,16 +350,16 @@ public class ModuleImpl implements Module {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof ModuleImpl)) return false;
-    ModuleImpl project = (ModuleImpl) o;
+    if (!(o instanceof MockModule)) return false;
+    MockModule project = (MockModule) o;
     return mRoot.equals(project.mRoot);
   }
 
-  // private static final AtomicFieldUpdater<ModuleImpl, KeyFMap> updater =
-  //    AtomicFieldUpdater.forFieldOfType(ModuleImpl.class, KeyFMap.class);
+  // private static final AtomicFieldUpdater<MockModule, KeyFMap> updater =
+  //    AtomicFieldUpdater.forFieldOfType(MockModule.class, KeyFMap.class);
 
-  private static final AtomicReferenceFieldUpdater<ModuleImpl, KeyFMap> updater =
-      AtomicReferenceFieldUpdater.newUpdater(ModuleImpl.class, KeyFMap.class, "myUserMap");
+  private static final AtomicReferenceFieldUpdater<MockModule, KeyFMap> updater =
+      AtomicReferenceFieldUpdater.newUpdater(MockModule.class, KeyFMap.class, "myUserMap");
 
   private final Map<CacheKey<?, ?>, Cache<?, ?>> mCacheMap = new HashMap<>();
 

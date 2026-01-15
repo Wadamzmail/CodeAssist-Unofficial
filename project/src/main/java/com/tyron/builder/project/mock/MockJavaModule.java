@@ -23,7 +23,7 @@ import org.jetbrains.kotlin.com.intellij.openapi.util.KeyWithDefaultValue;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 
 /** Used for testing, java files can be added manually and files are specified manually */
-public class MockJavaModule extends ModuleImpl implements JavaModule {
+public class MockJavaModule extends MockModule implements JavaModule {
 
   private final KeyFMap mDataMap = KeyFMap.EMPTY_MAP;
   private final Map<String, File> mJavaFiles = new HashMap<>();
