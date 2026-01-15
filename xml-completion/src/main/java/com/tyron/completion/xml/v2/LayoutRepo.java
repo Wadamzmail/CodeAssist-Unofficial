@@ -75,7 +75,8 @@ public class LayoutRepo {
     }
     BytecodeScanner.scanBootstrapIfNeeded();
     Set<File> libraries = new HashSet<>();
-    libraries.addAll(getAndroidLibs(module));
+    //libraries.addAll(getAndroidLibs(module));
+    //get libraries is enough
     libraries.addAll(module.getLibraries());
 
     for (File library : libraries) {

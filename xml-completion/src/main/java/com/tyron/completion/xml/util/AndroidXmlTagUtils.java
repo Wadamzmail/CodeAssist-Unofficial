@@ -9,9 +9,13 @@ import com.tyron.completion.xml.XmlRepository;
 import com.tyron.completion.xml.insert.LayoutTagInsertHandler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import org.apache.bcel.classfile.JavaClass;
 import com.tyron.completion.xml.v2.LayoutRepo;
-
+import com.tyron.completion.java.ShortNamesCache;
+import com.tyron.builder.project.api.Module;
+ 
 public class AndroidXmlTagUtils {
 
   private static final Map<String, String> sManifestTagMappings = new HashMap<>();
@@ -164,8 +168,10 @@ public class AndroidXmlTagUtils {
   public static void addTagItemsV2(
       @NonNull LayoutRepo repository,
       @NonNull String prefix,
-      @NonNull CompletionList.Builder builder) {
+      @NonNull CompletionList.Builder builder, Module module) {
+    Set<String> excluded = new HashSet<>();
     for (Map.Entry<String, JavaClass> entry : repository.getJavaViewClasses().entrySet()) {
+      excluded.add(entry.getKey());
       CompletionItem item = new CompletionItem();
       String commitPrefix = "<";
       if (prefix.startsWith("</")) {
@@ -195,6 +201,50 @@ public class AndroidXmlTagUtils {
       item.addFilterText("</" + simpleName);
       builder.addItem(item);
     }
+    Set<String> names = new HashSet<>();
+    ShortNamesCache cache = ShortNamesCache.getInstance(module);
+    for (String className : cache.getAllClassNames()) {
+      if (excluded.contains(className)) continue;
+      if (className.startsWith(prefix)) {
+        int start = prefix.lastIndexOf('.');
+        int end = className.indexOf('.', prefix.length());
+        if (end == -1) end = className.length();
+        String segment = className.substring(start + 1, end);
+        if (names.contains(segment)) continue;
+        names.add(segment);
+        boolean isClass = className.endsWith(segment);
+
+      CompletionItem item = new CompletionItem();
+      String commitPrefix = "<";
+      if (prefix.startsWith("</")) {
+        commitPrefix = "</";
+      }
+      boolean useFqn = prefix.contains(".");
+      if (!className.startsWith("android.widget")) {
+        useFqn = true;
+      }
+      String simpleName = StyleUtils.getSimpleName(className);
+      item.label = simpleName;
+      item.detail = className;
+      item.iconKind = DrawableKind.Class;
+      item.commitText =
+          commitPrefix
+              + (useFqn
+                  ? className
+                  : StyleUtils.getSimpleName(className));
+      item.cursorOffset = item.commitText.length();
+      item.setInsertHandler(new LayoutTagInsertHandler(null, item));
+      item.setSortText("");
+      item.addFilterText(className);
+      item.addFilterText("<" + className);
+      item.addFilterText("</" + className);
+      item.addFilterText(simpleName);
+      item.addFilterText("<" + simpleName);
+      item.addFilterText("</" + simpleName);
+      builder.addItem(item);
+      }
+    }
+    
   }
   
 }

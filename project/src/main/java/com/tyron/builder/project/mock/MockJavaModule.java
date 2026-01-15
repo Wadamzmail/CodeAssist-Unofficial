@@ -118,6 +118,12 @@ public class MockJavaModule extends ModuleImpl implements JavaModule {
   public PackageTrie getClassIndex() {
     return new PackageTrie();
   }
+  
+  @NonNull
+  @Override
+  public PackageTrie getApiClassIndex() {
+    return new PackageTrie();
+  }
 
   @NonNull
   @Override

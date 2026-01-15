@@ -45,7 +45,7 @@ fun handleLayout(
 
     when (completionType) {
         XmlCompletionType.TAG -> {
-          AndroidXmlTagUtils.addTagItems(LayoutRepo.get(params.module as AndroidModule), prefix, completionBuilder)
+          AndroidXmlTagUtils.addTagItemsV2(LayoutRepo.get(params.module as AndroidModule), prefix, completionBuilder, params.module )
         }
         XmlCompletionType.ATTRIBUTE -> {
             val nodeAt = parsedNode.findNodeAt(params.index.toInt()) as DOMElement

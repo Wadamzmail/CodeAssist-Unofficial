@@ -47,6 +47,12 @@ public class ModuleImpl implements Module {
   public ModuleImpl(File root) {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
+    File codeassist = new File(getProjectDir(), ".idea");
+    if (!codeassist.exists()) {
+      if (!codeassist.mkdirs()) {}
+    }
+    myModuleSettings =
+        new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
    // try{this.open();}catch(IOException e){e.printStackTrace();}
   }
 
@@ -117,8 +123,8 @@ public class ModuleImpl implements Module {
       }
     }
 
-    myModuleSettings =
-        new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
+    //myModuleSettings =
+     //   new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
   }
 
   @Override

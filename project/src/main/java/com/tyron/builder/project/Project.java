@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import com.tyron.builder.project.parser.SettingsGradleParser;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Project {
@@ -145,7 +146,17 @@ public class Project {
     return getDependencies(mMainModule);
   }
 
-  private void addEdges(MutableGraph<Module> graph, Module module) throws IOException {}
+  private void addEdges(MutableGraph<Module> graph, Module module) throws IOException {
+    List<String> moduleNames = SettingsGradleParser.parseModules(mRoot);
+
+    for (String name : moduleNames) {
+      File moduleDir = new File(mRoot, name);
+      Module module = new AndroidModuleImpl(moduleDir);
+
+      graph.addNode(module);
+      graph.putEdge(mMainModule, module);
+    }
+  }
 
   public Module getModule(File file) {
     for (Module value : mModules.values()) {

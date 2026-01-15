@@ -68,7 +68,7 @@ public class ShortNamesCache {
         Module dependingModule = current.getProject().getModuleByName(path);
         if (dependingModule instanceof JavaModule) {
           JavaModule javaModule = (JavaModule) current;
-          classNames.addAll(javaModule.getClassIndex().getLeafNodes());
+          classNames.addAll(javaModule.getApiClassIndex().getLeafNodes());
         }
         if (dependingModule != null && !visitedModules.contains(dependingModule)) {
           queue.addLast(dependingModule);

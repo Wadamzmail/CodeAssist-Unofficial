@@ -52,6 +52,9 @@ public interface JavaModule extends Module {
   @NonNull
   PackageTrie getClassIndex();
 
+  @NonNull
+  PackageTrie getApiClassIndex();  
+
   /**
    * @return The resources directory of the project. Note that this is different from android's res
    *     directory
