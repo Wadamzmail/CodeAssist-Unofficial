@@ -33,6 +33,7 @@ import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.tyron.builder.project.impl.*;
 
 public class MockModule implements Module {
 
