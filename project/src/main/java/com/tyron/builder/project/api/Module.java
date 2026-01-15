@@ -72,6 +72,8 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   void clear();
 
   void index();
+  
+  public String getModuleName();
 
   /**
    * @return The directory that this project can use to compile files

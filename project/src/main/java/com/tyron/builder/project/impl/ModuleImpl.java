@@ -126,6 +126,11 @@ public class ModuleImpl implements Module {
     //myModuleSettings =
      //   new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
   }
+  
+  @Override 
+  public String getModuleName() {
+    return mRoot.getName();
+  }
 
   @Override
   public void clear() {}

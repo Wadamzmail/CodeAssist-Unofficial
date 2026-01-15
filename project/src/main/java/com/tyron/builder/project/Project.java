@@ -151,10 +151,10 @@ public class Project {
 
     for (String name : moduleNames) {
       File moduleDir = new File(mRoot, name);
-      Module module = new AndroidModuleImpl(moduleDir);
+      Module mModule = new AndroidModuleImpl(moduleDir);
 
-      graph.addNode(module);
-      graph.putEdge(mMainModule, module);
+      graph.addNode(mModule);
+      graph.putEdge(module, mModule);
     }
   }
 
