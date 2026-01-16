@@ -185,9 +185,9 @@ public class Project {
       graph.putEdge(module, mModule);
       
       mModule.setProject(Project.this); 
+      mModules.put(name, mModule);
       mModule.open();
       System.out.println("Module opened :" +mModule.getName());
-      mModules.put(name, mModule);
     }
   }
 
