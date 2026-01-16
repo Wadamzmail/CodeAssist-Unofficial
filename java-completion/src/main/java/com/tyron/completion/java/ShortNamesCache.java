@@ -67,11 +67,11 @@ public class ShortNamesCache {
                 classNames.addAll(javaModule.getClassIndex().getLeafNodes());
             }
 
-//            visitedModules.add(current);
+            visitedModules.add(current);
             for (String path : current.getModuleDependencies()) {
                 System.out.println("Module Dependencies :" +path);
                 Module dependingModule = current.getProject().getModuleByName(path);
-                if (dependingModule != null && visitedModules.add(dependingModule)) {
+                if (dependingModule != null && !visitedModules.contains(dependingModule)) {
                     queue.addLast(dependingModule);
                 }
             }
