@@ -153,7 +153,7 @@ public class Project {
       if (name.equals(module.getModuleName())) continue;
       File moduleDir = new File(mRoot, name);
       Module mModule = new AndroidModuleImpl(moduleDir);
-
+      addModule(mModule);
       graph.addNode(mModule);
       graph.putEdge(module, mModule);
     }
