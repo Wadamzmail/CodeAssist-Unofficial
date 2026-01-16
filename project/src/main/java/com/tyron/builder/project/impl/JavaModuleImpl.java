@@ -70,6 +70,12 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   public Map<String, File> getJavaFiles() {
     return mJavaFiles;
   }
+  
+    @Override
+  public Set<String> getModuleDependencies() {
+    // return moduleDependencies;
+    return getAllProjects();
+  }
 
   @Nullable
   @Override

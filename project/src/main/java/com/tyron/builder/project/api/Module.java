@@ -87,7 +87,7 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   default void addChildModule(Module module) {}
 
   default Set<String> getModuleDependencies() {
-    return Collections.emptySet();
+    return getAllProjects();
   }
 
   default void addContentRoot(ContentRoot contentRoot) {}

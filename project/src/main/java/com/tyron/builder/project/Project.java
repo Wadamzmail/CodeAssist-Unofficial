@@ -119,8 +119,9 @@ public class Project {
 
     graph.addNode(mMainModule);
     addEdges(graph, mMainModule);
-//    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-    for (Module module : getModules()) {
+    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    for (Module module : modules) {
+      module.setProject(Project.this); 
       module.open();
       File rootFile = module.getRootFile();
       mModules.put(rootFile.getName(), module);
@@ -179,7 +180,6 @@ public class Project {
       if (name.equals(module.getModuleName())) continue;
       File moduleDir = new File(mRoot, name);
       Module mModule = new AndroidModuleImpl(moduleDir);
-      addModule(mModule);
       graph.addNode(mModule);
       graph.putEdge(module, mModule);
     }

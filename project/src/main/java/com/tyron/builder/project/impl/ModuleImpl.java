@@ -48,6 +48,7 @@ public class ModuleImpl implements Module {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
     try {
+      if (mRoot == null)return;
       File codeassist = new File(getProjectDir(), ".idea");
       if (!codeassist.exists()) {
         if (!codeassist.mkdirs()) {}
