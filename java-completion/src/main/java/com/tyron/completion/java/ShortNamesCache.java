@@ -83,33 +83,18 @@ public class ShortNamesCache {
         if (dep == null) {
           continue;
         }   
-        queue.addLast(dep);
+        getApiClassNames(jvModule, classNames, visitedModules);
     }   
-        
-
-    while (!queue.isEmpty()) {
-      Module current = queue.removeFirst();
-
-      JavaModule currentJava = (JavaModule) current;
-
-      visitedModules.add(currentJava);
-      
-        if (currentJava instanceof JavaModule) {
-          classNames.addAll(getApiClassNames((JavaModule) currentJava, queue, visitedModules));
-        }
-      
-    }
 
     classNames.addAll(JDK_MODULE.getClassIndex().getLeafNodes());
     return classNames.toArray(new String[0]);
   }
 
-  private static Set<String> getApiClassNames(
+  private static void getApiClassNames(
       JavaModule depModule,
-      Deque<Module> queue,
+      Set<String> classNames,
       Set<Module> visitedModules) {
       
-    Set<String> classNames = new HashSet<>();
     for (String apiName : depModule.getApiProjects()) {
       Module m = depModule.getProject().getModuleByName(apiName);
 
@@ -118,12 +103,12 @@ public class ShortNamesCache {
       if (visitedModules.contains(apiModule)) {
         continue;
       }
+     visitedModules.add(apiModule); 
 
       classNames.addAll(apiModule.getApiClassIndex().getLeafNodes());
-
-      visitedModules.add(apiModule);
-      queue.addLast(apiModule);
-    }
-    return classNames;
+      getApiClassNames(apiModule, classNames,visitedModules);
+      
+    } 
   }
+  
 }
