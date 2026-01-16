@@ -119,18 +119,19 @@ public class Project {
 
     graph.addNode(mMainModule);
     addEdges(graph, mMainModule);
-    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-    for (Module module : modules) {
-      module.setProject(Project.this); 
-      module.open();
-      File rootFile = module.getRootFile();
-      mModules.put(rootFile.getName(), module);
-    }
+//    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+//    for (Module module : modules) {
+//      module.setProject(Project.this); 
+//      module.open();
+//      System.out.println("Module opened :" +module.getName());
+//      File rootFile = module.getRootFile();
+//      mModules.put(rootFile.getName(), module);
+//    }
   }
 
   public void index() throws IOException {
-    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-    for (Module module : modules) {
+//    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    for (Module module : getModulee()) {
       module.clear();
       module.index();
     }
@@ -182,6 +183,11 @@ public class Project {
       Module mModule = new AndroidModuleImpl(moduleDir);
       graph.addNode(mModule);
       graph.putEdge(module, mModule);
+      
+      mModule.setProject(Project.this); 
+      mModule.open();
+      System.out.println("Module opened :" +mModule.getName());
+      mModules.put(name, mModule);
     }
   }
 

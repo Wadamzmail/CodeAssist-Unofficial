@@ -63,6 +63,7 @@ public class ShortNamesCache {
 
             if (current instanceof JavaModule) {
                 JavaModule javaModule = (JavaModule) current;
+                System.out.println("Module indexed :" + current.getName());
                 classNames.addAll(javaModule.getClassIndex().getLeafNodes());
             }
 

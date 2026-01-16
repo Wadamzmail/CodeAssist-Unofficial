@@ -98,7 +98,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     String className = getFullyQualifiedName(javaFile);
     mJavaFiles.put(className, javaFile);
     mClassIndex.add(className);
-    apiClassIndex.add(className);
+   // apiClassIndex.add(className);
   }
 
   @Override
@@ -205,25 +205,6 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     }
   }
 
-  public void addApiLibrary(@NonNull CodeAssistLibrary library) {
-    File jar = library.getSourceFile();
-    if (jar == null) {
-      return;
-    }
-    if (!jar.getName().endsWith(".jar")) {
-      return;
-    }
-    try {
-      // noinspection unused, used to check if jar is valid.
-      JarFile jarFile = new JarFile(jar);
-      putApiJar(jar);
-      mLibraries.add(jar);
-      libraries.add(library);
-    } catch (IOException e) {
-      // ignored, don't put the jar
-    }
-  }
-
   private boolean hasClassFiles(File file) throws IOException {
     if (file == null) {
       return false;
@@ -268,38 +249,6 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
 
         mClassFiles.put(packageName, file);
         mClassIndex.add(packageName);
-      }
-    }
-  }
-
-  protected void putApiJar(File file) throws IOException {
-    if (file == null) {
-      return;
-    }
-    try (JarFile jar = new JarFile(file)) {
-      Enumeration<JarEntry> entries = jar.entries();
-      while (entries.hasMoreElements()) {
-        JarEntry entry = entries.nextElement();
-
-        if (!entry.getName().endsWith(".class")) {
-          continue;
-        }
-
-        // We only want top level classes, if it contains $ then
-        // its an inner class, we ignore it
-        if (entry.getName().contains("$")) {
-          continue;
-        }
-
-        String packageName =
-            entry
-                .getName()
-                .replace("/", ".")
-                .substring(0, entry.getName().length() - ".class".length());
-
-        mClassFiles.put(packageName, file);
-        mClassIndex.add(packageName);
-        apiClassIndex.add(packageName);
       }
     }
   }
@@ -445,7 +394,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         for (File directory : implementation_files) {
           File check = new File(directory, "classes.jar");
           if (check.exists()) {
-            addApiLibrary(CodeAssistLibrary.forJar(check));
+            addLibrary(CodeAssistLibrary.forJar(check));
           }
         }
       }
@@ -456,7 +405,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         for (File directory : implementation_libs) {
           File check = new File(directory, "classes.jar");
           if (check.exists()) {
-            addApiLibrary(CodeAssistLibrary.forJar(check));
+            addLibrary(CodeAssistLibrary.forJar(check));
           }
         }
       }
