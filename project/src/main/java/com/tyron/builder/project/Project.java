@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import com.tyron.builder.project.api.JavaModule;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Project {
@@ -118,8 +119,8 @@ public class Project {
 
     graph.addNode(mMainModule);
     addEdges(graph, mMainModule);
-    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-    for (Module module : modules) {
+//    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    for (Module module : getModules()) {
       module.open();
       File rootFile = module.getRootFile();
       mModules.put(rootFile.getName(), module);
@@ -127,8 +128,8 @@ public class Project {
   }
 
   public void index() throws IOException {
-    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-    for (Module module : modules) {
+ //   Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    for (Module module : getModules()) {
       module.clear();
       module.index();
     }
@@ -174,6 +175,7 @@ public class Project {
     List<String> moduleNames = SettingsGradleParser.parseModules(mRoot);
 
     for (String name : moduleNames) {
+     System.out.println("Module name is "+name);
       if (name.equals(module.getModuleName())) continue;
       File moduleDir = new File(mRoot, name);
       Module mModule = new AndroidModuleImpl(moduleDir);

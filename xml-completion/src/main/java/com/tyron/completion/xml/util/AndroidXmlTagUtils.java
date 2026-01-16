@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.bcel.classfile.JavaClass;
+import static com.tyron.completion.java.util.CompletionItemFactory.importClassItem;
+import static com.tyron.completion.java.util.CompletionItemFactory.packageItem;
 
 public class AndroidXmlTagUtils {
 
@@ -226,19 +228,18 @@ public class AndroidXmlTagUtils {
           useFqn = true;
         }
         String simpleName = StyleUtils.getSimpleName(className);
-        item.label = simpleName;
-        item.detail = className;
-        item.iconKind = DrawableKind.Class;
-        item.commitText = commitPrefix + (useFqn ? className : StyleUtils.getSimpleName(className));
-        item.cursorOffset = item.commitText.length();
+        CompletionItem item;
+        if (isClass) {
+          item = importClassItem(className);
+        } else {
+          item = packageItem(segment);
+        }
+
+        item.addFilterText(segment);
         item.setInsertHandler(new LayoutTagInsertHandler(null, item));
-        item.setSortText("");
-        item.addFilterText(className);
-        item.addFilterText("<" + className);
-        item.addFilterText("</" + className);
-        item.addFilterText(simpleName);
-        item.addFilterText("<" + simpleName);
-        item.addFilterText("</" + simpleName);
+        if (path.contains(".")) {
+          item.addFilterText(path.substring(0, path.lastIndexOf('.')) + "." + segment);
+        }
         builder.addItem(item);
       }
     }

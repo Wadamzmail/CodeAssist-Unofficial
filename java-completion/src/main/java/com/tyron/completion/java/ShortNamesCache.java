@@ -53,7 +53,7 @@ public class ShortNamesCache {
 
     Deque<Module> queue = new LinkedList<>();
     Set<Module> visitedModules = new HashSet<>();
-    queue.addLast(module);
+//    queue.addLast(module);
 
     //    while (!queue.isEmpty()) {
     //      Module current = queue.removeFirst();
@@ -76,6 +76,16 @@ public class ShortNamesCache {
     //        }
     //      }
     //    }
+    JavaModule jvModule = (JavaModule)jvModule;
+    classNames.addAll(jvModule.getClassIndex().getLeafNodes());  
+    for (String depName : jvModule.getModuleDependencies()) {
+        Module dep = currentJava.getProject().getModuleByName(depName);
+        if (dep == null) {
+          continue;
+        }   
+        queue.addLast(dep);
+    }   
+        
 
     while (!queue.isEmpty()) {
       Module current = queue.removeFirst();
@@ -85,24 +95,11 @@ public class ShortNamesCache {
       }
 
       JavaModule currentJava = (JavaModule) current;
-      if (!visitedModules.contains(currentJava)) {
-        classNames.addAll(currentJava.getClassIndex().getLeafNodes());
-      }
-      for (String depName : currentJava.getModuleDependencies()) {
-        Module dep = currentJava.getProject().getModuleByName(depName);
-        if (dep == null) {
-          continue;
+      
+        if (currentJava instanceof JavaModule) {
+          indexApiModules((JavaModule) currentJava, classNames, queue, visitedModules);
         }
-
-        if (!visitedModules.contains(dep)) {
-          visitedModules.add(dep);
-          queue.addLast(dep);
-        }
-
-        if (dep instanceof JavaModule) {
-          indexApiModules((JavaModule) dep, classNames, queue, visitedModules);
-        }
-      }
+      
     }
 
     classNames.addAll(JDK_MODULE.getClassIndex().getLeafNodes());

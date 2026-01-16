@@ -81,6 +81,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   public void removeJavaFile(@NonNull String packageName) {
     mJavaFiles.remove(packageName);
     mClassIndex.remove(packageName);
+    apiClassIndex.remove(packageName);
   }
 
   @Override
