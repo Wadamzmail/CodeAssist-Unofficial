@@ -348,8 +348,8 @@ public class ProjectManager {
   }
 
   private synchronized void indexModule(Module module) throws IOException {
-        module.open();
-        module.index();
+      //  module.open();
+      //  module.index();
          if(!(module instanceof JavaModule))return;
         JavaModule javaModule = (JavaModule) module;
         for (File value : javaModule.getJavaFiles().values()) {

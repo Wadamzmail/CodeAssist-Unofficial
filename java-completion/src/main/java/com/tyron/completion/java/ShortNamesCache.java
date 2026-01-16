@@ -76,7 +76,7 @@ public class ShortNamesCache {
     //        }
     //      }
     //    }
-    JavaModule jvModule = (JavaModule)jvModule;
+    JavaModule jvModule = (JavaModule)module;
     classNames.addAll(jvModule.getClassIndex().getLeafNodes());  
     for (String depName : jvModule.getModuleDependencies()) {
         Module dep = jvModule.getProject().getModuleByName(depName);
