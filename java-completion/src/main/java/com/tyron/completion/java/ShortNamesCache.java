@@ -53,33 +53,30 @@ public class ShortNamesCache {
         }
 
         Set<String> classNames = new HashSet<>();
-
-        Deque<Module> queue = new LinkedList<>();
         Set<Module> visitedModules = new HashSet<>();
         Set<Module> pending = new HashSet<>();
-        queue.addLast(module);
 
-        while (!queue.isEmpty()) {
-            Module current = queue.removeFirst();
-
-            if (current instanceof JavaModule) {
-                JavaModule javaModule = (JavaModule) current;
+            if (module instanceof JavaModule) {
+                JavaModule javaModule = (JavaModule) module;
                 classNames.addAll(javaModule.getClassIndex().getLeafNodes());
             }
 
-            visitedModules.add(current);
-            for (String path : current.getModuleDependencies()) {
-                Module dependingModule = current.getProject().getModuleByName(path);
+            visitedModules.add(module);
+            for (String path : module.getModuleDependencies()) {
+                Module dependingModule = module.getProject().getModuleByName(path);
                 if (dependingModule != null && !visitedModules.contains(dependingModule)) {
                    // queue.addLast(dependingModule);
                    if(dependingModule instanceof JavaModule){
-                   classNames.addAll(((JavaModule)dependingModule).getClassIndex().getLeafNodes());
-                   pending.add(dependingModule);
-                   System.out.println("Module Dependency :" +path+ " from :"+current.getName());
+                   classNames.addAll(((JavaModule)dependingModule).getApiClassIndex().getLeafNodes());
+                   //pending.add(dependingModule);
+                   System.out.println("Module Dependency :" +path+ " from :"+module.getName());
+                  for (String path2 : ((JavaModule)dependingModule).getApiProjects()) {
+                     Module dm1 = dependingModule.getProject().getModuleByName(path2); 
+                     pending.add(dm1);
+                   }
                   }
                 }
             }
-        }
         
         getAllApiClassNames(visitedModules, classNames,pending);
         
@@ -87,7 +84,7 @@ public class ShortNamesCache {
         return classNames.toArray(new String[0]);
     }
     
-    private static void getAllApiClassNames(
+    private void getAllApiClassNames(
     Set<Module> visitedModules,
     Set<String> classNames,
     Set<Module> pending
