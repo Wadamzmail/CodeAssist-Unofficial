@@ -33,8 +33,6 @@ import java.util.ListResourceBundle;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-// don't remove
-import java.lang.ClassLoader;
 
 /**
  * This class is duplicated for each subpackage so keep it in sync. It is package private and
@@ -51,12 +49,12 @@ public final class SecuritySupport {
     return securitySupport;
   }
 
-  static ClassLoader getContextClassLoader() {
-    return (ClassLoader)
+  static java.lang.ClassLoader getContextClassLoader() {
+    return (java.lang.ClassLoader)
         AccessController.doPrivileged(
             new PrivilegedAction() {
               public Object run() {
-                ClassLoader cl = null;
+                java.lang.ClassLoader cl = null;
                 try {
                   cl = Thread.currentThread().getContextClassLoader();
                 } catch (SecurityException ex) {
@@ -66,14 +64,14 @@ public final class SecuritySupport {
             });
   }
 
-  static ClassLoader getSystemClassLoader() {
-    return (ClassLoader)
+  static java.lang.ClassLoader getSystemClassLoader() {
+    return (java.lang.ClassLoader)
         AccessController.doPrivileged(
             new PrivilegedAction() {
               public Object run() {
-                ClassLoader cl = null;
+                java.lang.ClassLoader cl = null;
                 try {
-                  cl = ClassLoader.getSystemClassLoader();
+                  cl = java.lang.ClassLoader.getSystemClassLoader();
                 } catch (SecurityException ex) {
                 }
                 return cl;
@@ -81,19 +79,19 @@ public final class SecuritySupport {
             });
   }
 
-  static ClassLoader getParentClassLoader(final ClassLoader cl) {
-    return (ClassLoader)
+  static java.lang.ClassLoader getParentClassLoader(final java.lang.ClassLoader cl) {
+    return (java.lang.ClassLoader)
         AccessController.doPrivileged(
             new PrivilegedAction() {
               public Object run() {
-                ClassLoader parent = null;
+                java.lang.ClassLoader parent = null;
                 try {
                   parent = cl.getParent();
                 } catch (SecurityException ex) {
                 }
 
                 // eliminate loops in case of the boot
-                // ClassLoader returning itself as a parent
+                // java.lang.ClassLoader returning itself as a parent
                 return (parent == cl) ? null : parent;
               }
             });
@@ -124,7 +122,7 @@ public final class SecuritySupport {
   }
 
   /**
-   * Return resource using the same classloader for the ObjectFactory by default or bootclassloader
+   * Return resource using the same java.lang.ClassLoader for the ObjectFactory by default or bootclassloader
    * when Security Manager is in place
    */
   public static InputStream getResourceAsStream(final String name) {
@@ -135,7 +133,7 @@ public final class SecuritySupport {
     }
   }
 
-  public static InputStream getResourceAsStream(final ClassLoader cl, final String name) {
+  public static InputStream getResourceAsStream(final java.lang.ClassLoader cl, final String name) {
     return (InputStream)
         AccessController.doPrivileged(
             new PrivilegedAction() {
@@ -220,8 +218,8 @@ public final class SecuritySupport {
         .longValue();
   }
 
-  /** Figure out which ClassLoader to use. */
-  public static ClassLoader findClassLoader() {
+  /** Figure out which java.lang.ClassLoader to use. */
+  public static java.lang.ClassLoader findClassLoader() {
     if (System.getSecurityManager() != null) {
       // this will ensure bootclassloader is used
       return null;

@@ -16,12 +16,15 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
+import com.tyron.builder.project.api.Module;
 import com.tyron.common.util.StringSearch;
-import com.tyron.completion.java.compiler.CompileTask;
+import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.completion.java.compiler.JavaCompilerService;
 import com.tyron.completion.model.CompletionItem;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.completion.model.DrawableKind;
+import dev.mutwakil.javac.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,13 +39,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
-import dev.mutwakil.javac.*;
-import com.tyron.completion.java.util.ProjectUtil;
-import com.tyron.completion.java.ShortNamesCache;
-import com.tyron.builder.project.api.Module;
-import com.tyron.builder.project.api.JavaModule;
-import com.tyron.builder.project.util.PackageTrie; 
-import java.io.File;
 
 public class ImportCompletionProvider extends BaseCompletionProvider {
 
@@ -89,7 +85,8 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
   }
 
-  public List<CompletionItem> addAnonymous(JavacUtilitiesProvider task, TreePath path, String partial) {
+  public List<CompletionItem> addAnonymous(
+      JavacUtilitiesProvider task, TreePath path, String partial) {
     checkCanceled();
 
     List<CompletionItem> items = new ArrayList<>();
@@ -99,7 +96,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
     }
 
     if (path.getParentPath().getParentPath().getLeaf().getKind() == Tree.Kind.METHOD_INVOCATION) {
-      Trees trees =task.getTrees();
+      Trees trees = task.getTrees();
       MethodInvocationTree method =
           (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf();
       Element element = trees.getElement(path.getParentPath().getParentPath());

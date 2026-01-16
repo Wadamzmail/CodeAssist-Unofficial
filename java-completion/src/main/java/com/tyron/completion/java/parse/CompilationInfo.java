@@ -8,6 +8,7 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Pair;
 import com.tyron.builder.model.CodeAssistAndroidLibrary;
+import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
@@ -15,10 +16,11 @@ import com.tyron.builder.project.impl.AndroidModuleImpl;
 import com.tyron.common.util.DebouncerStore;
 import com.tyron.completion.java.compiler.services.NBEnter;
 import com.tyron.completion.java.compiler.services.NBLog;
+import com.tyron.completion.java.util.ProjectUtil;
 import dev.mutwakil.javac.MJavacTrees;
 import java.io.File;
-import java.nio.file.Files;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,8 +37,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
-import com.tyron.completion.java.util.ProjectUtil;
-import com.tyron.builder.model.CodeAssistLibrary;
 
 public class CompilationInfo {
 
@@ -49,12 +49,12 @@ public class CompilationInfo {
     }
     JavaModule javaModule = (JavaModule) module;
     CompilationInfo info = module.getUserData(COMPILATION_INFO_KEY);
-    if (info == null || reIndex ) {
+    if (info == null || reIndex) {
       Set<File> libraries = new HashSet<>();
-        libraries.addAll((javaModule).getJavaFiles().values());
-        libraries.addAll((javaModule).getLibraries());
-        libraries.addAll((javaModule).getInjectedClasses().values());
-     
+      libraries.addAll((javaModule).getJavaFiles().values());
+      libraries.addAll((javaModule).getLibraries());
+      libraries.addAll((javaModule).getInjectedClasses().values());
+
       if (module instanceof AndroidModuleImpl) {
         libraries.addAll(
             ((AndroidModuleImpl) module)
@@ -63,55 +63,62 @@ public class CompilationInfo {
                     .map(it -> (CodeAssistAndroidLibrary) it)
                     .flatMap(it -> it.getCompileJarFiles().stream())
                     .collect(Collectors.toList()));
-                File buildGenDir = new File(module.getRootFile() + "/build/gen");
-                File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
-                File kotlinJar = new File(
-                   module.getRootFile(),
-                   "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar");
-                if(kotlinJar.exists()){
-                libraries.add(kotlinJar);
-                javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
-                } 
-                if (buildGenDir.exists()){ 
-                Set<File> buidGenSet = getFiles(buildGenDir, ".java");   
-                 for(File toAdd : buidGenSet){
-                   javaModule.addJavaFile(toAdd);
-                   libraries.add(toAdd);
-                 }
-               
-                } 
-                if (viewBindingDir.exists()){
-                 Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
-                 for(File toAdd : viewBindingSet){
-                 javaModule.addJavaFile(toAdd);
-                 libraries.add(toAdd);
-                 }
-                 }
+        File buildGenDir = new File(module.getRootFile() + "/build/gen");
+        File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
+        File kotlinJar =
+            new File(
+                module.getRootFile(),
+                "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar");
+        if (kotlinJar.exists()) {
+          libraries.add(kotlinJar);
+          javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
+        }
+        if (buildGenDir.exists()) {
+          Set<File> buidGenSet = getFiles(buildGenDir, ".java");
+          for (File toAdd : buidGenSet) {
+            javaModule.addJavaFile(toAdd);
+            libraries.add(toAdd);
+          }
+        }
+        if (viewBindingDir.exists()) {
+          Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
+          for (File toAdd : viewBindingSet) {
+            javaModule.addJavaFile(toAdd);
+            libraries.add(toAdd);
+          }
+        }
       }
-    // if (info == null || changed(mCachedPaths, libraries)) {
+      // if (info == null || changed(mCachedPaths, libraries)) {
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
-                  new JavacParser(), null, null, new ArrayList<>(libraries), Collections.emptyList(), null, null));
+                  new JavacParser(),
+                  null,
+                  null,
+                  new ArrayList<>(libraries),
+                  Collections.emptyList(),
+                  null,
+                  null));
       module.putUserData(COMPILATION_INFO_KEY, info);
-     // mCachedPaths.clear();
-     // mCachedPaths.addAll(libraries);
+      // mCachedPaths.clear();
+      // mCachedPaths.addAll(libraries);
     }
     return info;
   }
-  
+
   public static synchronized CompilationInfo get(Module module) {
-  return get(module,false);
+    return get(module, false);
   }
 
   public static synchronized CompilationInfo get(Project currentProject, File file) {
-     return get(currentProject,file,false);
+    return get(currentProject, file, false);
   }
-  
-  public static synchronized CompilationInfo get(Project currentProject, File file, boolean reIndex) {
+
+  public static synchronized CompilationInfo get(
+      Project currentProject, File file, boolean reIndex) {
     final Module module = currentProject.getModule(file);
-    ProjectUtil.getInstance().setProject(currentProject).setModule(module); 
-    return get(module,reIndex);
+    ProjectUtil.getInstance().setProject(currentProject).setModule(module);
+    return get(module, reIndex);
   }
 
   public final CompilationInfoImpl impl;
@@ -293,7 +300,7 @@ public class CompilationInfo {
   public CompilationUnitTree getCompilationUnit() {
     return impl.getCompilationUnit();
   }
-  
+
   private static synchronized boolean changed(Set<File> oldFiles, Set<File> newFiles) {
     if (oldFiles.size() != newFiles.size()) {
       return true;
@@ -313,7 +320,7 @@ public class CompilationInfo {
 
     return false;
   }
-  
+
   public static Set<File> getFiles(File dir, String ext) {
     Set<File> Files = new HashSet<>();
 
@@ -334,5 +341,4 @@ public class CompilationInfo {
 
     return Files;
   }
-  
 }

@@ -31,6 +31,7 @@ import com.tyron.code.ui.main.action.other.SSHKeyManagerAction;
 import com.tyron.code.ui.main.action.project.ProjectActionGroup;
 import com.tyron.code.ui.settings.ApplicationSettingsFragment;
 import com.tyron.common.ApplicationProvider;
+import com.tyron.common.Prefs;
 import com.tyron.completion.CompletionProvider;
 import com.tyron.completion.index.CompilerService;
 import com.tyron.completion.java.CompletionModule;
@@ -56,7 +57,6 @@ import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.provider.AssetsFileResolver;
 import java.security.Security;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import com.tyron.common.Prefs;
 
 public class ApplicationLoader extends Application {
 
@@ -102,7 +102,7 @@ public class ApplicationLoader extends Application {
         .showRestartButton(true)
         .logErrorOnRestart(true)
         .trackActivities(true)
-        .apply();	
+        .apply();
 
     FileProviderRegistry.getInstance()
         .addFileProvider(new AssetsFileResolver(applicationContext.getAssets()));

@@ -1,16 +1,15 @@
 package com.tyron.completion.java.rewrite;
 
 import com.google.common.collect.ImmutableMap;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.model.Range;
 import com.tyron.completion.model.TextEdit;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import java.util.Collections;
 
 public class AddCatchClause implements JavaRewrite2 {
 
@@ -33,14 +32,14 @@ public class AddCatchClause implements JavaRewrite2 {
     TextEdit edit = new TextEdit(range, finalString, true);
     edits.add(edit);
 
-            if (!ActionUtil.hasImport(task.root(), exceptionName)) {
-                AddImport addImport = new AddImport(file.toFile(), exceptionName);
-                Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
-                TextEdit[] imports = rewrite.get(file);
-                if (imports != null) {
-                    Collections.addAll(edits, imports);
-                }
-            }
+    if (!ActionUtil.hasImport(task.root(), exceptionName)) {
+      AddImport addImport = new AddImport(file.toFile(), exceptionName);
+      Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+      TextEdit[] imports = rewrite.get(file);
+      if (imports != null) {
+        Collections.addAll(edits, imports);
+      }
+    }
     return ImmutableMap.of(file, edits.toArray(new TextEdit[0]));
   }
 }

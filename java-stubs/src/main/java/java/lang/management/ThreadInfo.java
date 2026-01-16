@@ -1,4 +1,3 @@
 package java.lang.management;
 
-public class ThreadInfo {
-}
+public class ThreadInfo {}

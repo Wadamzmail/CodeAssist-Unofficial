@@ -5,7 +5,6 @@ import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.ModuleSettings;
 import com.tyron.builder.project.api.FileManager;
 import com.tyron.builder.project.api.JavaModule;
-import com.tyron.builder.project.impl.ModuleImpl;
 import com.tyron.builder.project.util.PackageTrie;
 import com.tyron.common.util.StringSearch;
 import java.io.File;
@@ -66,7 +65,7 @@ public class MockJavaModule extends MockModule implements JavaModule {
     }
     mJavaFiles.put(className, javaFile);
   }
-  
+
   @Override
   public List<File> getLibraries() {
     return Collections.emptyList();
@@ -118,7 +117,7 @@ public class MockJavaModule extends MockModule implements JavaModule {
   public PackageTrie getClassIndex() {
     return new PackageTrie();
   }
-  
+
   @NonNull
   @Override
   public PackageTrie getApiClassIndex() {

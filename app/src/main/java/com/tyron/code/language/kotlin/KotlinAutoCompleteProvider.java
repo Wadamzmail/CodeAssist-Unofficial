@@ -9,14 +9,11 @@ import com.tyron.code.ApplicationLoader;
 import com.tyron.code.language.AbstractAutoCompleteProvider;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
-import com.tyron.completion.model.CompletionItem;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.editor.Editor;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.kotlin.completion.KotlinFile;
-import java.util.List;
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment;
-import com.tyron.completion.java.provider.JavaSortCategory;
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement;
 
 public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
@@ -67,13 +64,13 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
     KotlinFile updatedFile =
         kotlinEnvironment.updateKotlinFile(
             mEditor.getCurrentFile().getAbsolutePath(), mEditor.getContent().toString());
-  //  List<CompletionItem> itemList = 
-   return  kotlinEnvironment.complete(updatedFile, line, column);
+    //  List<CompletionItem> itemList =
+    return kotlinEnvironment.complete(updatedFile, line, column);
 
-   // return CompletionList.builder(prefix).addItems(itemList).build();
+    // return CompletionList.builder(prefix).addItems(itemList).build();
   }
 
-/*  @Nullable
+  /*  @Nullable
   public List<CompletionItem> getCompletionItems(String prefix, int line, int column) {
     if (!mPreferences.getBoolean(SharedPreferenceKeys.KOTLIN_COMPLETIONS, false)) {
       return null;
@@ -111,34 +108,34 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
   }
   */
   @Override
-    public String getPrefix(Editor editor, int line, int column) {
-        String empty = "";
-        Project project = ProjectManager.getInstance().getCurrentProject();
-        if (project == null) {
-            return empty;
-        }
-
-        Module currentModule = project.getModule(mEditor.getCurrentFile());
-
-        if (!(currentModule instanceof AndroidModule)) {
-            return empty;
-        }
-
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
-        if (kotlinEnvironment == null) {
-            return empty;
-        }
-
-        KotlinFile kotlinFile =
-                kotlinEnvironment.getKotlinFile(editor.getCurrentFile().getAbsolutePath());
-        if (kotlinFile == null) {
-            return empty;
-        }
-
-        PsiElement psiElement = kotlinFile.elementAt(line, column);
-        if (psiElement == null) {
-            return empty;
-        }
-        return kotlinEnvironment.getPrefix(psiElement);
+  public String getPrefix(Editor editor, int line, int column) {
+    String empty = "";
+    Project project = ProjectManager.getInstance().getCurrentProject();
+    if (project == null) {
+      return empty;
     }
+
+    Module currentModule = project.getModule(mEditor.getCurrentFile());
+
+    if (!(currentModule instanceof AndroidModule)) {
+      return empty;
+    }
+
+    KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+    if (kotlinEnvironment == null) {
+      return empty;
+    }
+
+    KotlinFile kotlinFile =
+        kotlinEnvironment.getKotlinFile(editor.getCurrentFile().getAbsolutePath());
+    if (kotlinFile == null) {
+      return empty;
+    }
+
+    PsiElement psiElement = kotlinFile.elementAt(line, column);
+    if (psiElement == null) {
+      return empty;
+    }
+    return kotlinEnvironment.getPrefix(psiElement);
+  }
 }

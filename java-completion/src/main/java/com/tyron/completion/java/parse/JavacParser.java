@@ -51,9 +51,9 @@ public class JavacParser {
     Collections.addAll(
         options,
         "-bootclasspath",
-        joinPath(Arrays.asList(BuildModule.getAndroidJar(), BuildModule.getLambdaStubs()))); 
+        joinPath(Arrays.asList(BuildModule.getAndroidJar(), BuildModule.getLambdaStubs())));
     Collections.addAll(options, "-target", "1.8", "-source", "1.8");
-    Collections.addAll(options, "-cp", joinPath(cpInfo));  
+    Collections.addAll(options, "-cp", joinPath(cpInfo));
     Collections.addAll(options, "-proc:none", "-g");
     Collections.addAll(
         options,
@@ -65,7 +65,7 @@ public class JavacParser {
         "-Xlint:path",
         "-Xlint:unchecked",
         "-Xlint" + ":varargs",
-        "-Xlint:static");  
+        "-Xlint:static");
 
     JavacTool tool = JavacTool.create();
     JavacFileManager standardFileManager =

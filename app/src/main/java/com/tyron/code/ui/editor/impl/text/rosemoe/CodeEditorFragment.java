@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.actions.ActionManager;
 import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.CommonDataKeys;
@@ -93,15 +94,12 @@ import java.util.ServiceLoader;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.tools.Diagnostic;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import javax.tools.JavaFileObject;
-import com.sun.tools.javac.util.JCDiagnostic;
 
 // import com.tyron.editor.Content;
 
@@ -194,8 +192,8 @@ public class CodeEditorFragment extends Fragment
   }
 
   private void onContentChange(com.tyron.editor.Content content) {
-  
-   if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
+
+    if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
       return;
     }
     Language language = mEditor.getEditorLanguage();
@@ -209,17 +207,19 @@ public class CodeEditorFragment extends Fragment
 
     if (language instanceof KotlinLanguage) return;
     if (language instanceof LanguageXML) return;
-    
+
     ProgressManager.getInstance()
-              .runLater(
-                  () -> {
-    ServiceLoader<DiagnosticProvider> providers = ServiceLoader.load(DiagnosticProvider.class);
-    for (DiagnosticProvider provider : providers) {
-      List<JCDiagnostic> diagnostics = provider.getDiagnostics(module, mCurrentFile);
-      mEditor.setDiagnostics(
-          diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));     
-    }
-   },200);
+        .runLater(
+            () -> {
+              ServiceLoader<DiagnosticProvider> providers =
+                  ServiceLoader.load(DiagnosticProvider.class);
+              for (DiagnosticProvider provider : providers) {
+                List<JCDiagnostic> diagnostics = provider.getDiagnostics(module, mCurrentFile);
+                mEditor.setDiagnostics(
+                    diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
+              }
+            },
+            200);
   }
 
   public void hideEditorWindows() {
@@ -279,10 +279,9 @@ public class CodeEditorFragment extends Fragment
       TextMateColorScheme scheme = ThemeRepository.getColorScheme(schemeValue);
       if (scheme != null) {
         mEditor.setColorScheme(scheme);
-        mEditor.openFile(mCurrentFile);   
+        mEditor.openFile(mCurrentFile);
         initializeLanguage();
-        readOrWait();   
-                     
+        readOrWait();
       }
     } else {
       ListenableFuture<TextMateColorScheme> scheme = getScheme(schemeValue);
@@ -300,7 +299,6 @@ public class CodeEditorFragment extends Fragment
               mEditor.openFile(mCurrentFile);
               initializeLanguage();
               readOrWait();
-                 
             }
 
             @Override
@@ -318,10 +316,9 @@ public class CodeEditorFragment extends Fragment
                 ThemeRepository.putColorScheme(key, scheme);
               }
               mEditor.setColorScheme(scheme);
-              mEditor.openFile(mCurrentFile);  
+              mEditor.openFile(mCurrentFile);
               initializeLanguage();
               readOrWait();
-                  
             }
           },
           ContextCompat.getMainExecutor(requireContext()));
@@ -348,7 +345,7 @@ public class CodeEditorFragment extends Fragment
     editor.setLigatureEnabled(true);
     editor.setDiagnostics(new DiagnosticsContainer());
     editor.setHighlightCurrentBlock(false);
-    editor.setHighlightBracketPair(false); 
+    editor.setHighlightBracketPair(false);
     editor.setEdgeEffectColor(Color.TRANSPARENT);
     editor.setUndoEnabled(true);
     editor.openFile(mCurrentFile);
@@ -397,7 +394,7 @@ public class CodeEditorFragment extends Fragment
               Field mInterceptTargets =
                   ReflectionUtil.findFieldInHierarchy(
                       Event.class, field -> "mInterceptTargets".equals(field.getName()));
-                 if(mInterceptTargets==null)return;   
+              if (mInterceptTargets == null) return;
               mInterceptTargets.setAccessible(true);
               try {
                 mInterceptTargets.set(event, InterceptTarget.TARGET_EDITOR);
@@ -410,45 +407,45 @@ public class CodeEditorFragment extends Fragment
           }
         });
 
-        mEditor.subscribeEvent(
+    mEditor.subscribeEvent(
         LongPressEvent.class,
         (event, unsubscribe) -> {
           event.intercept();
 
           updateFile(mEditor.getText());
           Cursor cursor = mEditor.getCursor();
-          
+
           CharSequence text = mEditor.getText();
           int textLength = text.length();
 
           if (cursor.isSelected()) {
             int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
-            
+
             if (index >= 0 && index < textLength) {
-                int cursorLeft = cursor.getLeft();
-                int cursorRight = cursor.getRight();
-                char c = text.charAt(index);
-                
-                if (Character.isWhitespace(c)) {
-                  mEditor.setSelection(event.getLine(), event.getColumn());
-                } else if (index < cursorLeft || index > cursorRight) {
-                  EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
-                }
-            } else {
+              int cursorLeft = cursor.getLeft();
+              int cursorRight = cursor.getRight();
+              char c = text.charAt(index);
+
+              if (Character.isWhitespace(c)) {
                 mEditor.setSelection(event.getLine(), event.getColumn());
+              } else if (index < cursorLeft || index > cursorRight) {
+                EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
+              }
+            } else {
+              mEditor.setSelection(event.getLine(), event.getColumn());
             }
           } else {
             int index = event.getIndex();
-            
+
             if (index >= 0 && index < textLength) {
-                char c = text.charAt(index);
-                if (!Character.isWhitespace(c)) {
-                  EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
-                } else {
-                  mEditor.setSelection(event.getLine(), event.getColumn());
-                }
-            } else {
+              char c = text.charAt(index);
+              if (!Character.isWhitespace(c)) {
+                EditorUtil.selectWord(mEditor, event.getLine(), event.getColumn());
+              } else {
                 mEditor.setSelection(event.getLine(), event.getColumn());
+              }
+            } else {
+              mEditor.setSelection(event.getLine(), event.getColumn());
             }
           }
 
@@ -459,31 +456,31 @@ public class CodeEditorFragment extends Fragment
                   });
         });
 
-      mEditor.subscribeEvent(
-       ClickEvent.class,
-       (event, unsubscribe) -> {
-        try {
-        Cursor cursor = mEditor.getCursor();
-        if (cursor != null && cursor.isSelected()) {
-          int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
-          String text = mEditor.getText().toString();
+    mEditor.subscribeEvent(
+        ClickEvent.class,
+        (event, unsubscribe) -> {
+          try {
+            Cursor cursor = mEditor.getCursor();
+            if (cursor != null && cursor.isSelected()) {
+              int index = mEditor.getCharIndex(event.getLine(), event.getColumn());
+              String text = mEditor.getText().toString();
 
-          if (index >= 0 && index < text.length()) {
-            int cursorLeft = cursor.getLeft();
-            int cursorRight = cursor.getRight();
+              if (index >= 0 && index < text.length()) {
+                int cursorLeft = cursor.getLeft();
+                int cursorRight = cursor.getRight();
 
-            if (!EditorUtil.isWhitespace(text.charAt(index) + "")
-                && index >= cursorLeft
-                && index <= cursorRight) {
-              mEditor.showSoftInput();
-              event.intercept();
+                if (!EditorUtil.isWhitespace(text.charAt(index) + "")
+                    && index >= cursorLeft
+                    && index <= cursorRight) {
+                  mEditor.showSoftInput();
+                  event.intercept();
+                }
+              }
             }
+          } catch (Exception e) {
+            LOG.severe("Error ClickEvent: " + e.getMessage());
           }
-        }
-      } catch (Exception e) {
-        LOG.severe("Error ClickEvent: " + e.getMessage());
-      }
-    });
+        });
 
     mEditor.subscribeEvent(
         ContentChangeEvent.class,
@@ -957,7 +954,7 @@ public class CodeEditorFragment extends Fragment
     if (currentProject != null && mLanguage instanceof JavaLanguage) {
       JavaDataContextUtil.addEditorKeys(
           dataContext, currentProject, mCurrentFile, mEditor.getCursor().getLeft());
-          return dataContext;
+      return dataContext;
     }
 
     DiagnosticWrapper diagnosticWrapper =

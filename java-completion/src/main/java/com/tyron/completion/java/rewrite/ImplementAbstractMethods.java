@@ -9,12 +9,13 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.util.JCDiagnostic;
-import com.tyron.completion.java.CompilerProvider;
 import com.tyron.completion.java.FindNewTypeDeclarationAt;
 import com.tyron.completion.java.FindTypeDeclarationAt;
 import com.tyron.completion.java.provider.FindHelper;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.JavaParserUtil;
+import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.model.Position;
 import com.tyron.completion.model.Range;
 import com.tyron.completion.model.TextEdit;
@@ -25,7 +26,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import javax.lang.model.element.Element;
@@ -37,11 +37,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.tools.JavaFileObject;
-
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.util.ProjectUtil;
 
 public class ImplementAbstractMethods implements JavaRewrite2 {
 
@@ -78,19 +73,18 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
   }
 
   @Override
-public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-   // NOTE:
-   // Source lookup outside current CompilationUnit requires JavaCompilerService
-   // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-   Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile,task.root());
+  public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
+    // NOTE:
+    // Source lookup outside current CompilationUnit requires JavaCompilerService
+    // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
+    Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile, task.root());
     if (file == ProjectUtil.NOT_FOUND) {
       return Collections.emptyMap();
     }
     return rewriteInternal(task, file);
-}
+  }
 
-  private Map<Path, TextEdit[]> rewriteInternal(
-      JavacUtilitiesProvider task, Path file) {
+  private Map<Path, TextEdit[]> rewriteInternal(JavacUtilitiesProvider task, Path file) {
     Elements elements = task.getElements();
     Types types = task.getTypes();
     Trees trees = task.getTrees();
@@ -150,12 +144,12 @@ public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
     for (String type : typesToImport) {
       String fqn = ActionUtil.removeDiamond(type);
       if (!ActionUtil.hasImport(task.root(), fqn)) {
-                        JavaRewrite2 addImport = new AddImport(file.toFile(), fqn);
-                        Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
-                        TextEdit[] textEdits = rewrite.get(file);
-                        if (textEdits != null) {
-                            Collections.addAll(edits, textEdits);
-                        }
+        JavaRewrite2 addImport = new AddImport(file.toFile(), fqn);
+        Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+        TextEdit[] textEdits = rewrite.get(file);
+        if (textEdits != null) {
+          Collections.addAll(edits, textEdits);
+        }
       }
     }
 
@@ -178,7 +172,7 @@ public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
     return thisTree;
   }
 
-  private MethodTree findSource( JavacUtilitiesProvider task, ExecutableElement method) {
+  private MethodTree findSource(JavacUtilitiesProvider task, ExecutableElement method) {
     TypeElement superClass = (TypeElement) method.getEnclosingElement();
     String superClassName = superClass.getQualifiedName().toString();
     String methodName = method.getSimpleName().toString();

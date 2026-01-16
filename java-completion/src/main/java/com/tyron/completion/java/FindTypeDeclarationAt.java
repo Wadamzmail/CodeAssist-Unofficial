@@ -5,20 +5,19 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
+import com.sun.source.util.Trees;
 import dev.mutwakil.javac.*;
 import java.util.List;
-import com.sun.source.util.Trees;
 
 public class FindTypeDeclarationAt extends TreeScanner<ClassTree, Long> {
   private final SourcePositions pos;
-  //private final JavacTask task;
+  // private final JavacTask task;
   private CompilationUnitTree root;
 
   public FindTypeDeclarationAt(Trees trees) {
-    //this.task = task;
+    // this.task = task;
     pos = trees.getSourcePositions();
   }
 

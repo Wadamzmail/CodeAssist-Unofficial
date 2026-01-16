@@ -1,7 +1,6 @@
 package com.tyron.code.language.java;
 
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.os.Looper;
 import android.util.Log;
 import com.sun.source.tree.BlockTree;
@@ -22,7 +21,7 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.SemanticAnalyzeManager;
 import com.tyron.code.analyzer.semantic.SemanticToken;
-import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
+import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.Debouncer;
@@ -36,12 +35,11 @@ import com.tyron.completion.java.util.TreeUtil;
 import com.tyron.completion.progress.ProcessCanceledException;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.Editor;
-import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-import org.eclipse.tm4e.core.internal.theme.raw.IRawTheme;
+import dev.mutwakil.codeassist.BuildConfig;
+import dev.mutwakil.javac.JavacTreesUtil;
+import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
+import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.ref.WeakReference;
 import java.time.Duration;
 import java.time.Instant;
@@ -54,32 +52,24 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
-import dev.mutwakil.codeassist.BuildConfig;
-import java.lang.reflect.Method;
-import javax.tools.JavaCompiler.CompilationTask;
-import dev.mutwakil.javac.JavacTreesUtil;
-import org.eclipse.tm4e.core.internal.theme.Theme;
-import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 import org.eclipse.tm4e.core.grammar.IGrammar;
-import com.tyron.code.language.textmate.EmptyTextMateLanguage;
-import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
-import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
-
+import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
 
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
   private static final String CONFIG_PATH = "textmate/java/language-configuration.json";
-  private static final String SCOPENAME="source.java";
+  private static final String SCOPENAME = "source.java";
 
-  public static JavaAnalyzer create(Editor editor,EmptyTextMateLanguage lang) {
+  public static JavaAnalyzer create(Editor editor, EmptyTextMateLanguage lang) {
     try {
-        return new JavaAnalyzer(
-            editor,
-            lang,
-             GrammarRegistry.getInstance().findGrammar(SCOPENAME),
-            GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),ThemeRegistry.getInstance());
+      return new JavaAnalyzer(
+          editor,
+          lang,
+          GrammarRegistry.getInstance().findGrammar(SCOPENAME),
+          GrammarRegistry.getInstance().findLanguageConfiguration(SCOPENAME),
+          ThemeRegistry.getInstance());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -107,8 +97,9 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
       EmptyTextMateLanguage lang,
       IGrammar grammar,
       LanguageConfiguration languageConfiguration,
-      ThemeRegistry theme) throws Exception {
-    super(editor,lang,grammar, languageConfiguration, theme);
+      ThemeRegistry theme)
+      throws Exception {
+    super(editor, lang, grammar, languageConfiguration, theme);
 
     mEditorReference = new WeakReference<>(editor);
     mPreferences = ApplicationLoader.getDefaultPreferences();
@@ -230,7 +221,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     DiagnosticWrapper wrapped = new DiagnosticWrapper(diagnostic);
 
     if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
-     // Trees trees = Trees.instance(task.task);
+      // Trees trees = Trees.instance(task.task);
       Trees trees = JavacTreesUtil.instance(task.task);
       SourcePositions positions = trees.getSourcePositions();
 

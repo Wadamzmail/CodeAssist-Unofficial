@@ -2,44 +2,39 @@ package com.tyron.completion.java.action.quickfix;
 
 import android.app.AlertDialog;
 import androidx.annotation.NonNull;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.api.ClientCodeWrapper;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
+import com.tyron.builder.project.Project;
+import com.tyron.builder.project.api.JavaModule;
+import com.tyron.builder.project.api.Module;
 import com.tyron.completion.java.R;
-import com.tyron.completion.java.action.CommonJavaContextKeys;
-import com.tyron.completion.java.compiler.JavaCompilerService;
-import com.tyron.completion.java.rewrite.JavaRewrite;
+import com.tyron.completion.java.ShortNamesCache;
+import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.rewrite.AddImport;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.util.RewriteUtil;
 import com.tyron.editor.Editor;
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import javax.tools.Diagnostic;
-import java.util.HashSet;
-import java.util.Set;
-import java.io.File;
-
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.rewrite.JavaRewrite2;
-
-import com.tyron.builder.project.api.JavaModule;
-import com.tyron.builder.project.api.Module;
-import com.tyron.completion.java.action.FindCurrentPath;
-import com.tyron.builder.project.Project;
-import com.sun.source.util.TreePath;
-import com.tyron.completion.java.rewrite.AddImport;
-import com.tyron.completion.java.ShortNamesCache;
 
 public class ImportClassFieldFix extends AnAction {
 
@@ -60,13 +55,13 @@ public class ImportClassFieldFix extends AnAction {
     if (diagnostic == null) {
       return;
     }
-    
+
     Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-    if(editor==null)return;
+    if (editor == null) return;
     Project project = editor.getProject();
-    if(project==null)return;
+    if (project == null) return;
     File file = event.getRequiredData(CommonDataKeys.FILE);
-    if(file==null) return ;
+    if (file == null) return;
 
     ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
         DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
@@ -79,13 +74,13 @@ public class ImportClassFieldFix extends AnAction {
     }
 
     CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
-        if (compilationInfo == null) return;
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
-        if (unit == null) return;
-        int left = editor.getCaret().getStart();
-        int right = editor.getCaret().getEnd();
-        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
-        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+    if (compilationInfo == null) return;
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+    if (unit == null) return;
+    int left = editor.getCaret().getStart();
+    int right = editor.getCaret().getEnd();
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+    TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[0]);
     List<String> classNames = new ArrayList<>();
@@ -126,16 +121,16 @@ public class ImportClassFieldFix extends AnAction {
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
     JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
     String simpleName = String.valueOf(d.getArgs()[0]);
-     Project project = editor.getProject();
+    Project project = editor.getProject();
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
     CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
-        if (compilationInfo == null) return;
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toFile().toURI());
-        if (unit == null) return;
-        int left = editor.getCaret().getStart();
-        int right = editor.getCaret().getEnd();
-        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
-        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+    if (compilationInfo == null) return;
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toFile().toURI());
+    if (unit == null) return;
+    int left = editor.getCaret().getStart();
+    int right = editor.getCaret().getEnd();
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+    TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
     boolean isField = simpleName.contains(".");
     String searchName = simpleName;
@@ -152,16 +147,19 @@ public class ImportClassFieldFix extends AnAction {
             qualifiedName += simpleName;
           }
           String name = e.getDataContext().getString(R.string.import_class_name, qualifiedName);
-                              JavaRewrite2 addImport = new AddImport(file.toFile(),
-           qualifiedName);
-                              map.put(name, addImport);
-         // throw new UnsupportedOperationException();
+          JavaRewrite2 addImport = new AddImport(file.toFile(), qualifiedName);
+          map.put(name, addImport);
+          // throw new UnsupportedOperationException();
         }
       }
     }
 
     if (map.size() == 1) {
-      RewriteUtil.performRewrite(editor, file.toFile(), new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), map.values().iterator().next());
+      RewriteUtil.performRewrite(
+          editor,
+          file.toFile(),
+          new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()),
+          map.values().iterator().next());
     } else {
       String[] titles = map.keySet().toArray(new String[0]);
       new AlertDialog.Builder(e.getDataContext())
@@ -170,20 +168,24 @@ public class ImportClassFieldFix extends AnAction {
               titles,
               (di, w) -> {
                 JavaRewrite2 rewrite = map.get(titles[w]);
-                RewriteUtil.performRewrite(editor, file.toFile(), new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), rewrite);
+                RewriteUtil.performRewrite(
+                    editor,
+                    file.toFile(),
+                    new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()),
+                    rewrite);
               })
           .setNegativeButton(android.R.string.cancel, null)
           .show();
     }
   }
-  
-  public String[] getAllClassNames(Editor editor){
+
+  public String[] getAllClassNames(Editor editor) {
     Module module = editor.getProject().getModule(editor.getCurrentFile());
     ShortNamesCache cache = ShortNamesCache.getInstance(module);
     String[] allClasses = cache.getAllClassNames();
     return allClasses;
   }
-  
+
   public Set<String> publicTopLevelTypes(Editor editor) {
     Set<String> classes = new HashSet<>();
     Module mCurrentModule = editor.getProject().getModule(editor.getCurrentFile());
@@ -194,5 +196,4 @@ public class ImportClassFieldFix extends AnAction {
     }
     return classes;
   }
-  
 }

@@ -10,12 +10,11 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import dev.mutwakil.javac.*;
 import com.sun.source.util.Trees;
+import dev.mutwakil.javac.*;
 
 public class FindCompletionsAt extends TreePathScanner<TreePath, Long> {
 

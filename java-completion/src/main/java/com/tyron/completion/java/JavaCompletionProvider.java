@@ -16,6 +16,7 @@ import com.tyron.completion.java.action.FindCurrentPath;
 import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.provider.IdentifierCompletionProvider;
+import com.tyron.completion.java.provider.ImportCompletionProvider;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.provider.MemberReferenceCompletionProvider;
 import com.tyron.completion.java.provider.MemberSelectCompletionProvider;
@@ -26,7 +27,6 @@ import com.tyron.completion.model.CompletionList;
 import java.io.File;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import com.tyron.completion.java.provider.ImportCompletionProvider;
 
 public class JavaCompletionProvider extends CompletionProvider {
 
@@ -145,18 +145,20 @@ public class JavaCompletionProvider extends CompletionProvider {
       case MEMBER_REFERENCE:
         new MemberReferenceCompletionProvider(null)
             .complete(builder, javacUtilities, scanned, parameters.getPrefix(), false);
-        break;   
+        break;
       case IMPORT:
         String modifiedPartial = parameters.getPrefix();
-        modifiedPartial = StringSearch.qualifiedPartialIdentifier(parameters.getContents(), (int) parameters.getIndex());
-              if (modifiedPartial.endsWith(FileContentFixer.INJECTED_IDENT)) {
-                modifiedPartial =
-                    modifiedPartial.substring(
-                        0, modifiedPartial.length() - FileContentFixer.INJECTED_IDENT.length());
-              }
+        modifiedPartial =
+            StringSearch.qualifiedPartialIdentifier(
+                parameters.getContents(), (int) parameters.getIndex());
+        if (modifiedPartial.endsWith(FileContentFixer.INJECTED_IDENT)) {
+          modifiedPartial =
+              modifiedPartial.substring(
+                  0, modifiedPartial.length() - FileContentFixer.INJECTED_IDENT.length());
+        }
         new ImportCompletionProvider(null)
             .complete(builder, javacUtilities, scanned, modifiedPartial, false);
-        break;          
+        break;
       case VARIABLE:
         if (!parameters.getPrefix().isEmpty()) {
           new VariableNameCompletionProvider(null)

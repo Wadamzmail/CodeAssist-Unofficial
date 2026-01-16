@@ -2,9 +2,9 @@ package com.tyron.completion.java.hover;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.*;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import dev.mutwakil.javac.*;
 import javax.lang.model.element.Element;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 /** Class that searches where the current cursor is and returns the element corresponding to it */
 public class FindHoverElement extends TreePathScanner<Element, Long> {

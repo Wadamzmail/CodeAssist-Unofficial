@@ -6,39 +6,39 @@ import java.util.List;
 import java.util.Map;
 
 public interface RuntimeMXBean {
-    default long getPid() {
-        return AccessController.doPrivileged((PrivilegedAction<Long>) () -> 0L);
-    }
+  default long getPid() {
+    return AccessController.doPrivileged((PrivilegedAction<Long>) () -> 0L);
+  }
 
-    String getName();
+  String getName();
 
-    String getVmName();
+  String getVmName();
 
-    String getVmVendor();
+  String getVmVendor();
 
-    String getVmVersion();
+  String getVmVersion();
 
-    String getSpecName();
+  String getSpecName();
 
-    String getSpecVendor();
+  String getSpecVendor();
 
-    String getSpecVersion();
+  String getSpecVersion();
 
-    String getManagementSpecVersion();
+  String getManagementSpecVersion();
 
-    String getClassPath();
+  String getClassPath();
 
-    String getLibraryPath();
+  String getLibraryPath();
 
-    boolean isBootClassPathSupported();
+  boolean isBootClassPathSupported();
 
-    String getBootClassPath();
+  String getBootClassPath();
 
-    List<String> getInputArguments();
+  List<String> getInputArguments();
 
-    long getUptime();
+  long getUptime();
 
-    long getStartTime();
+  long getStartTime();
 
-    Map<String, String> getSystemProperties();
+  Map<String, String> getSystemProperties();
 }

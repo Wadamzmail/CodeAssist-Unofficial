@@ -2,20 +2,20 @@ package com.tyron.completion.xml.util;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.tyron.builder.project.api.Module;
+import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.completion.model.CompletionItem;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.completion.model.DrawableKind;
 import com.tyron.completion.xml.XmlRepository;
 import com.tyron.completion.xml.insert.LayoutTagInsertHandler;
+import com.tyron.completion.xml.v2.LayoutRepo;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 import org.apache.bcel.classfile.JavaClass;
-import com.tyron.completion.xml.v2.LayoutRepo;
-import com.tyron.completion.java.ShortNamesCache;
-import com.tyron.builder.project.api.Module;
- 
+
 public class AndroidXmlTagUtils {
 
   private static final Map<String, String> sManifestTagMappings = new HashMap<>();
@@ -129,6 +129,7 @@ public class AndroidXmlTagUtils {
       builder.addItem(item);
     }
   }
+
   public static void addTagItems(
       @NonNull LayoutRepo repository,
       @NonNull String prefix,
@@ -164,11 +165,12 @@ public class AndroidXmlTagUtils {
       builder.addItem(item);
     }
   }
-  
+
   public static void addTagItemsV2(
       @NonNull LayoutRepo repository,
       @NonNull String prefix,
-      @NonNull CompletionList.Builder builder, Module module) {
+      @NonNull CompletionList.Builder builder,
+      Module module) {
     Set<String> excluded = new HashSet<>();
     for (Map.Entry<String, JavaClass> entry : repository.getJavaViewClasses().entrySet()) {
       excluded.add(entry.getKey());
@@ -214,37 +216,31 @@ public class AndroidXmlTagUtils {
         names.add(segment);
         boolean isClass = className.endsWith(segment);
 
-      CompletionItem item = new CompletionItem();
-      String commitPrefix = "<";
-      if (prefix.startsWith("</")) {
-        commitPrefix = "</";
-      }
-      boolean useFqn = prefix.contains(".");
-      if (!className.startsWith("android.widget")) {
-        useFqn = true;
-      }
-      String simpleName = StyleUtils.getSimpleName(className);
-      item.label = simpleName;
-      item.detail = className;
-      item.iconKind = DrawableKind.Class;
-      item.commitText =
-          commitPrefix
-              + (useFqn
-                  ? className
-                  : StyleUtils.getSimpleName(className));
-      item.cursorOffset = item.commitText.length();
-      item.setInsertHandler(new LayoutTagInsertHandler(null, item));
-      item.setSortText("");
-      item.addFilterText(className);
-      item.addFilterText("<" + className);
-      item.addFilterText("</" + className);
-      item.addFilterText(simpleName);
-      item.addFilterText("<" + simpleName);
-      item.addFilterText("</" + simpleName);
-      builder.addItem(item);
+        CompletionItem item = new CompletionItem();
+        String commitPrefix = "<";
+        if (prefix.startsWith("</")) {
+          commitPrefix = "</";
+        }
+        boolean useFqn = prefix.contains(".");
+        if (!className.startsWith("android.widget")) {
+          useFqn = true;
+        }
+        String simpleName = StyleUtils.getSimpleName(className);
+        item.label = simpleName;
+        item.detail = className;
+        item.iconKind = DrawableKind.Class;
+        item.commitText = commitPrefix + (useFqn ? className : StyleUtils.getSimpleName(className));
+        item.cursorOffset = item.commitText.length();
+        item.setInsertHandler(new LayoutTagInsertHandler(null, item));
+        item.setSortText("");
+        item.addFilterText(className);
+        item.addFilterText("<" + className);
+        item.addFilterText("</" + className);
+        item.addFilterText(simpleName);
+        item.addFilterText("<" + simpleName);
+        item.addFilterText("</" + simpleName);
+        builder.addItem(item);
       }
     }
-    
   }
-  
 }

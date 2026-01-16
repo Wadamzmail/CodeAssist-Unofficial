@@ -1,124 +1,120 @@
 package com.tyron.completion.java.util;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import android.annotation.SuppressLint;
+import com.sun.source.tree.CompilationUnitTree;
+import com.tyron.builder.model.SourceFileObject;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
-import java.util.Collections;
+import com.tyron.builder.project.util.PackageTrie;
+import com.tyron.common.util.Cache;
+import com.tyron.common.util.StringSearch;
 import com.tyron.completion.java.Docs;
+import com.tyron.completion.java.FindTypeDeclarations;
+import com.tyron.completion.java.compiler.SourceFileManager;
 import java.io.File;
-import java.util.Optional;
-import javax.tools.JavaFileObject;
-import androidx.annotation.NonNull;
-import android.annotation.SuppressLint;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.IOException; 
-import com.tyron.builder.model.SourceFileObject;
-import javax.tools.StandardLocation;
-import com.tyron.completion.java.compiler.SourceFileManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.tyron.completion.java.FindTypeDeclarations;
-import com.tyron.common.util.Cache;
-import com.sun.source.tree.CompilationUnitTree;
-import com.tyron.common.util.StringSearch; 
-import java.util.ArrayList;
-import com.tyron.builder.project.util.PackageTrie;
-import java.util.function.Predicate;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 
 /*
-* @author Wadamzmail
-*/
+ * @author Wadamzmail
+ */
 public class ProjectUtil {
- 
- private Project mProject;
- private JavaModule mCurrentModule;
- private static ProjectUtil instance;
- private Docs docs;
- private Set<File> docPath = Collections.emptySet();
- public static final Path NOT_FOUND = Paths.get("");
- public SourceFileManager mSourceFileManager;
- 
- public static ProjectUtil getInstance(){
-  if(instance == null) {
-      instance = new ProjectUtil();
-  }
-  return instance;
- }
- 
- private ProjectUtil(){
- }
- 
- public ProjectUtil setProject(Project project){
- if(mProject==null){
-  mProject = project;
-  updateDocs();
-  updateSFM();
-  return instance;
- }
- if(mProject.equals(project))return instance;
-  this.mProject = project;
-  updateDocs();
-  updateSFM();
-  return instance;
- }
- 
- public ProjectUtil setModule(Module module){
 
-  if (module instanceof JavaModule) {
-  if(mCurrentModule==null){
-  mCurrentModule = (JavaModule) module;
-      updateDocs();
-      return instance;
+  private Project mProject;
+  private JavaModule mCurrentModule;
+  private static ProjectUtil instance;
+  private Docs docs;
+  private Set<File> docPath = Collections.emptySet();
+  public static final Path NOT_FOUND = Paths.get("");
+  public SourceFileManager mSourceFileManager;
+
+  public static ProjectUtil getInstance() {
+    if (instance == null) {
+      instance = new ProjectUtil();
+    }
+    return instance;
   }
-  if(mCurrentModule.equals((JavaModule)module))return instance;
+
+  private ProjectUtil() {}
+
+  public ProjectUtil setProject(Project project) {
+    if (mProject == null) {
+      mProject = project;
+      updateDocs();
+      updateSFM();
+      return instance;
+    }
+    if (mProject.equals(project)) return instance;
+    this.mProject = project;
+    updateDocs();
+    updateSFM();
+    return instance;
+  }
+
+  public ProjectUtil setModule(Module module) {
+
+    if (module instanceof JavaModule) {
+      if (mCurrentModule == null) {
+        mCurrentModule = (JavaModule) module;
+        updateDocs();
+        return instance;
+      }
+      if (mCurrentModule.equals((JavaModule) module)) return instance;
       mCurrentModule = (JavaModule) module;
       updateDocs();
-  } else {
+    } else {
       throw new IllegalArgumentException("Module must be a JavaModule");
+    }
+    return instance;
   }
-  return instance;
- }
- 
- public ProjectUtil updateDocs(){
-  return updateDocs(docPath);
- }
- 
- public ProjectUtil updateDocs(Set<File> docPath){
-  this.docs = new Docs(mProject,docPath);
-  return instance;
- }
- 
- public ProjectUtil setDocsPath(Set<File> docPath){
-   if(docPath==null)return instance;
-   if(docPath.equals(this.docPath))return instance;
-  this.docPath = docPath;
-  return updateDocs(docPath);
- }
- 
- public ProjectUtil updateSFM(){
-   this.mSourceFileManager = new SourceFileManager(mProject);
-   return instance;
- }
- 
- public Project getProject(){
-     return mProject;
- }
- 
- public JavaModule getModule(){
-     return mCurrentModule;
- }
- 
- public Set<String> publicTopLevelTypes() {
+
+  public ProjectUtil updateDocs() {
+    return updateDocs(docPath);
+  }
+
+  public ProjectUtil updateDocs(Set<File> docPath) {
+    this.docs = new Docs(mProject, docPath);
+    return instance;
+  }
+
+  public ProjectUtil setDocsPath(Set<File> docPath) {
+    if (docPath == null) return instance;
+    if (docPath.equals(this.docPath)) return instance;
+    this.docPath = docPath;
+    return updateDocs(docPath);
+  }
+
+  public ProjectUtil updateSFM() {
+    this.mSourceFileManager = new SourceFileManager(mProject);
+    return instance;
+  }
+
+  public Project getProject() {
+    return mProject;
+  }
+
+  public JavaModule getModule() {
+    return mCurrentModule;
+  }
+
+  public Set<String> publicTopLevelTypes() {
     Set<String> classes = new HashSet<>();
-    
+
     if (mProject == null || mCurrentModule == null) {
-        return classes;
+      return classes;
     }
 
     List<Module> deps = mProject.getDependencies(mCurrentModule);
@@ -131,7 +127,7 @@ public class ProjectUtil {
     }
     return classes;
   }
-  
+
   public Set<String> findClasses(String packageName) {
     Set<String> classes = new HashSet<>();
     for (Module module : mProject.getDependencies(mCurrentModule)) {
@@ -158,8 +154,8 @@ public class ProjectUtil {
     }
     return packages;
   }
-  
-    /**
+
+  /**
    * Finds all the occurrences of a class in javadocs, and source files
    *
    * @param className fully qualified name of the class
@@ -172,7 +168,7 @@ public class ProjectUtil {
       return fromDocs;
     }
 
-    Path fromSource = findTypeDeclaration(className,root);
+    Path fromSource = findTypeDeclaration(className, root);
     if (fromSource != NOT_FOUND) {
       return Optional.of(new SourceFileObject(fromSource, mCurrentModule));
     }
@@ -196,10 +192,9 @@ public class ProjectUtil {
       throw new RuntimeException(e);
     }
   }
-  
-  
-  public Path findTypeDeclaration(String className,CompilationUnitTree root) {
-    Path fastFind = findPublicTypeDeclaration(className,root);
+
+  public Path findTypeDeclaration(String className, CompilationUnitTree root) {
+    Path fastFind = findPublicTypeDeclaration(className, root);
     if (fastFind != NOT_FOUND) {
       return fastFind;
     }
@@ -209,7 +204,8 @@ public class ProjectUtil {
     String simpleName = simpleName(className);
 
     for (Module dependency : dependencies) {
-      Path path = findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className,root);
+      Path path =
+          findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className, root);
       if (path != NOT_FOUND) {
         return path;
       }
@@ -219,9 +215,13 @@ public class ProjectUtil {
   }
 
   private Path findPublicTypeDeclarationInModule(
-      Module module, String packageName, String simpleName, String className,CompilationUnitTree root) {
+      Module module,
+      String packageName,
+      String simpleName,
+      String className,
+      CompilationUnitTree root) {
     for (File file : SourceFileManager.list(module, packageName)) {
-      if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className,root)) {
+      if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className, root)) {
         if (file.getName().endsWith(".java")) {
           return file.toPath();
         }
@@ -246,14 +246,14 @@ public class ProjectUtil {
       return NOT_FOUND;
     }
     Path file = Paths.get(source.toUri());
-    if (!containsType(file, className,root)) {
+    if (!containsType(file, className, root)) {
       return NOT_FOUND;
     }
     return file;
   }
 
   public Optional<JavaFileObject> findPublicTypeDeclarationInJdk(String className) {
-     JavaFileObject source;
+    JavaFileObject source;
     try {
       source =
           mSourceFileManager.getJavaFileForInput(
@@ -263,7 +263,7 @@ public class ProjectUtil {
     }
     return Optional.ofNullable(source);
   }
-  
+
   private static final Pattern PACKAGE_EXTRACTOR =
       Pattern.compile("^([a-z][_a-zA-Z0-9]*\\.)*[a-z][_a-zA-Z0-9]*");
 
@@ -304,5 +304,4 @@ public class ProjectUtil {
     }
     return cacheContainsType.get(file, null).contains(className);
   }
-  
 }

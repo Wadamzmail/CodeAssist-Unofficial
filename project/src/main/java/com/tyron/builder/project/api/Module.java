@@ -39,7 +39,7 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   Set<String> getAllProjects();
 
   Set<String> getAllProjects(File file);
-  
+
   Set<String> getApiProjects();
 
   Set<String> getApiProjects(File file);
@@ -72,7 +72,7 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   void clear();
 
   void index();
-  
+
   public String getModuleName();
 
   /**

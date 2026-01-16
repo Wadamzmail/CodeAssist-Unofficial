@@ -22,7 +22,7 @@ public interface JavaModule extends Module {
   void removeJavaFile(@NonNull String packageName);
 
   void addJavaFile(@NonNull File javaFile);
-  
+
   List<File> getLibraries();
 
   List<File> getNativeLibraries();
@@ -53,7 +53,7 @@ public interface JavaModule extends Module {
   PackageTrie getClassIndex();
 
   @NonNull
-  PackageTrie getApiClassIndex();  
+  PackageTrie getApiClassIndex();
 
   /**
    * @return The resources directory of the project. Note that this is different from android's res

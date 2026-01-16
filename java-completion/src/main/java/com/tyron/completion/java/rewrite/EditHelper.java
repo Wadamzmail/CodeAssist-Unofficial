@@ -26,12 +26,12 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Symbol;
 import com.tyron.completion.java.patterns.ClassTreePattern;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.JavaParserTypesUtil;
 import com.tyron.completion.java.util.JavaParserUtil;
@@ -53,7 +53,6 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import org.jetbrains.kotlin.com.intellij.util.ProcessingContext;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 public class EditHelper {
   final JavacUtilitiesProvider task;
@@ -355,7 +354,8 @@ public class EditHelper {
     return indentInternal(task, root, leaf);
   }
 
-  private static int indentInternal(JavacUtilitiesProvider task, CompilationUnitTree root, Tree leaf) {
+  private static int indentInternal(
+      JavacUtilitiesProvider task, CompilationUnitTree root, Tree leaf) {
     SourcePositions pos = task.getTrees().getSourcePositions();
     LineMap lines = root.getLineMap();
     long startClass = pos.getStartPosition(root, leaf);
@@ -393,7 +393,8 @@ public class EditHelper {
     return indent;
   }
 
-  public static Position insertBefore(JavacUtilitiesProvider task, CompilationUnitTree root, Tree member) {
+  public static Position insertBefore(
+      JavacUtilitiesProvider task, CompilationUnitTree root, Tree member) {
     SourcePositions pos = task.getTrees().getSourcePositions();
     LineMap lines = root.getLineMap();
     long start = pos.getStartPosition(root, member);
@@ -401,7 +402,8 @@ public class EditHelper {
     return new Position(line - 1, 0);
   }
 
-  public static Position insertAfter(JavacUtilitiesProvider task, CompilationUnitTree root, Tree member) {
+  public static Position insertAfter(
+      JavacUtilitiesProvider task, CompilationUnitTree root, Tree member) {
     SourcePositions pos = task.getTrees().getSourcePositions();
     LineMap lines = root.getLineMap();
     long end = pos.getEndPosition(root, member);

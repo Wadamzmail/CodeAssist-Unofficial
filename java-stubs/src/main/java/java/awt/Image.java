@@ -1,7 +1,4 @@
 package java.awt;
 
-/**
- * STUB
- */
-public class Image {
-}
+/** STUB */
+public class Image {}

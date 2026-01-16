@@ -71,8 +71,8 @@ public class EditorUtil {
       e.printStackTrace();
       int blockLineColor = getColor("#575757");
       int currentBlockLineColor = getColor("#7a7a7a");
-     // scheme.setColor(EditorColorScheme.BLOCK_LINE, blockLineColor);
-    //  scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, currentBlockLineColor);
+      // scheme.setColor(EditorColorScheme.BLOCK_LINE, blockLineColor);
+      //  scheme.setColor(EditorColorScheme.BLOCK_LINE_CURRENT, currentBlockLineColor);
     }
     return scheme;
   }

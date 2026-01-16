@@ -6,12 +6,13 @@ import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableGraph;
 import com.tyron.builder.model.ProjectSettings;
+import com.tyron.builder.project.api.AndroidContentRoot;
+import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.impl.AndroidModuleImpl;
-import com.tyron.builder.project.api.AndroidModule;
-import com.tyron.builder.project.api.AndroidContentRoot;
 import com.tyron.builder.project.mock.MockAndroidModule;
+import com.tyron.builder.project.parser.SettingsGradleParser;
 import com.tyron.code.event.EventManager;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import com.tyron.builder.project.parser.SettingsGradleParser;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Project {
@@ -69,6 +69,30 @@ public class Project {
     module.setProject(this);
 
     mModules.put(module.getName(), module);
+  }
+
+  public void removeModule(String name) {
+    Module module = mModules.get(name);
+    if (module == null) {
+      return;
+    }
+
+    if (module == mMainModule) {
+      throw new IllegalArgumentException("Cannot remove main module");
+    }
+
+    // remove from graph (edges + node)
+    graph.removeNode(module);
+
+    // remove from modules map
+    mModules.remove(name);
+
+    for (Module m : mModules.values()) {
+      m.getModuleDependencies().remove(name);
+      if (m instanceof JavaModule) {
+        ((JavaModule) m).getApiProjects().remove(name);
+      }
+    }
   }
 
   public boolean isCompiling() {
@@ -171,12 +195,12 @@ public class Project {
     }
     return getMainModule();
   }
-  
+
   public Module getResModule(File file) {
     for (Module value : mModules.values()) {
-       if(!(value instanceof AndroidModule))continue;
-      for (ContentRoot contentRoot : ((AndroidModuleImpl)value).getContentRoots()) {
-        for (File sourceDirectory : ((AndroidContentRoot)contentRoot).getResourceDirectories()) {
+      if (!(value instanceof AndroidModule)) continue;
+      for (ContentRoot contentRoot : ((AndroidModuleImpl) value).getContentRoots()) {
+        for (File sourceDirectory : ((AndroidContentRoot) contentRoot).getResourceDirectories()) {
           if (directoryContainsFile(sourceDirectory, file)) {
             return value;
           }

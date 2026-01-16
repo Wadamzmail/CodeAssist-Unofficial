@@ -6,6 +6,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.tyron.actions.AnActionEvent;
@@ -13,10 +14,11 @@ import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
 import com.tyron.common.util.ThreadUtil;
 import com.tyron.completion.java.R;
-import com.tyron.completion.java.action.CommonJavaContextKeys;
-import com.tyron.completion.java.compiler.JavaCompilerService;
+import com.tyron.completion.java.action.FindCurrentPath;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.AddTryCatch;
-import com.tyron.completion.java.rewrite.JavaRewrite;
+import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.util.RewriteUtil;
@@ -24,13 +26,6 @@ import com.tyron.editor.Editor;
 import java.io.File;
 import java.util.Locale;
 import javax.tools.Diagnostic;
-
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.rewrite.JavaRewrite2;
-import com.tyron.completion.java.action.FindCurrentPath;
 
 public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
 
@@ -50,23 +45,22 @@ public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
     if (diagnostic == null) {
       return;
     }
-    
-    Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
-        if(editor==null) return;
-        File file = event.getRequiredData(CommonDataKeys.FILE);
-        if(file==null) return;
-    
-    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
-        if (compilationInfo == null) return;
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
-        if (unit == null) return;
-        int left = editor.getCaret().getStart();
-        int right = editor.getCaret().getEnd();
-        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
-        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
-    TreePath surroundingPath =
-        ActionUtil.findSurroundingPath(currentPath);
+    Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
+    if (editor == null) return;
+    File file = event.getRequiredData(CommonDataKeys.FILE);
+    if (file == null) return;
+
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    if (compilationInfo == null) return;
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+    if (unit == null) return;
+    int left = editor.getCaret().getStart();
+    int right = editor.getCaret().getEnd();
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+    TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+
+    TreePath surroundingPath = ActionUtil.findSurroundingPath(currentPath);
     if (surroundingPath == null) {
       return;
     }
@@ -89,15 +83,15 @@ public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
     File file = e.getRequiredData(CommonDataKeys.FILE);
     Diagnostic<?> diagnostic = e.getRequiredData(CommonDataKeys.DIAGNOSTIC);
     CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
-        if (compilationInfo == null) return;
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
-        if (unit == null) return;
-        int left = editor.getCaret().getStart();
-        int right = editor.getCaret().getEnd();
-        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
-        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
-        TreePath surroundingPath = ActionUtil.findSurroundingPath(currentPath);
-       String exceptionName =
+    if (compilationInfo == null) return;
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+    if (unit == null) return;
+    int left = editor.getCaret().getStart();
+    int right = editor.getCaret().getEnd();
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+    TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+    TreePath surroundingPath = ActionUtil.findSurroundingPath(currentPath);
+    String exceptionName =
         DiagnosticUtil.extractExceptionName(diagnostic.getMessage(Locale.ENGLISH));
 
     if (surroundingPath == null) {
@@ -107,7 +101,11 @@ public class SurroundWithTryCatchAction extends ExceptionsQuickFix {
     ThreadUtil.runOnBackgroundThread(
         () -> {
           JavaRewrite2 r = performInternal(file, exceptionName, surroundingPath);
-          RewriteUtil.performRewrite(editor, file, new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()), r);
+          RewriteUtil.performRewrite(
+              editor,
+              file,
+              new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()),
+              r);
         });
   }
 

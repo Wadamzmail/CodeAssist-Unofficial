@@ -17,9 +17,9 @@ import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +51,8 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     mResourceClasses = new HashMap<>(1);
     File contentRootDirectory = new File(getRootFile(), "src/main");
     AndroidContentRoot contentRoot = new AndroidContentRoot(contentRootDirectory);
-    contentRoot.setJavaDirectories(Arrays.asList(new File("src/main/java"),new File("src/main/kotlin")));
+    contentRoot.setJavaDirectories(
+        Arrays.asList(new File("src/main/java"), new File("src/main/kotlin")));
     contentRoot.setResourceDirectories(Collections.singletonList(new File("src/main/res")));
     addContentRoot(contentRoot);
   }
@@ -93,38 +94,42 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     super.index();
 
     Consumer<File> kotlinConsumer = this::addKotlinFile;
-    
+
     if (getJavaDirectory().exists()) {
       FileUtils.iterateFiles(
               getJavaDirectory(), FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
           .forEachRemaining(kotlinConsumer);
-    } 
-    
+    }
+
     if (getKotlinDirectory().exists()) {
       FileUtils.iterateFiles(
               getKotlinDirectory(),
               FileFilterUtils.suffixFileFilter(".kt"),
               TrueFileFilter.INSTANCE)
-          .forEachRemaining(kotlinConsumer); 
-        FileUtils.iterateFiles(
-                 getKotlinDirectory(), FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
-             .forEachRemaining(this::addJavaFile);      
-    } 
+          .forEachRemaining(kotlinConsumer);
+      FileUtils.iterateFiles(
+              getKotlinDirectory(),
+              FileFilterUtils.suffixFileFilter(".java"),
+              TrueFileFilter.INSTANCE)
+          .forEachRemaining(this::addJavaFile);
+    }
 
-//    for (ContentRoot contentRoot : getContentRoots()) {
-//      if (contentRoot instanceof AndroidContentRoot) {
-//        AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
-//        for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
-//          // java source root may contain kotlin files aswell
-//          FileUtils.iterateFiles(
-//                  javaDirectory, FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
-//              .forEachRemaining(kotlinConsumer);
-//          FileUtils.iterateFiles(
-//                  javaDirectory, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
-//              .forEachRemaining(this::addJavaFile);
-//        }
-//      }
-//    }
+    //    for (ContentRoot contentRoot : getContentRoots()) {
+    //      if (contentRoot instanceof AndroidContentRoot) {
+    //        AndroidContentRoot androidContentRoot = ((AndroidContentRoot) contentRoot);
+    //        for (File javaDirectory : androidContentRoot.getJavaDirectories()) {
+    //          // java source root may contain kotlin files aswell
+    //          FileUtils.iterateFiles(
+    //                  javaDirectory, FileFilterUtils.suffixFileFilter(".kt"),
+    // TrueFileFilter.INSTANCE)
+    //              .forEachRemaining(kotlinConsumer);
+    //          FileUtils.iterateFiles(
+    //                  javaDirectory, FileFilterUtils.suffixFileFilter(".java"),
+    // TrueFileFilter.INSTANCE)
+    //              .forEachRemaining(this::addJavaFile);
+    //        }
+    //      }
+    //    }
 
     // R.java files
     //        File gen = new File(getBuildDirectory(), "gen");
@@ -781,26 +786,26 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
       throw new Error(e);
     }
   }
-  
-    public void addModuleDependency(String targetModuleName) {
-        moduleDependencies.add(targetModuleName);
-    }
 
-    @Override
-    public Set<String> getModuleDependencies() {
-        //return moduleDependencies;
-       return getAllProjects();
-    }
-  
+  public void addModuleDependency(String targetModuleName) {
+    moduleDependencies.add(targetModuleName);
+  }
+
   @Override
-    public void addContentRoot(ContentRoot contentRoot) {
-        contentRoots.add(contentRoot);
-    }
+  public Set<String> getModuleDependencies() {
+    // return moduleDependencies;
+    return getAllProjects();
+  }
 
-    @Override
-    public Set<ContentRoot> getContentRoots() {
-        return contentRoots;
-    }
+  @Override
+  public void addContentRoot(ContentRoot contentRoot) {
+    contentRoots.add(contentRoot);
+  }
+
+  @Override
+  public Set<ContentRoot> getContentRoots() {
+    return contentRoots;
+  }
 
   @Override
   public String getPackageName() {

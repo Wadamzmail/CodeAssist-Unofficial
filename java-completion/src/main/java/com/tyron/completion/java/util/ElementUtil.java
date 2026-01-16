@@ -3,7 +3,7 @@ package com.tyron.completion.java.util;
 import static com.tyron.completion.progress.ProgressManager.checkCanceled;
 
 import com.sun.source.tree.Scope;
-import com.tyron.completion.java.compiler.CompileTask;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.provider.ScopeHelper;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,9 +18,6 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-
 
 public class ElementUtil {
 
@@ -102,7 +99,8 @@ public class ElementUtil {
    * <p>This is a hack, since ExecutableElement does not override equals and hashCode, i manually
    * checked the necessary information to determine on whether the two methods are equal.
    */
-  public static boolean isMemberOf(JavacUtilitiesProvider task, ExecutableElement method, TypeElement aClass) {
+  public static boolean isMemberOf(
+      JavacUtilitiesProvider task, ExecutableElement method, TypeElement aClass) {
     if (aClass == null) {
       return false;
     }

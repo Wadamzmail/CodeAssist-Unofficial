@@ -58,7 +58,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   public PackageTrie getClassIndex() {
     return mClassIndex;
   }
-  
+
   @NonNull
   @Override
   public PackageTrie getApiClassIndex() {
@@ -93,7 +93,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     mClassIndex.add(className);
     apiClassIndex.add(className);
   }
-  
+
   @Override
   public void putLibraryHashes(Map<String, CodeAssistLibrary> hashes) {
     mLibraryHashMap.putAll(hashes);
@@ -197,7 +197,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       // ignored, don't put the jar
     }
   }
-  
+
   public void addApiLibrary(@NonNull CodeAssistLibrary library) {
     File jar = library.getSourceFile();
     if (jar == null) {
@@ -264,7 +264,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       }
     }
   }
-  
+
   protected void putApiJar(File file) throws IOException {
     if (file == null) {
       return;

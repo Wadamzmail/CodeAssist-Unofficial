@@ -20,49 +20,33 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
-import com.tyron.builder.project.Project;
+import com.tyron.builder.model.CodeAssistAndroidLibrary;
 import com.tyron.builder.project.api.AndroidModule;
-import com.tyron.completion.index.CompilerService;
-import com.tyron.completion.xml.model.AttributeInfo;
-import com.tyron.completion.xml.model.DeclareStyleable;
-import com.tyron.completion.xml.model.Format;
+import com.tyron.builder.project.impl.AndroidModuleImpl;
+import com.tyron.completion.xml.BytecodeScanner;
 import com.tyron.completion.xml.util.StyleUtils;
-import com.tyron.xml.completion.repository.ResourceRepository;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
-import com.tyron.completion.xml.BytecodeScanner;
-import com.tyron.builder.model.CodeAssistAndroidLibrary;
-import com.tyron.builder.model.CodeAssistLibrary;
-import com.tyron.builder.project.impl.AndroidModuleImpl;
-import java.util.stream.Collectors;
-import com.tyron.completion.java.util.FilesUtil;
-
 
 public class LayoutRepo {
 
   private final Map<String, JavaClass> mJavaViewClasses = new TreeMap<>();
 
   private boolean mInitialized = false;
-  
+
   private static final Key<LayoutRepo> LAYOUT_REPO_KEY = Key.create("layoutRepo_key");
-  
+
   private static Set<File> mCachedPaths = new HashSet<>();
-  
+
   public LayoutRepo() {}
 
   public Map<String, JavaClass> getJavaViewClasses() {
@@ -75,8 +59,8 @@ public class LayoutRepo {
     }
     BytecodeScanner.scanBootstrapIfNeeded();
     Set<File> libraries = new HashSet<>();
-    //libraries.addAll(getAndroidLibs(module));
-    //get libraries is enough
+    // libraries.addAll(getAndroidLibs(module));
+    // get libraries is enough
     libraries.addAll(module.getLibraries());
 
     for (File library : libraries) {
@@ -112,21 +96,21 @@ public class LayoutRepo {
 
     mInitialized = true;
   }
-  
+
   public synchronized void initialize(AndroidModule module) throws IOException {
-      initialize(module,false);
-    } 
-  
-  Set<File> getAndroidLibs(AndroidModule module){
-  Set<File> libraries = new HashSet<>();
+    initialize(module, false);
+  }
+
+  Set<File> getAndroidLibs(AndroidModule module) {
+    Set<File> libraries = new HashSet<>();
     libraries.addAll(
-            ((AndroidModuleImpl) module)
-                .getCodeAssistLibraries().stream()
-                    .filter(it -> it instanceof CodeAssistAndroidLibrary)
-                    .map(it -> (CodeAssistAndroidLibrary) it)
-                    .flatMap(it -> it.getCompileJarFiles().stream())
-                    .collect(Collectors.toList()));
-     return libraries;             
+        ((AndroidModuleImpl) module)
+            .getCodeAssistLibraries().stream()
+                .filter(it -> it instanceof CodeAssistAndroidLibrary)
+                .map(it -> (CodeAssistAndroidLibrary) it)
+                .flatMap(it -> it.getCompileJarFiles().stream())
+                .collect(Collectors.toList()));
+    return libraries;
   }
 
   private void addFrameworkViews() {
@@ -163,14 +147,17 @@ public class LayoutRepo {
       // ignored
     }
   }
-       
-  public static synchronized LayoutRepo get( AndroidModule module) {
-     LayoutRepo repo = (LayoutRepo)module.getUserData(LAYOUT_REPO_KEY);
-     if(repo!=null)return repo;
-     repo = new LayoutRepo();
-    try{ repo.initialize(module);}catch(IOException e){e.printStackTrace();}
-     module.putUserData(LAYOUT_REPO_KEY,repo);
+
+  public static synchronized LayoutRepo get(AndroidModule module) {
+    LayoutRepo repo = (LayoutRepo) module.getUserData(LAYOUT_REPO_KEY);
+    if (repo != null) return repo;
+    repo = new LayoutRepo();
+    try {
+      repo.initialize(module);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    module.putUserData(LAYOUT_REPO_KEY, repo);
     return repo;
   }
-  
 }

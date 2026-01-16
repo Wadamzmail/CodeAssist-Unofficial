@@ -2,8 +2,11 @@ package com.tyron.completion.java.hover;
 
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
 import com.tyron.completion.java.provider.FindHelper;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.tyron.completion.java.util.ProjectUtil;
 import dev.mutwakil.javac.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -17,9 +20,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.sun.source.util.DocTrees;
-import com.tyron.completion.java.util.ProjectUtil;
 
 public class HoverProvider {
 
@@ -32,38 +32,39 @@ public class HoverProvider {
   }
 
   public List<String> hover(Path file, int offset) {
-          Element element = new FindHoverElement(task).scan(task.root(), (long) offset);
-          if (element == null) {
-            return NOT_SUPPORTED;
-          }
-          List<String> list = new ArrayList<>();
-          String code = printType(element);
-          list.add(code);
-          String docs = docs(task, element);
-          if (!docs.isEmpty()) {
-            list.add(docs);
-          }
-          return list;
- 
+    Element element = new FindHoverElement(task).scan(task.root(), (long) offset);
+    if (element == null) {
+      return NOT_SUPPORTED;
+    }
+    List<String> list = new ArrayList<>();
+    String code = printType(element);
+    list.add(code);
+    String docs = docs(task, element);
+    if (!docs.isEmpty()) {
+      list.add(docs);
+    }
+    return list;
   }
 
   public String docs(JavacUtilitiesProvider task, Element element) {
     if (element instanceof TypeElement) {
       TypeElement type = (TypeElement) element;
       String className = type.getQualifiedName().toString();
-     // TODO
-     // NOTE:
-     // Source lookup outside current CompilationUnit requires JavaCompilerService
-     // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
-       if (!file.isPresent()) return "";
+      // TODO
+      // NOTE:
+      // Source lookup outside current CompilationUnit requires JavaCompilerService
+      // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
+      Optional<JavaFileObject> file =
+          ProjectUtil.getInstance().findAnywhere(className, task.root());
+      if (!file.isPresent()) return "";
       Tree tree = FindHelper.findType(task, className);
       return docs(task, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
       VariableElement field = (VariableElement) element;
       TypeElement type = (TypeElement) field.getEnclosingElement();
       String className = type.getQualifiedName().toString();
-      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
+      Optional<JavaFileObject> file =
+          ProjectUtil.getInstance().findAnywhere(className, task.root());
       if (!file.isPresent()) return "";
       Tree tree = FindHelper.findType(task, className);
       return docs(task, tree);
@@ -73,7 +74,8 @@ public class HoverProvider {
       String className = type.getQualifiedName().toString();
       String methodName = method.getSimpleName().toString();
       String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
-      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className,task.root());
+      Optional<JavaFileObject> file =
+          ProjectUtil.getInstance().findAnywhere(className, task.root());
       if (!file.isPresent()) return "";
       Tree tree = FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
       return docs(task, tree);

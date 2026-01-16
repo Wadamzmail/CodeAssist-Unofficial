@@ -1,4 +1,3 @@
 package java.awt.datatransfer;
 
-public interface Transferable {
-}
+public interface Transferable {}

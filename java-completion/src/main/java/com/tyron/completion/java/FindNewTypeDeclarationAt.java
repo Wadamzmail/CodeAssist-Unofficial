@@ -3,11 +3,10 @@ package com.tyron.completion.java;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.util.JavacTask;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreeScanner;
-import dev.mutwakil.javac.*;
 import com.sun.source.util.Trees;
+import dev.mutwakil.javac.*;
 
 public class FindNewTypeDeclarationAt extends TreeScanner<ClassTree, Long> {
 

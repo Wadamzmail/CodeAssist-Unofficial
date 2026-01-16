@@ -14,16 +14,12 @@ import com.tyron.completion.model.CachedCompletion;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.completion.xml.XmlRepository;
 import com.tyron.completion.xml.model.XmlCompletionType;
-import com.tyron.completion.xml.util.AndroidAttributeUtils;
 import com.tyron.completion.xml.util.AndroidResourcesUtils;
 import com.tyron.completion.xml.util.AndroidXmlTagUtils;
-import com.tyron.completion.xml.util.AttributeValueUtils;
 import com.tyron.completion.xml.util.XmlUtils;
 import com.tyron.xml.completion.repository.api.ResourceNamespace;
-import com.tyron.xml.completion.util.DOMUtils;
 import java.io.File;
 import java.io.IOException;
-import org.eclipse.lemminx.dom.DOMAttr;
 import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.eclipse.lemminx.uriresolver.URIResolverExtensionManager;
@@ -119,23 +115,23 @@ public class LayoutXmlCompletionProvider extends CompletionProvider {
         AndroidXmlTagUtils.addTagItems(repository, prefix, builder);
         break;
       case ATTRIBUTE:
-       // AndroidAttributeUtils.addLayoutAttributes(
-       //     builder, repository.getRepository(), parsed.findNodeAt((int) index), namespace);
+        // AndroidAttributeUtils.addLayoutAttributes(
+        //     builder, repository.getRepository(), parsed.findNodeAt((int) index), namespace);
         break;
       case ATTRIBUTE_VALUE:
-       // DOMAttr attr = parsed.findAttrAt((int) index);
-      //  String uri = DOMUtils.lookupPrefix(attr);
-      //  ResourceNamespace resourceNamespace = ResourceNamespace.fromNamespaceUri(uri);
-       // AttributeValueUtils.addValueItems(
-          // project,
-          // module,
-          //  prefix,
-          //  (int) index,
-          //  repository,
-          //  attr,
-          //  resourceNamespace,
-          //  namespace,
-          //  builder);
+        // DOMAttr attr = parsed.findAttrAt((int) index);
+        //  String uri = DOMUtils.lookupPrefix(attr);
+        //  ResourceNamespace resourceNamespace = ResourceNamespace.fromNamespaceUri(uri);
+        // AttributeValueUtils.addValueItems(
+        // project,
+        // module,
+        //  prefix,
+        //  (int) index,
+        //  repository,
+        //  attr,
+        //  resourceNamespace,
+        //  namespace,
+        //  builder);
     }
     return builder;
   }

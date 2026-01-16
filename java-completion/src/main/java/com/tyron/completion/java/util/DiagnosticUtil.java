@@ -2,15 +2,19 @@ package com.tyron.completion.java.util;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.JavacTask;
+import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.ClientCodeWrapper;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.completion.java.action.FindMethodDeclarationAt;
 import com.tyron.completion.java.compiler.CompileTask;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.editor.CharPosition;
 import com.tyron.editor.Editor;
 import dev.mutwakil.javac.*;
@@ -25,14 +29,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.util.ErrorCodes;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.util.SourcePositions;
-import com.sun.source.tree.BlockTree;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.tree.JCTree;
 
 public class DiagnosticUtil {
 
@@ -204,7 +200,7 @@ public class DiagnosticUtil {
 
   @NonNull
   public static MethodPtr findMethod(JavacUtilitiesProvider task, long position) {
-    Trees trees = task.getTrees();//MTrees.instance(task.getTask());
+    Trees trees = task.getTrees(); // MTrees.instance(task.getTask());
     Tree tree = new FindMethodDeclarationAt(trees).scan(task.root(), position);
     TreePath path = trees.getPath(task.root(), tree);
     ExecutableElement method = (ExecutableElement) trees.getElement(path);
@@ -223,7 +219,7 @@ public class DiagnosticUtil {
     }
     return group;
   }
-  
+
   public static DiagnosticWrapper modifyDiagnostic(
       JavacUtilitiesProvider task, Diagnostic<? extends JavaFileObject> diagnostic) {
     DiagnosticWrapper wrapped = new DiagnosticWrapper(diagnostic);
@@ -270,6 +266,5 @@ public class DiagnosticUtil {
       }
     }
     return wrapped;
-  } 
-  
+  }
 }

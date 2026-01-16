@@ -3,26 +3,21 @@ package com.tyron.completion.java.action.context;
 import android.app.AlertDialog;
 import androidx.annotation.NonNull;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.tree.JCTree;
 import com.tyron.actions.ActionPlaces;
 import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
 import com.tyron.completion.java.R;
-import com.tyron.completion.java.action.CommonJavaContextKeys;
-import com.tyron.completion.java.compiler.JavaCompilerService;
+import com.tyron.completion.java.action.FindCurrentPath;
 import com.tyron.completion.java.hover.HoverProvider;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.editor.Editor;
 import java.io.File;
 import java.util.List;
-
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.rewrite.JavaRewrite2;
-import com.tyron.completion.java.action.FindCurrentPath;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 
 public class ViewJavaDocAction extends AnAction {
 
@@ -44,24 +39,24 @@ public class ViewJavaDocAction extends AnAction {
     if (editor == null) {
       return;
     }
-       
-        CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
-        if (compilationInfo == null) return;
-    
 
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
-       if (unit == null) return;
+    CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    if (compilationInfo == null) return;
 
-        int left = editor.getCaret().getStart();
-        int right = editor.getCaret().getEnd();
-        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
-        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
-        if(currentPath ==null) return;
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+    if (unit == null) return;
 
-    HoverProvider hoverProvider = new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()));
+    int left = editor.getCaret().getStart();
+    int right = editor.getCaret().getEnd();
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+    TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+    if (currentPath == null) return;
+
+    HoverProvider hoverProvider =
+        new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()));
     List<String> strings =
-    hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
-   
+        hoverProvider.hover(file.toPath().getFileName(), editor.getCaret().getStart());
+
     if (strings.isEmpty()) {
       return;
     }
@@ -74,21 +69,20 @@ public class ViewJavaDocAction extends AnAction {
   public void actionPerformed(@NonNull AnActionEvent e) {
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     File file = e.getData(CommonDataKeys.FILE);
-        CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
-        if (compilationInfo == null) return;
-    
+    CompilationInfo compilationInfo = e.getData(CompilationInfo.COMPILATION_INFO_KEY);
+    if (compilationInfo == null) return;
 
-        JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
-       if (unit == null) return;
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toURI());
+    if (unit == null) return;
 
-        int left = editor.getCaret().getStart();
-        int right = editor.getCaret().getEnd();
-        JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
-        TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
-        if(currentPath ==null) return;
-     
+    int left = editor.getCaret().getStart();
+    int right = editor.getCaret().getEnd();
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
+    TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
+    if (currentPath == null) return;
 
-    HoverProvider hoverProvider = new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()));
+    HoverProvider hoverProvider =
+        new HoverProvider(new DefaultJavacUtilitiesProvider(javacTask, unit, editor.getProject()));
     List<String> strings = hoverProvider.hover(file.toPath(), editor.getCaret().getStart());
 
     String title = e.getDataContext().getString(R.string.menu_action_view_javadoc_title);

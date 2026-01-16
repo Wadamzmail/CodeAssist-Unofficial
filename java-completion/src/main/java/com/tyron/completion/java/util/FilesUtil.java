@@ -1,14 +1,14 @@
 package com.tyron.completion.java.util;
 
 import java.io.File;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-public final class FilesUtil{
-  private FilesUtil(){}
-  
+public final class FilesUtil {
+  private FilesUtil() {}
+
   public static synchronized boolean changed(Set<File> oldFiles, Set<File> newFiles) {
     if (oldFiles.size() != newFiles.size()) {
       return true;
@@ -28,7 +28,7 @@ public final class FilesUtil{
 
     return false;
   }
-  
+
   public static Set<File> getFiles(File dir, String ext) {
     Set<File> Files = new HashSet<>();
 
@@ -49,5 +49,4 @@ public final class FilesUtil{
 
     return Files;
   }
-  
 }

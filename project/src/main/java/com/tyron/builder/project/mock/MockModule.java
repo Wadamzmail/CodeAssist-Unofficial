@@ -5,6 +5,7 @@ import com.tyron.builder.model.ModuleSettings;
 import com.tyron.builder.project.api.FileManager;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.cache.CacheHolder.CacheKey;
+import com.tyron.builder.project.impl.*;
 import com.tyron.common.util.Cache;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,10 +18,10 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +34,6 @@ import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.tyron.builder.project.impl.*;
 
 public class MockModule implements Module {
 
@@ -48,8 +48,8 @@ public class MockModule implements Module {
   public MockModule(File root) {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
-    
-   // try{this.open();}catch(IOException e){e.printStackTrace();}
+
+    // try{this.open();}catch(IOException e){e.printStackTrace();}
   }
 
   @Override
@@ -119,11 +119,11 @@ public class MockModule implements Module {
       }
     }
 
-    //myModuleSettings =
-     //   new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
+    // myModuleSettings =
+    //   new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
   }
-  
-  @Override 
+
+  @Override
   public String getModuleName() {
     return mRoot.getName();
   }
@@ -211,13 +211,13 @@ public class MockModule implements Module {
   public Set<String> getAllProjects(File gradleFile) {
     return parseAllProjects(gradleFile);
   }
-  
+
   @Override
   public Set<String> getApiProjects() {
     return parseApiProjects(getGradleFile());
   }
-  
-  @Override 
+
+  @Override
   public Set<String> getApiProjects(File gradleFile) {
     return parseApiProjects(gradleFile);
   }
@@ -422,7 +422,7 @@ public class MockModule implements Module {
       String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
       return parseProjects(readString);
     } catch (IOException e) {
-    e.printStackTrace();
+      e.printStackTrace();
     }
     return null;
   }
@@ -612,9 +612,7 @@ public class MockModule implements Module {
     }
     return null;
   }
-  
-  
-  
+
   private Set<String> parseApiProjects(File gradleFile) {
     try {
       String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
@@ -622,14 +620,14 @@ public class MockModule implements Module {
     } catch (IOException e) {
     }
     return null;
-  } 
-  
+  }
+
   public static Set<String> parseApiProjects(String readString) throws IOException {
-     
+
     final Pattern API_PROJECT_PATH =
         Pattern.compile("api project\\(path:\\s*['\"]([^'\"]+)['\"]\\)");
     final Pattern API_PROJECT = Pattern.compile("api project\\(\\s*['\"]([^'\"]+)['\"]\\)");
-  
+
     readString = readString.replaceAll("\\s*//.*", "");
     Set<String> projects = new HashSet<>();
     Matcher matcher = API_PROJECT_PATH.matcher(readString);
@@ -649,9 +647,9 @@ public class MockModule implements Module {
         projects.add(declaration);
       }
     }
-    
+
     return projects;
-  } 
+  }
 
   public static List<String> parseIncludedProjects(String readString) throws IOException {
     final Pattern INCLUDE = Pattern.compile("\\s*include\\s*(?:'|\\\")([\\w./:-]+)(?:'|\\\")");

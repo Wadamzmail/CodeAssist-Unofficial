@@ -1,6 +1,7 @@
 package com.tyron.completion.java.parse;
 
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.api.DiagnosticFormatter;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.util.JCDiagnostic;
@@ -20,7 +21,6 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
-import com.sun.tools.javac.api.ClientCodeWrapper;
 
 public class CompilationInfoImpl {
 
@@ -116,13 +116,14 @@ public class CompilationInfoImpl {
     DiagnosticListenerImpl.DiagNode node = errors.first;
     while (node != null) {
       final JCDiagnostic diagnostic;
-          if (node.diag instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
-            diagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) node.diag).d;
-            System.out.println("CompilationInfoImpl Yes it's instance of ClientCodeWrapper.DiagnosticSourceUnwrapper");
-          } else {
-            diagnostic = (JCDiagnostic) node.diag;
-          } 
-      localErrors.add(RichDiagnostic.wrap(diagnostic, formatter));    
+      if (node.diag instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
+        diagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) node.diag).d;
+        System.out.println(
+            "CompilationInfoImpl Yes it's instance of ClientCodeWrapper.DiagnosticSourceUnwrapper");
+      } else {
+        diagnostic = (JCDiagnostic) node.diag;
+      }
+      localErrors.add(RichDiagnostic.wrap(diagnostic, formatter));
       node = node.next;
     }
 

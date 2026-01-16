@@ -10,8 +10,6 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.tyron.completion.java.compiler.CompileTask;
-import com.tyron.completion.java.compiler.ParseTask;
 import dev.mutwakil.javac.*;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -26,7 +24,8 @@ import javax.lang.model.util.Types;
 /** Convenience class for common tasks with completions */
 public class FindHelper {
 
-  public static String[] erasedParameterTypes(JavacUtilitiesProvider task, ExecutableElement method) {
+  public static String[] erasedParameterTypes(
+      JavacUtilitiesProvider task, ExecutableElement method) {
     Types types = task.getTypes();
     String[] erasedParameterTypes = new String[method.getParameters().size()];
     for (int i = 0; i < erasedParameterTypes.length; i++) {
@@ -36,7 +35,8 @@ public class FindHelper {
     return erasedParameterTypes;
   }
 
-  public static String[] erasedParameterTypes2(JavacUtilitiesProvider task, ExecutableElement method) {
+  public static String[] erasedParameterTypes2(
+      JavacUtilitiesProvider task, ExecutableElement method) {
     Types types = task.getTypes();
     String[] erasedParameterTypes = new String[method.getParameters().size()];
     for (int i = 0; i < erasedParameterTypes.length; i++) {
@@ -47,9 +47,12 @@ public class FindHelper {
   }
 
   public static MethodTree findMethod(
-      JavacUtilitiesProvider task, String className, String methodName, String[] erasedParameterTypes) {
+      JavacUtilitiesProvider task,
+      String className,
+      String methodName,
+      String[] erasedParameterTypes) {
     ClassTree classTree = findType(task, className);
-    if(classTree==null) return null;
+    if (classTree == null) return null;
     for (Tree member : classTree.getMembers()) {
       if (member.getKind() != Tree.Kind.METHOD) continue;
       MethodTree method = (MethodTree) member;
@@ -60,7 +63,8 @@ public class FindHelper {
     return null;
   }
 
-  public static VariableTree findField(JavacUtilitiesProvider task, String className, String memberName) {
+  public static VariableTree findField(
+      JavacUtilitiesProvider task, String className, String memberName) {
     ClassTree classTree = findType(task, className);
     for (Tree member : classTree.getMembers()) {
       if (member.getKind() != Tree.Kind.VARIABLE) continue;
@@ -76,7 +80,10 @@ public class FindHelper {
   }
 
   public static ExecutableElement findMethod2(
-      JavacUtilitiesProvider task, String className, String methodName, String[] erasedParameterTypes) {
+      JavacUtilitiesProvider task,
+      String className,
+      String methodName,
+      String[] erasedParameterTypes) {
     TypeElement type = task.getElements().getTypeElement(className);
     for (Element member : type.getEnclosedElements()) {
       if (member.getKind() != ElementKind.METHOD) continue;

@@ -17,10 +17,10 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,17 +47,17 @@ public class ModuleImpl implements Module {
   public ModuleImpl(File root) {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
-    try{
-    File codeassist = new File(getProjectDir(), ".idea");
-    if (!codeassist.exists()) {
-      if (!codeassist.mkdirs()) {}
+    try {
+      File codeassist = new File(getProjectDir(), ".idea");
+      if (!codeassist.exists()) {
+        if (!codeassist.mkdirs()) {}
+      }
+      myModuleSettings =
+          new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
+    } catch (Exception e) {
+      e.printStackTrace();
     }
-    myModuleSettings =
-        new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
-   }catch(Exception e){
-   e.printStackTrace();
-   }
-   // try{this.open();}catch(IOException e){e.printStackTrace();}
+    // try{this.open();}catch(IOException e){e.printStackTrace();}
   }
 
   @Override
@@ -127,11 +127,11 @@ public class ModuleImpl implements Module {
       }
     }
 
-    //myModuleSettings =
-     //   new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
+    // myModuleSettings =
+    //   new ModuleSettings(new File(codeassist, getRootFile().getName() + "_libraries.json"));
   }
-  
-  @Override 
+
+  @Override
   public String getModuleName() {
     return mRoot.getName();
   }
@@ -219,13 +219,13 @@ public class ModuleImpl implements Module {
   public Set<String> getAllProjects(File gradleFile) {
     return parseAllProjects(gradleFile);
   }
-  
+
   @Override
   public Set<String> getApiProjects() {
     return parseApiProjects(getGradleFile());
   }
-  
-  @Override 
+
+  @Override
   public Set<String> getApiProjects(File gradleFile) {
     return parseApiProjects(gradleFile);
   }
@@ -430,7 +430,7 @@ public class ModuleImpl implements Module {
       String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
       return parseProjects(readString);
     } catch (IOException e) {
-    e.printStackTrace();
+      e.printStackTrace();
     }
     return null;
   }
@@ -620,9 +620,7 @@ public class ModuleImpl implements Module {
     }
     return null;
   }
-  
-  
-  
+
   private Set<String> parseApiProjects(File gradleFile) {
     try {
       String readString = FileUtils.readFileToString(gradleFile, Charset.defaultCharset());
@@ -630,14 +628,14 @@ public class ModuleImpl implements Module {
     } catch (IOException e) {
     }
     return null;
-  } 
-  
+  }
+
   public static Set<String> parseApiProjects(String readString) throws IOException {
-     
+
     final Pattern API_PROJECT_PATH =
         Pattern.compile("api project\\(path:\\s*['\"]([^'\"]+)['\"]\\)");
     final Pattern API_PROJECT = Pattern.compile("api project\\(\\s*['\"]([^'\"]+)['\"]\\)");
-  
+
     readString = readString.replaceAll("\\s*//.*", "");
     Set<String> projects = new HashSet<>();
     Matcher matcher = API_PROJECT_PATH.matcher(readString);
@@ -657,9 +655,9 @@ public class ModuleImpl implements Module {
         projects.add(declaration);
       }
     }
-    
+
     return projects;
-  } 
+  }
 
   public static List<String> parseIncludedProjects(String readString) throws IOException {
     final Pattern INCLUDE = Pattern.compile("\\s*include\\s*(?:'|\\\")([\\w./:-]+)(?:'|\\\")");

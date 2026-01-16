@@ -442,9 +442,9 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
       saveAll(false);
       project.getSettings().refresh();
     }
-    
+
     mProject = project;
-    mIndexServiceConnection.setProject(project); 
+    mIndexServiceConnection.setProject(project);
 
     mMainViewModel.setToolbarTitle(project.getRootFile().getName());
     mMainViewModel.setIndexing(true);
@@ -452,13 +452,14 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
 
     RefreshRootEvent event = new RefreshRootEvent(project.getRootFile());
     ApplicationLoader.getInstance().getEventManager().dispatchEvent(event);
-    
+
     ProgressManager.getInstance()
-              .runLater(
-                  () -> {
-                   IndexServiceConnection.restoreFileEditors(project, mMainViewModel);
-                  },50);
-    
+        .runLater(
+            () -> {
+              IndexServiceConnection.restoreFileEditors(project, mMainViewModel);
+            },
+            50);
+
     Intent intent = new Intent(requireContext(), IndexService.class);
     requireActivity().startService(intent);
     requireActivity().bindService(intent, mIndexServiceConnection, Context.BIND_IMPORTANT);

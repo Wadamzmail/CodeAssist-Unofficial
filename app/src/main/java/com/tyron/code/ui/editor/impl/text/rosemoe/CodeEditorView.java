@@ -221,35 +221,34 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
   @Override
-public void commitText(CharSequence text, boolean applyAutoIndent) {
+  public void commitText(CharSequence text, boolean applyAutoIndent) {
     try {
-        if (text.length() == 1) {
-            io.github.rosemoe.sora.text.Content content = getText();
-            int cursorIndex = getCursor().getLeft();
-            
-            if (cursorIndex < content.length()) { 
-                char currentChar = content.charAt(cursorIndex);
-                char c = text.charAt(0);
-                
-                if (IGNORED_PAIR_ENDS.contains(c) && c == currentChar) {
-                    // ignored pair end, just move the cursor over the character
-                    setSelection(getCursor().getLeftLine(), getCursor().getLeftColumn() + 1);
-                    return;
-                }
-            }
+      if (text.length() == 1) {
+        io.github.rosemoe.sora.text.Content content = getText();
+        int cursorIndex = getCursor().getLeft();
+
+        if (cursorIndex < content.length()) {
+          char currentChar = content.charAt(cursorIndex);
+          char c = text.charAt(0);
+
+          if (IGNORED_PAIR_ENDS.contains(c) && c == currentChar) {
+            // ignored pair end, just move the cursor over the character
+            setSelection(getCursor().getLeftLine(), getCursor().getLeftColumn() + 1);
+            return;
+          }
         }
+      }
     } catch (Exception e) {
-        android.util.Log.e("CodeEditorView", "failed to commit text", e);
+      android.util.Log.e("CodeEditorView", "failed to commit text", e);
     }
-    
+
     super.commitText(text, applyAutoIndent);
 
     if (text.length() == 1) {
-        char c = text.charAt(0);
-        handleAutoInsert(c);
+      char c = text.charAt(0);
+      handleAutoInsert(c);
     }
-}
-
+  }
 
   private void handleAutoInsert(char c) {
     if (getEditorLanguage() instanceof LanguageXML) {
@@ -274,40 +273,38 @@ public void commitText(CharSequence text, boolean applyAutoIndent) {
     }
   }
 
- 
   @Override
-public void deleteText() {
+  public void deleteText() {
     try {
-        Cursor cursor = getCursor();
-        if (!cursor.isSelected()) {
-            io.github.rosemoe.sora.text.Content text = getText();
-            int startIndex = cursor.getLeft();
-            int length = text.length();
-            if (startIndex - 1 >= 0) {
-                char deleteChar = text.charAt(startIndex - 1);
-                if (startIndex < length) {
-                    char afterChar = text.charAt(startIndex);
-                    SymbolPairMatch.SymbolPair replacement = null;
+      Cursor cursor = getCursor();
+      if (!cursor.isSelected()) {
+        io.github.rosemoe.sora.text.Content text = getText();
+        int startIndex = cursor.getLeft();
+        int length = text.length();
+        if (startIndex - 1 >= 0) {
+          char deleteChar = text.charAt(startIndex - 1);
+          if (startIndex < length) {
+            char afterChar = text.charAt(startIndex);
+            SymbolPairMatch.SymbolPair replacement = null;
 
-                    SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
-                    if (pairs != null) {
-                        replacement = pairs.matchBestPairBySingleChar(deleteChar);
-                    }
-                    if (replacement != null) {
-                        if (("" + deleteChar + afterChar).equals(replacement.open + replacement.close)) {
-                            text.delete(startIndex - 1, startIndex + 1);
-                            return;
-                        }
-                    }
-                }
+            SymbolPairMatch pairs = getEditorLanguage().getSymbolPairs();
+            if (pairs != null) {
+              replacement = pairs.matchBestPairBySingleChar(deleteChar);
             }
+            if (replacement != null) {
+              if (("" + deleteChar + afterChar).equals(replacement.open + replacement.close)) {
+                text.delete(startIndex - 1, startIndex + 1);
+                return;
+              }
+            }
+          }
         }
+      }
     } catch (Exception e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
     super.deleteText();
-}
-
+  }
 
   @Override
   public void insertMultilineString(int line, int column, String string) {
