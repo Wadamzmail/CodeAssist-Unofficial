@@ -79,7 +79,7 @@ public class ShortNamesCache {
     JavaModule jvModule = (JavaModule)jvModule;
     classNames.addAll(jvModule.getClassIndex().getLeafNodes());  
     for (String depName : jvModule.getModuleDependencies()) {
-        Module dep = currentJava.getProject().getModuleByName(depName);
+        Module dep = jvModule.getProject().getModuleByName(depName);
         if (dep == null) {
           continue;
         }   
