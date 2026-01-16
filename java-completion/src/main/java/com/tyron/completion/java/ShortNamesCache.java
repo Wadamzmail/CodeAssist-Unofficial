@@ -31,7 +31,7 @@ public class ShortNamesCache {
     /**
      * module used to store JDK indexes
      */
-    private static final JavaModule JDK_MODULE = new JavaModuleImpl(null);
+    public static final JavaModule JDK_MODULE = new JavaModuleImpl(null);
 
     static {
         JDK_MODULE.addLibrary(CodeAssistLibrary.forJar(Objects.requireNonNull(CompletionModule.getAndroidJar())));
@@ -56,6 +56,7 @@ public class ShortNamesCache {
 
         Deque<Module> queue = new LinkedList<>();
         Set<Module> visitedModules = new HashSet<>();
+        Set<Module> pending = new HashSet<>();
         queue.addLast(module);
 
         while (!queue.isEmpty()) {
@@ -63,21 +64,59 @@ public class ShortNamesCache {
 
             if (current instanceof JavaModule) {
                 JavaModule javaModule = (JavaModule) current;
-                System.out.println("Module indexed :" + current.getName());
                 classNames.addAll(javaModule.getClassIndex().getLeafNodes());
             }
 
             visitedModules.add(current);
             for (String path : current.getModuleDependencies()) {
-                System.out.println("Module Dependencies :" +path);
+                Module dependingModule = current.getProject().getModuleByName(path);
+                if (dependingModule != null && !visitedModules.contains(dependingModule)) {
+                   // queue.addLast(dependingModule);
+                   if(dependingModule instanceof JavaModule){
+                   classNames.addAll(((JavaModule)dependingModule).getClassIndex().getLeafNodes());
+                   pending.add(dependingModule);
+                   System.out.println("Module Dependency :" +path+ " from :"+current.getName());
+                  }
+                }
+            }
+        }
+        
+        getAllApiClassNames(visitedModules, classNames,pending);
+        
+        classNames.addAll(JDK_MODULE.getClassIndex().getLeafNodes());
+        return classNames.toArray(new String[0]);
+    }
+    
+    private static void getAllApiClassNames(
+    Set<Module> visitedModules,
+    Set<String> classNames,
+    Set<Module> pending
+    ) {
+
+        Deque<Module> queue = new LinkedList<>();
+        for (Module m : pending){
+        if (!(m instanceof JavaModule)) {
+            continue;
+        }
+          queue.addLast(m);
+        } 
+        while (!queue.isEmpty()) {
+            Module current = queue.removeFirst();
+            if (current instanceof JavaModule) {
+                JavaModule javaModule = (JavaModule) current;
+                classNames.addAll(javaModule.getApiClassIndex().getLeafNodes());
+                System.out.println("Api Module indexed :" + current.getName());
+            }
+            
+            visitedModules.add(current); 
+            for (String path : current.getApiProjects()) {
                 Module dependingModule = current.getProject().getModuleByName(path);
                 if (dependingModule != null && !visitedModules.contains(dependingModule)) {
                     queue.addLast(dependingModule);
+                    System.out.println("Api Module Dependency :" +path+ " from :"+current.getName());
                 }
             }
         }
 
-        classNames.addAll(JDK_MODULE.getClassIndex().getLeafNodes());
-        return classNames.toArray(new String[0]);
     }
 }
