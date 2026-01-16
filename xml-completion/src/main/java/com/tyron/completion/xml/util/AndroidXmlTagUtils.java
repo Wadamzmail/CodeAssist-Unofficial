@@ -218,7 +218,7 @@ public class AndroidXmlTagUtils {
         names.add(segment);
         boolean isClass = className.endsWith(segment);
 
-        CompletionItem item = new CompletionItem();
+//        CompletionItem item = new CompletionItem();
         String commitPrefix = "<";
         if (prefix.startsWith("</")) {
           commitPrefix = "</";
@@ -237,8 +237,8 @@ public class AndroidXmlTagUtils {
 
         item.addFilterText(segment);
         item.setInsertHandler(new LayoutTagInsertHandler(null, item));
-        if (path.contains(".")) {
-          item.addFilterText(path.substring(0, path.lastIndexOf('.')) + "." + segment);
+        if (prefix.contains(".")) {
+          item.addFilterText(prefix.substring(0, prefix.lastIndexOf('.')) + "." + segment);
         }
         builder.addItem(item);
       }
