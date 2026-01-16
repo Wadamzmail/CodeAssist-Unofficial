@@ -324,7 +324,9 @@ public class ProjectManager {
                   }
                 }
               }
-              indexModule(module);
+             // indexModule(module);
+             CompilationInfo info = CompilationInfo.get(module,true);
+             KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module,true); 
           }
         } catch (Throwable e) {
           String message = "Failure indexing project.\n" + Throwables.getStackTraceAsString(e);

@@ -90,10 +90,6 @@ public class ShortNamesCache {
     while (!queue.isEmpty()) {
       Module current = queue.removeFirst();
 
-      if (!(current instanceof JavaModule)) {
-        continue;
-      }
-
       JavaModule currentJava = (JavaModule) current;
 
       visitedModules.add(currentJava);
@@ -116,9 +112,6 @@ public class ShortNamesCache {
     Set<String> classNames = new HashSet<>();
     for (String apiName : depModule.getApiProjects()) {
       Module m = depModule.getProject().getModuleByName(apiName);
-      if (!(m instanceof JavaModule)) {
-        continue;
-      }
 
       JavaModule apiModule = (JavaModule) m;
 

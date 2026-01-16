@@ -129,8 +129,8 @@ public class Project {
   }
 
   public void index() throws IOException {
- //   Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-    for (Module module : getModules()) {
+    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    for (Module module : modules) {
       module.clear();
       module.index();
     }
