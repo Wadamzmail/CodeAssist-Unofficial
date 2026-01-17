@@ -73,6 +73,7 @@ public class ShortNamesCache {
                   for (String path2 : ((JavaModule)dependingModule).getApiProjects()) {
                      Module dm1 = dependingModule.getProject().getModuleByName(path2); 
                      pending.add(dm1);
+                     System.out.println("added Module Dependency :" +path+ " from :"+module.getName());
                    }
                   }
                 }
@@ -108,9 +109,10 @@ public class ShortNamesCache {
             visitedModules.add(current); 
             for (String path : current.getApiProjects()) {
                 Module dependingModule = current.getProject().getModuleByName(path);
+                System.out.println("Api Module Dependency :" +path+ " from :"+current.getName());
                 if (dependingModule != null && !visitedModules.contains(dependingModule)) {
                     queue.addLast(dependingModule);
-                    System.out.println("Api Module Dependency :" +path+ " from :"+current.getName());
+                    System.out.println("Added Api Module Dependency :" +path+ " from :"+current.getName());
                 }
             }
         }
