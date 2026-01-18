@@ -158,6 +158,7 @@ public class PackageTask extends Task<AndroidModule> {
       message += "File1: " + e.getFile1() + " \n";
       message += "File2: " + e.getFile2() + " \n";
       message += "Archive path: " + e.getArchivePath();
+      e.printStackTrace();
       throw new CompilationFailedException(message);
     }
   }
