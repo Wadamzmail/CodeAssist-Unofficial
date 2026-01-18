@@ -69,11 +69,19 @@ public final class ApkBuilder implements IArchiveBuilder {
         public boolean checkEntry(String archivePath) throws ZipAbortException {
             verbosePrintln("=> %s", archivePath);
 
+//            File duplicate = checkFileForDuplicate(archivePath);
+//            if (duplicate != null) {
+//                throw new DuplicateFileException(archivePath, duplicate, mInputFile);
+//            } else {
+//                mAddedFiles.put(archivePath, mInputFile);
+//            }
             File duplicate = checkFileForDuplicate(archivePath);
             if (duplicate != null) {
-                throw new DuplicateFileException(archivePath, duplicate, mInputFile);
+                  verbosePrintln("Warning: Skipping duplicate file %s from %s (already added from %s)", 
+                      archivePath, mInputFile, duplicate);
+                 return false; 
             } else {
-                mAddedFiles.put(archivePath, mInputFile);
+                    mAddedFiles.put(archivePath, mInputFile);
             }
 
             return true;
@@ -828,7 +836,10 @@ public final class ApkBuilder implements IArchiveBuilder {
 
         File duplicate = checkFileForDuplicate(archivePath);
         if (duplicate != null) {
-            throw new DuplicateFileException(archivePath, duplicate, file);
+//            throw new DuplicateFileException(archivePath, duplicate, file);
+            verbosePrintln("Warning: Skipping duplicate file %s from %s (already added from %s)", 
+                      archivePath, file, duplicate);
+             return;        
         }
 
         mAddedFiles.put(archivePath, file);

@@ -191,6 +191,15 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     if (jar == null) {
       return;
     }
+    
+    try {
+      if (!hasClassFiles(jar)) {
+        return;
+      }
+    } catch (IOException e) {
+      // ignored, don't put the jar
+    }
+    
     if (!jar.getName().endsWith(".jar")) {
       return;
     }
@@ -210,6 +219,15 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     if (jar == null) {
       return;
     }
+    
+    try {
+      if (!hasClassFiles(jar)) {
+        return;
+      }
+    } catch (IOException e) {
+      // ignored, don't put the jar
+    }
+    
     if (!jar.getName().endsWith(".jar")) {
       return;
     }
