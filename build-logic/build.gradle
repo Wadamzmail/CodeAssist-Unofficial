@@ -58,6 +58,7 @@ dependencies {
     api 'com.android.tools:r8:8.13.19'
 
     compileOnly project(path: ':android-stubs')
+    implementation project(path: ':android-common-resources')
 }
 
 spotless {
