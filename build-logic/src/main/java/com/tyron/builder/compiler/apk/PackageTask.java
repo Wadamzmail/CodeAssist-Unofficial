@@ -89,7 +89,8 @@ public class PackageTask extends Task<AndroidModule> {
               mGeneratedRes.getAbsolutePath(),
               mDexFile.getAbsolutePath(),
               null,
-              null);
+              null,
+              System.out);
 
       for (File extraDex : mDexFiles) {
         dexCount++;
