@@ -7,6 +7,9 @@ import java.util.Objects;
 
 public class Dependency {
 
+  public static final Dependency STDLIB_JDK7 = new Dependency("org.jetbrains.kotlin","kotlin-stdlib-jdk7","2.3.0");
+  public static final Dependency STDLIB_JDK8 = new Dependency("org.jetbrains.kotlin","kotlin-stdlib-jdk8","2.3.0");
+
   public static Dependency valueOf(String declaration) {
     String[] names = declaration.split(":");
     if (names.length >= 4) {
@@ -25,7 +28,10 @@ public class Dependency {
 
   private final List<Dependency> excludes = new ArrayList<>(1);
 
-  public Dependency() {}
+  public Dependency() {
+    this.excludes.add(STDLIB_JDK7);
+    this.excludes.add(STDLIB_JDK8);
+  }
 
   public Dependency(Dependency copy) {
     this.artifactId = copy.artifactId;
@@ -44,6 +50,8 @@ public class Dependency {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.versionName = versionName;
+    this.excludes.add(STDLIB_JDK7);
+    this.excludes.add(STDLIB_JDK8);
   }
 
   public Dependency(String groupId, String artifactId, String versionName, String natives) {
@@ -52,6 +60,8 @@ public class Dependency {
     this.versionName = versionName;
     this.natives = natives;
     this.isNatives = true;
+    this.excludes.add(STDLIB_JDK7);
+    this.excludes.add(STDLIB_JDK8);
   }
 
   public String getArtifactId() {

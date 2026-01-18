@@ -437,6 +437,7 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
     if (getContext() == null) {
       return;
     }
+    mLogViewModel.clear(LogViewModel.BUILD_LOG);
 
     if (project.equals(ProjectManager.getInstance().getCurrentProject())) {
       saveAll(false);
