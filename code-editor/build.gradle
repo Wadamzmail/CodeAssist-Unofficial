@@ -58,7 +58,7 @@ dependencies {
  	api ('io.github.rosemoe:editor:0.24.3'){
  	   exclude group: 'com.google.guava', module: 'guava'
  	} 
-    api 'io.github.rosemoe:language-textmate:0.24.3'){
+    api ('io.github.rosemoe:language-textmate:0.24.3'){
        exclude group: 'com.google.guava', module: 'guava'
     } 
 }
