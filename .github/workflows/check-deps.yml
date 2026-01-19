@@ -27,7 +27,4 @@ jobs:
         run: chmod +x ./gradlew
       
       - name: Inspect Guava dependency
-        run: |
-          ./gradlew :app:dependencyInsight \
-            --dependency guava \
-            --configuration runtimeClasspath
+        run: ./gradlew dependencies | grep -i guava 
