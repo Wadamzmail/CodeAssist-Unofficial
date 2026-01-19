@@ -48,7 +48,6 @@ configurations.implementation {
 dependencies {
 
     implementation project(path: ':kotlinc')
-	//implementation("com.github.Cosmic-Ide.kotlinc-android:kotlinc-android:fce2462f00") 
     implementation project(path: ':javac')
     implementation project(path: ':project')
     implementation project(path: ':logging')

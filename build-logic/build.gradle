@@ -29,13 +29,15 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.annotation:annotation:1.8.2'
+     
     api ('com.android.tools:sdklib:25.3.0'){
       exclude group: 'com.google.guava', module: 'guava'
     }
     implementation project(path: ':common')
 	implementation project(path: ':apksigner')
-    implementation 'androidx.test:core:1.7.0'
+    implementation ('androidx.test:core:1.7.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 
     // required so internal classes would be included 
     api project(path: ':jaxp:jaxp-internal')

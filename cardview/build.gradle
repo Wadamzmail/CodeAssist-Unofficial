@@ -35,6 +35,10 @@ android {
     }
 }
 
+configurations.all{
+  exclude group: 'com.google.guava', module: 'guava'
+}
+
 dependencies {
 
     compileOnly 'androidx.cardview:cardview:1.0.0'

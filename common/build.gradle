@@ -24,8 +24,19 @@ dependencies {
     api ('net.lingala.zip4j:zip4j:2.11.5'){
        exclude group: 'com.google.guava', module: 'guava'
     }
+    api ('org.antlr:antlr4-runtime:4.13.2'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    api ('org.apache.commons:commons-vfs2:2.9.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    api ('org.slf4j:slf4j-api:2.0.16'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
     compileOnly project(path: ':android-stubs')
-	implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.3.0'
+	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 }
 
 spotless {

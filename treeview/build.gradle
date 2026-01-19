@@ -35,7 +35,7 @@ android {
     }
 }
 
-configurations.implementation {
+configurations.all {
     exclude group: 'com.google.guava', module: 'guava'
 }
 

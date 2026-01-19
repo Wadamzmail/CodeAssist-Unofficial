@@ -44,7 +44,9 @@ dependencies {
     implementation project(path: ':editor-api')
     implementation project(path: ':common')
     implementation project(path: ':language-api')
-    implementation("org.checkerframework:checker-qual:3.50.0") 
+    implementation("org.checkerframework:checker-qual:3.50.0"){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 }
 
 spotless {

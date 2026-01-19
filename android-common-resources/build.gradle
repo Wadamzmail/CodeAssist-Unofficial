@@ -8,6 +8,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.guava:guava:33.5.0-jre'
+    }
+}  
+
 dependencies {
     api files('libs/manifest-merger.jar')
     api files('libs/aaptcompiler-7.4.0-alpha09.jar')

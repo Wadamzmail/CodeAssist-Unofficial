@@ -31,15 +31,6 @@ dependencies {
     implementation project(path: ':common')
     compileOnly project(path: ':android-stubs')
     implementation project(':editor-api')
-    implementation 'androidx.annotation:annotation:1.8.2'
-    
-    implementation ('org.slf4j:slf4j-api:1.7.36'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    implementation 'androidx.annotation:annotation:1.3.0'
-    implementation ('org.apache.commons:commons-vfs2:2.9.0'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
 }
 
 spotless {

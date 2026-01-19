@@ -51,8 +51,6 @@ dependencies {
        exclude group: 'com.google.guava', module: 'guava'
     }
 
-    implementation 'androidx.annotation:annotation:1.9.1'
-
     implementation project(':common')
     implementation project(':completion-api')
     implementation project(':language-api')
@@ -63,7 +61,9 @@ dependencies {
 
     api project(':build-logic')
 
-    compileOnly 'androidx.recyclerview:recyclerview:1.2.1'
+    compileOnly ('androidx.recyclerview:recyclerview:1.2.1'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
     compileOnly project(':android-stubs')
     implementation("org.checkerframework:checker-qual:3.50.0")
 }

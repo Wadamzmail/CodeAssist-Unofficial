@@ -28,7 +28,6 @@ android {
 
 dependencies {
 	api files('libs/google-java-format.jar')
-    //api files('libs/google-java-format-1.28.0.jar')
 	implementation project(path: ':common')
     api ('com.google.auto.value:auto-value-annotations:1.11.0'){
        exclude group: 'com.google.guava', module: 'guava'
@@ -36,7 +35,6 @@ dependencies {
 	annotationProcessor 'com.google.auto.value:auto-value:1.11.0'
 	implementation project(path: ':javac')
 	implementation("org.checkerframework:checker-qual:3.50.0")
-	implementation 'androidx.annotation:annotation:1.8.2'
 }
 
 spotless {

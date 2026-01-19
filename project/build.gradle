@@ -29,7 +29,6 @@ android {
 }
 		
 dependencies {
-    implementation 'androidx.annotation:annotation:1.8.2'
     implementation project(path: ':common')
 	implementation project(path: ':apksigner')
 	implementation project(path: ':event-manager') 
@@ -40,8 +39,6 @@ dependencies {
     implementation project(path: ':kotlinc')
     compileOnly project(path: ':android-stubs')
     implementation project(path: ':android-common-resources')
-    
-
 }
 
 spotless {

@@ -35,9 +35,7 @@ configurations.implementation {
 
 dependencies {
     implementation project(path: ':common')
-    implementation ('org.antlr:antlr4-runtime:4.13.2'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    
     api ('com.github.albfernandez:juniversalchardet:2.5.0') {
        exclude group: 'com.google.guava', module: 'guava'
     }
