@@ -47,7 +47,9 @@ dependencies {
     implementation project(':treeview')
     implementation project(':kotlin-completion')
 
-    api 'com.github.javaparser:javaparser-core:3.26.1'
+    api ('com.github.javaparser:javaparser-core:3.26.1'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 
     implementation 'androidx.annotation:annotation:1.9.1'
 

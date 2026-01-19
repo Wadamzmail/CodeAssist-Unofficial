@@ -103,12 +103,7 @@ android {
         //exclude 'com/sun/tools/javac/resources/legacy.properties'
 		
     }
-    
-    configurations.all {
-    resolutionStrategy {
-        force 'com.google.guava:guava:33.5.0-jre'
-    }
-    } 
+   
 }
 
 configurations.implementation {
@@ -118,6 +113,11 @@ configurations.implementation {
   //  exclude group: "javax.inject", module: "javax.inject"
   
 }
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.guava:guava:33.5.0-jre'
+    }
+}  
 
 dependencies {
     // TODO: Removed these modules, the features that are using these modules

@@ -36,14 +36,11 @@ dependencies {
 	
     // for manifest  parsing
     implementation project(path: ':manifmerger')
-	compileOnly 'com.google.code.gson:gson:2.11.0'
     // user data holder
     implementation project(path: ':kotlinc')
     compileOnly project(path: ':android-stubs')
+    implementation project(path: ':android-common-resources')
     
-    compileOnly("com.android.tools:sdk-common:30.4.0-alpha09") {
-        transitive = false
-    }
 
 }
 

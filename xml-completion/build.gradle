@@ -38,25 +38,43 @@ android {
 
 dependencies {
 
-    compileOnly 'com.android.tools.build:aapt2-proto'
-    implementation 'com.google.protobuf:protobuf-java:3.21.5' 
+    compileOnly ('com.android.tools.build:aapt2-proto'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    implementation ('com.google.protobuf:protobuf-java:3.21.5'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
     implementation project(path: ':event-manager') 
     
     implementation project(path: ':actions-api')
     implementation project(path: ':editor-api')
     implementation project(':fileeditor-api')
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.13.0'
+    implementation ('androidx.appcompat:appcompat:1.7.1'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    implementation ('com.google.android.material:material:1.13.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 
     // bytecode analysis
-    api 'org.apache.bcel:bcel:6.5.0'
-    implementation 'org.antlr:antlr4-runtime:4.13.2'
-    api 'org.jsoup:jsoup:1.18.1'
+    api ('org.apache.bcel:bcel:6.5.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    implementation ('org.antlr:antlr4-runtime:4.13.2'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    api ('org.jsoup:jsoup:1.18.1'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
     
     // v2 dependencies
-    implementation 'it.unimi.dsi:fastutil:8.5.8'
-    implementation 'net.sf.kxml:kxml2:2.3.0'
+    implementation ('it.unimi.dsi:fastutil:8.5.8'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    implementation ('net.sf.kxml:kxml2:2.3.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 
     implementation project(path: ':language-api')
     implementation project(path: ':completion-api')

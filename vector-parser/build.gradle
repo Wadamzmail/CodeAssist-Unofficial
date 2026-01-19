@@ -35,6 +35,10 @@ android {
     }
 }
 
+configurations.implementation {
+    exclude group: 'com.google.guava', module: 'guava'
+}
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.7.0'

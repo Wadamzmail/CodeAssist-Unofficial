@@ -35,12 +35,16 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'com.github.marschall:zipfilesystem-standalone:1.0.1'
+    implementation ('com.github.marschall:zipfilesystem-standalone:1.0.1'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
     implementation 'androidx.annotation:annotation:1.9.1'
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')
      
-    runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0')
+    runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0'){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
 	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
@@ -48,8 +52,12 @@ dependencies {
     api files('libs/kotlin-compiler-embeddable-2.3.0.jar')
    
     implementation 'org.jetbrains:annotations:26.0.2'
-    api("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
-    api("org.jetbrains.intellij.deps:trove4j:1.0.20200330")
+    api("org.lsposed.hiddenapibypass:hiddenapibypass:6.1"){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
+    api("org.jetbrains.intellij.deps:trove4j:1.0.20200330"){
+       exclude group: 'com.google.guava', module: 'guava'
+    }
     implementation files('libs/jps-model-impl-253.28294.357.jar') 
     implementation project(':java-stubs')
    
