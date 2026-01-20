@@ -45,7 +45,7 @@
                 android:id="@+id/diagnostic_tooltip_brief_message"
                 style="?android:textAppearanceMedium"
                 android:layout_width="wrap_content"
-                android;visibility="gone"
+                android:visibility="gone"
                 android:layout_height="wrap_content" />
 
             <TextView
