@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface JavaModule extends Module {
+public interface JavaModule extends Module, KotlinModule {
 
   /**
    * @return a map of fully qualified name and its java file

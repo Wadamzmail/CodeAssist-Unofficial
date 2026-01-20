@@ -56,13 +56,6 @@ public class CompilationInfo {
       libraries.addAll((javaModule).getInjectedClasses().values());
 
       if (module instanceof AndroidModuleImpl) {
-        libraries.addAll(
-            ((AndroidModuleImpl) module)
-                .getCodeAssistLibraries().stream()
-                    .filter(it -> it instanceof CodeAssistAndroidLibrary)
-                    .map(it -> (CodeAssistAndroidLibrary) it)
-                    .flatMap(it -> it.getCompileJarFiles().stream())
-                    .collect(Collectors.toList()));
         File buildGenDir = new File(module.getRootFile() + "/build/gen");
         File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
         File kotlinJar =

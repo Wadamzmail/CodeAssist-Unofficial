@@ -657,7 +657,7 @@ public class CodeEditorFragment extends Fragment
   public void onLowMemory() {
     super.onLowMemory();
 
-    mEditor.setBackgroundAnalysisEnabled(false);
+ //   mEditor.setBackgroundAnalysisEnabled(false);
   }
 
   @Override

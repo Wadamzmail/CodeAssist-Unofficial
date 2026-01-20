@@ -8,6 +8,8 @@ import com.tyron.completion.DefaultInsertHandler
 import com.tyron.completion.model.CompletionItem
 import com.tyron.completion.model.CompletionList
 import com.tyron.completion.model.DrawableKind
+import com.tyron.builder.project.api.JavaModule
+import com.tyron.builder.project.impl.JavaModuleImpl
 import android.util.Log
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.tree.TokenSet
@@ -172,7 +174,7 @@ data class KotlinEnvironment(
      @JvmField
     var analysis: TopDownAnalysisContext? = null
 
-    private fun getPrefix(element: PsiElement): String {
+    fun getPrefix(element: PsiElement): String {
         var text = (element as? KtSimpleNameExpression)?.text
         if (text == null) {
             val type = PsiUtilsKt.findParent(element)
@@ -499,7 +501,7 @@ data class KotlinEnvironment(
         override fun invoke(descriptor: DeclarationDescriptor): Boolean {
             
             if (currentItemCount >= MAX_ITEMS_COUNT) {
-                println("MAX COUNT EXCEEDED")
+                println("KotlinEnvironment: MAX COUNT EXCEEDED")
                 return false
             }
 
@@ -622,32 +624,28 @@ data class KotlinEnvironment(
         }
 
         fun get(module: Module, reIndex : Boolean): KotlinEnvironment? {
-            val androidModule = module as? AndroidModuleImpl ?: return null
+//            val androidModule = module as? AndroidModuleImpl ?: return null
+            val javaModule = module as? JavaModuleImpl ?: return null
+           
 
-            val existingEnvironment = androidModule.getUserData(ENVIRONMENT_KEY)
-            if (existingEnvironment != null || !reIndex) {
-//                val jars = androidModule.codeAssistLibraries.map {
-//                    it.sourceFile
-//                }.filter(File::exists).toMutableList()
-//                existingEnvironment.kotlinEnvironment.updateClasspath(
-//                jars.map { JvmClasspathRoot(it) }
-//                )
+            val existingEnvironment = javaModule.getUserData(ENVIRONMENT_KEY)
+            if (existingEnvironment != null || !reIndex) { 
                 return existingEnvironment
             }
 
-            val jars = androidModule.codeAssistLibraries.map {
-                it.sourceFile
-            }.filter(File::exists).toMutableList()
-            jars.add(BuildModule.getLambdaStubs())
-            jars.add(BuildModule.getAndroidJar()) 
+            val jars = javaModule.getLibraries()
+//            if(module instanceof AndroidModuleImpl){
+              jars.add(BuildModule.getLambdaStubs())
+              jars.add(BuildModule.getAndroidJar()) 
+//            }
             val environment = with(jars)
             environment.kotlinEnvironment.updateClasspath(
                 jars.map { JvmClasspathRoot(it) }
             ) 
-            androidModule.kotlinFiles.values.forEach {
+            javaModule.kotlinFiles.values.forEach {
                 environment.updateKotlinFile(it.absolutePath, it.readText())
             }
-            androidModule.putUserData(ENVIRONMENT_KEY, environment)
+            javaModule.putUserData(ENVIRONMENT_KEY, environment)
             return environment
         }
         

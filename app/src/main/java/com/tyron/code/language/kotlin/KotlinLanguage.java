@@ -118,12 +118,12 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         autoCompleteProvider = new CachedAutoCompleteProvider(editor,
                 new KotlinAutoCompleteProvider(editor));
         if(isHighlightEnabled()){
-        ProgressManager.getInstance()
-        .runLater(
-            () -> {
+//        ProgressManager.getInstance()
+//        .runLater(
+//            () -> {
              initAnalysis();
-             },
-            50);   
+//             },
+//            50);   
         }
     }
     

@@ -31,12 +31,12 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import java.util.jar.JarFile;
 
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
   // private final List<CodeAssistLibrary> libraries = new ArrayList<>();
-
-  private final Map<String, File> mKotlinFiles;
+//  private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
   private String packageName;
   private Project project;
@@ -72,14 +72,17 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
   @Override
   public void addLibrary(@NonNull @NotNull CodeAssistLibrary library) {
-    libraries.add(library);
+//    libraries.add(library);
 
     if (library instanceof CodeAssistAndroidLibrary) {
       CodeAssistAndroidLibrary androidLibrary = (CodeAssistAndroidLibrary) library;
       List<File> compileJarFiles = androidLibrary.getCompileJarFiles();
       for (File compileJarFile : compileJarFiles) {
         try {
+          libraries.add(library);
           putJar(compileJarFile);
+          mLibraries.add(compileJarFile);
+         
         } catch (IOException e) {
           throw new UncheckedIOException(e);
         }
@@ -93,26 +96,26 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   public void index() {
     super.index();
 
-    Consumer<File> kotlinConsumer = this::addKotlinFile;
+//    Consumer<File> kotlinConsumer = this::addKotlinFile;
 
-    if (getJavaDirectory().exists()) {
-      FileUtils.iterateFiles(
-              getJavaDirectory(), FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
-          .forEachRemaining(kotlinConsumer);
-    }
+//    if (getJavaDirectory().exists()) {
+//      FileUtils.iterateFiles(
+//              getJavaDirectory(), FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
+//          .forEachRemaining(kotlinConsumer);
+//    }
 
-    if (getKotlinDirectory().exists()) {
-      FileUtils.iterateFiles(
-              getKotlinDirectory(),
-              FileFilterUtils.suffixFileFilter(".kt"),
-              TrueFileFilter.INSTANCE)
-          .forEachRemaining(kotlinConsumer);
-      FileUtils.iterateFiles(
-              getKotlinDirectory(),
-              FileFilterUtils.suffixFileFilter(".java"),
-              TrueFileFilter.INSTANCE)
-          .forEachRemaining(this::addJavaFile);
-    }
+//    if (getKotlinDirectory().exists()) {
+//      FileUtils.iterateFiles(
+//              getKotlinDirectory(),
+//              FileFilterUtils.suffixFileFilter(".kt"),
+//              TrueFileFilter.INSTANCE)
+//          .forEachRemaining(kotlinConsumer);
+//      FileUtils.iterateFiles(
+//              getKotlinDirectory(),
+//              FileFilterUtils.suffixFileFilter(".java"),
+//              TrueFileFilter.INSTANCE)
+//          .forEachRemaining(this::addJavaFile);
+//    }
 
     //    for (ContentRoot contentRoot : getContentRoots()) {
     //      if (contentRoot instanceof AndroidContentRoot) {
@@ -153,7 +156,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   @Override
   public Set<String> getAllClasses() {
     Set<String> classes = super.getAllClasses();
-    classes.addAll(mKotlinFiles.keySet());
+//    classes.addAll(mKotlinFiles.keySet());
     return classes;
   }
 
@@ -333,7 +336,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
         // handle the exception here, if needed
       }
     }
-    return 33;
+    return 36;
   }
 
   public static int parseTargetSdk(String readString) throws IOException {
@@ -369,7 +372,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
         }
       }
     }
-    return 33;
+    return 36;
   }
 
   @Override

@@ -42,6 +42,11 @@ import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.PruneMethodBodies;
+import com.tyron.completion.java.compiler.Parser;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
 
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
@@ -183,7 +188,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
     if (isResource) {
       Project project = ProjectManager.getInstance().getCurrentProject();
       if (project != null) {
-        Module module = project.getModule(file);
+        Module module = project.getResModule(file);
         if (module instanceof AndroidModule) {
           try {
             doGenerate(project, (AndroidModule) module, file, contents, logger);
@@ -228,13 +233,28 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
     // work around to refresh R.java file
     File resourceClass = module.getJavaFile(module.getNameSpace() + ".R");
-    if (resourceClass != null) {
-      JavaCompilerProvider provider =
-          CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
-      JavaCompilerService service = provider.getCompiler(project, module);
+//    if (resourceClass != null) {
+//      JavaCompilerProvider provider =
+//          CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
+//      JavaCompilerService service = provider.getCompiler(project, module);
 
-      CompilerContainer container = service.compile(resourceClass.toPath());
-      container.run(__ -> {});
-    }
+//      CompilerContainer container = service.compile(resourceClass.toPath());
+//      container.run(__ -> {
+            CompilationInfo info = CompilationInfo.get(module,true);
+            if (info == null) {
+                return;
+            }
+            info.updateImmediately(new SimpleJavaFileObject(resourceClass.toURI(),
+                    JavaFileObject.Kind.SOURCE) {
+                @Override
+                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                    Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
+                    // During indexing, statements inside methods are not needed so
+                    // it is stripped to speed up the index process
+                    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+                }
+            });
+//      });
+//    }
   }
 }

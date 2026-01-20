@@ -22,10 +22,12 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import com.tyron.builder.project.api.ContentRoot;
 
 public class JavaModuleImpl extends ModuleImpl implements JavaModule {
 
@@ -34,7 +36,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   private final Map<String, File> mJavaFiles;
   private final Map<String, CodeAssistLibrary> mLibraryHashMap;
   private final Map<String, File> mInjectedClassesMap;
-  private final Set<File> mLibraries;
+  protected final Set<File> mLibraries;
   private final Set<File> mNativeLibraries;
 
   // the index of all the class files in this module
@@ -42,6 +44,8 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   private final PackageTrie apiClassIndex = new PackageTrie();
 
   protected final List<CodeAssistLibrary> libraries = new ArrayList<>();
+  protected final Map<String, File> mKotlinFiles;
+  private final Set<ContentRoot> contentRoots = new HashSet<>(3);
 
   public JavaModuleImpl(File root) {
     super(root);
@@ -51,6 +55,15 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     mNativeLibraries = new HashSet<>();
     mInjectedClassesMap = new HashMap<>();
     mLibraryHashMap = new HashMap<>();
+    mKotlinFiles = new HashMap<>();
+    
+    File contentRootDirectory = new File(getRootFile(), "src/main");
+    ContentRoot contentRoot = new ContentRoot(contentRootDirectory);
+    contentRoot.setSourceDirectory(
+       new File("src/main/java"));
+    contentRoot.setSourceDirectory(
+       new File("src/main/kotlin"));
+    addContentRoot(contentRoot);
   }
 
   @NonNull
@@ -118,6 +131,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     classes.addAll(mJavaFiles.keySet());
     classes.addAll(mClassFiles.keySet());
     classes.addAll(mInjectedClassesMap.keySet());
+    classes.addAll(mKotlinFiles.keySet());
     return classes;
   }
 
@@ -242,7 +256,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     }
   }
 
-  private boolean hasClassFiles(File file) throws IOException {
+  protected boolean hasClassFiles(File file) throws IOException {
     if (file == null) {
       return false;
     }
@@ -413,10 +427,24 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     } catch (IOException e) {
       // ignored
     }
+    
+    Consumer<File> kotlinConsumer = this::addKotlinFile;
 
     if (getJavaDirectory().exists()) {
       FileUtils.iterateFiles(
               getJavaDirectory(),
+              FileFilterUtils.suffixFileFilter(".java"),
+              TrueFileFilter.INSTANCE)
+          .forEachRemaining(this::addJavaFile);
+    }
+    if (getKotlinDirectory().exists()) {
+      FileUtils.iterateFiles(
+              getKotlinDirectory(),
+              FileFilterUtils.suffixFileFilter(".kt"),
+              TrueFileFilter.INSTANCE)
+          .forEachRemaining(kotlinConsumer);
+      FileUtils.iterateFiles(
+              getKotlinDirectory(),
               FileFilterUtils.suffixFileFilter(".java"),
               TrueFileFilter.INSTANCE)
           .forEachRemaining(this::addJavaFile);
@@ -479,6 +507,48 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         }
       }
     }
+  }
+  
+  @NonNull
+  @Override
+  public Map<String, File> getKotlinFiles() {
+    return ImmutableMap.copyOf(mKotlinFiles);
+  }
+  
+  @NonNull
+  @Override
+  public File getKotlinDirectory() {
+    File custom = getPathSetting("kotlin_directory");
+    if (custom.exists()) {
+      return custom;
+    }
+    return new File(getRootFile(), "src/main/kotlin");
+  }
+
+  @Nullable
+  @Override
+  public File getKotlinFile(String packageName) {
+    return mKotlinFiles.get(packageName);
+  }
+
+  @Override
+  public void addKotlinFile(File file) {
+    String packageName = StringSearch.packageName(file);
+    if (packageName == null) {
+      packageName = "";
+    }
+    String fqn = packageName + "." + file.getName().replace(".kt", "");
+    mKotlinFiles.put(fqn, file);
+  }
+  
+  @Override
+  public void addContentRoot(ContentRoot contentRoot) {
+    contentRoots.add(contentRoot);
+  }
+
+  @Override
+  public Set<ContentRoot> getContentRoots() {
+    return contentRoots;
   }
 
   @Override
