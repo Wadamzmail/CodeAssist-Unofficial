@@ -35,8 +35,8 @@ final class SneakyThrows<T extends Throwable> {
    * However, we can't usually write {@code throw t;} when {@code t} has a static type of {@link
    * Throwable}. But we <i>can</i> write {@code sneakyThrow(t);}.
    *
-   * <p>We sometimes also use {@code sneakyThrow} for testing how our code responds to
-   * sneaky checked exception.
+   * <p>We sometimes also use {@code sneakyThrow} for testing how our code responds to sneaky
+   * checked exception.
    *
    * @return never; this method declares a return type of {@link Error} only so that callers can
    *     write {@code throw sneakyThrow(t);} to convince the compiler that the statement will always

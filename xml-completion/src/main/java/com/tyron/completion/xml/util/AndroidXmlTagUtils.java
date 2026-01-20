@@ -1,5 +1,8 @@
 package com.tyron.completion.xml.util;
 
+import static com.tyron.completion.java.util.CompletionItemFactory.importClassItem;
+import static com.tyron.completion.java.util.CompletionItemFactory.packageItem;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.tyron.builder.project.api.Module;
@@ -15,8 +18,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.bcel.classfile.JavaClass;
-import static com.tyron.completion.java.util.CompletionItemFactory.importClassItem;
-import static com.tyron.completion.java.util.CompletionItemFactory.packageItem;
 
 public class AndroidXmlTagUtils {
 
@@ -218,7 +219,7 @@ public class AndroidXmlTagUtils {
         names.add(segment);
         boolean isClass = className.endsWith(segment);
 
-//        CompletionItem item = new CompletionItem();
+        //        CompletionItem item = new CompletionItem();
         String commitPrefix = "<";
         if (prefix.startsWith("</")) {
           commitPrefix = "</";

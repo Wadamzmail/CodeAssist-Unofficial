@@ -3,12 +3,12 @@ package com.tyron.builder.project;
 import androidx.annotation.NonNull;
 import com.google.common.collect.ImmutableList;
 import com.google.common.graph.GraphBuilder;
-import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableGraph;
 import com.tyron.builder.model.ProjectSettings;
 import com.tyron.builder.project.api.AndroidContentRoot;
 import com.tyron.builder.project.api.AndroidModule;
 import com.tyron.builder.project.api.ContentRoot;
+import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.impl.AndroidModuleImpl;
 import com.tyron.builder.project.mock.MockAndroidModule;
@@ -21,8 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import com.tyron.builder.project.api.JavaModule;
 
 @SuppressWarnings("UnstableApiUsage")
 public class Project {
@@ -119,18 +117,18 @@ public class Project {
 
     graph.addNode(mMainModule);
     addEdges(graph, mMainModule);
-//    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
-//    for (Module module : modules) {
-//      module.setProject(Project.this); 
-//      module.open();
-//      System.out.println("Module opened :" +module.getName());
-//      File rootFile = module.getRootFile();
-//      mModules.put(rootFile.getName(), module);
-//    }
+    //    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    //    for (Module module : modules) {
+    //      module.setProject(Project.this);
+    //      module.open();
+    //      System.out.println("Module opened :" +module.getName());
+    //      File rootFile = module.getRootFile();
+    //      mModules.put(rootFile.getName(), module);
+    //    }
   }
 
   public void index() throws IOException {
-//    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
+    //    Set<Module> modules = Graphs.reachableNodes(graph, mMainModule);
     for (Module module : getModules()) {
       module.clear();
       module.index();
@@ -177,17 +175,17 @@ public class Project {
     List<String> moduleNames = SettingsGradleParser.parseModules(mRoot);
 
     for (String name : moduleNames) {
-     System.out.println("Module name is "+name);
+      System.out.println("Module name is " + name);
       if (name.equals(module.getModuleName())) continue;
       File moduleDir = new File(mRoot, name);
       Module mModule = new AndroidModuleImpl(moduleDir);
       graph.addNode(mModule);
       graph.putEdge(module, mModule);
-      
-      mModule.setProject(Project.this); 
+
+      mModule.setProject(Project.this);
       mModules.put(name, mModule);
       mModule.open();
-      System.out.println("Module opened :" +mModule.getName());
+      System.out.println("Module opened :" + mModule.getName());
     }
   }
 

@@ -122,8 +122,8 @@ public final class SecuritySupport {
   }
 
   /**
-   * Return resource using the same java.lang.ClassLoader for the ObjectFactory by default or bootclassloader
-   * when Security Manager is in place
+   * Return resource using the same java.lang.ClassLoader for the ObjectFactory by default or
+   * bootclassloader when Security Manager is in place
    */
   public static InputStream getResourceAsStream(final String name) {
     if (System.getSecurityManager() != null) {

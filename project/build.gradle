@@ -38,7 +38,7 @@ dependencies {
     // user data holder
     implementation project(path: ':kotlinc')
     compileOnly project(path: ':android-stubs')
-    implementation project(path: ':android-common-resources')
+    compileOnly project(path: ':android-common-resources')
 }
 
 spotless {

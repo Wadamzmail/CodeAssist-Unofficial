@@ -1,6 +1,5 @@
 package com.tyron.completion.model;
 
-
 import com.google.common.collect.Ordering;
 import com.google.errorprone.annotations.Immutable;
 import com.tyron.completion.CompletionPrefixMatcher;

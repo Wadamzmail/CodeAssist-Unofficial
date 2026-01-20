@@ -70,8 +70,8 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   public Map<String, File> getJavaFiles() {
     return mJavaFiles;
   }
-  
-    @Override
+
+  @Override
   public Set<String> getModuleDependencies() {
     // return moduleDependencies;
     return getAllProjects();
@@ -191,7 +191,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     if (jar == null) {
       return;
     }
-    
+
     try {
       if (!hasClassFiles(jar)) {
         return;
@@ -199,7 +199,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     } catch (IOException e) {
       // ignored, don't put the jar
     }
-    
+
     if (!jar.getName().endsWith(".jar")) {
       return;
     }
@@ -213,13 +213,13 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       // ignored, don't put the jar
     }
   }
-  
+
   public void addApiLibrary(@NonNull CodeAssistLibrary library) {
     File jar = library.getSourceFile();
     if (jar == null) {
       return;
     }
-    
+
     try {
       if (!hasClassFiles(jar)) {
         return;
@@ -227,7 +227,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     } catch (IOException e) {
       // ignored, don't put the jar
     }
-    
+
     if (!jar.getName().endsWith(".jar")) {
       return;
     }
@@ -289,7 +289,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       }
     }
   }
-  
+
   protected void putApiJar(File file) throws IOException {
     if (file == null) {
       return;

@@ -118,7 +118,12 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         autoCompleteProvider = new CachedAutoCompleteProvider(editor,
                 new KotlinAutoCompleteProvider(editor));
         if(isHighlightEnabled()){
-        initAnalysis();
+        ProgressManager.getInstance()
+        .runLater(
+            () -> {
+             initAnalysis();
+             },
+            50);   
         }
     }
     
@@ -142,24 +147,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CharPosition position,
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
-    /* try{                             
-            String identifierPart = CompletionHelper.computePrefix(content, position, CompletionUtils.JAVA_PREDICATE::test);
-            KotlinAutoCompleteProvider provider =
-                new KotlinAutoCompleteProvider(editor);
-           
-            container.reset();                
-            List<CompletionItem> itemsList = provider.getCompletionItems(identifierPart,position.getLine(),position.getColumn());
-            if (itemsList==null)return;
-            Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container));
-            itemsList.stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
-       }catch(Exception e){
-        if (!(e instanceof InterruptedException)
-                    && !(e instanceof ProcessCanceledException)) {
-                 Log.e(TAG, "Completion failed", e);
-              throw new CompletionCancelledException(e.toString());
-        }
-       }
-       kotlinEnvironment.analysis = null;*/
+       try{
        container.reset();     
        CompletionList completionList = autoCompleteProvider.getCompletionList(null,
                 position.getLine(),
@@ -169,6 +157,13 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         }
         Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container)); 
         completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
+        }catch(Exception e){
+        if (!(e instanceof InterruptedException)
+                    && !(e instanceof ProcessCanceledException)) {
+                    Log.e(TAG, "Completion failed", e);
+        }
+        }          
+        kotlinEnvironment.analysis = null;  
   }
 
     @Override

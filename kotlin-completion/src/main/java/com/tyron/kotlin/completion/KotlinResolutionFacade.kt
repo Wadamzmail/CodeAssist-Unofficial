@@ -1,12 +1,12 @@
 package com.tyron.kotlin.completion
 
+import org.jetbrains.kotlin.com.intellij.openapi.project.Project
+import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import com.tyron.kotlin.completion.resolve.ResolutionFacade
 import com.tyron.kotlin.completion.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.analyzer.ModuleInfo
 import org.jetbrains.kotlin.analyzer.ResolverForProject
-import org.jetbrains.kotlin.com.intellij.openapi.project.Project
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.container.ComponentProvider
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
@@ -55,7 +55,7 @@ class KotlinResolutionFacade(
         bodyResolveMode: BodyResolveMode
     ): DeclarationDescriptor = TODO("not implemented")
 
-    override fun <T : Any> tryGetFrontendService(element: PsiElement, serviceClass: Class<T>): T? =
+    override fun <T : Any> tryGetFrontendService(element: PsiElement, serviceClass: Class<T>): T =
         TODO("not implemented")
 
     override fun getResolverForProject(): ResolverForProject<out ModuleInfo> {

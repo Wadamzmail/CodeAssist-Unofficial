@@ -48,7 +48,7 @@ public class ModuleImpl implements Module {
     mRoot = root;
     mFileManager = new FileManagerImpl(root);
     try {
-      if (mRoot == null)return;
+      if (mRoot == null) return;
       File codeassist = new File(getProjectDir(), ".idea");
       if (!codeassist.exists()) {
         if (!codeassist.mkdirs()) {}
@@ -472,7 +472,7 @@ public class ModuleImpl implements Module {
     }
     return null;
   }
-  
+
   public static String normalizeModuleName(String path) {
     // :lib:ui -> lib/ui
     if (path.startsWith(":")) {
@@ -514,7 +514,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -523,7 +523,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -532,7 +532,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -541,7 +541,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -550,7 +550,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -559,7 +559,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -568,7 +568,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -577,7 +577,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -586,7 +586,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -595,7 +595,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -604,7 +604,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -613,7 +613,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -651,7 +651,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -660,7 +660,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         projects.add(declaration);
       }
     }
@@ -676,7 +676,7 @@ public class ModuleImpl implements Module {
     while (matcher.find()) {
       String declaration = matcher.group(1);
       if (declaration != null) {
-        declaration = normalizeModuleName(declaration); //declaration.replaceAll(":", "/");
+        declaration = normalizeModuleName(declaration); // declaration.replaceAll(":", "/");
         included.add(declaration);
       }
     }

@@ -164,7 +164,7 @@ public final class Suppliers {
 
     @GwtIncompatible
     @J2ktIncompatible
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
       in.defaultReadObject();
       lock = new Object();
     }
@@ -337,7 +337,7 @@ public final class Suppliers {
 
     @GwtIncompatible
     @J2ktIncompatible
-        private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
       in.defaultReadObject();
       lock = new Object();
     }

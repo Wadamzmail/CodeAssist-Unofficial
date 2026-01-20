@@ -7,8 +7,10 @@ import java.util.Objects;
 
 public class Dependency {
 
-  public static final Dependency STDLIB_JDK7 = new Dependency("org.jetbrains.kotlin","kotlin-stdlib-jdk7","2.3.0");
-  public static final Dependency STDLIB_JDK8 = new Dependency("org.jetbrains.kotlin","kotlin-stdlib-jdk8","2.3.0");
+  public static final Dependency STDLIB_JDK7 =
+      new Dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk7", "2.3.0");
+  public static final Dependency STDLIB_JDK8 =
+      new Dependency("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "2.3.0");
 
   public static Dependency valueOf(String declaration) {
     String[] names = declaration.split(":");

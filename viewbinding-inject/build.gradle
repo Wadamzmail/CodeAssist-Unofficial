@@ -40,7 +40,7 @@ android {
     }
 }
 
-configurations.all {
+configurations.implementation {
     exclude group: "org.jetbrains", module: "annotations"
 }
 

@@ -1,9 +1,27 @@
 package com.tyron.kotlin.completion.util
 
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.descriptors.*
+import com.tyron.kotlin.completion.resolve.ResolutionFacade
+import com.tyron.kotlin.completion.resolve.frontendService
+import com.tyron.kotlin.completion.resolve.getDataFlowValueFactory
+import com.tyron.kotlin.completion.resolve.getLanguageVersionSettings
+import org.jetbrains.kotlin.descriptors.CallableDescriptor
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.FunctionDescriptor
+import org.jetbrains.kotlin.descriptors.SimpleFunctionDescriptor
+import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
+import org.jetbrains.kotlin.descriptors.VariableDescriptor
 import org.jetbrains.kotlin.idea.FrontendInternals
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.Call
+import org.jetbrains.kotlin.psi.KtExpression
+import org.jetbrains.kotlin.psi.KtPsiFactory
+import org.jetbrains.kotlin.psi.KtTypeProjection
+import org.jetbrains.kotlin.psi.LambdaArgument
+import org.jetbrains.kotlin.psi.ValueArgument
+import org.jetbrains.kotlin.psi.ValueArgumentName
+import org.jetbrains.kotlin.psi.createExpressionByPattern
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.BindingTraceFilter.Companion.NO_DIAGNOSTICS
 import org.jetbrains.kotlin.resolve.DelegatingBindingTrace
@@ -21,10 +39,6 @@ import org.jetbrains.kotlin.types.TypeUtils
 import org.jetbrains.kotlin.types.checker.KotlinTypeChecker
 import org.jetbrains.kotlin.types.checker.KotlinTypeCheckerImpl
 import org.jetbrains.kotlin.types.typeUtil.equalTypesOrNulls
-import com.tyron.kotlin.completion.resolve.ResolutionFacade
-import com.tyron.kotlin.completion.resolve.frontendService
-import com.tyron.kotlin.completion.resolve.getDataFlowValueFactory
-import com.tyron.kotlin.completion.resolve.getLanguageVersionSettings
 
 class ShadowedDeclarationsFilter(
     private val bindingContext: BindingContext,
@@ -53,7 +67,12 @@ class ShadowedDeclarationsFilter(
                 val type = bindingContext.getType(it) ?: return null
                 ExpressionReceiver.create(it, type, bindingContext)
             }
-            return ShadowedDeclarationsFilter(bindingContext, resolutionFacade, context, explicitReceiverValue)
+            return ShadowedDeclarationsFilter(
+                bindingContext,
+                resolutionFacade,
+                context,
+                explicitReceiverValue
+            )
         }
     }
 
@@ -61,30 +80,11 @@ class ShadowedDeclarationsFilter(
     private val dummyExpressionFactory = DummyExpressionFactory(psiFactory)
 
     fun <TDescriptor : DeclarationDescriptor> filter(declarations: Collection<TDescriptor>): Collection<TDescriptor> =
-        declarations.groupBy { signature(it) }.values.flatMap { group -> filterEqualSignatureGroup(group) }
-
-    fun <TDescriptor : DeclarationDescriptor> createNonImportedDeclarationsFilter(
-        importedDeclarations: Collection<DeclarationDescriptor>
-    ): (Collection<TDescriptor>) -> Collection<TDescriptor> {
-        val importedDeclarationsSet = importedDeclarations.toSet()
-        val importedDeclarationsBySignature = importedDeclarationsSet.groupBy { signature(it) }
-
-        return filter@{ declarations ->
-            // optimization
-            if (declarations.size == 1 && importedDeclarationsBySignature[signature(declarations.single())] == null) return@filter declarations
-
-            val nonImportedDeclarations = declarations.filter { it !in importedDeclarationsSet }
-
-            val notShadowed = HashSet<DeclarationDescriptor>()
-            // same signature non-imported declarations from different packages do not shadow each other
-            for ((pair, group) in nonImportedDeclarations.groupBy { signature(it) to packageName(it) }) {
-                val imported = importedDeclarationsBySignature[pair.first]
-                val all = if (imported != null) group + imported else group
-                notShadowed.addAll(filterEqualSignatureGroup(all, descriptorsToImport = group))
-            }
-            declarations.filter { it in notShadowed }
+        declarations.groupBy { signature(it) }.values.flatMap { group ->
+            filterEqualSignatureGroup(
+                group
+            )
         }
-    }
 
     private fun signature(descriptor: DeclarationDescriptor): Any = when (descriptor) {
         is SimpleFunctionDescriptor -> FunctionSignature(descriptor)
@@ -92,8 +92,6 @@ class ShadowedDeclarationsFilter(
         is ClassDescriptor -> descriptor.importableFqName ?: descriptor
         else -> descriptor
     }
-
-    private fun packageName(descriptor: DeclarationDescriptor) = descriptor.importableFqName?.parent()
 
     private fun <TDescriptor : DeclarationDescriptor> filterEqualSignatureGroup(
         descriptors: Collection<TDescriptor>,
@@ -111,7 +109,13 @@ class ShadowedDeclarationsFilter(
 
         // Optimization: if the descriptors are structurally equivalent then there is no need to run resolve.
         // This can happen when the classpath contains multiple copies of the same library.
-        if (descriptors.all { DescriptorEquivalenceForOverrides.areEquivalent(first, it, allowCopiesFromTheSameDeclaration = true) }) {
+        if (descriptors.all {
+                DescriptorEquivalenceForOverrides.areEquivalent(
+                    first,
+                    it,
+                    allowCopiesFromTheSameDeclaration = true
+                )
+            }) {
             return listOf(first)
         }
 
@@ -122,7 +126,8 @@ class ShadowedDeclarationsFilter(
         }
         val parameters = (first as CallableDescriptor).valueParameters
 
-        val dummyArgumentExpressions = dummyExpressionFactory.createDummyExpressions(parameters.size)
+        val dummyArgumentExpressions =
+            dummyExpressionFactory.createDummyExpressions(parameters.size)
 
         val bindingTrace = DelegatingBindingTrace(
             bindingContext, "Temporary trace for filtering shadowed declarations",
@@ -133,7 +138,8 @@ class ShadowedDeclarationsFilter(
             bindingTrace.record(BindingContext.PROCESSED, expression, true)
         }
 
-        val firstVarargIndex = parameters.withIndex().firstOrNull { it.value.varargElementType != null }?.index
+        val firstVarargIndex =
+            parameters.withIndex().firstOrNull { it.value.varargElementType != null }?.index
         val useNamedFromIndex =
             if (firstVarargIndex != null && firstVarargIndex != parameters.lastIndex) firstVarargIndex else parameters.size
 
@@ -206,9 +212,13 @@ class ShadowedDeclarationsFilter(
 
         @OptIn(FrontendInternals::class)
         val callResolver = resolutionFacade.frontendService<CallResolver>()
-        val results = if (isFunction) callResolver.resolveFunctionCall(context) else callResolver.resolveSimpleProperty(context)
+        val results =
+            if (isFunction) callResolver.resolveFunctionCall(context) else callResolver.resolveSimpleProperty(
+                context
+            )
         val resultingDescriptors = results.resultingCalls.map { it.resultingDescriptor }
-        val resultingOriginals = resultingDescriptors.mapTo(HashSet<DeclarationDescriptor>()) { it.original }
+        val resultingOriginals =
+            resultingDescriptors.mapTo(HashSet<DeclarationDescriptor>()) { it.original }
         val filtered = descriptors.filter { candidateDescriptor ->
             candidateDescriptor.original in resultingOriginals /* optimization */ && resultingDescriptors.any {
                 descriptorsEqualWithSubstitution(
@@ -217,7 +227,7 @@ class ShadowedDeclarationsFilter(
                 )
             }
         }
-        return if (filtered.isNotEmpty()) filtered else descriptors /* something went wrong, none of our declarations among resolve candidates, let's not filter anything */
+        return filtered.ifEmpty { descriptors } /* something went wrong, none of our declarations among resolve candidates, let's not filter anything */
     }
 
     private class DummyExpressionFactory(val factory: KtPsiFactory) {
@@ -272,21 +282,22 @@ fun descriptorsEqualWithSubstitution(
     if (descriptor1 !is CallableDescriptor) return true
     descriptor2 as CallableDescriptor
 
-    val typeChecker = KotlinTypeCheckerImpl.withAxioms(object : KotlinTypeChecker.TypeConstructorEquality {
-        override fun equals(a: TypeConstructor, b: TypeConstructor): Boolean {
-            val typeParam1 = a.declarationDescriptor as? TypeParameterDescriptor
-            val typeParam2 = b.declarationDescriptor as? TypeParameterDescriptor
-            if (typeParam1 != null
-                && typeParam2 != null
-                && typeParam1.containingDeclaration == descriptor1
-                && typeParam2.containingDeclaration == descriptor2
-            ) {
-                return typeParam1.index == typeParam2.index
-            }
+    val typeChecker =
+        KotlinTypeCheckerImpl.withAxioms(object : KotlinTypeChecker.TypeConstructorEquality {
+            override fun equals(a: TypeConstructor, b: TypeConstructor): Boolean {
+                val typeParam1 = a.declarationDescriptor as? TypeParameterDescriptor
+                val typeParam2 = b.declarationDescriptor as? TypeParameterDescriptor
+                if (typeParam1 != null
+                    && typeParam2 != null
+                    && typeParam1.containingDeclaration == descriptor1
+                    && typeParam2.containingDeclaration == descriptor2
+                ) {
+                    return typeParam1.index == typeParam2.index
+                }
 
-            return a == b
-        }
-    })
+                return a == b
+            }
+        })
 
     if (!typeChecker.equalTypesOrNulls(descriptor1.returnType, descriptor2.returnType)) return false
 

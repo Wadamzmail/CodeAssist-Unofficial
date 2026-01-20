@@ -1,6 +1,13 @@
 package com.tyron.kotlin.completion.util
 
-import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.CallableDescriptor
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.ClassifierDescriptorWithTypeParameters
+import org.jetbrains.kotlin.descriptors.ConstructorDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.PackageViewDescriptor
+import org.jetbrains.kotlin.descriptors.TypeAliasDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
@@ -21,7 +28,8 @@ fun DeclarationDescriptor.canBeReferencedViaImport(): Boolean {
     }
 
     //Both TypeAliasDescriptor and ClassDescriptor
-    val parentClassifier = containingDeclaration as? ClassifierDescriptorWithTypeParameters ?: return false
+    val parentClassifier =
+        containingDeclaration as? ClassifierDescriptorWithTypeParameters ?: return false
     if (!parentClassifier.canBeReferencedViaImport()) return false
 
     return when (this) {
