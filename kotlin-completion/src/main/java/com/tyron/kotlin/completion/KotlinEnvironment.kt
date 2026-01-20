@@ -107,6 +107,14 @@ data class KotlinEnvironment(
         kotlinFiles[name] = kotlinFile
         return kotlinFile
     }
+    
+    fun removeKotlinFile(name: String) {
+        kotlinFiles.remove(name)
+    }
+
+    fun getKotlinFile(name: String): KotlinFile? {
+        return kotlinFiles[name]
+    }
 
     private data class DescriptorInfo(
         val isTipsManagerCompletion: Boolean,
