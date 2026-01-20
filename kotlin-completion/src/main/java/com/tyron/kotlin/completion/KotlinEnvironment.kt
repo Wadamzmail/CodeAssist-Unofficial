@@ -198,17 +198,15 @@ data class KotlinEnvironment(
     fun complete(file: KotlinFile, line: Int, character: Int): CompletionList {
         currentItemCount = 0
         var list: List<CompletionItem>
-        var builder: CompletionList
         val originalFile = file.kotlinFile
         CoroutineScope(Dispatchers.IO).launch {
             analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
         }
 
-        with(file.insert(COMPLETION_SUFFIX, line, character)) {
+        return with(file.insert(COMPLETION_SUFFIX, line, character)) {
             kotlinFiles[originalFile.name] = this
             val position = elementAt(line, character)
             val prefix = position?.let { getPrefix(it) } ?: ""
-            builder = CompletionList.builder(prefix) 
 
             val reference = (position?.parent as? KtSimpleNameExpression)?.mainReference
             println("reference: $reference")
@@ -228,14 +226,13 @@ data class KotlinEnvironment(
                         keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
             }
                 ?: emptyList()
-                
+            val builder = CompletionList.builder(prefix)    
             builder.addItems(list)
             if (currentItemCount >= MAX_ITEMS_COUNT) {
                 builder.incomplete()
             }    
+            builder.build()
         }
-
-        return builder.build()
     }
     
     private fun isAfterDot(element: PsiElement?): Boolean {
