@@ -47,7 +47,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   public AndroidModuleImpl(File root) {
     super(root);
 
-    mKotlinFiles = new HashMap<>();
+//    mKotlinFiles = new HashMap<>();
     mResourceClasses = new HashMap<>(1);
     File contentRootDirectory = new File(getRootFile(), "src/main");
     AndroidContentRoot contentRoot = new AndroidContentRoot(contentRootDirectory);

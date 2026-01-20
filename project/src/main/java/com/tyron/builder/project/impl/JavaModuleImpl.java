@@ -59,9 +59,9 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     
     File contentRootDirectory = new File(getRootFile(), "src/main");
     ContentRoot contentRoot = new ContentRoot(contentRootDirectory);
-    contentRoot.setSourceDirectory(
+    contentRoot.addSourceDirectory(
        new File("src/main/java"));
-    contentRoot.setSourceDirectory(
+    contentRoot.addSourceDirectory(
        new File("src/main/kotlin"));
     addContentRoot(contentRoot);
   }
