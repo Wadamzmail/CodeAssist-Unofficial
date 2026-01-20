@@ -92,6 +92,9 @@ import org.jetbrains.kotlin.diagnostics.Severity
 import com.tyron.builder.BuildModule
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor
 import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
+import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
+import org.jetbrains.kotlin.config.IrVerificationMode
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -195,6 +198,7 @@ data class KotlinEnvironment(
     fun complete(file: KotlinFile, line: Int, character: Int): CompletionList {
         currentItemCount = 0
         var list: List<CompletionItem>
+        var builder: CompletionList
         val originalFile = file.kotlinFile
         CoroutineScope(Dispatchers.IO).launch {
             analysisOf(kotlinFiles.values.map { it.kotlinFile }, file.kotlinFile)
@@ -204,6 +208,7 @@ data class KotlinEnvironment(
             kotlinFiles[originalFile.name] = this
             val position = elementAt(line, character)
             val prefix = position?.let { getPrefix(it) } ?: ""
+            builder = CompletionList.builder(prefix) 
 
             val reference = (position?.parent as? KtSimpleNameExpression)?.mainReference
             println("reference: $reference")
@@ -223,13 +228,12 @@ data class KotlinEnvironment(
                         keywordsCompletionVariants(KtTokens.KEYWORDS, prefix)
             }
                 ?: emptyList()
-        }
-        
-        val builder = CompletionList.builder(prefix)
+                
             builder.addItems(list)
             if (currentItemCount >= MAX_ITEMS_COUNT) {
                 builder.incomplete()
-            }
+            }    
+        }
 
         return builder.build()
     }
