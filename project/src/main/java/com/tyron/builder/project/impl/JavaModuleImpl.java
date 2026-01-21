@@ -47,7 +47,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   protected final Map<String, File> mKotlinFiles;
   private final Set<ContentRoot> contentRoots = new HashSet<>(3);
 
-  public JavaModuleImpl(File root) {
+  public JavaModuleImpl(File root, boolean fromChild) {
     super(root);
     mJavaFiles = new HashMap<>();
     mClassFiles = new HashMap<>();
@@ -58,13 +58,19 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     mKotlinFiles = new HashMap<>();
     
     File contentRootDirectory = new File(getRootFile(), "src/main");
+    if(!fromChild){
     ContentRoot contentRoot = new ContentRoot(contentRootDirectory);
     contentRoot.addSourceDirectory(
        new File("src/main/java"));
     contentRoot.addSourceDirectory(
        new File("src/main/kotlin"));
     addContentRoot(contentRoot);
+    }
   }
+  public JavaModuleImpl(File root) {
+    this(root,false);
+  }
+  
 
   @NonNull
   @Override

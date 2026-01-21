@@ -42,10 +42,10 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   private Project project;
 
   private final Set<String> moduleDependencies = new HashSet<>();
-  private final Set<ContentRoot> contentRoots = new HashSet<>(3);
+//  private final Set<ContentRoot> contentRoots = new HashSet<>(3);
 
   public AndroidModuleImpl(File root) {
-    super(root);
+    super(root,true);
 
 //    mKotlinFiles = new HashMap<>();
     mResourceClasses = new HashMap<>(1);
@@ -800,15 +800,15 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     return getAllProjects();
   }
 
-  @Override
-  public void addContentRoot(ContentRoot contentRoot) {
-    contentRoots.add(contentRoot);
-  }
+//  @Override
+//  public void addContentRoot(ContentRoot contentRoot) {
+//    contentRoots.add(contentRoot);
+//  }
 
-  @Override
-  public Set<ContentRoot> getContentRoots() {
-    return contentRoots;
-  }
+//  @Override
+//  public Set<ContentRoot> getContentRoots() {
+//    return contentRoots;
+//  }
 
   @Override
   public String getPackageName() {
