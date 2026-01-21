@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
@@ -213,7 +214,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
    File checkResStaticFolder = new File(libFolder,"res.apk");
    File checkSymbolFile = new File(libFolder,"R.txt");
    File checkPublicRes = new File(libFolder,"public.txt");
-   ArrayList jars = getJars(libFolder);
+   List<File> jars = getJars(libFolder);
    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
    
    if(checkResFolder.exists()){
@@ -250,7 +251,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
    File checkResStaticFolder = new File(libFolder,"res.apk");
    File checkSymbolFile = new File(libFolder,"R.txt");
    File checkPublicRes = new File(libFolder,"public.txt");
-   ArrayList jars = getJars(libFolder);
+   List<File> jars = getJars(libFolder);
    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
    
    if(checkResFolder.exists()){
