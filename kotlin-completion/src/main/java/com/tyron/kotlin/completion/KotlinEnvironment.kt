@@ -635,26 +635,29 @@ data class KotlinEnvironment(
         fun get(module: Module, reIndex : Boolean): KotlinEnvironment? {
 //            val androidModule = module as? AndroidModuleImpl ?: return null
             val javaModule = module as? JavaModuleImpl ?: return null
-           
+            var currentModule = javaModule;
+           if(module is AndroidModuleImpl){
+             currentModule = module as AndroidModuleImpl
+           }else if(module is JavaModuleImpl){
+             currentModule = module as JavaModuleImpl
+           }
 
-            val existingEnvironment = javaModule.getUserData(ENVIRONMENT_KEY)
-            if (existingEnvironment != null || !reIndex) { 
+            val existingEnvironment = currentModule.getUserData(ENVIRONMENT_KEY)
+            if (existingEnvironment != null && !reIndex) { 
                 return existingEnvironment
             }
 
-            val jars = javaModule.getLibraries()
-//            if(module instanceof AndroidModuleImpl){
+            val jars = currentModule.getLibraries()
               jars.add(BuildModule.getLambdaStubs())
               jars.add(BuildModule.getAndroidJar()) 
-//            }
             val environment = with(jars)
             environment.kotlinEnvironment.updateClasspath(
                 jars.map { JvmClasspathRoot(it) }
             ) 
-            javaModule.kotlinFiles.values.forEach {
+            currentModule.kotlinFiles.values.forEach {
                 environment.updateKotlinFile(it.absolutePath, it.readText())
             }
-            javaModule.putUserData(ENVIRONMENT_KEY, environment)
+            currentModule.putUserData(ENVIRONMENT_KEY, environment)
             return environment
         }
         

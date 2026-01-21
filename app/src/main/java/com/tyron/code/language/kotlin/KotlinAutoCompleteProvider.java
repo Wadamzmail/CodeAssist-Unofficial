@@ -123,6 +123,7 @@ public class KotlinAutoCompleteProvider extends AbstractAutoCompleteProvider {
 
     KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
     if (kotlinEnvironment == null) {
+    System.out.println(TAG+": KotlinEnvironment is null");
       return empty;
     }
 
