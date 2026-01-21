@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.tyron.builder.model.CodeAssistLibrary;
+import com.tyron.builder.model.CodeAssistAndroidLibrary;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.util.PackageTrie;
 import com.tyron.common.util.StringSearch;
@@ -203,6 +204,91 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       }
     }
     return libraries;
+  }
+  
+  @Override 
+  public void addLibrary(@NonNull File libFolder){
+   boolean isAar = false;
+   File checkResFolder = new File(libFolder,"res");
+   File checkResStaticFolder = new File(libFolder,"res.apk");
+   File checkSymbolFile = new File(libFolder,"R.txt");
+   File checkPublicRes = new File(libFolder,"public.txt");
+   ArrayList jars = getJars(libFolder);
+   CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
+   
+   if(checkResFolder.exists()){
+     isAar = true;
+     lib.setResFolder(checkResFolder);
+   }
+   if(checkResStaticFolder.exists()&&checkResStaticFolder.isDirectory()){
+     isAar = true;
+     lib.setResStaticLibrary(checkResStaticFolder);
+   }
+   if(checkSymbolFile.exists()){
+     isAar = true;
+     lib.setSymbolFile(checkSymbolFile);
+   }
+   if(checkPublicRes.exists()){
+     isAar = true;
+     lib.setPublicResources(checkPublicRes);
+   }
+   if(!jars.isEmpty()){
+   if(isAar){
+    lib.setCompileJarFiles(jars);
+    addLibrary(lib);
+    }else{
+    jars.forEach(it->addLibrary(CodeAssistLibrary.forJar(it)));
+   }
+   
+   }
+  
+  }
+  
+  public void addApiLibrary(@NonNull File libFolder){
+   boolean isAar = false;
+   File checkResFolder = new File(libFolder,"res");
+   File checkResStaticFolder = new File(libFolder,"res.apk");
+   File checkSymbolFile = new File(libFolder,"R.txt");
+   File checkPublicRes = new File(libFolder,"public.txt");
+   ArrayList jars = getJars(libFolder);
+   CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
+   
+   if(checkResFolder.exists()){
+     isAar = true;
+     lib.setResFolder(checkResFolder);
+   }
+   if(checkResStaticFolder.exists()&&checkResStaticFolder.isDirectory()){
+     isAar = true;
+     lib.setResStaticLibrary(checkResStaticFolder);
+   }
+   if(checkSymbolFile.exists()){
+     isAar = true;
+     lib.setSymbolFile(checkSymbolFile);
+   }
+   if(checkPublicRes.exists()){
+     isAar = true;
+     lib.setPublicResources(checkPublicRes);
+   }
+   if(!jars.isEmpty()){
+   if(isAar){
+    lib.setCompileJarFiles(jars);
+    addApiLibrary(lib);
+    }else{
+    jars.forEach(it->addApiLibrary(CodeAssistLibrary.forJar(it)));
+   }
+   
+   }
+  
+  }
+  
+  private List<File> getJars(File dir){
+     
+    File[] jarFiles = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".jar"));
+
+    List<File> jars = jarFiles == null
+        ? new ArrayList<>()
+        : Arrays.asList(jarFiles);
+     return jars;    
   }
 
   @Override
@@ -461,10 +547,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
             .listFiles(File::isDirectory);
     if (implementation_files != null) {
       for (File directory : implementation_files) {
-        File check = new File(directory, "classes.jar");
-        if (check.exists()) {
-          addLibrary(CodeAssistLibrary.forJar(check));
-        }
+          addLibrary(directory);
+//        File check = new File(directory, "classes.jar");
+//        if (check.exists()) {
+//          addLibrary(CodeAssistLibrary.forJar(check));
+//        }
       }
     }
 
@@ -472,10 +559,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         new File(getBuildDirectory(), "libraries/implementation_libs").listFiles(File::isDirectory);
     if (implementation_libs != null) {
       for (File directory : implementation_libs) {
-        File check = new File(directory, "classes.jar");
-        if (check.exists()) {
-          addLibrary(CodeAssistLibrary.forJar(check));
-        }
+          addLibrary(directory);
+//        File check = new File(directory, "classes.jar");
+//        if (check.exists()) {
+//          addLibrary(CodeAssistLibrary.forJar(check));
+//        }
       }
     }
 
@@ -483,10 +571,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         new File(getBuildDirectory(), "libraries/natives_libs").listFiles(File::isDirectory);
     if (natives_libs != null) {
       for (File directory : natives_libs) {
-        File check = new File(directory, "classes.jar");
-        if (check.exists()) {
-          mNativeLibraries.add(check);
-        }
+          addLibrary(directory);
+//        File check = new File(directory, "classes.jar");
+//        if (check.exists()) {
+//          addLibrary(CodeAssistLibrary.forJar(check));
+//        }
       }
     }
 
@@ -495,10 +584,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
           new File(getBuildDirectory(), "libraries/api_files/libs").listFiles(File::isDirectory);
       if (implementation_files != null) {
         for (File directory : implementation_files) {
-          File check = new File(directory, "classes.jar");
-          if (check.exists()) {
-            addApiLibrary(CodeAssistLibrary.forJar(check));
-          }
+          addLibrary(directory);
+//        File check = new File(directory, "classes.jar");
+//        if (check.exists()) {
+//          addLibrary(CodeAssistLibrary.forJar(check));
+//        }
         }
       }
 
@@ -506,10 +596,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
           new File(getBuildDirectory(), "libraries/api_libs").listFiles(File::isDirectory);
       if (implementation_libs != null) {
         for (File directory : implementation_libs) {
-          File check = new File(directory, "classes.jar");
-          if (check.exists()) {
-            addApiLibrary(CodeAssistLibrary.forJar(check));
-          }
+          addLibrary(directory);
+//        File check = new File(directory, "classes.jar");
+//        if (check.exists()) {
+//          addApiLibrary(CodeAssistLibrary.forJar(check));
+//        }
         }
       }
     }

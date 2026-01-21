@@ -96,6 +96,10 @@ public class MockJavaModule extends MockModule implements JavaModule {
   public void addLibrary(@NonNull CodeAssistLibrary jar) {
     throw new UnsupportedOperationException();
   }
+  @Override
+  public void addLibrary(@NonNull File libFolder){
+   throw new UnsupportedOperationException(); 
+  }
 
   @Override
   public void putLibraryHashes(Map<String, CodeAssistLibrary> hashes) {
