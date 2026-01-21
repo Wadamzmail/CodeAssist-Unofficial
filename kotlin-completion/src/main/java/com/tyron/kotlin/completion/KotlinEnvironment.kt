@@ -647,7 +647,7 @@ data class KotlinEnvironment(
                 return existingEnvironment
             }
 
-            val jars = currentModule.getLibraries()
+            val jars = currentModule.getLibraries().toMutableList()
               jars.add(BuildModule.getLambdaStubs())
               jars.add(BuildModule.getAndroidJar()) 
             val environment = with(jars)
