@@ -208,9 +208,9 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
     if (mEditor.getProject() == null) {
       return;
     }
-    EventManager eventManager = mEditor.getProject().getEventManager();
-    eventManager.dispatchEvent(
-        new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
+//    EventManager eventManager = mEditor.getProject().getEventManager();
+//    eventManager.dispatchEvent(
+//        new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
     // AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
     //  try{ InjectResourcesTask.inject(mEditor.getProject());}catch(Exception e){}
     //  try{ InjectViewBindingTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}

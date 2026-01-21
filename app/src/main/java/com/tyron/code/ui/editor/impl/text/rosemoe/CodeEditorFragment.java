@@ -219,7 +219,7 @@ public class CodeEditorFragment extends Fragment
                     diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
               }
             },
-            200);
+            300);
   }
 
   public void hideEditorWindows() {
