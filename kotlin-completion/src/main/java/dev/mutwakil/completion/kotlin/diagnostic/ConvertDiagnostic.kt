@@ -32,9 +32,9 @@ fun convertDiagnostic(diagnostic: KotlinDiagnostic): List<DiagnosticWrapper> {
 }
 
 fun getDiagnostics(context : BindingContext): List<DiagnosticWrapper>{
-   val diagnosticWrappers : List<DiagnosticWrapper> = emptyList()
-   val diagnostics = context.getDiagnostics().toMutableList()
-      for (var it : diagnostics) {
+   val diagnosticWrappers = mutableListOf<DiagnosticWrapper>()
+   val diagnostics = context.diagnostics.toMutableList()
+      for (it in diagnostics) {
         diagnosticWrappers.addAll(convertDiagnostic(it as KotlinDiagnostic))
       }
       return diagnosticWrappers

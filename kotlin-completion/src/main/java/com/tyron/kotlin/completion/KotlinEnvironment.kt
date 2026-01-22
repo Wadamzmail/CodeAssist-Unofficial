@@ -118,7 +118,7 @@ data class KotlinEnvironment(
         return kotlinFiles[name]
     }
     
-    var diagnostics : List<DiagnosticWrapper> = emptyList() 
+    var diagnostics : MutableList<DiagnosticWrapper> = mutableListOf<DiagnosticWrapper>() 
     
     fun getDiagnostics(): List<DiagnosticWrapper>{
       return diagnostics
