@@ -119,10 +119,6 @@ data class KotlinEnvironment(
     }
     
     var diagnostics : MutableList<DiagnosticWrapper> = mutableListOf<DiagnosticWrapper>() 
-    
-    fun getDiagnostics(): List<DiagnosticWrapper>{
-      return diagnostics
-    }
 
     private data class DescriptorInfo(
         val isTipsManagerCompletion: Boolean,
