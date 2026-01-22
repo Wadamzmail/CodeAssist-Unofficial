@@ -351,6 +351,9 @@ public class ResourceRepositoryManager {
     Map<ExternalAndroidLibrary, Future<AarResourceRepository>> futures =
         Maps.newHashMapWithExpectedSize(codeAssistLibraries.size());
     for (CodeAssistAndroidLibrary library : codeAssistLibraries) {
+      if (library.getResFolder() == null){
+        continue;
+      }
       if (!library.getResFolder().exists() && library.getResStaticLibrary() == null) {
         continue;
       }
@@ -362,7 +365,9 @@ public class ResourceRepositoryManager {
               "",
               new RecursiveResourceFolder(toPathString(library.getResFolder())),
               null,
-              toPathString(library.getSymbolFile()),
+              library.getSymbolFile() == null
+                  ? null 
+                  : toPathString(library.getSymbolFile()),
               library.getResStaticLibrary() == null
                   ? null
                   : toPathString(library.getResStaticLibrary()));

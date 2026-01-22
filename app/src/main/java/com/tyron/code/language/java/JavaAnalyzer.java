@@ -26,17 +26,13 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.Debouncer;
 import com.tyron.completion.index.CompilerService;
-import com.tyron.completion.java.JavaCompilerProvider;
-import com.tyron.completion.java.compiler.CompileTask;
-import com.tyron.completion.java.compiler.CompilerContainer;
-import com.tyron.completion.java.compiler.JavaCompilerService;
 import com.tyron.completion.java.util.ErrorCodes;
 import com.tyron.completion.java.util.TreeUtil;
 import com.tyron.completion.progress.ProcessCanceledException;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.Editor;
 import dev.mutwakil.codeassist.BuildConfig;
-import dev.mutwakil.javac.JavacTreesUtil;
+import dev.mutwakil.javac.*;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import java.io.File;
@@ -45,6 +41,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
@@ -54,6 +51,10 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.tyron.completion.java.compiler.services.NBLog;
+import java.util.concurrent.CompletableFuture;
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
 
@@ -108,23 +109,27 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
   @Override
   public List<SemanticToken> analyzeSpansAsync(CharSequence contents) {
     Editor editor = mEditorReference.get();
-    JavaCompilerService compiler = getCompiler(editor);
-    if (compiler == null) {
+    Project project = editor.getProject();
+    File currentFile = editor.getCurrentFile();
+     
+    CompilationInfo compilationInfo = getInfo(editor);
+    if (compilationInfo == null) {
       return null;
     }
 
-    File currentFile = editor.getCurrentFile();
+    
     SourceFileObject object =
         new SourceFileObject(currentFile.toPath(), contents.toString(), Instant.now());
-    CompilerContainer container = compiler.compile(Collections.singletonList(object));
-
-    return container.get(
-        task -> {
-          JavaSemanticHighlighter highlighter = new JavaSemanticHighlighter(task.task);
-          CompilationUnitTree root = task.root(currentFile);
+    CompletableFuture<List<SemanticToken>> future = new CompletableFuture<>();
+    info.update(object,0,
+        unit -> {
+          JavacTaskImpl task = info.impl.getJavacTask();
+          JavaSemanticHighlighter highlighter = new JavaSemanticHighlighter(task);
+          CompilationUnitTree root = info.getCompilationUnit();
           highlighter.scan(root, true);
-          return highlighter.getTokens();
+          future.complete(highlighter.getTokens());
         });
+   return future.get();   
   }
 
   @Override
@@ -137,7 +142,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
         });
   }
 
-  private JavaCompilerService getCompiler(Editor editor) {
+  private CompilationInfo getInfo(Editor editor) {
     Project project = ProjectManager.getInstance().getCurrentProject();
     if (project == null) {
       return null;
@@ -146,14 +151,8 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
       return null;
     }
     Module module = project.getModule(editor.getCurrentFile());
-    if (module instanceof JavaModule) {
-      JavaCompilerProvider provider =
-          CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
-      if (provider != null) {
-        return provider.getCompiler(project, (JavaModule) module);
-      }
-    }
-    return null;
+    CompilationInfo compilationInfo = CompilationInfo.get(module);
+    return compilationInfo;
   }
 
   private void doAnalyzeInBackground(Function0<Boolean> cancel, CharSequence contents) {
@@ -169,8 +168,8 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     // do not compile the file if it not yet closed as it will cause issues when
     // compiling multiple files at the same time
     if (mPreferences.getBoolean(SharedPreferenceKeys.JAVA_ERROR_HIGHLIGHTING, true)) {
-      JavaCompilerService service = getCompiler(editor);
-      if (service != null) {
+      CompilationInfo info = getInfo(editor);
+      if (info != null) {
         File currentFile = editor.getCurrentFile();
         if (currentFile == null) {
           return;
@@ -180,20 +179,18 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
           return;
         }
         try {
-          if (service.getCachedContainer().isWriting()) {
-            return;
-          }
           ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(true));
           SourceFileObject sourceFileObject =
               new SourceFileObject(currentFile.toPath(), contents.toString(), Instant.now());
-          CompilerContainer container =
-              service.compile(Collections.singletonList(sourceFileObject));
-          container.run(
-              task -> {
+          info.update(
+              sourceFileObject,
+              0,  
+              unit -> {
+                JavacTaskImpl task = info.impl.getJavacTask();
                 if (!cancel.invoke()) {
                   List<DiagnosticWrapper> collect =
-                      task.diagnostics.stream()
-                          .map(d -> modifyDiagnostic(task, d))
+                      NBLog.instance(task.getContext()).getDiagnostics(currentFile.toURI()).stream()
+                          .map(d -> modifyDiagnostic(info, d))
                           .peek(it -> ProgressManager.checkCanceled())
                           .filter(d -> currentFile.equals(d.getSource()))
                           .collect(Collectors.toList());
@@ -209,7 +206,6 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
           if (BuildConfig.DEBUG) {
             Log.e(TAG, "Unable to get diagnostics", e);
           }
-          service.destroy();
           ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(false));
         }
       }
@@ -217,12 +213,12 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
   }
 
   private DiagnosticWrapper modifyDiagnostic(
-      CompileTask task, Diagnostic<? extends JavaFileObject> diagnostic) {
+      CompilationInfo info, Diagnostic<? extends JavaFileObject> diagnostic) {
     DiagnosticWrapper wrapped = new DiagnosticWrapper(diagnostic);
-
+    JavacTaskImpl task = info.impl.getJavacTask();
     if (diagnostic instanceof ClientCodeWrapper.DiagnosticSourceUnwrapper) {
       // Trees trees = Trees.instance(task.task);
-      Trees trees = JavacTreesUtil.instance(task.task);
+      Trees trees = MTrees.instance(task);
       SourcePositions positions = trees.getSourcePositions();
 
       JCDiagnostic jcDiagnostic = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
@@ -230,7 +226,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
       JCTree tree = diagnosticPosition.getTree();
 
       if (tree != null) {
-        TreePath treePath = trees.getPath(task.root(), tree);
+        TreePath treePath = trees.getPath(info.getCompilationUnit(), tree);
         if (treePath == null) {
           return wrapped;
         }
@@ -243,7 +239,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
             TreePath block = TreeUtil.findParentOfType(treePath, BlockTree.class);
             if (block != null) {
               // show error span only at the end parenthesis
-              end = positions.getEndPosition(task.root(), block.getLeaf()) + 1;
+              end = positions.getEndPosition(info.getCompilationUnit(), block.getLeaf()) + 1;
               start = end - 2;
             }
             break;
@@ -251,8 +247,8 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
             if (treePath.getLeaf().getKind() == Tree.Kind.METHOD) {
               MethodTree methodTree = (MethodTree) treePath.getLeaf();
               if (methodTree.getBody() != null) {
-                start = positions.getStartPosition(task.root(), methodTree);
-                end = positions.getStartPosition(task.root(), methodTree.getBody());
+                start = positions.getStartPosition(info.getCompilationUnit(), methodTree);
+                end = positions.getStartPosition(info.getCompilationUnit(), methodTree.getBody());
               }
             }
             break;

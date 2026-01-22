@@ -192,6 +192,7 @@ public class CodeEditorFragment extends Fragment
   }
 
   private void onContentChange(com.tyron.editor.Content content) {
+    if(true)return;
 
     if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
       return;
@@ -657,7 +658,7 @@ public class CodeEditorFragment extends Fragment
   public void onLowMemory() {
     super.onLowMemory();
 
- //   mEditor.setBackgroundAnalysisEnabled(false);
+//    mEditor.setBackgroundAnalysisEnabled(false);
   }
 
   @Override

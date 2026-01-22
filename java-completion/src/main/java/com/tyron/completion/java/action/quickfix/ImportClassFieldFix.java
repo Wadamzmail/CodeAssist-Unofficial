@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import javax.tools.Diagnostic;
+import com.sun.tools.javac.util.JCDiagnostic;
+import com.tyron.builder.model.DiagnosticWrapper;
 
 public class ImportClassFieldFix extends AnAction {
 
@@ -51,7 +53,7 @@ public class ImportClassFieldFix extends AnAction {
       return;
     }
 
-    Diagnostic<?> diagnostic = event.getData(CommonDataKeys.DIAGNOSTIC);
+    DiagnosticWrapper diagnostic = event.getData(CommonDataKeys.DIAGNOSTIC);
     if (diagnostic == null) {
       return;
     }
@@ -63,15 +65,18 @@ public class ImportClassFieldFix extends AnAction {
     File file = event.getRequiredData(CommonDataKeys.FILE);
     if (file == null) return;
 
-    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
-        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
-    if (diagnosticSourceUnwrapper == null) {
-      return;
-    }
+//    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
+//        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+//    if (diagnosticSourceUnwrapper == null) {
+//      return;
+//    }
 
     if (!ERROR_CODE.equals(diagnostic.getCode())) {
       return;
     }
+    
+    JCDiagnostic jcDiagnostic = (JCDiagnostic) diagnostic.getExtra();
+    if(jcDiagnostic==null)return;
 
     CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
     if (compilationInfo == null) return;
@@ -82,9 +87,9 @@ public class ImportClassFieldFix extends AnAction {
     JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
     TreePath currentPath = new FindCurrentPath(javacTask).scan(unit, left, right);
 
-    String simpleName = String.valueOf(diagnosticSourceUnwrapper.d.getArgs()[0]);
+    String simpleName = String.valueOf(jcDiagnostic.getArgs()[0]);
     List<String> classNames = new ArrayList<>();
-    for (String qualifiedName : publicTopLevelTypes(editor)) {
+    for (String qualifiedName : getAllClassNames(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         classNames.add(qualifiedName);
       }
@@ -112,14 +117,16 @@ public class ImportClassFieldFix extends AnAction {
 
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
-    Diagnostic<?> diagnostic = e.getRequiredData(CommonDataKeys.DIAGNOSTIC);
-    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+    DiagnosticWrapper diagnostic = e.getRequiredData(CommonDataKeys.DIAGNOSTIC);
+//    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
     if (diagnostic == null) {
       return;
     }
+    JCDiagnostic d = (JCDiagnostic) diagnostic.getExtra();
+    if(d==null) return;
 
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
-    JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
+//    JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
     String simpleName = String.valueOf(d.getArgs()[0]);
     Project project = editor.getProject();
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
@@ -139,7 +146,7 @@ public class ImportClassFieldFix extends AnAction {
     }
 
     Map<String, JavaRewrite2> map = new TreeMap<>();
-    for (String qualifiedName : publicTopLevelTypes(editor)) {
+    for (String qualifiedName : getAllClassNames(editor)) {
       if (qualifiedName.endsWith("." + simpleName)) {
         if (qualifiedName.endsWith("." + searchName)) {
           if (isField) {
@@ -182,8 +189,7 @@ public class ImportClassFieldFix extends AnAction {
   public String[] getAllClassNames(Editor editor) {
     Module module = editor.getProject().getModule(editor.getCurrentFile());
     ShortNamesCache cache = ShortNamesCache.getInstance(module);
-    String[] allClasses = cache.getAllClassNames();
-    return allClasses;
+    return cache.getAllClassNames();
   }
 
   public Set<String> publicTopLevelTypes(Editor editor) {

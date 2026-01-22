@@ -17,7 +17,7 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.tyron.code.analyzer.semantic.SemanticToken;
-import dev.mutwakil.javac.JavacTreesUtil;
+import dev.mutwakil.javac.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -44,7 +44,7 @@ public class JavaSemanticHighlighter extends TreePathScanner<Void, Boolean> {
 
   public JavaSemanticHighlighter(JavacTask task) {
     // this.trees = Trees.instance(task);
-    this.trees = JavacTreesUtil.instance(task);
+    this.trees = MTrees.instance(task);
     this.pos = trees.getSourcePositions();
     this.elements = task.getElements();
     this.tokens = new ArrayList<>();

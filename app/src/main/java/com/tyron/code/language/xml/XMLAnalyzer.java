@@ -233,13 +233,6 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
     // work around to refresh R.java file
     File resourceClass = module.getJavaFile(module.getNameSpace() + ".R");
-//    if (resourceClass != null) {
-//      JavaCompilerProvider provider =
-//          CompilerService.getInstance().getIndex(JavaCompilerProvider.KEY);
-//      JavaCompilerService service = provider.getCompiler(project, module);
-
-//      CompilerContainer container = service.compile(resourceClass.toPath());
-//      container.run(__ -> {
             CompilationInfo info = CompilationInfo.get(module,true);
             if (info == null) {
                 return;
@@ -254,7 +247,5 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
                     return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
                 }
             });
-//      });
-//    }
   }
 }

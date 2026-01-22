@@ -41,6 +41,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 
 public class JavaLanguage extends EmptyTextMateLanguage
     implements Language, EditorFormatter, CodeAssistLanguage {
@@ -49,7 +50,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   private final Editor mEditor;
 
-  // private final BaseTextmateAnalyzer mAnalyzer;
+   private final BaseTextmateAnalyzer mAnalyzer;
   private final TextMateLanguage delegate;
   public boolean createIdentifiers = false;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
@@ -99,8 +100,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   public JavaLanguage(Editor editor) {
     this.mEditor = editor;
-    delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
-    // mAnalyzer = JavaAnalyzer.create(editor, this);
+ //   delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
+     mAnalyzer = JavaAnalyzer.create(editor, this);
     // onContentChange(editor.getCurrentFile(),editor.getContent());
   }
 
@@ -141,8 +142,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
   @NonNull
   @Override
   public AnalyzeManager getAnalyzeManager() {
-    return delegate.getAnalyzeManager();
-    // return mAnalyzer;
+//    return delegate.getAnalyzeManager();
+     return mAnalyzer;
   }
 
   @Override
@@ -185,6 +186,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   @Override
   public void onContentChange(File file, CharSequence content) {
+    if(true)return;
     Project project = mEditor.getProject();
     if (project == null) {
       return;
@@ -248,8 +250,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-    return delegate.getSymbolPairs();
-    // return new SymbolPairMatch.DefaultSymbolPairs();
+//    return delegate.getSymbolPairs();
+     return new SymbolPairMatch.DefaultSymbolPairs();
   }
 
   private final NewlineHandler[] newLineHandlers =
@@ -264,8 +266,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   @Override
   public void destroy() {
-    delegate.destroy();
-    //  mAnalyzer.destroy();
+//    delegate.destroy();
+      mAnalyzer.destroy();
   }
 
   class CallParenHandler implements NewlineHandler {

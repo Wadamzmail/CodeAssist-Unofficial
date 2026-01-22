@@ -95,6 +95,8 @@ import org.jetbrains.kotlin.descriptors.impl.TypeParameterDescriptorImpl
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.config.IrVerificationMode
+import com.tyron.builder.model.DiagnosticWrapper
+import dev.mutwakil.completion.kotlin.diagnostic.getDiagnostics
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -114,6 +116,12 @@ data class KotlinEnvironment(
 
     fun getKotlinFile(name: String): KotlinFile? {
         return kotlinFiles[name]
+    }
+    
+    var diagnostics : List<DiagnosticWrapper> = emptyList() 
+    
+    fun getDiagnostics(): List<DiagnosticWrapper>{
+      return diagnostics
     }
 
     private data class DescriptorInfo(
@@ -382,6 +390,7 @@ data class KotlinEnvironment(
         val project = files.first().project
         val bindingTrace = CliBindingTrace(project)
         var componentProvider: ComponentProvider? = null
+        diagnostics.clear()
         analyzerWithCompilerReport.analyzeAndReport(files) {
             componentProvider = logTime("componentProvider") {
                 TopDownAnalyzerFacadeForJVM.createContainer(
@@ -413,7 +422,7 @@ data class KotlinEnvironment(
                     listOf(current)
                 ) != null
             }
-
+            diagnostics = getDiagnostics(bindingTrace.bindingContext)
             return@analyzeAndReport AnalysisResult.success(
                 bindingTrace.bindingContext,
                 componentProvider!!.getService(ModuleDescriptor::class.java)
