@@ -422,7 +422,7 @@ data class KotlinEnvironment(
                     listOf(current)
                 ) != null
             }
-            diagnostics = getDiagnostics(bindingTrace.bindingContext)
+            diagnostics = getDiagnostics(bindingTrace.bindingContext).toMutableList() 
             return@analyzeAndReport AnalysisResult.success(
                 bindingTrace.bindingContext,
                 componentProvider!!.getService(ModuleDescriptor::class.java)
