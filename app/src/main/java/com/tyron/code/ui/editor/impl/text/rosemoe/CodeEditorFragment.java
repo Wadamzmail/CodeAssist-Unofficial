@@ -89,6 +89,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.Executors;
@@ -215,7 +216,8 @@ public class CodeEditorFragment extends Fragment
               ServiceLoader<DiagnosticProvider> providers =
                   ServiceLoader.load(DiagnosticProvider.class);
               for (DiagnosticProvider provider : providers) {
-                List<JCDiagnostic> diagnostics = provider.getDiagnostics(module, mCurrentFile);
+                
+                List<JCDiagnostic> diagnostics = new ArrayList<>(provider.getDiagnostics(module, mCurrentFile));
                 mEditor.setDiagnostics(
                     diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
               }

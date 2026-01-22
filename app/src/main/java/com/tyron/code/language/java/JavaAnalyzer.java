@@ -129,7 +129,11 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
           highlighter.scan(root, true);
           future.complete(highlighter.getTokens());
         });
-   return future.get();   
+    try {
+      return future.get();
+    } catch (ExecutionException | InterruptedException e) {
+      return new ArrayList<SemanticToken>();
+    }   
   }
 
   @Override
