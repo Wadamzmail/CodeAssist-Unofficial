@@ -115,7 +115,7 @@ public class ImportClassAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     DiagnosticWrapper diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
-    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+//    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
     if (diagnostic == null) {
       return;
     }
