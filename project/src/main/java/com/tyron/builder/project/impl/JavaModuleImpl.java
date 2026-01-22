@@ -222,14 +222,14 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
      lib.setResFolder(checkResFolder);
    }
    if(checkResStaticFolder.exists()){
-     isAar = true;
+//     isAar = true;
      lib.setResStaticLibrary(checkResStaticFolder);  
    }
    if(checkSymbolFile.exists()){
      isAar = true;
    }
    if(checkPublicRes.exists()){
-     isAar = true;
+//     isAar = true;
      lib.setPublicResources(checkPublicRes);  
    }
    lib.setSymbolFile(checkSymbolFile); 

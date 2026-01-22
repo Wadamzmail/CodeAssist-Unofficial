@@ -267,7 +267,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
     }
     editor.setColorScheme(scheme);
 //    editor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
-    editor.setBackgroundAnalysisEnabled(false);
+//    editor.setBackgroundAnalysisEnabled(false);
     editor.setCursorAnimationEnabled(false);
     editor.setTypefaceText(
         ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));
@@ -338,11 +338,11 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
               }
             }
 
-           mEditor.post(()->{
+//           mEditor.post(()->{
             mEditor.setText(combinedText);
             int lastLine = mEditor.getLineCount() - 1;
             mEditor.setSelection(lastLine, 0);
-            });
+//            });
           },
           100);
     }
