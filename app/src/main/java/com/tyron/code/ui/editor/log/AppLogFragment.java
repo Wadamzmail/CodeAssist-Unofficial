@@ -266,7 +266,7 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       ThemeRepository.putColorScheme(key, scheme);
     }
     editor.setColorScheme(scheme);
-    editor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
+//    editor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
     editor.setBackgroundAnalysisEnabled(false);
     editor.setCursorAnimationEnabled(false);
     editor.setTypefaceText(

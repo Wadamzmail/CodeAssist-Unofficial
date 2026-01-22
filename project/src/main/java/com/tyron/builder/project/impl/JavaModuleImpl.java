@@ -217,22 +217,22 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
    List<File> jars = getJars(libFolder);
    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
    
-   if(checkResFolder.exists()){
+   if(checkResFolder.exists()&&checkResFolder.isDirectory()){
      isAar = true;
      lib.setResFolder(checkResFolder);
    }
-   if(checkResStaticFolder.exists()&&checkResStaticFolder.isDirectory()){
+   if(checkResStaticFolder.exists()){
      isAar = true;
-     lib.setResStaticLibrary(checkResStaticFolder);
+     lib.setResStaticLibrary(checkResStaticFolder);  
    }
    if(checkSymbolFile.exists()){
      isAar = true;
-     lib.setSymbolFile(checkSymbolFile);
    }
    if(checkPublicRes.exists()){
      isAar = true;
-     lib.setPublicResources(checkPublicRes);
+     lib.setPublicResources(checkPublicRes);  
    }
+   lib.setSymbolFile(checkSymbolFile); 
    if(!jars.isEmpty()){
    if(isAar){
     lib.setCompileJarFiles(jars);

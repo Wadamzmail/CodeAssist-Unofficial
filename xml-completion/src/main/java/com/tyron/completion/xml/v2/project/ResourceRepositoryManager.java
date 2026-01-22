@@ -354,7 +354,7 @@ public class ResourceRepositoryManager {
       if (library.getResFolder() == null){
         continue;
       }
-      if (!library.getResFolder().exists() && library.getResStaticLibrary() == null) {
+      if (!library.getResFolder().exists()/* && library.getResStaticLibrary() == null*/) {
         continue;
       }
       ExternalLibraryImpl externalLibrary =
@@ -365,9 +365,7 @@ public class ResourceRepositoryManager {
               "",
               new RecursiveResourceFolder(toPathString(library.getResFolder())),
               null,
-              library.getSymbolFile() == null
-                  ? null 
-                  : toPathString(library.getSymbolFile()),
+               toPathString(library.getSymbolFile()),
               library.getResStaticLibrary() == null
                   ? null
                   : toPathString(library.getResStaticLibrary()));
