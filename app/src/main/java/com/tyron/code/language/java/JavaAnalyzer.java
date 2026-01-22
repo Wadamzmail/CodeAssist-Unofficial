@@ -55,6 +55,7 @@ import com.tyron.completion.java.parse.CompilationInfo;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.tyron.completion.java.compiler.services.NBLog;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
 
@@ -112,8 +113,8 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     Project project = editor.getProject();
     File currentFile = editor.getCurrentFile();
      
-    CompilationInfo compilationInfo = getInfo(editor);
-    if (compilationInfo == null) {
+    CompilationInfo info = getInfo(editor);
+    if (info == null) {
       return null;
     }
 

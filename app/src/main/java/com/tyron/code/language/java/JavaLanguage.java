@@ -50,8 +50,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   private final Editor mEditor;
 
-   private final BaseTextmateAnalyzer mAnalyzer;
-  private final TextMateLanguage delegate;
+  private final BaseTextmateAnalyzer mAnalyzer;
+//  private final TextMateLanguage delegate;
   public boolean createIdentifiers = false;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
