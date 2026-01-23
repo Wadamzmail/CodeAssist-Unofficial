@@ -252,10 +252,8 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
   }
 
   private void configureEditor(@NonNull CodeEditorView editor) {
-
     editor.setEditable(false);
     editor.setColorScheme(new CompiledEditorScheme(requireContext()));
-
     String key =
         EditorUtil.isDarkMode(requireContext())
             ? ThemeRepository.DEFAULT_NIGHT
@@ -266,8 +264,8 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       ThemeRepository.putColorScheme(key, scheme);
     }
     editor.setColorScheme(scheme);
-//    editor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
-//    editor.setBackgroundAnalysisEnabled(false);
+    editor.setEditorLanguage(LanguageManager.createTextMateLanguage("source.build"));
+    editor.setBackgroundAnalysisEnabled(false);
     editor.setCursorAnimationEnabled(false);
     editor.setTypefaceText(
         ResourcesCompat.getFont(requireContext(), R.font.jetbrains_mono_regular));

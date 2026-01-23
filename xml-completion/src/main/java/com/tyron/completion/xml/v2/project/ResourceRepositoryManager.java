@@ -359,7 +359,7 @@ public class ResourceRepositoryManager {
                     "",
                     new RecursiveResourceFolder(toPathString(library.getResFolder())),
                     null,
-                    toPathString(library.getSymbolFile()),
+                    library.getSymbolFile() == null ? null : toPathString(library.getSymbolFile()),
                     library.getResStaticLibrary() == null ? null : toPathString(library.getResStaticLibrary())
             );
             futures.put(externalLibrary, executor.submit(() -> factory.apply(externalLibrary)));

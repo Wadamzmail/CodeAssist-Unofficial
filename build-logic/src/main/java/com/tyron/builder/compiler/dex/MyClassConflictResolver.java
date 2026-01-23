@@ -24,8 +24,7 @@ public class MyClassConflictResolver implements ClassConflictResolver {
   public Origin resolveDuplicateClass(
       ClassReference reference, Collection<Origin> origins, DiagnosticsHandler handler) {
 
-    warning("Duplicate class found: " + reference.getDescriptor());
-    warning("Origins: " + origins);
+//    warning("Duplicate class found: " + reference.getDescriptor()+"\n in Origins: "+origins);
     return origins.iterator().next();
   }
 

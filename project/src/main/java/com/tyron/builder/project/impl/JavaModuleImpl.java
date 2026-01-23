@@ -210,12 +210,14 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   @Override 
   public void addLibrary(@NonNull File libFolder){
    boolean isAar = false;
+   File check = new File(libFolder,"classes.jar");
    File checkResFolder = new File(libFolder,"res");
    File checkResStaticFolder = new File(libFolder,"res.apk");
    File checkSymbolFile = new File(libFolder,"R.txt");
    File checkPublicRes = new File(libFolder,"public.txt");
    List<File> jars = getJars(libFolder);
    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
+   lib.setDeclaration(libFolder.getName());
    
    if(checkResFolder.exists()&&checkResFolder.isDirectory()){
      isAar = true;
@@ -227,18 +229,21 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
    }
    if(checkSymbolFile.exists()){
      isAar = true;
+     lib.setSymbolFile(checkSymbolFile);
    }
    if(checkPublicRes.exists()){
 //     isAar = true;
      lib.setPublicResources(checkPublicRes);  
-   }
-   lib.setSymbolFile(checkSymbolFile); 
+   } 
    if(!jars.isEmpty()){
    if(isAar){
     lib.setCompileJarFiles(jars);
     addLibrary(lib);
     }else{
-    jars.forEach(it->addLibrary(CodeAssistLibrary.forJar(it)));
+//    jars.forEach(it->addLibrary(CodeAssistLibrary.forJar(it)));
+    if(check.exists()){ 
+    addLibrary(CodeAssistLibrary.forJar(check));
+    } 
    }
    
    }
@@ -247,19 +252,21 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   
   public void addApiLibrary(@NonNull File libFolder){
    boolean isAar = false;
+   File check = new File(libFolder,"classes.jar");
    File checkResFolder = new File(libFolder,"res");
    File checkResStaticFolder = new File(libFolder,"res.apk");
    File checkSymbolFile = new File(libFolder,"R.txt");
    File checkPublicRes = new File(libFolder,"public.txt");
    List<File> jars = getJars(libFolder);
    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
+   lib.setDeclaration(libFolder.getName());
    
-   if(checkResFolder.exists()){
+   if(checkResFolder.exists()&&checkResFolder.isDirectory()){
      isAar = true;
      lib.setResFolder(checkResFolder);
    }
-   if(checkResStaticFolder.exists()&&checkResStaticFolder.isDirectory()){
-     isAar = true;
+   if(checkResStaticFolder.exists()){
+//     isAar = true;
      lib.setResStaticLibrary(checkResStaticFolder);
    }
    if(checkSymbolFile.exists()){
@@ -267,7 +274,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
      lib.setSymbolFile(checkSymbolFile);
    }
    if(checkPublicRes.exists()){
-     isAar = true;
+//     isAar = true;
      lib.setPublicResources(checkPublicRes);
    }
    if(!jars.isEmpty()){
@@ -275,7 +282,10 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     lib.setCompileJarFiles(jars);
     addApiLibrary(lib);
     }else{
-    jars.forEach(it->addApiLibrary(CodeAssistLibrary.forJar(it)));
+//    jars.forEach(it->addApiLibrary(CodeAssistLibrary.forJar(it)));
+    if(check.exists()){
+    addApiLibrary(CodeAssistLibrary.forJar(check));
+    }
    }
    
    }
