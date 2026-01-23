@@ -56,7 +56,7 @@ import com.tyron.code.MainActivity;
 import android.util.Log;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.code.language.CachedAutoCompleteProvider;
-
+import com.tyron.builder.model.DiagnosticWrapper;
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 

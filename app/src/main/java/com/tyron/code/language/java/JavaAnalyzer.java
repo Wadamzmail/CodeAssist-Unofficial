@@ -194,7 +194,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
                 JavacTaskImpl task = info.impl.getJavacTask();
                 if (!cancel.invoke()) {
                   List<DiagnosticWrapper> collect =
-                      new ArrayList<DiagnosticWrapper>(NBLog.instance(task.getContext()).getDiagnostics(currentFile.toURI())).stream()
+                      new ArrayList<JCDiagnostic>(NBLog.instance(task.getContext()).getDiagnostics(currentFile.toURI())).stream()
                           .map(d -> modifyDiagnostic(info, d))
                           .peek(it -> ProgressManager.checkCanceled())
                           .filter(d -> currentFile.equals(d.getSource()))

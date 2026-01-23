@@ -42,6 +42,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.tools.Diagnostic;
@@ -529,7 +530,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
               (int) it.getEndPosition(),
               severitySupplier.apply(it.getKind()), 
               0,
-              isDiagnosticDetailEnabled()?new DiagnosticDetail("Info",issue.getMessage(),null,null):null);
+              isDiagnosticDetailEnabled()?new DiagnosticDetail("Info",it.getMessage(),null,null):null);
       getDiagnostics().addDiagnostic(region);
     }
   }
