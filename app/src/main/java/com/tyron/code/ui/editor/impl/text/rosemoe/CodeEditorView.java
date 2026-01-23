@@ -142,7 +142,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
-    if (diagnostics == null) return;
+    if (diagnostics == null){
+     diagnostics = new ArrayList<DiagnosticWrapper>();
+     }
     mStopConv = true;
     mDiagnostics = diagnostics;
 

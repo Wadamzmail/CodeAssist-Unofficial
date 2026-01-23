@@ -143,6 +143,7 @@ public class HighlightUtil {
    */
   public static void markDiagnostics(
       Editor editor, List<DiagnosticWrapper> diagnostics, Styles styles) {
+      try{
     diagnostics.forEach(
         it -> {
           ProgressManager.checkCanceled();
@@ -197,6 +198,9 @@ public class HighlightUtil {
             }
           }
         });
+       }catch(Exception e){
+       Log.d("HighlightUtil", "Failed to mark diagnostics", e);
+       }
   }
 
   public static void clearDiagnostics(Styles styles) {}

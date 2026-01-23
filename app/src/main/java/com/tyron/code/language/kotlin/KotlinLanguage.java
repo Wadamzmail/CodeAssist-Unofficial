@@ -20,6 +20,7 @@ import com.tyron.kotlin.completion.KotlinFile;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
 
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
@@ -121,7 +122,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 //        ProgressManager.getInstance()
 //        .runLater(
 //            () -> {
-             initAnalysis();
+//             initAnalysis();
 //             },
 //            50);   
         }
@@ -155,14 +156,15 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         if (completionList == null) {
             return;
         }
-        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container)); 
+//        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container)); 
         completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
         }catch(Exception e){
         if (!(e instanceof InterruptedException)
                     && !(e instanceof ProcessCanceledException)) {
                     Log.e(TAG, "Completion failed", e);
         }
-        }          
+        }
+        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(new ArrayList<DiagnosticWrapper>(kotlinEnvironment.getDiagnostics())));           
         kotlinEnvironment.analysis = null;  
   }
 
