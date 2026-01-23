@@ -236,7 +236,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
      lib.setPublicResources(checkPublicRes);  
    } 
    if(!jars.isEmpty()){
-   if(isAar){
+   if(false){
     lib.setCompileJarFiles(jars);
     addLibrary(lib);
     }else{
