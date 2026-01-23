@@ -35,10 +35,6 @@ android {
     }
 }
 
-configurations.implementation {
-    exclude group: 'com.google.guava', module: 'guava'
-}
-
 dependencies {
     compileOnly 'androidx.constraintlayout:constraintlayout:2.1.4'
     compileOnly project(path: ':proteus-core')

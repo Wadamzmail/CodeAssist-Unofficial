@@ -12,31 +12,15 @@ java {
 dependencies {
  
     api 'androidx.annotation:annotation:1.9.1'
-	api ('com.google.guava:guava:33.5.0-jre'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    api ('com.google.code.gson:gson:2.13.2'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    api ('commons-io:commons-io:2.16.1'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    api ('net.lingala.zip4j:zip4j:2.11.5'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    api ('org.antlr:antlr4-runtime:4.13.2'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    api ('org.apache.commons:commons-vfs2:2.9.0'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
-    api ('org.slf4j:slf4j-api:2.0.16'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+	api ('com.google.guava:guava:33.5.0-jre')
+    api ('com.google.code.gson:gson:2.13.2')
+    api ('commons-io:commons-io:2.16.1')
+    api ('net.lingala.zip4j:zip4j:2.11.5')
+    api ('org.antlr:antlr4-runtime:4.13.2')
+    api ('org.apache.commons:commons-vfs2:2.9.0')
+    api ('org.slf4j:slf4j-api:2.0.16') 
     compileOnly project(path: ':android-stubs')
-	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
 }
 
 spotless {

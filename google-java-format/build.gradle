@@ -29,9 +29,7 @@ android {
 dependencies {
 	api files('libs/google-java-format.jar')
 	implementation project(path: ':common')
-    api ('com.google.auto.value:auto-value-annotations:1.11.0'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    api ('com.google.auto.value:auto-value-annotations:1.11.0')
 	annotationProcessor 'com.google.auto.value:auto-value:1.11.0'
 	implementation project(path: ':javac')
 	implementation("org.checkerframework:checker-qual:3.50.0")

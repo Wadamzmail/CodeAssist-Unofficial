@@ -36,16 +36,12 @@ configurations.implementation {
 dependencies {
     implementation project(path: ':common')
     
-    api ('com.github.albfernandez:juniversalchardet:2.5.0') {
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    api ('com.github.albfernandez:juniversalchardet:2.5.0') 
     implementation 'com.android.tools:annotations:31.6.0'
     api project(path: ':javapoet')
     implementation project(path: ":javac")
     // jaxb
-    api ('javax.xml.bind:jaxb-api:2.3.1') {
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    api ('javax.xml.bind:jaxb-api:2.3.1')
 }
 repositories {
     mavenCentral()

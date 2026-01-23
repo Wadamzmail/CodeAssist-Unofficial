@@ -34,19 +34,13 @@ android {
 
 dependencies {
 
-    api ('me.xdrop:fuzzywuzzy:1.4.0'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    api ('me.xdrop:fuzzywuzzy:1.4.0')
     api project(path: ':project')
-	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0'){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0') 
     implementation project(path: ':editor-api')
     implementation project(path: ':common')
     implementation project(path: ':language-api')
-    implementation("org.checkerframework:checker-qual:3.50.0"){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    implementation("org.checkerframework:checker-qual:3.50.0") 
 }
 
 spotless {

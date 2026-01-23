@@ -27,13 +27,9 @@ android {
 }
 dependencies {
 	implementation project(path: ':common')
-    api ("com.android.tools.build:apksig:8.13.2"){
-       exclude group: 'com.google.guava', module: 'guava'
-     } 
+    api ("com.android.tools.build:apksig:8.13.2") 
   //  api "org.bouncycastle:bcprov-jdk15on:1.70"
-    api ("org.bouncycastle:bcprov-jdk18on:1.83"){
-       exclude group: 'com.google.guava', module: 'guava'
-    }
+    api ("org.bouncycastle:bcprov-jdk18on:1.83") 
 }
 java {
     sourceCompatibility = JavaVersion.VERSION_17
