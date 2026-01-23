@@ -97,7 +97,7 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.config.IrVerificationMode
 import com.tyron.builder.model.DiagnosticWrapper
 import dev.mutwakil.completion.kotlin.diagnostic.getDiagnostics
-import org.jetbrains.kotlin.cli.jvm.config.JvmContentRootsKt
+import org.jetbrains.kotlin.cli.jvm.config.addJavaSourceRoot 
 import com.tyron.completion.java.util.FilesUtil
 
 data class KotlinEnvironment(
@@ -694,7 +694,7 @@ data class KotlinEnvironment(
                ).filter { it.exists() }
 
                javaSourceRoots.forEach { root ->
-                 JvmContentRootsKt.addJavaSourceRoot(configuration, root)
+                  addJavaSourceRoot(configuration, root)
                }
             
             currentModule.putUserData(ENVIRONMENT_KEY, environment)

@@ -56,6 +56,7 @@ dependencies {
     implementation project(path: ':actions-api')
     implementation project(path: ':editor-api')
     implementation project(path: ':common')
+    compileOnly project(':java-completion')
 
     api ('org.jetbrains.exposed:exposed-core:0.32.1')
     api ('org.jetbrains.exposed:exposed-dao:0.32.1')
