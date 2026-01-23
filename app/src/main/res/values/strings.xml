@@ -185,6 +185,8 @@
     <string name="defaultString">Default</string>
     <string name="editor_scheme_title">Editor color scheme</string>
     <string name="editor_scheme_desc">Change the color scheme</string>
+    <string name="diagnostic_detail_title">Diagnostic Detail</string>
+    <string name="diagnostic_detail_desc">Will show Diagnostic detail window in the Editor.</string>
     <string name="change_scheme_dialog_title">Paste the path of theme file</string>
 	<string name="set_scheme_file_path">Set scheme file path</string>
     <string name="font_size_title">Font size</string>

@@ -49,6 +49,9 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import com.tyron.code.ApplicationLoader;
+import com.tyron.common.SharedPreferenceKeys;  
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail; 
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
@@ -492,6 +495,11 @@ public class CodeEditorView extends CodeEditor implements Editor {
         mDiagnosticPaint.setColor(color.getColor(EditorColorScheme.PROBLEM_WARNING));
     }
   }
+  
+  private boolean isDiagnosticDetailEnabled(){
+    return ApplicationLoader.getDefaultPreferences()
+            .getBoolean(SharedPreferenceKeys.DIAGNOSTIC_DETAIL, false);
+  }
 
   private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
 
@@ -519,7 +527,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
           new DiagnosticRegion(
               (int) it.getStartPosition(),
               (int) it.getEndPosition(),
-              severitySupplier.apply(it.getKind()));
+              severitySupplier.apply(it.getKind()), 
+              0,
+              isDiagnosticDetailEnabled()?new DiagnosticDetail("Info",issue.getMessage(),null,null):null);
       getDiagnostics().addDiagnostic(region);
     }
   }

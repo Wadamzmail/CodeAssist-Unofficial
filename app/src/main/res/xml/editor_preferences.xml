@@ -100,6 +100,13 @@
             app:defaultValue="false"
             app:title="@string/editor_delete_whitespaces"
             app:key="editor_delete_whitespaces"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:iconSpaceReserved="false"
+            android:key="diagnostic_detail"
+            app:iconSpaceReserved="false"
+            android:title="@string/diagnostic_detail_title"
+            android:summary="@string/diagnostic_detail_desc"/>  
         <Preference
             app:key="scheme"
             app:iconSpaceReserved="false"

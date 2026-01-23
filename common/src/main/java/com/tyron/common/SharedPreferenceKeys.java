@@ -30,4 +30,5 @@ public class SharedPreferenceKeys {
   public static final String USE_PSI_CLASS_FILES_READING = "use_psi_class_files_reading";
   public static final String PARALLEL_BACKEND_THREADS = "parallel_backend_threads";
   public static final String USE_FIR = "use_fir";
+  public static final String DIAGNOSTIC_DETAIL = "diagnostic_detail";
 }
