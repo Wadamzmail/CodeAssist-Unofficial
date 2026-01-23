@@ -5,14 +5,18 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.Trees;
+import com.tyron.builder.project.api.Module;
+import com.tyron.completion.java.ShortNamesCache;
 import com.tyron.completion.java.provider.FindHelper;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.tyron.completion.java.util.ActionUtil;
 import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.model.Range;
 import com.tyron.completion.model.TextEdit;
 import dev.mutwakil.javac.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.lang.model.element.ExecutableElement;
@@ -45,6 +49,9 @@ public class AddException implements JavaRewrite2 {
     if (root == null) {
       return CANCELLED;
     }
+    // for import
+    final Module module = task.getProject().getModule(file.toFile());
+    ShortNamesCache cache = ShortNamesCache.getInstance(module);
 
     Trees trees = task.getTrees();
     ExecutableElement methodElement =
@@ -65,15 +72,24 @@ public class AddException implements JavaRewrite2 {
     } else {
       insertText = ", " + simpleName + " ";
     }
-
-    //            if (!ActionUtil.hasImport(task.root(), simpleName)) {
-    //                AddImport addImport = new AddImport(file.toFile(), simpleName);
-    //                Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
-    //                TextEdit[] imports = rewrite.get(file);
-    //                if (imports != null) {
-    //                    Collections.addAll(edits, imports);
-    //                }
-    //            }
+    String qualifiedName = packageName + simpleName;
+    if (!qualifiedName.contains(".")) {
+      for (String it : cache.getAllClassNames()) {
+        if (it.endsWith("." + simpleName)) {
+          //        if(it.startsWith("java.lang."))break;
+          qualifiedName = it;
+          break;
+        }
+      }
+    }
+    if (!ActionUtil.hasImport(root, qualifiedName)) {
+      AddImport addImport = new AddImport(file.toFile(), qualifiedName);
+      Map<Path, TextEdit[]> rewrite = addImport.rewrite(task);
+      TextEdit[] imports = rewrite.get(file);
+      if (imports != null) {
+        Collections.addAll(edits, imports);
+      }
+    }
 
     TextEdit insertThrows = new TextEdit(new Range(startBody - 1, startBody - 1), insertText);
     edits.add(insertThrows);

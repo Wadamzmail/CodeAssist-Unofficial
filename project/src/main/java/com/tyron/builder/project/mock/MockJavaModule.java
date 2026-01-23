@@ -3,6 +3,7 @@ package com.tyron.builder.project.mock;
 import androidx.annotation.NonNull;
 import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.ModuleSettings;
+import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.api.FileManager;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.util.PackageTrie;
@@ -20,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import org.jetbrains.kotlin.com.intellij.openapi.util.KeyWithDefaultValue;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
-import com.tyron.builder.project.api.ContentRoot;
 
 /** Used for testing, java files can be added manually and files are specified manually */
 public class MockJavaModule extends MockModule implements JavaModule {
@@ -96,9 +96,10 @@ public class MockJavaModule extends MockModule implements JavaModule {
   public void addLibrary(@NonNull CodeAssistLibrary jar) {
     throw new UnsupportedOperationException();
   }
+
   @Override
-  public void addLibrary(@NonNull File libFolder){
-   throw new UnsupportedOperationException(); 
+  public void addLibrary(@NonNull File libFolder) {
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -241,12 +242,13 @@ public class MockJavaModule extends MockModule implements JavaModule {
   public <T> void putUserData(@NotNull Key<T> key, @Nullable T t) {
     mDataMap.plus(key, t);
   }
-    @NonNull
+
+  @NonNull
   @Override
   public Map<String, File> getKotlinFiles() {
     return null;
   }
-  
+
   @NonNull
   @Override
   public File getKotlinDirectory() {
@@ -260,16 +262,13 @@ public class MockJavaModule extends MockModule implements JavaModule {
   }
 
   @Override
-  public void addKotlinFile(File file) {
- 
-  }
-  
+  public void addKotlinFile(File file) {}
+
   @Override
-  public void addContentRoot(ContentRoot contentRoot) {
-  }
+  public void addContentRoot(ContentRoot contentRoot) {}
 
   @Override
   public Set<ContentRoot> getContentRoots() {
     return null;
-  } 
+  }
 }

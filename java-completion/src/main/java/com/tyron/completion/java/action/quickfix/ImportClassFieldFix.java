@@ -3,7 +3,6 @@ package com.tyron.completion.java.action.quickfix;
 import android.app.AlertDialog;
 import androidx.annotation.NonNull;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
@@ -12,6 +11,7 @@ import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
+import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
@@ -23,7 +23,6 @@ import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.AddImport;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.util.ActionUtil;
-import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.util.RewriteUtil;
 import com.tyron.editor.Editor;
 import java.io.File;
@@ -34,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.tools.Diagnostic;
-import com.sun.tools.javac.util.JCDiagnostic;
-import com.tyron.builder.model.DiagnosticWrapper;
 
 public class ImportClassFieldFix extends AnAction {
 
@@ -65,18 +61,18 @@ public class ImportClassFieldFix extends AnAction {
     File file = event.getRequiredData(CommonDataKeys.FILE);
     if (file == null) return;
 
-//    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
-//        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
-//    if (diagnosticSourceUnwrapper == null) {
-//      return;
-//    }
+    //    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
+    //        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+    //    if (diagnosticSourceUnwrapper == null) {
+    //      return;
+    //    }
 
     if (!ERROR_CODE.equals(diagnostic.getCode())) {
       return;
     }
-    
+
     JCDiagnostic jcDiagnostic = (JCDiagnostic) diagnostic.getExtra();
-    if(jcDiagnostic==null)return;
+    if (jcDiagnostic == null) return;
 
     CompilationInfo compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY);
     if (compilationInfo == null) return;
@@ -118,15 +114,15 @@ public class ImportClassFieldFix extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     DiagnosticWrapper diagnostic = e.getRequiredData(CommonDataKeys.DIAGNOSTIC);
-//    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+    //    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
     if (diagnostic == null) {
       return;
     }
     JCDiagnostic d = (JCDiagnostic) diagnostic.getExtra();
-    if(d==null) return;
+    if (d == null) return;
 
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
-//    JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
+    //    JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
     String simpleName = String.valueOf(d.getArgs()[0]);
     Project project = editor.getProject();
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();

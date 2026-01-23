@@ -11,12 +11,12 @@ import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.ClientCodeWrapper;
+import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.model.SourceFileObject;
 import com.tyron.builder.project.Project;
-import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.SemanticAnalyzeManager;
@@ -25,7 +25,8 @@ import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.Debouncer;
-import com.tyron.completion.index.CompilerService;
+import com.tyron.completion.java.compiler.services.NBLog;
+import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.completion.java.util.ErrorCodes;
 import com.tyron.completion.java.util.TreeUtil;
 import com.tyron.completion.progress.ProcessCanceledException;
@@ -39,9 +40,10 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
@@ -51,11 +53,6 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.tyron.completion.java.compiler.services.NBLog;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class JavaAnalyzer extends SemanticAnalyzeManager {
 
@@ -112,17 +109,18 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     Editor editor = mEditorReference.get();
     Project project = editor.getProject();
     File currentFile = editor.getCurrentFile();
-     
+
     CompilationInfo info = getInfo(editor);
     if (info == null) {
       return null;
     }
 
-    
     SourceFileObject object =
         new SourceFileObject(currentFile.toPath(), contents.toString(), Instant.now());
     CompletableFuture<List<SemanticToken>> future = new CompletableFuture<>();
-    info.update(object,0,
+    info.update(
+        object,
+        0,
         unit -> {
           JavacTaskImpl task = info.impl.getJavacTask();
           JavaSemanticHighlighter highlighter = new JavaSemanticHighlighter(task);
@@ -134,7 +132,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
       return future.get();
     } catch (ExecutionException | InterruptedException e) {
       return new ArrayList<SemanticToken>();
-    }   
+    }
   }
 
   @Override
@@ -189,16 +187,18 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
               new SourceFileObject(currentFile.toPath(), contents.toString(), Instant.now());
           info.update(
               sourceFileObject,
-              0,  
+              0,
               unit -> {
                 JavacTaskImpl task = info.impl.getJavacTask();
                 if (!cancel.invoke()) {
                   List<DiagnosticWrapper> collect =
-                      new ArrayList<JCDiagnostic>(NBLog.instance(task.getContext()).getDiagnostics(currentFile.toURI())).stream()
-                          .map(d -> modifyDiagnostic(info, d))
-                          .peek(it -> ProgressManager.checkCanceled())
-                          .filter(d -> currentFile.equals(d.getSource()))
-                          .collect(Collectors.toList());
+                      new ArrayList<JCDiagnostic>(
+                              NBLog.instance(task.getContext()).getDiagnostics(currentFile.toURI()))
+                          .stream()
+                              .map(d -> modifyDiagnostic(info, d))
+                              .peek(it -> ProgressManager.checkCanceled())
+                              .filter(d -> currentFile.equals(d.getSource()))
+                              .collect(Collectors.toList());
                   editor.setDiagnostics(collect);
 
                   ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(false), 300);

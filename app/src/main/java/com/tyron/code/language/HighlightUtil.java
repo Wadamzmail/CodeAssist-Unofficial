@@ -143,64 +143,64 @@ public class HighlightUtil {
    */
   public static void markDiagnostics(
       Editor editor, List<DiagnosticWrapper> diagnostics, Styles styles) {
-      try{
-    diagnostics.forEach(
-        it -> {
-          ProgressManager.checkCanceled();
-          try {
-            int startLine;
-            int startColumn;
-            int endLine;
-            int endColumn;
-            if (it.getPosition() != DiagnosticWrapper.USE_LINE_POS) {
-              if (it.getStartPosition() == -1) {
-                it.setStartPosition(it.getPosition());
-              }
-              if (it.getEndPosition() == -1) {
-                it.setEndPosition(it.getPosition());
-              }
+    try {
+      diagnostics.forEach(
+          it -> {
+            ProgressManager.checkCanceled();
+            try {
+              int startLine;
+              int startColumn;
+              int endLine;
+              int endColumn;
+              if (it.getPosition() != DiagnosticWrapper.USE_LINE_POS) {
+                if (it.getStartPosition() == -1) {
+                  it.setStartPosition(it.getPosition());
+                }
+                if (it.getEndPosition() == -1) {
+                  it.setEndPosition(it.getPosition());
+                }
 
-              if (it.getStartPosition() > editor.getContent().length()) {
-                return;
-              }
-              if (it.getEndPosition() > editor.getContent().length()) {
-                return;
-              }
-              CharPosition start = editor.getCharPosition((int) it.getStartPosition());
-              CharPosition end = editor.getCharPosition((int) it.getEndPosition());
+                if (it.getStartPosition() > editor.getContent().length()) {
+                  return;
+                }
+                if (it.getEndPosition() > editor.getContent().length()) {
+                  return;
+                }
+                CharPosition start = editor.getCharPosition((int) it.getStartPosition());
+                CharPosition end = editor.getCharPosition((int) it.getEndPosition());
 
-              int sLine = start.getLine();
-              int sColumn = start.getColumn();
-              int eLine = end.getLine();
-              int eColumn = end.getColumn();
+                int sLine = start.getLine();
+                int sColumn = start.getColumn();
+                int eLine = end.getLine();
+                int eColumn = end.getColumn();
 
-              // the editor does not support marking underline spans for the same start and end
-              // index
-              // to work around this, we just subtract one to the start index
-              if (sLine == eLine && eColumn == sColumn) {
-                sColumn--;
-                eColumn++;
+                // the editor does not support marking underline spans for the same start and end
+                // index
+                // to work around this, we just subtract one to the start index
+                if (sLine == eLine && eColumn == sColumn) {
+                  sColumn--;
+                  eColumn++;
+                }
+
+                it.setStartLine(sLine);
+                it.setEndLine(eLine);
+                it.setStartColumn(sColumn);
+                it.setEndColumn(eColumn);
               }
+              startLine = it.getStartLine();
+              startColumn = it.getStartColumn();
+              endLine = it.getEndLine();
+              endColumn = it.getEndColumn();
 
-              it.setStartLine(sLine);
-              it.setEndLine(eLine);
-              it.setStartColumn(sColumn);
-              it.setEndColumn(eColumn);
+            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+              if (BuildConfig.DEBUG) {
+                Log.d("HighlightUtil", "Failed to mark diagnostics", e);
+              }
             }
-            startLine = it.getStartLine();
-            startColumn = it.getStartColumn();
-            endLine = it.getEndLine();
-            endColumn = it.getEndColumn();
-
-          } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-            if (BuildConfig.DEBUG) {
-              Log.d("HighlightUtil", "Failed to mark diagnostics", e);
-            }
-          }
-        });
-       }catch(Exception e){
-       Log.d("HighlightUtil", "Failed to mark diagnostics", e);
-       }
+          });
+    } catch (Exception e) {
+      Log.d("HighlightUtil", "Failed to mark diagnostics", e);
+    }
   }
 
   public static void clearDiagnostics(Styles styles) {}

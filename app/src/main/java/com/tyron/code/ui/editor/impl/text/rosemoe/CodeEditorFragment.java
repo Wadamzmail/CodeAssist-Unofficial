@@ -88,8 +88,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.Executors;
@@ -193,7 +193,7 @@ public class CodeEditorFragment extends Fragment
   }
 
   private void onContentChange(com.tyron.editor.Content content) {
-    if(true)return;
+    if (true) return;
 
     if (com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
       return;
@@ -216,8 +216,9 @@ public class CodeEditorFragment extends Fragment
               ServiceLoader<DiagnosticProvider> providers =
                   ServiceLoader.load(DiagnosticProvider.class);
               for (DiagnosticProvider provider : providers) {
-                
-                List<JCDiagnostic> diagnostics = new ArrayList<>(provider.getDiagnostics(module, mCurrentFile));
+
+                List<JCDiagnostic> diagnostics =
+                    new ArrayList<>(provider.getDiagnostics(module, mCurrentFile));
                 mEditor.setDiagnostics(
                     diagnostics.stream().map(DiagnosticWrapper::new).collect(Collectors.toList()));
               }
@@ -660,7 +661,7 @@ public class CodeEditorFragment extends Fragment
   public void onLowMemory() {
     super.onLowMemory();
 
-//    mEditor.setBackgroundAnalysisEnabled(false);
+    //    mEditor.setBackgroundAnalysisEnabled(false);
   }
 
   @Override

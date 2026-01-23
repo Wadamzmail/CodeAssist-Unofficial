@@ -12,12 +12,10 @@ import com.tyron.builder.project.api.Module;
 // import com.tyron.completion.model.CompletionItem;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.BaseTextmateAnalyzer;
-import com.tyron.code.event.EventManager;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 // new
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.completion.xml.lexer.XMLLexer;
-import com.tyron.completion.xml.v2.events.XmlResourceChangeEvent;
 import com.tyron.editor.Editor;
 import com.tyron.language.api.CodeAssistLanguage;
 import io.github.rosemoe.sora.lang.Language;
@@ -208,9 +206,9 @@ public class LanguageXML extends EmptyTextMateLanguage implements Language, Code
     if (mEditor.getProject() == null) {
       return;
     }
-//    EventManager eventManager = mEditor.getProject().getEventManager();
-//    eventManager.dispatchEvent(
-//        new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
+    //    EventManager eventManager = mEditor.getProject().getEventManager();
+    //    eventManager.dispatchEvent(
+    //        new XmlResourceChangeEvent(mEditor.getCurrentFile(), mEditor.getContent()));
     // AndroidModule mainModule = (AndroidModule) mEditor.getProject().getMainModule();
     //  try{ InjectResourcesTask.inject(mEditor.getProject());}catch(Exception e){}
     //  try{ InjectViewBindingTask.inject(mEditor.getProject(),mainModule);}catch(Exception e){}

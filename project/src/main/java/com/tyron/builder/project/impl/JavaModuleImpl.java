@@ -4,8 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.model.CodeAssistAndroidLibrary;
+import com.tyron.builder.model.CodeAssistLibrary;
+import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.util.PackageTrie;
 import com.tyron.common.util.StringSearch;
@@ -14,22 +15,21 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-import java.util.function.Consumer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import com.tyron.builder.project.api.ContentRoot;
 
 public class JavaModuleImpl extends ModuleImpl implements JavaModule {
 
@@ -58,21 +58,19 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     mInjectedClassesMap = new HashMap<>();
     mLibraryHashMap = new HashMap<>();
     mKotlinFiles = new HashMap<>();
-    
+
     File contentRootDirectory = new File(getRootFile(), "src/main");
-    if(!fromChild){
-    ContentRoot contentRoot = new ContentRoot(contentRootDirectory);
-    contentRoot.addSourceDirectory(
-       new File("src/main/java"));
-    contentRoot.addSourceDirectory(
-       new File("src/main/kotlin"));
-    addContentRoot(contentRoot);
+    if (!fromChild) {
+      ContentRoot contentRoot = new ContentRoot(contentRootDirectory);
+      contentRoot.addSourceDirectory(new File("src/main/java"));
+      contentRoot.addSourceDirectory(new File("src/main/kotlin"));
+      addContentRoot(contentRoot);
     }
   }
+
   public JavaModuleImpl(File root) {
-    this(root,false);
+    this(root, false);
   }
-  
 
   @NonNull
   @Override
@@ -206,100 +204,94 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     }
     return libraries;
   }
-  
-  @Override 
-  public void addLibrary(@NonNull File libFolder){
-   boolean isAar = false;
-   File check = new File(libFolder,"classes.jar");
-   File checkResFolder = new File(libFolder,"res");
-   File checkResStaticFolder = new File(libFolder,"res.apk");
-   File checkSymbolFile = new File(libFolder,"R.txt");
-   File checkPublicRes = new File(libFolder,"public.txt");
-   List<File> jars = getJars(libFolder);
-   CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
-   lib.setDeclaration(libFolder.getName());
-   
-   if(checkResFolder.exists()&&checkResFolder.isDirectory()){
-     isAar = true;
-     lib.setResFolder(checkResFolder);
-   }
-   if(checkResStaticFolder.exists()){
-//     isAar = true;
-     lib.setResStaticLibrary(checkResStaticFolder);  
-   }
-   if(checkSymbolFile.exists()){
-     isAar = true;
-     lib.setSymbolFile(checkSymbolFile);
-   }
-   if(checkPublicRes.exists()){
-//     isAar = true;
-     lib.setPublicResources(checkPublicRes);  
-   } 
-   if(!jars.isEmpty()){
-   if(false){
-    lib.setCompileJarFiles(jars);
-    addLibrary(lib);
-    }else{
-//    jars.forEach(it->addLibrary(CodeAssistLibrary.forJar(it)));
-    if(check.exists()){ 
-    addLibrary(CodeAssistLibrary.forJar(check));
-    } 
-   }
-   
-   }
-  
-  }
-  
-  public void addApiLibrary(@NonNull File libFolder){
-   boolean isAar = false;
-   File check = new File(libFolder,"classes.jar");
-   File checkResFolder = new File(libFolder,"res");
-   File checkResStaticFolder = new File(libFolder,"res.apk");
-   File checkSymbolFile = new File(libFolder,"R.txt");
-   File checkPublicRes = new File(libFolder,"public.txt");
-   List<File> jars = getJars(libFolder);
-   CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
-   lib.setDeclaration(libFolder.getName());
-   
-   if(checkResFolder.exists()&&checkResFolder.isDirectory()){
-     isAar = true;
-     lib.setResFolder(checkResFolder);
-   }
-   if(checkResStaticFolder.exists()){
-//     isAar = true;
-     lib.setResStaticLibrary(checkResStaticFolder);
-   }
-   if(checkSymbolFile.exists()){
-     isAar = true;
-     lib.setSymbolFile(checkSymbolFile);
-   }
-   if(checkPublicRes.exists()){
-//     isAar = true;
-     lib.setPublicResources(checkPublicRes);
-   }
-   if(!jars.isEmpty()){
-   if(isAar){
-    lib.setCompileJarFiles(jars);
-    addApiLibrary(lib);
-    }else{
-//    jars.forEach(it->addApiLibrary(CodeAssistLibrary.forJar(it)));
-    if(check.exists()){
-    addApiLibrary(CodeAssistLibrary.forJar(check));
+
+  @Override
+  public void addLibrary(@NonNull File libFolder) {
+    boolean isAar = false;
+    File check = new File(libFolder, "classes.jar");
+    File checkResFolder = new File(libFolder, "res");
+    File checkResStaticFolder = new File(libFolder, "res.apk");
+    File checkSymbolFile = new File(libFolder, "R.txt");
+    File checkPublicRes = new File(libFolder, "public.txt");
+    List<File> jars = getJars(libFolder);
+    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
+    lib.setDeclaration(libFolder.getName());
+
+    if (checkResFolder.exists() && checkResFolder.isDirectory()) {
+      isAar = true;
+      lib.setResFolder(checkResFolder);
     }
-   }
-   
-   }
-  
+    if (checkResStaticFolder.exists()) {
+      //     isAar = true;
+      lib.setResStaticLibrary(checkResStaticFolder);
+    }
+    if (checkSymbolFile.exists()) {
+      isAar = true;
+      lib.setSymbolFile(checkSymbolFile);
+    }
+    if (checkPublicRes.exists()) {
+      //     isAar = true;
+      lib.setPublicResources(checkPublicRes);
+    }
+    if (!jars.isEmpty()) {
+      if (false) {
+        lib.setCompileJarFiles(jars);
+        addLibrary(lib);
+      } else {
+        //    jars.forEach(it->addLibrary(CodeAssistLibrary.forJar(it)));
+        if (check.exists()) {
+          addLibrary(CodeAssistLibrary.forJar(check));
+        }
+      }
+    }
   }
-  
-  private List<File> getJars(File dir){
-     
+
+  public void addApiLibrary(@NonNull File libFolder) {
+    boolean isAar = false;
+    File check = new File(libFolder, "classes.jar");
+    File checkResFolder = new File(libFolder, "res");
+    File checkResStaticFolder = new File(libFolder, "res.apk");
+    File checkSymbolFile = new File(libFolder, "R.txt");
+    File checkPublicRes = new File(libFolder, "public.txt");
+    List<File> jars = getJars(libFolder);
+    CodeAssistAndroidLibrary lib = new CodeAssistAndroidLibrary();
+    lib.setDeclaration(libFolder.getName());
+
+    if (checkResFolder.exists() && checkResFolder.isDirectory()) {
+      isAar = true;
+      lib.setResFolder(checkResFolder);
+    }
+    if (checkResStaticFolder.exists()) {
+      //     isAar = true;
+      lib.setResStaticLibrary(checkResStaticFolder);
+    }
+    if (checkSymbolFile.exists()) {
+      isAar = true;
+      lib.setSymbolFile(checkSymbolFile);
+    }
+    if (checkPublicRes.exists()) {
+      //     isAar = true;
+      lib.setPublicResources(checkPublicRes);
+    }
+    if (!jars.isEmpty()) {
+      if (isAar) {
+        lib.setCompileJarFiles(jars);
+        addApiLibrary(lib);
+      } else {
+        //    jars.forEach(it->addApiLibrary(CodeAssistLibrary.forJar(it)));
+        if (check.exists()) {
+          addApiLibrary(CodeAssistLibrary.forJar(check));
+        }
+      }
+    }
+  }
+
+  private List<File> getJars(File dir) {
+
     File[] jarFiles = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".jar"));
 
-    List<File> jars = jarFiles == null
-        ? new ArrayList<>()
-        : Arrays.asList(jarFiles);
-     return jars;    
+    List<File> jars = jarFiles == null ? new ArrayList<>() : Arrays.asList(jarFiles);
+    return jars;
   }
 
   @Override
@@ -530,7 +522,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     } catch (IOException e) {
       // ignored
     }
-    
+
     Consumer<File> kotlinConsumer = this::addKotlinFile;
 
     if (getJavaDirectory().exists()) {
@@ -558,11 +550,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
             .listFiles(File::isDirectory);
     if (implementation_files != null) {
       for (File directory : implementation_files) {
-          addLibrary(directory);
-//        File check = new File(directory, "classes.jar");
-//        if (check.exists()) {
-//          addLibrary(CodeAssistLibrary.forJar(check));
-//        }
+        addLibrary(directory);
+        //        File check = new File(directory, "classes.jar");
+        //        if (check.exists()) {
+        //          addLibrary(CodeAssistLibrary.forJar(check));
+        //        }
       }
     }
 
@@ -570,11 +562,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         new File(getBuildDirectory(), "libraries/implementation_libs").listFiles(File::isDirectory);
     if (implementation_libs != null) {
       for (File directory : implementation_libs) {
-          addLibrary(directory);
-//        File check = new File(directory, "classes.jar");
-//        if (check.exists()) {
-//          addLibrary(CodeAssistLibrary.forJar(check));
-//        }
+        addLibrary(directory);
+        //        File check = new File(directory, "classes.jar");
+        //        if (check.exists()) {
+        //          addLibrary(CodeAssistLibrary.forJar(check));
+        //        }
       }
     }
 
@@ -582,11 +574,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
         new File(getBuildDirectory(), "libraries/natives_libs").listFiles(File::isDirectory);
     if (natives_libs != null) {
       for (File directory : natives_libs) {
-          addLibrary(directory);
-//        File check = new File(directory, "classes.jar");
-//        if (check.exists()) {
-//          addLibrary(CodeAssistLibrary.forJar(check));
-//        }
+        addLibrary(directory);
+        //        File check = new File(directory, "classes.jar");
+        //        if (check.exists()) {
+        //          addLibrary(CodeAssistLibrary.forJar(check));
+        //        }
       }
     }
 
@@ -596,10 +588,10 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       if (implementation_files != null) {
         for (File directory : implementation_files) {
           addLibrary(directory);
-//        File check = new File(directory, "classes.jar");
-//        if (check.exists()) {
-//          addLibrary(CodeAssistLibrary.forJar(check));
-//        }
+          //        File check = new File(directory, "classes.jar");
+          //        if (check.exists()) {
+          //          addLibrary(CodeAssistLibrary.forJar(check));
+          //        }
         }
       }
 
@@ -608,21 +600,21 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       if (implementation_libs != null) {
         for (File directory : implementation_libs) {
           addLibrary(directory);
-//        File check = new File(directory, "classes.jar");
-//        if (check.exists()) {
-//          addApiLibrary(CodeAssistLibrary.forJar(check));
-//        }
+          //        File check = new File(directory, "classes.jar");
+          //        if (check.exists()) {
+          //          addApiLibrary(CodeAssistLibrary.forJar(check));
+          //        }
         }
       }
     }
   }
-  
+
   @NonNull
   @Override
   public Map<String, File> getKotlinFiles() {
     return ImmutableMap.copyOf(mKotlinFiles);
   }
-  
+
   @NonNull
   @Override
   public File getKotlinDirectory() {
@@ -648,7 +640,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     String fqn = packageName + "." + file.getName().replace(".kt", "");
     mKotlinFiles.put(fqn, file);
   }
-  
+
   @Override
   public void addContentRoot(ContentRoot contentRoot) {
     contentRoots.add(contentRoot);

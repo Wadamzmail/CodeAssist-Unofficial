@@ -16,10 +16,9 @@ import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.common.util.Debouncer;
-import com.tyron.completion.index.CompilerService;
-import com.tyron.completion.java.JavaCompilerProvider;
-import com.tyron.completion.java.compiler.CompilerContainer;
-import com.tyron.completion.java.compiler.JavaCompilerService;
+import com.tyron.completion.java.compiler.Parser;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.PruneMethodBodies;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.editor.Editor;
@@ -38,15 +37,12 @@ import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.stream.Collectors;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
 import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.completion.java.provider.PruneMethodBodies;
-import com.tyron.completion.java.compiler.Parser;
-import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
 
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
@@ -233,19 +229,19 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
     // work around to refresh R.java file
     File resourceClass = module.getJavaFile(module.getNameSpace() + ".R");
-            CompilationInfo info = CompilationInfo.get(module,true);
-            if (info == null) {
-                return;
-            }
-            info.updateImmediately(new SimpleJavaFileObject(resourceClass.toURI(),
-                    JavaFileObject.Kind.SOURCE) {
-                @Override
-                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                    Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
-                    // During indexing, statements inside methods are not needed so
-                    // it is stripped to speed up the index process
-                    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
-                }
-            });
+    CompilationInfo info = CompilationInfo.get(module, true);
+    if (info == null) {
+      return;
+    }
+    info.updateImmediately(
+        new SimpleJavaFileObject(resourceClass.toURI(), JavaFileObject.Kind.SOURCE) {
+          @Override
+          public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+            Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
+            // During indexing, statements inside methods are not needed so
+            // it is stripped to speed up the index process
+            return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+          }
+        });
   }
 }

@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import com.tyron.actions.DataContext;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
+import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
 import com.tyron.code.language.HighlightUtil;
 import com.tyron.code.language.xml.LanguageXML;
@@ -18,6 +19,7 @@ import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 import com.tyron.code.ui.editor.EditorViewModel;
 import com.tyron.code.ui.editor.NoOpTextActionWindow;
 import com.tyron.code.ui.project.ProjectManager;
+import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.completion.xml.model.XmlCompletionType;
 import com.tyron.completion.xml.util.XmlUtils;
 import com.tyron.editor.Caret;
@@ -27,6 +29,7 @@ import com.tyron.editor.Editor;
 import com.tyron.xml.completion.util.DOMUtils;
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
+import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.styling.Styles;
@@ -40,9 +43,10 @@ import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.tools.Diagnostic;
@@ -50,10 +54,6 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import com.tyron.code.ApplicationLoader;
-import com.tyron.common.SharedPreferenceKeys;  
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail; 
-import java.util.Locale;
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
@@ -147,9 +147,9 @@ public class CodeEditorView extends CodeEditor implements Editor {
 
   @Override
   public void setDiagnostics(List<DiagnosticWrapper> diagnostics) {
-    if (diagnostics == null){
-     diagnostics = new ArrayList<DiagnosticWrapper>();
-     }
+    if (diagnostics == null) {
+      diagnostics = new ArrayList<DiagnosticWrapper>();
+    }
     mStopConv = true;
     mDiagnostics = diagnostics;
 
@@ -497,10 +497,10 @@ public class CodeEditorView extends CodeEditor implements Editor {
         mDiagnosticPaint.setColor(color.getColor(EditorColorScheme.PROBLEM_WARNING));
     }
   }
-  
-  private boolean isDiagnosticDetailEnabled(){
+
+  private boolean isDiagnosticDetailEnabled() {
     return ApplicationLoader.getDefaultPreferences()
-            .getBoolean(SharedPreferenceKeys.DIAGNOSTIC_DETAIL, false);
+        .getBoolean(SharedPreferenceKeys.DIAGNOSTIC_DETAIL, false);
   }
 
   private void convDiagnostics(List<? extends Diagnostic<?>> diagnostics) {
@@ -529,9 +529,11 @@ public class CodeEditorView extends CodeEditor implements Editor {
           new DiagnosticRegion(
               (int) it.getStartPosition(),
               (int) it.getEndPosition(),
-              severitySupplier.apply(it.getKind()), 
+              severitySupplier.apply(it.getKind()),
               0,
-              isDiagnosticDetailEnabled()?new DiagnosticDetail("Info",it.getMessage(Locale.getDefault()),null,null):null);
+              isDiagnosticDetailEnabled()
+                  ? new DiagnosticDetail("Info", it.getMessage(Locale.getDefault()), null, null)
+                  : null);
       getDiagnostics().addDiagnostic(region);
     }
   }

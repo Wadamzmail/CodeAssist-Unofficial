@@ -4,9 +4,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.tyron.builder.project.Project;
+import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 import com.tyron.code.language.CompletionItemWrapper;
 import com.tyron.code.language.EditorFormatter;
-import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 // new
 import com.tyron.completion.CompletionParameters;
@@ -27,7 +27,6 @@ import io.github.rosemoe.sora.lang.format.Formatter;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandleResult;
 import io.github.rosemoe.sora.lang.smartEnter.NewlineHandler;
 import io.github.rosemoe.sora.lang.styling.Styles;
-import io.github.rosemoe.sora.langs.textmate.TextMateLanguage;
 import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.text.ContentReference;
@@ -41,7 +40,6 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 
 public class JavaLanguage extends EmptyTextMateLanguage
     implements Language, EditorFormatter, CodeAssistLanguage {
@@ -51,7 +49,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
   private final Editor mEditor;
 
   private final BaseTextmateAnalyzer mAnalyzer;
-//  private final TextMateLanguage delegate;
+  //  private final TextMateLanguage delegate;
   public boolean createIdentifiers = false;
   private static final String GRAMMAR_NAME = "java.tmLanguage.json";
   private static final String LANGUAGE_PATH = "textmate/java/syntaxes/java.tmLanguage.json";
@@ -100,8 +98,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   public JavaLanguage(Editor editor) {
     this.mEditor = editor;
- //   delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
-     mAnalyzer = JavaAnalyzer.create(editor, this);
+    //   delegate = LanguageManager.createTextMateLanguage(SCOPENAME);
+    mAnalyzer = JavaAnalyzer.create(editor, this);
     // onContentChange(editor.getCurrentFile(),editor.getContent());
   }
 
@@ -142,8 +140,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
   @NonNull
   @Override
   public AnalyzeManager getAnalyzeManager() {
-//    return delegate.getAnalyzeManager();
-     return mAnalyzer;
+    //    return delegate.getAnalyzeManager();
+    return mAnalyzer;
   }
 
   @Override
@@ -186,7 +184,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   @Override
   public void onContentChange(File file, CharSequence content) {
-    if(true)return;
+    if (true) return;
     Project project = mEditor.getProject();
     if (project == null) {
       return;
@@ -250,8 +248,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   @Override
   public SymbolPairMatch getSymbolPairs() {
-//    return delegate.getSymbolPairs();
-     return new SymbolPairMatch.DefaultSymbolPairs();
+    //    return delegate.getSymbolPairs();
+    return new SymbolPairMatch.DefaultSymbolPairs();
   }
 
   private final NewlineHandler[] newLineHandlers =
@@ -266,8 +264,8 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
   @Override
   public void destroy() {
-//    delegate.destroy();
-      mAnalyzer.destroy();
+    //    delegate.destroy();
+    mAnalyzer.destroy();
   }
 
   class CallParenHandler implements NewlineHandler {

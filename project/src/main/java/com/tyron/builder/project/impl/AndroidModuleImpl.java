@@ -8,7 +8,6 @@ import com.tyron.builder.model.CodeAssistLibrary;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.AndroidContentRoot;
 import com.tyron.builder.project.api.AndroidModule;
-import com.tyron.builder.project.api.ContentRoot;
 import com.tyron.builder.project.cache.CacheHolder.CacheKey;
 import com.tyron.common.util.StringSearch;
 import java.io.File;
@@ -23,31 +22,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import java.util.jar.JarFile;
 
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
   // private final List<CodeAssistLibrary> libraries = new ArrayList<>();
-//  private final Map<String, File> mKotlinFiles;
+  //  private final Map<String, File> mKotlinFiles;
   private Map<String, File> mResourceClasses;
   private String packageName;
   private Project project;
 
   private final Set<String> moduleDependencies = new HashSet<>();
-//  private final Set<ContentRoot> contentRoots = new HashSet<>(3);
+
+  //  private final Set<ContentRoot> contentRoots = new HashSet<>(3);
 
   public AndroidModuleImpl(File root) {
-    super(root,true);
+    super(root, true);
 
-//    mKotlinFiles = new HashMap<>();
+    //    mKotlinFiles = new HashMap<>();
     mResourceClasses = new HashMap<>(1);
     File contentRootDirectory = new File(getRootFile(), "src/main");
     AndroidContentRoot contentRoot = new AndroidContentRoot(contentRootDirectory);
@@ -72,7 +68,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
 
   @Override
   public void addLibrary(@NonNull @NotNull CodeAssistLibrary library) {
-//    libraries.add(library);
+    //    libraries.add(library);
 
     if (library instanceof CodeAssistAndroidLibrary) {
       CodeAssistAndroidLibrary androidLibrary = (CodeAssistAndroidLibrary) library;
@@ -82,7 +78,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
           libraries.add(library);
           putJar(compileJarFile);
           mLibraries.add(compileJarFile);
-         
+
         } catch (IOException e) {
           throw new UncheckedIOException(e);
         }
@@ -96,26 +92,27 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   public void index() {
     super.index();
 
-//    Consumer<File> kotlinConsumer = this::addKotlinFile;
+    //    Consumer<File> kotlinConsumer = this::addKotlinFile;
 
-//    if (getJavaDirectory().exists()) {
-//      FileUtils.iterateFiles(
-//              getJavaDirectory(), FileFilterUtils.suffixFileFilter(".kt"), TrueFileFilter.INSTANCE)
-//          .forEachRemaining(kotlinConsumer);
-//    }
+    //    if (getJavaDirectory().exists()) {
+    //      FileUtils.iterateFiles(
+    //              getJavaDirectory(), FileFilterUtils.suffixFileFilter(".kt"),
+    // TrueFileFilter.INSTANCE)
+    //          .forEachRemaining(kotlinConsumer);
+    //    }
 
-//    if (getKotlinDirectory().exists()) {
-//      FileUtils.iterateFiles(
-//              getKotlinDirectory(),
-//              FileFilterUtils.suffixFileFilter(".kt"),
-//              TrueFileFilter.INSTANCE)
-//          .forEachRemaining(kotlinConsumer);
-//      FileUtils.iterateFiles(
-//              getKotlinDirectory(),
-//              FileFilterUtils.suffixFileFilter(".java"),
-//              TrueFileFilter.INSTANCE)
-//          .forEachRemaining(this::addJavaFile);
-//    }
+    //    if (getKotlinDirectory().exists()) {
+    //      FileUtils.iterateFiles(
+    //              getKotlinDirectory(),
+    //              FileFilterUtils.suffixFileFilter(".kt"),
+    //              TrueFileFilter.INSTANCE)
+    //          .forEachRemaining(kotlinConsumer);
+    //      FileUtils.iterateFiles(
+    //              getKotlinDirectory(),
+    //              FileFilterUtils.suffixFileFilter(".java"),
+    //              TrueFileFilter.INSTANCE)
+    //          .forEachRemaining(this::addJavaFile);
+    //    }
 
     //    for (ContentRoot contentRoot : getContentRoots()) {
     //      if (contentRoot instanceof AndroidContentRoot) {
@@ -156,7 +153,7 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
   @Override
   public Set<String> getAllClasses() {
     Set<String> classes = super.getAllClasses();
-//    classes.addAll(mKotlinFiles.keySet());
+    //    classes.addAll(mKotlinFiles.keySet());
     return classes;
   }
 
@@ -800,15 +797,15 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     return getAllProjects();
   }
 
-//  @Override
-//  public void addContentRoot(ContentRoot contentRoot) {
-//    contentRoots.add(contentRoot);
-//  }
+  //  @Override
+  //  public void addContentRoot(ContentRoot contentRoot) {
+  //    contentRoots.add(contentRoot);
+  //  }
 
-//  @Override
-//  public Set<ContentRoot> getContentRoots() {
-//    return contentRoots;
-//  }
+  //  @Override
+  //  public Set<ContentRoot> getContentRoots() {
+  //    return contentRoots;
+  //  }
 
   @Override
   public String getPackageName() {

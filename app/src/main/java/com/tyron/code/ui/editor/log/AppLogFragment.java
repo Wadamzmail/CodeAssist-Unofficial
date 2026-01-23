@@ -31,6 +31,7 @@ import com.tyron.builder.log.LogViewModel;
 import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
+import com.tyron.code.language.LanguageManager;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
@@ -42,11 +43,8 @@ import com.tyron.code.util.ApkInstaller;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.editor.Caret;
 import com.tyron.fileeditor.api.FileEditorManager;
-import com.tyron.code.language.LanguageManager;
-
-
+import dev.mutwakil.codeassist.R;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
-
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +52,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Handler;
 import javax.tools.Diagnostic;
-import dev.mutwakil.codeassist.R;
 
 public class AppLogFragment extends Fragment implements ProjectManager.OnProjectOpenListener {
 
@@ -336,11 +333,11 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
               }
             }
 
-//           mEditor.post(()->{
+            //           mEditor.post(()->{
             mEditor.setText(combinedText);
             int lastLine = mEditor.getLineCount() - 1;
             mEditor.setSelection(lastLine, 0);
-//            });
+            //            });
           },
           100);
     }
@@ -444,8 +441,4 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
       return new File(path);
     }
   }
-
-  
-
 }
-

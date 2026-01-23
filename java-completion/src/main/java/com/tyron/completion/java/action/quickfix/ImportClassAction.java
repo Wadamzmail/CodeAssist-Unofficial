@@ -3,7 +3,6 @@ package com.tyron.completion.java.action.quickfix;
 import android.app.AlertDialog;
 import androidx.annotation.NonNull;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.api.ClientCodeWrapper;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
@@ -12,6 +11,7 @@ import com.tyron.actions.AnAction;
 import com.tyron.actions.AnActionEvent;
 import com.tyron.actions.CommonDataKeys;
 import com.tyron.actions.Presentation;
+import com.tyron.builder.model.DiagnosticWrapper;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
@@ -23,7 +23,6 @@ import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.rewrite.AddImport;
 import com.tyron.completion.java.rewrite.JavaRewrite2;
 import com.tyron.completion.java.util.ActionUtil;
-import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.util.RewriteUtil;
 import com.tyron.editor.Editor;
 import java.io.File;
@@ -34,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.tools.Diagnostic;
-import com.tyron.builder.model.DiagnosticWrapper;
-import com.sun.tools.javac.util.JCDiagnostic;
 
 public class ImportClassAction extends AnAction {
 
@@ -59,20 +55,20 @@ public class ImportClassAction extends AnAction {
       return;
     }
 
-//    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
-//        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
-//    if (diagnosticSourceUnwrapper == null) {
-//      return;
-//    }
+    //    ClientCodeWrapper.DiagnosticSourceUnwrapper diagnosticSourceUnwrapper =
+    //        DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+    //    if (diagnosticSourceUnwrapper == null) {
+    //      return;
+    //    }
 
     if (!ERROR_CODE.equals(diagnostic.getCode())
         && !ERROR_CODE_RETURN_TYPE.equals(diagnostic.getCode())) {
       return;
     }
-    
+
     JCDiagnostic jcDiagnostic = (JCDiagnostic) diagnostic.getExtra();
-    
-    if (jcDiagnostic == null)return;
+
+    if (jcDiagnostic == null) return;
 
     Editor editor = event.getRequiredData(CommonDataKeys.EDITOR);
     if (editor == null) return;
@@ -115,15 +111,15 @@ public class ImportClassAction extends AnAction {
   @Override
   public void actionPerformed(@NonNull AnActionEvent e) {
     DiagnosticWrapper diagnostic = e.getData(CommonDataKeys.DIAGNOSTIC);
-//    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
+    //    diagnostic = DiagnosticUtil.getDiagnosticSourceUnwrapper(diagnostic);
     if (diagnostic == null) {
       return;
     }
     JCDiagnostic d = (JCDiagnostic) diagnostic.getExtra();
-    if (d==null) return;
+    if (d == null) return;
 
     Editor editor = e.getRequiredData(CommonDataKeys.EDITOR);
-//    JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
+    //    JCDiagnostic d = ((ClientCodeWrapper.DiagnosticSourceUnwrapper) diagnostic).d;
     String simpleName = String.valueOf(d.getArgs()[1]);
     Path file = e.getRequiredData(CommonDataKeys.FILE).toPath();
     Project project = editor.getProject();

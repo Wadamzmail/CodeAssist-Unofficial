@@ -30,6 +30,7 @@ public interface JavaModule extends Module, KotlinModule {
   List<File> getLibraries(File dir);
 
   void addLibrary(@NonNull File libFolder);
+
   void addLibrary(@NonNull CodeAssistLibrary jar);
 
   /** Sets the map of md5 hash to its library source */
