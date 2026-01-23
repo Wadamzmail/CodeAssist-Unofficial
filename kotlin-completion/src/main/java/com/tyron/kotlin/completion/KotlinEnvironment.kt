@@ -98,7 +98,7 @@ import org.jetbrains.kotlin.config.IrVerificationMode
 import com.tyron.builder.model.DiagnosticWrapper
 import dev.mutwakil.completion.kotlin.diagnostic.getDiagnostics
 import org.jetbrains.kotlin.cli.jvm.config.addJavaSourceRoot 
-import com.tyron.completion.java.util.FilesUtil
+import com.tyron.common.util.FilesUtil
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment

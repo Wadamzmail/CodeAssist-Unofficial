@@ -335,8 +335,8 @@ public class AppLogFragment extends Fragment implements ProjectManager.OnProject
 
             //           mEditor.post(()->{
             mEditor.setText(combinedText);
-            int lastLine = mEditor.getLineCount() - 1;
-            mEditor.setSelection(lastLine, 0);
+//            int lastLine = mEditor.getLineCount() - 1;
+//            mEditor.setSelection(lastLine, 0);
             //            });
           },
           100);
