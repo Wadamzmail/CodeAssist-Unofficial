@@ -97,6 +97,8 @@ import org.jetbrains.kotlin.descriptors.PackageFragmentDescriptor
 import org.jetbrains.kotlin.config.IrVerificationMode
 import com.tyron.builder.model.DiagnosticWrapper
 import dev.mutwakil.completion.kotlin.diagnostic.getDiagnostics
+import org.jetbrains.kotlin.cli.jvm.config.JvmContentRootsKt
+import com.tyron.completion.java.util.FilesUtil
 
 data class KotlinEnvironment(
     val kotlinEnvironment: KotlinCoreEnvironment
@@ -662,6 +664,39 @@ data class KotlinEnvironment(
             currentModule.kotlinFiles.values.forEach {
                 environment.updateKotlinFile(it.absolutePath, it.readText())
             }
+            //Java
+//            val javaFiles = currentModule.getJavaFiles().toMutableList()
+//            if (currentModule is AndroidModuleImpl) {
+//            val buildGenDir = File(currentModule.rootFile + "/build/gen")
+//            val viewBindingDir = File(currentModule.rootFile + "/build/view_binding")
+//            if (buildGenDir.exists()) {
+//             val buidGenSet = FilesUtil.getFiles(buildGenDir, ".java")
+//              for (toAdd in buidGenSet) {
+//                currentModule.addJavaFile(toAdd)
+//                javaFiles.add(toAdd)
+//              }
+//            }
+//            if (viewBindingDir.exists()) {
+//              val viewBindingSet = FilesUtil.getFiles(viewBindingDir, ".java")
+//              for (toAdd in viewBindingSet) {
+//                currentModule.addJavaFile(toAdd)
+//                javaFiles.add(toAdd)
+//              }
+//            }
+//           }
+           val configuration = environment.kotlinEnvironment.configuration
+
+           val javaSourceRoots = listOf(
+                  File(currentModule.rootFile, "/src/main/java"),
+                  File(currentModule.rootFile, "/src/main/kotlin"),
+                  File(currentModule.rootFile, "/build/gen"),
+                  File(currentModule.rootFile, "/build/view_binding")
+               ).filter { it.exists() }
+
+               javaSourceRoots.forEach { root ->
+                 JvmContentRootsKt.addJavaSourceRoot(configuration, root)
+               }
+            
             currentModule.putUserData(ENVIRONMENT_KEY, environment)
             return environment
         }

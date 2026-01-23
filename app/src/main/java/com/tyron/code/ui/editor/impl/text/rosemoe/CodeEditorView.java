@@ -53,6 +53,7 @@ import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.common.SharedPreferenceKeys;  
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail; 
+import java.util.Locale;
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
@@ -530,7 +531,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
               (int) it.getEndPosition(),
               severitySupplier.apply(it.getKind()), 
               0,
-              isDiagnosticDetailEnabled()?new DiagnosticDetail("Info",it.getMessage(),null,null):null);
+              isDiagnosticDetailEnabled()?new DiagnosticDetail("Info",it.getMessage(Locale.getDefault()),null,null):null);
       getDiagnostics().addDiagnostic(region);
     }
   }
