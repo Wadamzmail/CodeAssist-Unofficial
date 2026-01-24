@@ -232,7 +232,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
     }
 
     // work around to refresh R.java file
-    CompilationInfo info = CompilationInfo.get(module,true);
+    CompilationInfo info = CompilationInfo.get(module);
     if (info == null) {
       return;
     }
@@ -241,10 +241,11 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
         new SimpleJavaFileObject(resourceClass.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
+             return CompilationInfo.readFile(resourceClass);
+      //      Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
             // During indexing, statements inside methods are not needed so
             // it is stripped to speed up the index process
-            return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+        //    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
           }
         });
   }

@@ -85,23 +85,8 @@ public class CompilationInfo {
           }
         }
       }
-      // if (info == null || changed(mCachedPaths, libraries)) {
-      info =
-          new CompilationInfo(
-              new CompilationInfoImpl(
-                  new JavacParser(),
-                  null,
-                  null,
-                  new ArrayList<>(libraries),
-                  Collections.emptyList(),
-                  null,
-                  null));
-      module.putUserData(COMPILATION_INFO_KEY, info);
-      // mCachedPaths.clear();
-      // mCachedPaths.addAll(libraries);
-    }
-  //  indexFiles(module,info);
-/*  if(module instanceof AndroidModuleImpl) {
+      
+      if(module instanceof AndroidModuleImpl) {
    AndroidModuleImpl aModule = (AndroidModuleImpl)module;
      File value = new File(module.getRootFile() + "/build/gen/"+aModule.getNameSpace().replace(".","/")+"/R.java");
     if(value.exists()){
@@ -118,7 +103,23 @@ public class CompilationInfo {
                 }
             }); 
      } 
-   }*/
+   } 
+      // if (info == null || changed(mCachedPaths, libraries)) {
+      info =
+          new CompilationInfo(
+              new CompilationInfoImpl(
+                  new JavacParser(),
+                  null,
+                  null,
+                  new ArrayList<>(libraries),
+                  Collections.emptyList(),
+                  null,
+                  null));
+      module.putUserData(COMPILATION_INFO_KEY, info);
+      // mCachedPaths.clear();
+      // mCachedPaths.addAll(libraries);
+    }
+  //  indexFiles(module,info);
     return info;
   }
 
