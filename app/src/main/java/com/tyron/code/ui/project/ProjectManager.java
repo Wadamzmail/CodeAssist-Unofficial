@@ -324,7 +324,7 @@ public class ProjectManager {
                   }
                 }
               }
-             // indexModule(module);
+              indexModule(module);
              CompilationInfo info = CompilationInfo.get(module,true);
 //             KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module,true); 
           }
@@ -371,7 +371,7 @@ public class ProjectManager {
             });
         }
 
-        KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module,true);
+    //    KotlinEnvironment kotlinEnvironment = KotlinEnvironment.Companion.get(module,true);
     }
 
   private void downloadLibraries(JavaModule project, TaskListener listener, ILogger logger)

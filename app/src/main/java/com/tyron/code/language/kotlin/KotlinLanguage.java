@@ -122,7 +122,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 //        ProgressManager.getInstance()
 //        .runLater(
 //            () -> {
-//             initAnalysis();
+             initAnalysis();
 //             },
 //            50);   
         }
@@ -156,7 +156,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         if (completionList == null) {
             return;
         }
-//        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container)); 
+        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(container)); 
         completionList.getItems().stream().map(CompletionItemWrapper::new).forEach(publisher::addItem);
         }catch(Exception e){
         if (!(e instanceof InterruptedException)
@@ -164,7 +164,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                     Log.e(TAG, "Completion failed", e);
         }
         }
-        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(new ArrayList<DiagnosticWrapper>(kotlinEnvironment.getDiagnostics())));           
+//        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(new ArrayList<DiagnosticWrapper>(kotlinEnvironment.getDiagnostics())));           
         kotlinEnvironment.analysis = null;  
   }
 

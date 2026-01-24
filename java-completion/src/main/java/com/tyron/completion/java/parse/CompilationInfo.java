@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +36,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
+import com.tyron.completion.java.compiler.Parser;
+import com.tyron.completion.java.provider.PruneMethodBodies;
+import javax.tools.SimpleJavaFileObject;
 
 public class CompilationInfo {
 
@@ -52,7 +56,7 @@ public class CompilationInfo {
       libraries.addAll((javaModule).getJavaFiles().values());
       libraries.addAll((javaModule).getLibraries());
       libraries.addAll((javaModule).getInjectedClasses().values());
-
+      
       if (module instanceof AndroidModuleImpl) {
         File buildGenDir = new File(module.getRootFile() + "/build/gen");
         File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
@@ -94,6 +98,7 @@ public class CompilationInfo {
       // mCachedPaths.clear();
       // mCachedPaths.addAll(libraries);
     }
+  //  indexFiles(module);
     return info;
   }
 
@@ -104,6 +109,7 @@ public class CompilationInfo {
   public static synchronized CompilationInfo get(Project currentProject, File file) {
     return get(currentProject, file, false);
   }
+  
 
   public static synchronized CompilationInfo get(
       Project currentProject, File file, boolean reIndex) {
@@ -111,6 +117,52 @@ public class CompilationInfo {
     ProjectUtil.getInstance().setProject(currentProject).setModule(module);
     return get(module, reIndex);
   }
+  
+  private synchronized void indexFiles(Module module ) {
+     try{
+       if (module instanceof AndroidModuleImpl) {
+        Set<File> libraries = new HashSet<>();
+        File buildGenDir = new File(module.getRootFile() + "/build/gen");
+        File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
+        File kotlinJar =
+            new File(
+                module.getRootFile(),
+                "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar");
+        if (kotlinJar.exists()) {
+          libraries.add(kotlinJar);
+          javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
+        }
+        if (buildGenDir.exists()) {
+          Set<File> buidGenSet = getFiles(buildGenDir, ".java");
+          for (File toAdd : buidGenSet) {
+            javaModule.addJavaFile(toAdd);
+            libraries.add(toAdd);
+          }
+        }
+        if (viewBindingDir.exists()) {
+          Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
+          for (File toAdd : viewBindingSet) {
+            javaModule.addJavaFile(toAdd);
+            libraries.add(toAdd);
+          }
+        }
+        for (File value : libraries) {
+            info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
+                    JavaFileObject.Kind.SOURCE) {
+                @Override
+                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                    Parser parser = Parser.parseFile(module.getProject(), value.toPath());
+                    // During indexing, statements inside methods are not needed so
+                    // it is stripped to speed up the index process
+                    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+                }
+            });
+        }
+       }
+       }catch(IOException e){
+       e.printStackTrace();
+       }
+    }
 
   public final CompilationInfoImpl impl;
   private final Map<URI, JCCompilationUnit> compiledMap = new HashMap<>();

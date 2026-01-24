@@ -420,7 +420,7 @@ data class KotlinEnvironment(
                     listOf(current)
                 ) != null
             }
-            diagnostics = getDiagnostics(bindingTrace.bindingContext).toMutableList() 
+//            diagnostics = getDiagnostics(bindingTrace.bindingContext).toMutableList() 
             return@analyzeAndReport AnalysisResult.success(
                 bindingTrace.bindingContext,
                 componentProvider!!.getService(ModuleDescriptor::class.java)
@@ -565,7 +565,7 @@ data class KotlinEnvironment(
                 "kotlin.reflect.jvm.internal"
             )
 
-        fun with(classpath: List<File>): KotlinEnvironment {
+        fun with(classpath: List<File>, javaSourceRoots : List<File>): KotlinEnvironment {
             setIdeaIoUseFallback()
             setupIdeaStandaloneExecution()
             return KotlinEnvironment(
@@ -633,6 +633,12 @@ data class KotlinEnvironment(
                             addJvmClasspathRoots(
                                 classpath
                             )
+                           if (javaSourceRoots.isNotEmpty()) {
+                              javaSourceRoots.forEach { root ->
+                               addJavaSourceRoot(root,null)
+                              }
+                           }
+                            
                         }
                     }
                 )
@@ -657,7 +663,13 @@ data class KotlinEnvironment(
             val jars = currentModule.getLibraries().toMutableList()
               jars.add(BuildModule.getLambdaStubs())
               jars.add(BuildModule.getAndroidJar()) 
-            val environment = with(jars)
+            val javaSourceRoots = listOf(
+                  File(currentModule.rootFile, "/src/main/java"),
+                  File(currentModule.rootFile, "/src/main/kotlin"),
+                  File(currentModule.rootFile, "/build/gen"),
+                  File(currentModule.rootFile, "/build/view_binding")
+               ).filter { it.exists() }
+            val environment = with(jars,javaSourceRoots )
             environment.kotlinEnvironment.updateClasspath(
                 jars.map { JvmClasspathRoot(it) }
             ) 
@@ -684,18 +696,7 @@ data class KotlinEnvironment(
 //              }
 //            }
 //           }
-           val configuration = environment.kotlinEnvironment.configuration
-
-           val javaSourceRoots = listOf(
-                  File(currentModule.rootFile, "/src/main/java"),
-                  File(currentModule.rootFile, "/src/main/kotlin"),
-                  File(currentModule.rootFile, "/build/gen"),
-                  File(currentModule.rootFile, "/build/view_binding")
-               ).filter { it.exists() }
-
-               javaSourceRoots.forEach { root ->
-                  configuration.addJavaSourceRoot(root,null)
-               }
+//           val configuration = environment.kotlinEnvironment.configuration
             
             currentModule.putUserData(ENVIRONMENT_KEY, environment)
             return environment

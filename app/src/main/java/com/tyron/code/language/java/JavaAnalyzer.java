@@ -131,6 +131,7 @@ public class JavaAnalyzer extends SemanticAnalyzeManager {
     try {
       return future.get();
     } catch (ExecutionException | InterruptedException e) {
+      e.printStackTrace();
       return new ArrayList<SemanticToken>();
     }
   }

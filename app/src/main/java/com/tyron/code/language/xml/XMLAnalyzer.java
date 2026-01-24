@@ -100,6 +100,10 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       if (project == null) {
         return;
       }
+      
+    if (project.isCompiling() || project.isIndexing()) {
+      return null;
+    }
 
       ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(true));
 
@@ -228,11 +232,11 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
     }
 
     // work around to refresh R.java file
-    File resourceClass = module.getJavaFile(module.getNameSpace() + ".R");
-    CompilationInfo info = CompilationInfo.get(module, true);
+    CompilationInfo info = CompilationInfo.get(module,true);
     if (info == null) {
       return;
     }
+     File resourceClass = module.getJavaFile(module.getNameSpace() + ".R"); 
     info.updateImmediately(
         new SimpleJavaFileObject(resourceClass.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
