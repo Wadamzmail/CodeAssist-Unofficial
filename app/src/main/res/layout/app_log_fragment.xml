@@ -22,7 +22,6 @@
         android:layout_marginBottom="86dp"
         android:layout_marginEnd="16dp"
         android:visibility="gone"
-        app:backgroundTint="@color/md_theme_primary"
         app:fabSize="normal"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,7 +32,6 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/round_content_copy_20"
-        app:backgroundTint="@color/md_theme_primary"
         app:fabSize="normal"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

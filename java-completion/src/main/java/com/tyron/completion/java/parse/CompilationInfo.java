@@ -101,7 +101,7 @@ public class CompilationInfo {
       // mCachedPaths.addAll(libraries);
     }
   //  indexFiles(module,info);
-  if(module instanceof AndroidModuleImpl) {
+/*  if(module instanceof AndroidModuleImpl) {
    AndroidModuleImpl aModule = (AndroidModuleImpl)module;
      File value = new File(module.getRootFile() + "/build/gen/"+aModule.getNameSpace().replace(".","/")+"/R.java");
     if(value.exists()){
@@ -118,8 +118,7 @@ public class CompilationInfo {
                 }
             }); 
      } 
-
-   }
+   }*/
     return info;
   }
 
