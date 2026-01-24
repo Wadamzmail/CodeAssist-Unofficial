@@ -98,7 +98,7 @@ public class CompilationInfo {
       // mCachedPaths.clear();
       // mCachedPaths.addAll(libraries);
     }
-  //  indexFiles(module);
+  //  indexFiles(module,info);
     return info;
   }
 
@@ -118,8 +118,12 @@ public class CompilationInfo {
     return get(module, reIndex);
   }
   
-  private synchronized void indexFiles(Module module ) {
+  private synchronized void indexFiles(Module module,CompilationInfo info) {
      try{
+       if (!(module instanceof JavaModule)) {
+      return;
+       }
+      JavaModule javaModule = (JavaModule) module;
        if (module instanceof AndroidModuleImpl) {
         Set<File> libraries = new HashSet<>();
         File buildGenDir = new File(module.getRootFile() + "/build/gen");
