@@ -100,10 +100,10 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       if (project == null) {
         return;
       }
-      
-    if (project.isCompiling() || project.isIndexing()) {
-      return;
-    }
+
+      if (project.isCompiling() || project.isIndexing()) {
+        return;
+      }
 
       ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(true));
 
@@ -236,16 +236,15 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
     if (info == null) {
       return;
     }
-     File resourceClass = module.getJavaFile(module.getNameSpace() + ".R"); 
+    File resourceClass = module.getJavaFile(module.getNameSpace() + ".R");
     info.updateImmediately(
         new SimpleJavaFileObject(resourceClass.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-             return CompilationInfo.readFile(resourceClass);
-      //      Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
+            Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
             // During indexing, statements inside methods are not needed so
             // it is stripped to speed up the index process
-        //    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+            return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
           }
         });
   }

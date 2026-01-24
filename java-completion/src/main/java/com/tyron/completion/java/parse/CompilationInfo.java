@@ -13,18 +13,22 @@ import com.tyron.builder.project.api.JavaModule;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.impl.AndroidModuleImpl;
 import com.tyron.common.util.DebouncerStore;
+import com.tyron.completion.java.compiler.Parser;
 import com.tyron.completion.java.compiler.services.NBEnter;
 import com.tyron.completion.java.compiler.services.NBLog;
+import com.tyron.completion.java.provider.PruneMethodBodies;
 import com.tyron.completion.java.util.ProjectUtil;
 import dev.mutwakil.javac.MJavacTrees;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,12 +39,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
-import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
-import com.tyron.completion.java.compiler.Parser;
-import com.tyron.completion.java.provider.PruneMethodBodies;
 import javax.tools.SimpleJavaFileObject;
-import java.io.FileReader;
-import java.io.BufferedReader;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 
 public class CompilationInfo {
 
@@ -58,7 +58,7 @@ public class CompilationInfo {
       libraries.addAll((javaModule).getJavaFiles().values());
       libraries.addAll((javaModule).getLibraries());
       libraries.addAll((javaModule).getInjectedClasses().values());
-      
+
       if (module instanceof AndroidModuleImpl) {
         File buildGenDir = new File(module.getRootFile() + "/build/gen");
         File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
@@ -84,27 +84,8 @@ public class CompilationInfo {
             libraries.add(toAdd);
           }
         }
+        //   indexFiles(module,info);
       }
-      
-      if(module instanceof AndroidModuleImpl) {
-   AndroidModuleImpl aModule = (AndroidModuleImpl)module;
-     File value = new File(module.getRootFile() + "/build/gen/"+aModule.getNameSpace().replace(".","/")+"/R.java");
-    if(value.exists()){
-    info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
-                    JavaFileObject.Kind.SOURCE) {
-                @Override
-                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                   try{
-                     return readFile(value);
-                    }catch(IOException e){
-                       e.printStackTrace();
-                       return "";
-                    }
-                }
-            }); 
-     } 
-   } 
-      // if (info == null || changed(mCachedPaths, libraries)) {
       info =
           new CompilationInfo(
               new CompilationInfoImpl(
@@ -116,10 +97,7 @@ public class CompilationInfo {
                   null,
                   null));
       module.putUserData(COMPILATION_INFO_KEY, info);
-      // mCachedPaths.clear();
-      // mCachedPaths.addAll(libraries);
     }
-  //  indexFiles(module,info);
     return info;
   }
 
@@ -130,7 +108,6 @@ public class CompilationInfo {
   public static synchronized CompilationInfo get(Project currentProject, File file) {
     return get(currentProject, file, false);
   }
-  
 
   public static synchronized CompilationInfo get(
       Project currentProject, File file, boolean reIndex) {
@@ -138,69 +115,54 @@ public class CompilationInfo {
     ProjectUtil.getInstance().setProject(currentProject).setModule(module);
     return get(module, reIndex);
   }
-  
-  public static String readFile(File file) throws IOException{
-    
-  StringBuilder builder = new StringBuilder();
-   try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-    String line;
-    while ((line = reader.readLine()) != null) {
+
+  public static String readFile(File file) throws IOException {
+
+    StringBuilder builder = new StringBuilder();
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+      String line;
+      while ((line = reader.readLine()) != null) {
         builder.append(line).append("\n");
+      }
     }
+
+    return builder.toString();
   }
 
- return builder.toString();
-  }
-  
-  private synchronized void indexFiles(Module module,CompilationInfo info) {
-     try{
-       if (!(module instanceof JavaModule)) {
-      return;
-       }
+  private synchronized void indexFiles(Module module, CompilationInfo info) {
+    if (module instanceof AndroidModuleImpl) {
       JavaModule javaModule = (JavaModule) module;
-       if (module instanceof AndroidModuleImpl) {
-        Set<File> libraries = new HashSet<>();
-        File buildGenDir = new File(module.getRootFile() + "/build/gen");
-        File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
-        File kotlinJar =
-            new File(
-                module.getRootFile(),
-                "/build/libraries/kotlin_runtime/" + module.getRootFile().getName() + ".jar");
-        if (kotlinJar.exists()) {
-          libraries.add(kotlinJar);
-          javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
+      Set<File> libraries = new HashSet<>();
+      File buildGenDir = new File(module.getRootFile() + "/build/gen");
+      File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
+      if (buildGenDir.exists()) {
+        Set<File> buidGenSet = getFiles(buildGenDir, ".java");
+        for (File toAdd : buidGenSet) {
+          javaModule.addJavaFile(toAdd);
+          libraries.add(toAdd);
         }
-        if (buildGenDir.exists()) {
-          Set<File> buidGenSet = getFiles(buildGenDir, ".java");
-          for (File toAdd : buidGenSet) {
-            javaModule.addJavaFile(toAdd);
-            libraries.add(toAdd);
-          }
+      }
+      if (viewBindingDir.exists()) {
+        Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
+        for (File toAdd : viewBindingSet) {
+          javaModule.addJavaFile(toAdd);
+          libraries.add(toAdd);
         }
-        if (viewBindingDir.exists()) {
-          Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
-          for (File toAdd : viewBindingSet) {
-            javaModule.addJavaFile(toAdd);
-            libraries.add(toAdd);
-          }
-        }
-        for (File value : libraries) {
-            info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
-                    JavaFileObject.Kind.SOURCE) {
-                @Override
-                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                    Parser parser = Parser.parseFile(module.getProject(), value.toPath());
-                    // During indexing, statements inside methods are not needed so
-                    // it is stripped to speed up the index process
-                    return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
-                }
+      }
+      for (File value : libraries) {
+        info.updateImmediately(
+            new SimpleJavaFileObject(value.toURI(), JavaFileObject.Kind.SOURCE) {
+              @Override
+              public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                Parser parser = Parser.parseFile(module.getProject(), value.toPath());
+                // During indexing, statements inside methods are not needed so
+                // it is stripped to speed up the index process
+                return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
+              }
             });
-        }
-       }
-       }catch(Exception e){
-       e.printStackTrace();
-       }
+      }
     }
+  }
 
   public final CompilationInfoImpl impl;
   private final Map<URI, JCCompilationUnit> compiledMap = new HashMap<>();

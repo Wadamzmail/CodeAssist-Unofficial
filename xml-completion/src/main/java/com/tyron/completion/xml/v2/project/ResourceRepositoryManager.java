@@ -278,7 +278,7 @@ public class ResourceRepositoryManager {
     }
 
     getLibraryResources(); // Precompute library resources to do less work inside the read action
-                           // below.
+    // below.
 
     synchronized (APP_RESOURCES_LOCK) {
       if (myAppResources == null) {
@@ -343,7 +343,7 @@ public class ResourceRepositoryManager {
     Function<ExternalAndroidLibrary, AarResourceRepository> factory =
         myNamespacing == Namespacing.DISABLED
             ? aarResourceRepositoryCache::getSourceRepository
-            : aarResourceRepositoryCache::getSourceRepository; //getProtoRepository;
+            : aarResourceRepositoryCache::getSourceRepository; // getProtoRepository;
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
 

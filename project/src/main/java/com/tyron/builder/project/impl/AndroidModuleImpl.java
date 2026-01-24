@@ -132,13 +132,18 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
     //    }
 
     // R.java files
-    //        File gen = new File(getBuildDirectory(), "gen");
-    //        if (gen.exists()) {
-    //            FileUtils.iterateFiles(gen,
-    //                    FileFilterUtils.suffixFileFilter(".java"),
-    //                    TrueFileFilter.INSTANCE
-    //            ).forEachRemaining(this::addJavaFile);
-    //        }
+    File gen = new File(getBuildDirectory(), "gen");
+    if (gen.exists()) {
+      FileUtils.iterateFiles(
+              gen, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+          .forEachRemaining(this::addJavaFile);
+    }
+    File gen = new File(getBuildDirectory(), "view_binding");
+    if (gen.exists()) {
+      FileUtils.iterateFiles(
+              gen, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+          .forEachRemaining(this::addJavaFile);
+    }
   }
 
   @Override
