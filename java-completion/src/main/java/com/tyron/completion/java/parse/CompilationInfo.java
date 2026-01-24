@@ -113,6 +113,7 @@ public class CompilationInfo {
                      return readFile(value);
                     }catch(IOException e){
                        e.printStackTrace();
+                       return "";
                     }
                 }
             }); 
