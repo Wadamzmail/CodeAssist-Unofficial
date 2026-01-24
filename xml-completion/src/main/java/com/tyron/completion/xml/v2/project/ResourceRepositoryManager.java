@@ -343,7 +343,7 @@ public class ResourceRepositoryManager {
     Function<ExternalAndroidLibrary, AarResourceRepository> factory =
         myNamespacing == Namespacing.DISABLED
             ? aarResourceRepositoryCache::getSourceRepository
-            : aarResourceRepositoryCache::getProtoRepository;
+            : aarResourceRepositoryCache::getSourceRepository; //getProtoRepository;
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -354,7 +354,10 @@ public class ResourceRepositoryManager {
       if (library.getResFolder() == null) {
         continue;
       }
-      if (!library.getResFolder().exists() && library.getResStaticLibrary() == null) {
+      if (library.getResStaticLibrary() == null) {
+        continue;
+      }
+      if (!library.getResFolder().exists() && !library.getResStaticLibrary().exists()) {
         continue;
       }
       ExternalLibraryImpl externalLibrary =

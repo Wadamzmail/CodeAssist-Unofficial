@@ -694,7 +694,7 @@ data class KotlinEnvironment(
                ).filter { it.exists() }
 
                javaSourceRoots.forEach { root ->
-                  addJavaSourceRoot(configuration, root)
+                  configuration.addJavaSourceRoot(root,null)
                }
             
             currentModule.putUserData(ENVIRONMENT_KEY, environment)

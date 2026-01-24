@@ -167,7 +167,7 @@ dependencies {
     implementation project(path: ':ktfmt')
 	 
     // about
-    implementation ('com.github.daniel-stoneuk:material-about-library:3.1.2')
+    implementation ('com.github.daniel-stoneuk:material-about-library:3.2.0-rc01')
 
     implementation ('androidx.appcompat:appcompat:1.7.1')
 	implementation ('androidx.core:core:1.17.0')
@@ -202,11 +202,6 @@ dependencies {
      //for CodeAssist
      implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
      implementation 'com.google.guava:guava:33.5.0-jre' 
-     
-     // Virtual File System
-    implementation("org.apache.commons:commons-vfs2:2.9.0") {
-    exclude group: "org.apache.commons", module: "commons-lang3"
-    }
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }
