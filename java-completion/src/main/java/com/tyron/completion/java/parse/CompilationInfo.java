@@ -101,8 +101,10 @@ public class CompilationInfo {
       // mCachedPaths.addAll(libraries);
     }
   //  indexFiles(module,info);
+  if(module instanceof AndroidModuleImpl) {
    try{
-     File value = new File(module.getRootFile() + "/build/gen/"+module.getNameSpace().replace(".","/")+"/R.java");
+   AndroidModuleImpl aModule = (AndroidModuleImpl)module;
+     File value = new File(module.getRootFile() + "/build/gen/"+aModule.getNameSpace().replace(".","/")+"/R.java");
     if(value.exists()){
     info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
                     JavaFileObject.Kind.SOURCE) {
@@ -115,6 +117,7 @@ public class CompilationInfo {
     }catch(IOException e){
     e.printStackTrace();
     }
+   }
     return info;
   }
 
@@ -134,7 +137,7 @@ public class CompilationInfo {
     return get(module, reIndex);
   }
   
-  public String readFile(File file) throws IOException{
+  public static String readFile(File file) throws IOException{
     
   StringBuilder builder = new StringBuilder();
    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
