@@ -102,7 +102,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
       }
       
     if (project.isCompiling() || project.isIndexing()) {
-      return null;
+      return;
     }
 
       ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(true));
