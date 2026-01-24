@@ -39,6 +39,8 @@ import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import com.tyron.completion.java.compiler.Parser;
 import com.tyron.completion.java.provider.PruneMethodBodies;
 import javax.tools.SimpleJavaFileObject;
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class CompilationInfo {
 
@@ -99,6 +101,20 @@ public class CompilationInfo {
       // mCachedPaths.addAll(libraries);
     }
   //  indexFiles(module,info);
+   try{
+     File value = new File(module.getRootFile() + "/build/gen/"+module.getNameSpace().replace(".","/")+"/R.java");
+    if(value.exists()){
+    info.updateImmediately(new SimpleJavaFileObject(value.toURI(),
+                    JavaFileObject.Kind.SOURCE) {
+                @Override
+                public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                     return readFile(value);
+                }
+            }); 
+     } 
+    }catch(IOException e){
+    e.printStackTrace();
+    }
     return info;
   }
 
@@ -116,6 +132,19 @@ public class CompilationInfo {
     final Module module = currentProject.getModule(file);
     ProjectUtil.getInstance().setProject(currentProject).setModule(module);
     return get(module, reIndex);
+  }
+  
+  public String readFile(File file) throws IOException{
+    
+  StringBuilder builder = new StringBuilder();
+   try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        builder.append(line).append("\n");
+    }
+  }
+
+ return builder.toString();
   }
   
   private synchronized void indexFiles(Module module,CompilationInfo info) {
@@ -163,7 +192,7 @@ public class CompilationInfo {
             });
         }
        }
-       }catch(IOException e){
+       }catch(Exception e){
        e.printStackTrace();
        }
     }
