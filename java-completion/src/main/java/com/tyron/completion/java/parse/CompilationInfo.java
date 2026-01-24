@@ -102,7 +102,6 @@ public class CompilationInfo {
     }
   //  indexFiles(module,info);
   if(module instanceof AndroidModuleImpl) {
-   try{
    AndroidModuleImpl aModule = (AndroidModuleImpl)module;
      File value = new File(module.getRootFile() + "/build/gen/"+aModule.getNameSpace().replace(".","/")+"/R.java");
     if(value.exists()){
@@ -110,13 +109,15 @@ public class CompilationInfo {
                     JavaFileObject.Kind.SOURCE) {
                 @Override
                 public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                   try{
                      return readFile(value);
+                    }catch(IOException e){
+                       e.printStackTrace();
+                    }
                 }
             }); 
      } 
-    }catch(IOException e){
-    e.printStackTrace();
-    }
+
    }
     return info;
   }
