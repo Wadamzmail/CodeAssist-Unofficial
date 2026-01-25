@@ -26,6 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
@@ -138,10 +140,10 @@ public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {
               gen, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
           .forEachRemaining(this::addJavaFile);
     }
-    File gen = new File(getBuildDirectory(), "view_binding");
-    if (gen.exists()) {
+    File viewBindingDir = new File(getBuildDirectory(), "view_binding");
+    if (viewBindingDir.exists()) {
       FileUtils.iterateFiles(
-              gen, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
+              viewBindingDir, FileFilterUtils.suffixFileFilter(".java"), TrueFileFilter.INSTANCE)
           .forEachRemaining(this::addJavaFile);
     }
   }
