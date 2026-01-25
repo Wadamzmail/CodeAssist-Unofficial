@@ -190,7 +190,7 @@ public class Pom {
     return properties;
   }
   
-  public void getProperties(Map<String, String> props){
+  public void setProperties(Map<String, String> props){
      properties = props;
   }
 
