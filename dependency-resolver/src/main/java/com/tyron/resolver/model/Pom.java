@@ -23,7 +23,7 @@ public class Pom {
   private List<Dependency> dependencies;
   private List<Dependency> excludes;
 
-  private final Map<String, String> properties = new HashMap<>();
+  private Map<String, String> properties = new HashMap<>();
   private Pom parent;
 
   private List<Dependency> managedDependencies;
@@ -184,6 +184,14 @@ public class Pom {
   @Nullable
   public String getProperty(String key) {
     return properties.get(key);
+  }
+  
+  public Map<String, String> getProperties(){
+    return properties;
+  }
+  
+  public void getProperties(Map<String, String> props){
+     properties = props;
   }
 
   @Nullable
