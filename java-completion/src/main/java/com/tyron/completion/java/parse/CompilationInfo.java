@@ -55,13 +55,9 @@ public class CompilationInfo {
     CompilationInfo info = module.getUserData(COMPILATION_INFO_KEY);
     if (info == null || reIndex) {
       Set<File> libraries = new HashSet<>();
-      libraries.addAll((javaModule).getJavaFiles().values());
-      libraries.addAll((javaModule).getLibraries());
-      libraries.addAll((javaModule).getInjectedClasses().values());
+      libraries.addAll(javaModule.getLibraries());
 
       if (module instanceof AndroidModuleImpl) {
-        File buildGenDir = new File(module.getRootFile() + "/build/gen");
-        File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
         File kotlinJar =
             new File(
                 module.getRootFile(),
@@ -70,21 +66,6 @@ public class CompilationInfo {
           libraries.add(kotlinJar);
           javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
         }
-        if (buildGenDir.exists()) {
-          Set<File> buidGenSet = getFiles(buildGenDir, ".java");
-          for (File toAdd : buidGenSet) {
-            javaModule.addJavaFile(toAdd);
-            libraries.add(toAdd);
-          }
-        }
-        if (viewBindingDir.exists()) {
-          Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
-          for (File toAdd : viewBindingSet) {
-            javaModule.addJavaFile(toAdd);
-            libraries.add(toAdd);
-          }
-        }
-        //   indexFiles(module,info);
       }
       info =
           new CompilationInfo(
@@ -97,6 +78,7 @@ public class CompilationInfo {
                   null,
                   null));
       module.putUserData(COMPILATION_INFO_KEY, info);
+      indexJavaFiles(module); 
     }
     return info;
   }
@@ -116,52 +98,40 @@ public class CompilationInfo {
     return get(module, reIndex);
   }
 
-  public static String readFile(File file) throws IOException {
-
-    StringBuilder builder = new StringBuilder();
-    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-      String line;
-      while ((line = reader.readLine()) != null) {
-        builder.append(line).append("\n");
-      }
-    }
-
-    return builder.toString();
-  }
-
-  private synchronized void indexFiles(Module module, CompilationInfo info) {
+  private synchronized void indexJavaFiles(Module module) {
     if (module instanceof AndroidModuleImpl) {
       JavaModule javaModule = (JavaModule) module;
-      Set<File> libraries = new HashSet<>();
+      Set<File> files = new HashSet<>();
+     // files.addAll(javaModule.getInjectedClasses().values());
       File buildGenDir = new File(module.getRootFile() + "/build/gen");
       File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
       if (buildGenDir.exists()) {
-        Set<File> buidGenSet = getFiles(buildGenDir, ".java");
-        for (File toAdd : buidGenSet) {
-          javaModule.addJavaFile(toAdd);
-          libraries.add(toAdd);
-        }
+        files.addAll(getFiles(buildGenDir, ".java"));
       }
       if (viewBindingDir.exists()) {
-        Set<File> viewBindingSet = getFiles(viewBindingDir, ".java");
-        for (File toAdd : viewBindingSet) {
-          javaModule.addJavaFile(toAdd);
-          libraries.add(toAdd);
-        }
+         files.addAll(getFiles(viewBindingDir, ".java"));
       }
-      for (File value : libraries) {
-        info.updateImmediately(
-            new SimpleJavaFileObject(value.toURI(), JavaFileObject.Kind.SOURCE) {
-              @Override
-              public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                Parser parser = Parser.parseFile(module.getProject(), value.toPath());
-                // During indexing, statements inside methods are not needed so
-                // it is stripped to speed up the index process
-                return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
-              }
-            });
+      
+      for (File value : files) {
+        javaModule.addJavaFile(value);
+      }     
+      for (File value : javaModule.getJavaFiles().values()){
+        updateFile(module,value);
       }
     }
+  }
+  
+  public synchronized void updateFile(Module module, File file){
+  updateImmediately(
+            new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
+              @Override
+              public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                Parser parser = Parser.parseFile(module.getProject(), file.toPath());
+                // During indexing, statements inside methods are not needed so
+                // it is stripped to speed up the index process
+                return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
+              }
+            });
   }
 
   public final CompilationInfoImpl impl;
