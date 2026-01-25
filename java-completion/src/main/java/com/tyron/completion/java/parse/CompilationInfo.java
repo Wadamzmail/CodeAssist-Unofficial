@@ -78,7 +78,7 @@ public class CompilationInfo {
                   null,
                   null));
       module.putUserData(COMPILATION_INFO_KEY, info);
-      indexJavaFiles(module); 
+      info.indexJavaFiles(module); 
     }
     return info;
   }
