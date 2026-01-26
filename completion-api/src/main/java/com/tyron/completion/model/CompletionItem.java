@@ -151,6 +151,10 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
     insertHandler.handleInsert(editor);
   }
   
+  public void appendDesc(String extra) {
+    super.desc = String.valueOf(super.desc) + extra;
+  }
+  
   @Override
   public void performCompletion(CodeEditor editor, Content text, int line, int column) {
     if (!(editor instanceof Editor)) {

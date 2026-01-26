@@ -115,7 +115,7 @@ private fun indexCompletionItems(
         .map {
             CompletionItem().apply {
                 label = it.fqName.shortName().toString()
-                commitText = label
+                commitText = label as String
                 cursorOffset = label.length
                 iconKind = when (it.kind) {
                     Symbol.Kind.CLASS -> DrawableKind.Class
@@ -169,7 +169,7 @@ private fun keywordCompletionItems(partial: String): Sequence<CompletionItem> {
             CompletionItem().apply {
                 label = it
                 iconKind = DrawableKind.Keyword
-                commitText = label
+                commitText = label as String 
                 cursorOffset = label.length
             }
         }
@@ -265,7 +265,8 @@ private fun completionItem(
     if (isNotStaticJavaMethod(d) && (isGetter(d) || isSetter(d))) {
         val name = extractPropertyName(d)
 
-        result.desc += " (from ${result.label})"
+       // result.desc = result.desc.toString() + " (from ${result.label})"
+        result.appendDesc(" (from ${result.label})") 
         result.label = name
         result.commitText = name
         //  result.filterText = name
