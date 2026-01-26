@@ -341,7 +341,7 @@ public class XmlUtils {
     item.action = CompletionItem.Kind.NORMAL;
     item.label = commitText;
     item.iconKind = DrawableKind.Attribute;
-    item.detail =
+    item.desc =
         attributeInfo.getFormats().stream().map(Format::name).collect(Collectors.joining("|"));
     item.commitText = commitText;
     if (!fixedPrefix.contains("=")) {
