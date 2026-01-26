@@ -41,7 +41,6 @@ dependencies {
     implementation project(path: ':jaxp:xml')
      
     runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0')
-	api files('libs/javax.jar')
     compileOnly files('libs/the-unsafe.jar')
     compileOnly project(path: ':android-stubs')
     implementation project(':javac')
