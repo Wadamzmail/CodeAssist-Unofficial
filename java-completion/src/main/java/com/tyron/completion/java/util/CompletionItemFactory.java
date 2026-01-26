@@ -49,7 +49,7 @@ public class CompletionItemFactory {
   public static CompletionItem forPsiMethod(PsiMethod psiMethod) {
     CompletionItem item = new CompletionItem();
     item.label = getMethodLabel(psiMethod);
-    item.detail = psiMethod.getReturnType().getPresentableText();
+    item.desc = psiMethod.getReturnType().getPresentableText();
     item.commitText = psiMethod.getName();
     item.cursorOffset = item.commitText.length();
     item.iconKind = DrawableKind.Method;
@@ -100,7 +100,7 @@ public class CompletionItemFactory {
     item.label = label;
     item.commitText = snippet;
     item.cursorOffset = item.commitText.length();
-    item.detail = "Snippet";
+    item.desc = "Snippet";
     item.iconKind = DrawableKind.Snippet;
     return item;
   }
@@ -108,7 +108,7 @@ public class CompletionItemFactory {
   public static CompletionItem item(Element element) {
     CompletionItem item = new CompletionItem();
     item.label = element.getSimpleName().toString();
-    item.detail = simpleType(element.asType());
+    item.desc = simpleType(element.asType());
     item.commitText = element.getSimpleName().toString();
     item.cursorOffset = item.commitText.length();
     item.iconKind = getKind(element);
@@ -119,7 +119,7 @@ public class CompletionItemFactory {
   public static CompletionItem item(String element) {
     CompletionItem item = new CompletionItem();
     item.label = element;
-    item.detail = "";
+    item.desc = "";
     item.commitText = element;
     item.cursorOffset = item.commitText.length();
     item.iconKind = DrawableKind.Snippet;
@@ -198,7 +198,7 @@ public class CompletionItemFactory {
     CompletionItem item = new CompletionItem();
     item.label = getMethodLabel(first, type);
     item.commitText = first.getName() + ((methodRef || endsWithParen) ? "" : "()");
-    item.detail =
+    item.desc =
         type != null
             ? PrintHelper.printType(type.getReturnType())
             : ActionUtil.getSimpleName(first.getReturnType().toString());
@@ -216,7 +216,7 @@ public class CompletionItemFactory {
     CompletionItem item = new CompletionItem();
     item.label = getMethodLabel(first, type);
     item.commitText = first.getSimpleName().toString();
-    item.detail =
+    item.desc =
         type != null
             ? PrintHelper.printType(type.getReturnType())
             : PrintHelper.printType(first.getReturnType());
@@ -274,7 +274,7 @@ public class CompletionItemFactory {
 
       CompletionItem item = new CompletionItem();
       item.label = getMethodLabel(element, executableType);
-      item.detail = PrintHelper.printType(element.getReturnType());
+      item.desc = PrintHelper.printType(element.getReturnType());
       item.commitText = text;
       item.cursorOffset = item.commitText.length();
       item.iconKind = DrawableKind.Method;

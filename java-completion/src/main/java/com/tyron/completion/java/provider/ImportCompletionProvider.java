@@ -131,7 +131,7 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
               item.commitText =
                   "" + classElement.getSimpleName() + "() {\n" + "\t" + "// TODO\n" + "}";
               item.cursorOffset = item.commitText.length();
-              item.detail = "";
+              item.desc = "";
             }
             items.add(item);
           }

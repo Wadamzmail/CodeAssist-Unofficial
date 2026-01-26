@@ -287,7 +287,7 @@ data class KotlinEnvironment(
         return if (name.startsWith(prefix)) {
             CompletionItem(name).apply {
                 iconKind = iconFrom(descriptor)
-                detail = tailName
+                desc = tailName
                 commitText = completionText
                 cursorOffset = commitText.length
                 sortText = name

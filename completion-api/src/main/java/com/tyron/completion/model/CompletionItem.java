@@ -6,13 +6,17 @@ import com.tyron.completion.DefaultInsertHandler;
 import com.tyron.completion.InsertHandler;
 import com.tyron.completion.util.CompletionUtils;
 import com.tyron.editor.Editor;
+import com.tyron.completion.drawable.CircleDrawable; 
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.widget.CodeEditor;
 
 /** A class representing the completion item shown in the user list */
-public class CompletionItem implements Comparable<CompletionItem> {
+public class CompletionItem extends io.github.rosemoe.sora.lang.completion.CompletionItem implements Comparable<CompletionItem> {
 
   @SuppressWarnings("NewApi")
   public static final Comparator<CompletionItem> COMPARATOR =
@@ -22,21 +26,20 @@ public class CompletionItem implements Comparable<CompletionItem> {
           .thenComparing(
               it -> it.getFilterTexts().isEmpty() ? it.getLabel() : it.getFilterTexts().get(0));
 
-  public static CompletionItem create(String label, String detail, String commitText) {
-    return create(label, detail, commitText, null);
+  public static CompletionItem create(String label, String desc, String commitText) {
+    return create(label, desc, commitText, null);
   }
 
   public static CompletionItem create(
-      String label, String detail, String commitText, DrawableKind kind) {
-    CompletionItem completionItem = new CompletionItem(label, detail, commitText, kind);
+      String label, String desc, String commitText, DrawableKind kind) {
+    CompletionItem completionItem = new CompletionItem(label, desc, commitText, kind);
     completionItem.sortText = "";
     completionItem.matchLevel = CompletionPrefixMatcher.MatchLevel.NOT_MATCH;
     return completionItem;
   }
 
   private InsertHandler insertHandler;
-  public String label;
-  public String detail;
+  
   public String commitText;
   public Kind action = Kind.NORMAL;
   public DrawableKind iconKind = DrawableKind.Method;
@@ -44,18 +47,19 @@ public class CompletionItem implements Comparable<CompletionItem> {
   public List<TextEdit> additionalTextEdits;
   public String data = "";
 
-  private String sortText;
   private List<String> filterTexts = new ArrayList<>(1);
   private CompletionPrefixMatcher.MatchLevel matchLevel;
 
   public CompletionItem() {
-    this.insertHandler = new DefaultInsertHandler(CompletionUtils.JAVA_PREDICATE, this);
-    this.sortText = "";
+    this("");
   }
 
-  public CompletionItem(String label, String details, String commitText, DrawableKind kind) {
-    this.label = label;
-    this.detail = details;
+  public CompletionItem(String label) {
+    this(label,"","",DrawableKind.Keyword);
+  }
+
+  public CompletionItem(String label, String desc, String commitText, DrawableKind kind) {
+    super(label, desc, new CircleDrawable(kind));  
     this.commitText = commitText;
     this.cursorOffset = commitText.length();
     this.iconKind = kind;
@@ -63,17 +67,27 @@ public class CompletionItem implements Comparable<CompletionItem> {
     this.sortText = "";
   }
 
-  public CompletionItem(String label) {
-    this.label = label;
+  @Override
+  public void setSortText(String sortText) {
+    super.sortText = sortText;
   }
 
-  public void setSortText(String sortText) {
-    this.sortText = sortText;
+  @Override
+  public String getSortText() {
+    return super.sortText;
+  }
+  
+  public String getLabel() {
+    return String.valueOf(super.label);
+  }
+
+  public String getDesc() {
+      return String.valueOf(super.desc);
   }
 
   public ImmutableList<String> getFilterTexts() {
     if (filterTexts.isEmpty()) {
-      return ImmutableList.of(label);
+      return ImmutableList.of(getLabel());
     }
     return ImmutableList.copyOf(filterTexts);
   }
@@ -82,16 +96,8 @@ public class CompletionItem implements Comparable<CompletionItem> {
     filterTexts.add(text);
   }
 
-  public String getSortText() {
-    return sortText;
-  }
-
   public CompletionPrefixMatcher.MatchLevel getMatchLevel() {
     return matchLevel;
-  }
-
-  public String getLabel() {
-    return label;
   }
 
   public void setMatchLevel(CompletionPrefixMatcher.MatchLevel matchLevel) {
@@ -110,7 +116,7 @@ public class CompletionItem implements Comparable<CompletionItem> {
 
   @Override
   public String toString() {
-    return label;
+    return String.valueOf(label);
   }
 
   @Override
@@ -123,8 +129,8 @@ public class CompletionItem implements Comparable<CompletionItem> {
     }
     CompletionItem that = (CompletionItem) o;
     return cursorOffset == that.cursorOffset
-        && Objects.equals(label, that.label)
-        && Objects.equals(detail, that.detail)
+        && Objects.equals(String.valueOf(label), String.valueOf(that.label))
+        && Objects.equals(desc, that.desc) 
         && Objects.equals(commitText, that.commitText)
         && action == that.action
         && iconKind == that.iconKind
@@ -135,7 +141,7 @@ public class CompletionItem implements Comparable<CompletionItem> {
   @Override
   public int hashCode() {
     return Objects.hash(
-        label, detail, commitText, action, iconKind, cursorOffset, additionalTextEdits, data);
+        label, desc, commitText, action, iconKind, cursorOffset, additionalTextEdits, data);
   }
 
   @Override
@@ -145,5 +151,20 @@ public class CompletionItem implements Comparable<CompletionItem> {
 
   public void handleInsert(Editor editor) {
     insertHandler.handleInsert(editor);
+  }
+  
+  @Override
+  public void performCompletion(CodeEditor editor, Content text, int line, int column) {
+    if (!(editor instanceof Editor)) {
+      throw new IllegalArgumentException(
+          "Cannot use CompletionItem on an editor that does not implement"
+              + " com.tyron.editor.Editor");
+    }
+
+    Editor rawEditor = ((Editor) editor);
+    if (rawEditor == null) {
+      throw new RuntimeException("Editor is null, cannot handle insert");
+    }
+    handleInsert(rawEditor);
   }
 }

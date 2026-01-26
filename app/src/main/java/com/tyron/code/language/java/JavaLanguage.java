@@ -179,7 +179,7 @@ public class JavaLanguage extends EmptyTextMateLanguage
 
     publisher.setUpdateThreshold(0);
     publisher.addItems(
-        list.getItems().stream().map(CompletionItemWrapper::new).collect(Collectors.toList()));
+        list.getItems()/*.stream().map(CompletionItemWrapper::new).collect(Collectors.toList())*/);
   }
 
   @Override

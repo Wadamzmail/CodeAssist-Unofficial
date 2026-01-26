@@ -111,7 +111,7 @@ public class ApplicationLoader extends Application {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    Prefs.init(getDefaultPreferences());
+    Prefs.init(applicationContext,getDefaultPreferences());
     runStartup();
   }
 

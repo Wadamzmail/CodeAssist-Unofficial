@@ -125,7 +125,7 @@ private fun indexCompletionItems(
                     Symbol.Kind.FIELD -> DrawableKind.Field
                     else -> DrawableKind.Method
                 }
-                detail = "(import from ${it.fqName.parent()})"
+                desc = "(import from ${it.fqName.parent()})"
 //                val pos = findImportInsertionPosition(parsedFile, it.fqName)
 //                val prefix = if (importNames.isEmpty()) "\n\n" else "\n"
 //                additionalTextEdits =
@@ -260,12 +260,12 @@ private fun completionItem(
     //            && surroundingElement !is KtImportDirective
     val result = d.accept(RenderCompletionItem(renderWithSnippets), null)
 
-    result.label = methodSignature.find(result.detail)?.groupValues?.get(1) ?: result.label
+    result.label = methodSignature.find(result.desc)?.groupValues?.get(1) ?: result.label
 
     if (isNotStaticJavaMethod(d) && (isGetter(d) || isSetter(d))) {
         val name = extractPropertyName(d)
 
-        result.detail += " (from ${result.label})"
+        result.desc += " (from ${result.label})"
         result.label = name
         result.commitText = name
         //  result.filterText = name

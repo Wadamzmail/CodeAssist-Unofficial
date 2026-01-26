@@ -84,7 +84,7 @@ public class AndroidXmlTagUtils {
         commitPrefix = "</";
       }
       item.label = tag;
-      item.detail = "TAG";
+      item.desc = "TAG";
       item.iconKind = DrawableKind.Class;
       item.commitText = commitPrefix + tag;
       item.cursorOffset = item.commitText.length();
@@ -113,7 +113,7 @@ public class AndroidXmlTagUtils {
       }
       String simpleName = StyleUtils.getSimpleName(entry.getKey());
       item.label = simpleName;
-      item.detail = entry.getValue().getPackageName();
+      item.desc = entry.getValue().getPackageName();
       item.iconKind = DrawableKind.Class;
       item.commitText =
           commitPrefix
@@ -149,7 +149,7 @@ public class AndroidXmlTagUtils {
       }
       String simpleName = StyleUtils.getSimpleName(entry.getKey());
       item.label = simpleName;
-      item.detail = entry.getValue().getPackageName();
+      item.desc = entry.getValue().getPackageName();
       item.iconKind = DrawableKind.Class;
       item.commitText =
           commitPrefix
@@ -188,7 +188,7 @@ public class AndroidXmlTagUtils {
       }
       String simpleName = StyleUtils.getSimpleName(entry.getKey());
       item.label = simpleName;
-      item.detail = entry.getValue().getPackageName();
+      item.desc = entry.getValue().getPackageName();
       item.iconKind = DrawableKind.Class;
       item.commitText =
           commitPrefix

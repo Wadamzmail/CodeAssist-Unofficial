@@ -62,7 +62,7 @@ public class RenderCompletionItem implements DeclarationDescriptorVisitor<Comple
   private void setDefaults(DeclarationDescriptor d) {
     result.label = label(d);
     result.commitText = escape(label(d));
-    result.detail = DECL_RENDERER.render(d);
+    result.desc = DECL_RENDERER.render(d);
   }
 
   private String functionInsertText(FunctionDescriptor d) {

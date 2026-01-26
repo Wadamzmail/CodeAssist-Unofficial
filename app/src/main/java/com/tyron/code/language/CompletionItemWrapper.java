@@ -12,7 +12,7 @@ public class CompletionItemWrapper extends CompletionItem {
   private final com.tyron.completion.model.CompletionItem item;
 
   public CompletionItemWrapper(com.tyron.completion.model.CompletionItem item) {
-    super(item.label, item.detail, new CircleDrawable(item.iconKind));
+    super(item.label, item.desc, new CircleDrawable(item.iconKind));
     this.item = item;
   }
 
