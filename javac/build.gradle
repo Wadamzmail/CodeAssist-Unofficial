@@ -16,6 +16,7 @@ dependencies {
     api files('libs/nb-javac-17.0.0.0-api.jar')
     api files('libs/nb-javac-17.0.0.0.jar')
     api files('libs/jrt-fs.jar')
+    api files('libs/jmx-1.2.1.jar') 
 }
 
 spotless {
