@@ -128,7 +128,7 @@ public class CompletionEngine {
             cachedList.items.stream()
                 .filter(
                     item -> {
-                      String label = item.label;
+                      String label = item.label.toString();
                       if (label.contains("(")) {
                         label = label.substring(0, label.indexOf('('));
                       }
