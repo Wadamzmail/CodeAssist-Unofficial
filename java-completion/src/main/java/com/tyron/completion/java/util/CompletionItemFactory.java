@@ -117,7 +117,7 @@ public class CompletionItemFactory {
     SnippetCompletionItem item = new SnippetCompletionItem(
        snippet.getPrefix(),
        snippet.getDescription(),
-       new SnippetDescription(prefix.length(), cs, true));
+       new SnippetDescription(snippet.getPrefix().length(), cs, true));
     item.setSortText(snippet.getPrefix());
     return item;
   }

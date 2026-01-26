@@ -23,7 +23,7 @@ public class CustomActions {
     item.label = "Override methods";
     item.commitText = "";
     item.cursorOffset = 0;
-    item.detail = "";
+    item.desc = "";
     list.items.add(0, item);
   }
 }
