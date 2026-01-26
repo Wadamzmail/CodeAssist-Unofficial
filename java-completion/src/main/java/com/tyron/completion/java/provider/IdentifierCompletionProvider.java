@@ -37,8 +37,11 @@ public class IdentifierCompletionProvider extends BaseCompletionProvider {
     SharedPreferences preferences =
         PreferenceManager.getDefaultSharedPreferences(ApplicationProvider.getApplicationContext());
     boolean caseSensitiveMatch =
-        !preferences.getBoolean(SharedPreferenceKeys.JAVA_CASE_INSENSITIVE_MATCH, false);
+        !preferences.getBoolean(SharedPreferenceKeys.JAVA_CASE_INSENSITIVE_MATCH, false); 
 
+    new SnippetCompletionProvider(null)
+        .complete(builder,task, path, partial, endsWithParen)
+    
     ScopeCompletionProvider.addCompletionItems(task, path, partial, endsWithParen, builder);
     addStaticImports(task, path.getCompilationUnit(), partial, endsWithParen, builder);
     if (!builder.isIncomplete()) {

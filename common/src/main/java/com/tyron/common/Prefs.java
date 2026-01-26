@@ -2,15 +2,16 @@ package com.tyron.common;
 
 import android.content.SharedPreferences;
 import android.content.Context;
+import android.app.Application;
 
 public class Prefs {
   private static volatile SharedPreferences prefs;
-  private static Context ctx;
+  private static Application application;
 
   private Prefs() {}
 
-  public static void init(Context context,SharedPreferences preferences) {
-    ctx = context;
+  public static void init(Application app,SharedPreferences preferences) {
+    application = app;
     prefs = preferences;
   }
 
@@ -21,7 +22,11 @@ public class Prefs {
     return prefs;
   }
   
+  public static Application getApplication(){
+    return application;
+  }
+  
   public static Context getContext(){
-     return ctx;
+     return application.getApplicationContext();
   }
 }

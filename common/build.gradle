@@ -18,7 +18,8 @@ dependencies {
     api ('net.lingala.zip4j:zip4j:2.11.5')
     api ('org.antlr:antlr4-runtime:4.13.2')
     api ('org.apache.commons:commons-vfs2:2.9.0')
-    api ('org.slf4j:slf4j-api:2.0.16') 
+    api ('org.slf4j:slf4j-api:2.0.16')
+    implementation ("com.blankj:utilcodex:1.31.1")
     compileOnly project(path: ':android-stubs')
 	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
 }

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
 }
+apply plugin: 'kotlin-android'
 apply plugin: 'com.diffplug.spotless'
 
 android {
@@ -26,6 +27,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_17 
         targetCompatibility JavaVersion.VERSION_17 
     }
+    
+    kotlinOptions {
+        jvmTarget = '17'
+    }
      
     buildFeatures {
         buildConfig = true	    
@@ -40,9 +45,9 @@ dependencies {
     implementation project(path: ':editor-api')
     implementation project(path: ':common')
     implementation project(path: ':language-api')
-    implementation project(path: ':code-editor') 
+    api ('io.github.rosemoe:editor:0.24.4')
     
-    implementation("org.checkerframework:checker-qual:3.50.0") 
+    implementation ("org.checkerframework:checker-qual:3.50.0") 
 }
 
 spotless {

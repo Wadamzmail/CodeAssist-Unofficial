@@ -8,18 +8,26 @@ import com.tyron.builder.project.Project;
 import dev.mutwakil.javac.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import com.tyron.completion.CompletionParameters;
 
 public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider {
 
   private final JavacTaskImpl task;
   private final CompilationUnitTree root;
   private final Project project;
+  private CompletionParameters parameters;
 
   public DefaultJavacUtilitiesProvider(
       JavacTaskImpl task, CompilationUnitTree root, Project project) {
+    this(task,root,project,null);
+  }
+  
+  public DefaultJavacUtilitiesProvider(
+      JavacTaskImpl task, CompilationUnitTree root, Project project, CompletionParameters parameters) {
     this.task = task;
     this.root = root;
     this.project = project;
+    this.parameters = parameters;
   }
 
   @Override
@@ -55,5 +63,10 @@ public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider {
   @Override
   public Project getProject() {
     return project;
+  }
+  
+  @Override 
+  public CompletionParameters getParameters(){
+    return parameters;
   }
 }

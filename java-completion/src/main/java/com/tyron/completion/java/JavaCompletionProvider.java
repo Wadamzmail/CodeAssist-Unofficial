@@ -109,7 +109,7 @@ public class JavaCompletionProvider extends CompletionProvider {
       return null;
     }
     JavacUtilitiesProvider javacUtilities =
-        new DefaultJavacUtilitiesProvider(javacTask, unit, parameters.getProject());
+        new DefaultJavacUtilitiesProvider(javacTask, unit, parameters.getProject(),parameters);
     TreePath scanned = new FindCurrentPath(javacTask).scan(unit, parameters.getIndex());
     if (scanned == null || scanned.getLeaf() == null) {
       return null;

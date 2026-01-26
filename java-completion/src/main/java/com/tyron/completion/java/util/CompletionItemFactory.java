@@ -12,6 +12,7 @@ import com.tyron.completion.java.insert.MethodInsertHandler;
 import com.tyron.completion.java.provider.JavaSortCategory;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.model.CompletionItem;
+import com.tyron.completion.model.SnippetCompletionItem;
 import com.tyron.completion.model.DrawableKind;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,6 +31,10 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiNamedElement;
 import org.jetbrains.kotlin.com.intellij.psi.PsiParameter;
 import org.jetbrains.kotlin.com.intellij.psi.PsiParameterList;
 import org.jetbrains.kotlin.com.intellij.psi.PsiType;
+import io.github.rosemoe.sora.lang.completion.SnippetDescription;
+import io.github.rosemoe.sora.lang.completion.snippet.CodeSnippet;
+import com.tyron.completion.snippets.ISnippet;
+import io.github.rosemoe.sora.lang.completion.snippet.parser.CodeSnippetParser;
 
 public class CompletionItemFactory {
 
@@ -102,6 +107,18 @@ public class CompletionItemFactory {
     item.cursorOffset = item.commitText.length();
     item.desc = "Snippet";
     item.iconKind = DrawableKind.Snippet;
+    return item;
+  }
+  
+  public static SnippetCompletionItem snippetItem(ISnippet snippet) {
+    String body = String.join("\n", snippet.getBody());
+    CodeSnippet cs = CodeSnippetParser.parse(body);
+    
+    SnippetCompletionItem item = new SnippetCompletionItem(
+       snippet.getPrefix(),
+       snippet.getDescription(),
+       new SnippetDescription(prefix.length(), cs, true));
+    item.setSortText(snippet.getPrefix());
     return item;
   }
 
