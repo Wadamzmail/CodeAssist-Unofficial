@@ -40,7 +40,7 @@ public class IdentifierCompletionProvider extends BaseCompletionProvider {
         !preferences.getBoolean(SharedPreferenceKeys.JAVA_CASE_INSENSITIVE_MATCH, false); 
 
     new SnippetCompletionProvider(null)
-        .complete(builder,task, path, partial, endsWithParen)
+        .complete(builder,task, path, partial, endsWithParen);
     
     ScopeCompletionProvider.addCompletionItems(task, path, partial, endsWithParen, builder);
     addStaticImports(task, path.getCompilationUnit(), partial, endsWithParen, builder);
