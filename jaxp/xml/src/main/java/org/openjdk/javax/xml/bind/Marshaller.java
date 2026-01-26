@@ -356,7 +356,7 @@ public interface Marshaller {
    *     element</a>.
    * @throws IllegalArgumentException If any of the method parameters are null
    */
-  public void marshal(Object jaxbElement, javax.xml.transform.Result result) throws JAXBException;
+  public void marshal(Object jaxbElement, org.openjdk.javax.xml.transform.Result result) throws JAXBException;
 
   /**
    * Marshal the content tree rooted at {@code jaxbElement} into an output stream.
@@ -451,7 +451,7 @@ public interface Marshaller {
    * @throws IllegalArgumentException If any of the method parameters are null
    * @since 1.6, JAXB 2.0
    */
-  public void marshal(Object jaxbElement, javax.xml.stream.XMLStreamWriter writer)
+  public void marshal(Object jaxbElement, org.openjdk.javax.xml.stream.XMLStreamWriter writer)
       throws JAXBException;
 
   /**
@@ -469,7 +469,7 @@ public interface Marshaller {
    * @throws IllegalArgumentException If any of the method parameters are null
    * @since 1.6, JAXB 2.0
    */
-  public void marshal(Object jaxbElement, javax.xml.stream.XMLEventWriter writer)
+  public void marshal(Object jaxbElement, org.openjdk.javax.xml.stream.XMLEventWriter writer)
       throws JAXBException;
 
   /**

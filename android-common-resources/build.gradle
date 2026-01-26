@@ -56,6 +56,7 @@ dependencies {
     implementation project(path: ':common')
     implementation project(path: ':jaxp:jaxp-internal')
     implementation project(path: ':jaxp:xml')
+    implementation project(path: ':java-stubs')
     implementation files('libs\\compilerCommon.antlr.shaded_jar.jar')
     implementation files('libs\\compilerCommon.antlr_runtime.shaded_jar.jar')
 }

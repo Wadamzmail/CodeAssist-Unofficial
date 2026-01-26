@@ -575,7 +575,7 @@ public interface Unmarshaller {
    * @throws IllegalArgumentException If the Source parameter is null
    * @see #unmarshal(javax.xml.transform.Source, Class)
    */
-  public Object unmarshal(javax.xml.transform.Source source) throws JAXBException;
+  public Object unmarshal(org.openjdk.javax.xml.transform.Source source) throws JAXBException;
 
   /**
    * Unmarshal XML data from the specified XML Source by {@code declaredType} and return the
@@ -602,7 +602,7 @@ public interface Unmarshaller {
    * @throws IllegalArgumentException If any parameter is null
    * @since 1.6, JAXB 2.0
    */
-  public <T> JAXBElement<T> unmarshal(javax.xml.transform.Source source, Class<T> declaredType)
+  public <T> JAXBElement<T> unmarshal(org.openjdk.javax.xml.transform.Source source, Class<T> declaredType)
       throws JAXBException;
 
   /**
@@ -629,7 +629,7 @@ public interface Unmarshaller {
    * @since 1.6, JAXB 2.0
    * @see #unmarshal(javax.xml.stream.XMLStreamReader, Class)
    */
-  public Object unmarshal(javax.xml.stream.XMLStreamReader reader) throws JAXBException;
+  public Object unmarshal(org.openjdk.javax.xml.stream.XMLStreamReader reader) throws JAXBException;
 
   /**
    * Unmarshal root element to JAXB mapped {@code declaredType} and return the resulting content
@@ -659,7 +659,7 @@ public interface Unmarshaller {
    * @since 1.6, JAXB 2.0
    */
   public <T> JAXBElement<T> unmarshal(
-      javax.xml.stream.XMLStreamReader reader, Class<T> declaredType) throws JAXBException;
+      org.openjdk.javax.xml.stream.XMLStreamReader reader, Class<T> declaredType) throws JAXBException;
 
   /**
    * Unmarshal XML data from the specified pull parser and return the resulting content tree.
@@ -686,7 +686,7 @@ public interface Unmarshaller {
    * @since 1.6, JAXB 2.0
    * @see #unmarshal(javax.xml.stream.XMLEventReader, Class)
    */
-  public Object unmarshal(javax.xml.stream.XMLEventReader reader) throws JAXBException;
+  public Object unmarshal(org.openjdk.javax.xml.stream.XMLEventReader reader) throws JAXBException;
 
   /**
    * Unmarshal root element to JAXB mapped {@code declaredType} and return the resulting content
@@ -715,7 +715,7 @@ public interface Unmarshaller {
    * @throws IllegalArgumentException If any parameter is null
    * @since 1.6, JAXB 2.0
    */
-  public <T> JAXBElement<T> unmarshal(javax.xml.stream.XMLEventReader reader, Class<T> declaredType)
+  public <T> JAXBElement<T> unmarshal(org.openjdk.javax.xml.stream.XMLEventReader reader, Class<T> declaredType)
       throws JAXBException;
 
   /**
@@ -843,7 +843,7 @@ public interface Unmarshaller {
    *     Unmarshaller created from a JAXBContext referencing JAXB 1.0 mapped classes
    * @since 1.6, JAXB 2.0
    */
-  public void setSchema(javax.xml.validation.Schema schema);
+  public void setSchema(org.openjdk.javax.xml.validation.Schema schema);
 
   /**
    * Get the JAXP 1.3 {@link javax.xml.validation.Schema Schema} object being used to perform
@@ -864,7 +864,7 @@ public interface Unmarshaller {
    *     Unmarshaller created from a JAXBContext referencing JAXB 1.0 mapped classes
    * @since 1.6, JAXB 2.0
    */
-  public javax.xml.validation.Schema getSchema();
+  public org.openjdk.javax.xml.validation.Schema getSchema();
 
   /**
    * Associates a configured instance of {@link XmlAdapter} with this unmarshaller.
