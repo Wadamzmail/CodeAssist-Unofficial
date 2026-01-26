@@ -8,7 +8,7 @@ import io.github.rosemoe.sora.text.CharPosition;
 import io.github.rosemoe.sora.text.Content;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.lang.completion.SnippetDescription;
-import io.github.rosemoe.sora.lang.completion.CompletionItem.CompletionItemKind;
+import io.github.rosemoe.sora.lang.completion.CompletionItemKind;
 
 public class SnippetCompletionItem extends CompletionItem {
 

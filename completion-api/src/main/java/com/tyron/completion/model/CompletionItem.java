@@ -67,12 +67,10 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
     this.sortText = "";
   }
 
-  @Override
   public void setSortText(String sortText) {
     super.sortText = sortText;
   }
 
-  @Override
   public String getSortText() {
     return super.sortText;
   }
