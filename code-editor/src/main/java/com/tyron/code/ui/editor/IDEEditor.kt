@@ -48,7 +48,9 @@ abstract class IDEEditor @JvmOverloads constructor(
   protected var _signatureHelpWindow: SignatureHelpWindow? = null
   protected var _diagnosticWindow: DiagnosticWindow? = null
   private var sigHelpCancelChecker: ICancelChecker? = null
-  protected var mCurrentFile: File? = null
+  
+  @Suppress("PropertyName")
+  var mCurrentFile: File? = null
   
    /**
    * The [CoroutineScope] for the editor.
@@ -98,7 +100,7 @@ abstract class IDEEditor @JvmOverloads constructor(
     if (isReleased) {
       return
     }
-    
+    val file = this.file ?: return
     sigHelpCancelChecker?.also { it.cancel() }
 
     val cancelChecker = JobCancelChecker().also {
@@ -109,7 +111,7 @@ abstract class IDEEditor @JvmOverloads constructor(
       cancelChecker.job = coroutineContext[Job]
 
       val help = safeGet("signature help request") {
-        val params = SignatureHelpParams(mCurrentFile?.toPath(), cursorLSPPosition, cancelChecker)
+        val params = SignatureHelpParams(file.toPath(), cursorLSPPosition, cancelChecker)
         getSignatureHelp(params)
       }
 
