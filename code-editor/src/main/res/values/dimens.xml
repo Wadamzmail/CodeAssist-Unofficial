@@ -23,4 +23,6 @@
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
 
 <resources>
+  <dimen name="completion_window_corner_radius">8dp</dimen>
+  <dimen name="completion_window_stroke_width">1dp</dimen>
 </resources>

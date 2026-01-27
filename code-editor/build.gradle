@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
 }
+apply plugin: 'kotlin-android'
 apply plugin: 'com.diffplug.spotless'
 
 android {
@@ -45,16 +46,12 @@ configurations.implementation {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.7.1'
-    implementation 'com.google.android.material:material:1.13.0'
-    implementation 'androidx.recyclerview:recyclerview:1.4.0'
-
     implementation project(path: ':completion-api')
     implementation project(path: ':java-completion')
     implementation project(path: ':common')
     implementation project(':resources')
+    implementation project(':logging') 
     
-    implementation("org.checkerframework:checker-qual:3.50.0")
  	api ('io.github.rosemoe:editor:0.24.4')
     api ('io.github.rosemoe:language-textmate:0.24.4') 
 }

@@ -54,10 +54,13 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import com.tyron.code.ui.editor.IDEEditor;
+import com.tyron.completion.model.signatures.SignatureHelp;
+import com.tyron.completion.model.signatures.SignatureHelpParams;
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
-public class CodeEditorView extends CodeEditor implements Editor {
+public class CodeEditorView extends IDEEditor implements Editor {
 
   private final Set<Character> IGNORED_PAIR_ENDS =
       ImmutableSet.<Character>builder()
@@ -74,7 +77,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   private List<DiagnosticWrapper> mDiagnostics;
   private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
   private boolean mStopConv = false;
-  private File mCurrentFile;
+  //private File mCurrentFile;
   private EditorViewModel mViewModel;
 
   private final Paint mDiagnosticPaint;
@@ -106,6 +109,16 @@ public class CodeEditorView extends CodeEditor implements Editor {
   public Project getProject() {
     return ProjectManager.getInstance().getCurrentProject();
   }
+  
+  @Override 
+  protected SignatureHelp getSignatureHelp(SignatureHelpParams params){
+    return null;
+  }
+  
+  @Override 
+  protected void onSelectionChange(){
+  
+  }
 
   @Override
   public void setEditorLanguage(@Nullable Language lang) {
@@ -129,6 +142,7 @@ public class CodeEditorView extends CodeEditor implements Editor {
   }
 
   private void init() {
+    super.init();
     mCompletionWindow = new CodeAssistCompletionWindow(this);
     mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
     replaceComponent(EditorAutoCompletion.class, mCompletionWindow);
