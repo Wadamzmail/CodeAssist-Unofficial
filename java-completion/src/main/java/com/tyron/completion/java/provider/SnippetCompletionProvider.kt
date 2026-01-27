@@ -21,7 +21,7 @@ import com.tyron.completion.java.compiler.JavaCompilerService
 import com.tyron.completion.java.provider.snippet.JavaSnippetRepository
 import com.tyron.completion.java.provider.snippet.JavaSnippetScope
 import com.tyron.completion.java.util.CompletionItemFactory.snippetItem
-import com.tyron.completion.snippets.ISnippet
+import com.tyron.completion.model.snippets.ISnippet
 import io.github.rosemoe.sora.text.TextUtils
 import com.sun.source.tree.ClassTree
 import com.sun.source.tree.CompilationUnitTree

@@ -52,6 +52,7 @@ dependencies {
     implementation project(path: ':completion-api')
     implementation project(path: ':java-completion')
     implementation project(path: ':common')
+    implementation project(':resources')
     
     implementation("org.checkerframework:checker-qual:3.50.0")
  	api ('io.github.rosemoe:editor:0.24.4')

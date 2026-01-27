@@ -17,8 +17,8 @@
 
 package com.tyron.completion.java.provider.snippet
 
-import com.tyron.completion.snippets.ISnippet
-import com.tyron.completion.snippets.SnippetParser
+import com.tyron.completion.model.snippets.ISnippet
+import com.tyron.completion.model.snippets.SnippetParser
 
 /**
  * Repository to store various snippets for Java.

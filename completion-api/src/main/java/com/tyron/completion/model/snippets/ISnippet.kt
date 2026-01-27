@@ -15,29 +15,24 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.tyron.completion.java.provider.snippet
-
-import com.tyron.completion.model.snippets.ISnippetScope
+package com.tyron.completion.model.snippets
 
 /**
- * Scope for [JavaSnippet].
+ * A snippet item.
  *
  * @author Akash Yadav
  */
-enum class JavaSnippetScope(override val filename: String) : ISnippetScope {
+interface ISnippet {
+
+  /** The prefix for the snippet. */
+  val prefix: String
+
+  /** A short description about the snippet. */
+  val description: String
 
   /**
-   * Snippets that can be used at the top level. This includes snippes such as class, interface,
-   * enum templates.
+   * The snippet body. Each element in this array represents a line of code. The lines are joined
+   * and indented before inserting the text.
    */
-  TOP_LEVEL("top-level"),
-
-  /** Snippets that can be used at the member level i.e. inside a class tree. */
-  MEMBER("member"),
-
-  /** Snippets that can be used at a local level. E.g. inside a method or constructor. */
-  LOCAL("local"),
-
-  /** Snippets that can be used anywhere in the code, irrespective of the current scope. */
-  GLOBAL("global")
+  val body: Array<String>
 }

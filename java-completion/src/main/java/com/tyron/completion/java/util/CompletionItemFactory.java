@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.com.intellij.psi.PsiParameterList;
 import org.jetbrains.kotlin.com.intellij.psi.PsiType;
 import io.github.rosemoe.sora.lang.completion.SnippetDescription;
 import io.github.rosemoe.sora.lang.completion.snippet.CodeSnippet;
-import com.tyron.completion.snippets.ISnippet;
+import com.tyron.completion.model.snippets.ISnippet;
 import io.github.rosemoe.sora.lang.completion.snippet.parser.CodeSnippetParser;
 
 public class CompletionItemFactory {
