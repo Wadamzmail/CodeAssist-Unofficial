@@ -50,7 +50,7 @@ abstract class IDEEditor @JvmOverloads constructor(
   private var sigHelpCancelChecker: ICancelChecker? = null
   
   @Suppress("PropertyName")
-  var mCurrentFile: File? = null
+  open var mCurrentFile: File? = null
   
    /**
    * The [CoroutineScope] for the editor.
@@ -80,6 +80,7 @@ abstract class IDEEditor @JvmOverloads constructor(
   init {
     run {
       editorFeatures.editor = this
+      initEditor()
     }
   }
   
@@ -167,7 +168,7 @@ abstract class IDEEditor @JvmOverloads constructor(
   /**
    * Initialize the editor.
    */
-  protected open fun init() {
+  protected open fun initEditor() {
   
      DiagnosticWindow(this).also { _diagnosticWindow = it }
      SignatureHelpWindow(this).also { _signatureHelpWindow = it }

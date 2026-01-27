@@ -142,7 +142,6 @@ public class CodeEditorView extends IDEEditor implements Editor {
   }
 
   private void init() {
-    super.init();
     mCompletionWindow = new CodeAssistCompletionWindow(this);
     mCompletionWindow.setAdapter(new CodeAssistCompletionAdapter());
     replaceComponent(EditorAutoCompletion.class, mCompletionWindow);
