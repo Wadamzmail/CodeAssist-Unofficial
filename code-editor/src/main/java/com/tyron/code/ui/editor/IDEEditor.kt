@@ -49,8 +49,8 @@ abstract class IDEEditor @JvmOverloads constructor(
   protected var _diagnosticWindow: DiagnosticWindow? = null
   private var sigHelpCancelChecker: ICancelChecker? = null
   
-  @Suppress("PropertyName")
-  open var mCurrentFile: File? = null
+  @JvmField 
+  var mCurrentFile: File? = null
   
    /**
    * The [CoroutineScope] for the editor.
