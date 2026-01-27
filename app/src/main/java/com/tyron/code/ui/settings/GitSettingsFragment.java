@@ -13,7 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialSharedAxis;
 import com.tyron.common.SharedPreferenceKeys;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import dev.mutwakil.codeassist.databinding.BaseTextinputLayoutBinding;
 
 public class GitSettingsFragment extends PreferenceFragmentCompat {

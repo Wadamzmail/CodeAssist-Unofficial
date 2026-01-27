@@ -23,7 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.util.SingleTextWatcher;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;

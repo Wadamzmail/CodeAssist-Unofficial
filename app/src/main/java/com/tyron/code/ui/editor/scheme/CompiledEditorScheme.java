@@ -7,7 +7,7 @@ import android.util.TypedValue;
 import androidx.annotation.StyleableRes;
 import com.google.android.material.color.MaterialColors;
 import com.google.common.collect.ImmutableMap;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 import java.util.Map;
 

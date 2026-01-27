@@ -8,7 +8,7 @@ import com.tyron.code.ui.main.MainViewModel;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorManager;
 import com.tyron.fileeditor.api.FileEditorProvider;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.util.Arrays;
 import java.util.function.Consumer;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.tyron.code.ui.layoutEditor.model.EditorDragState;
 import com.tyron.code.ui.layoutEditor.model.ViewPalette;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

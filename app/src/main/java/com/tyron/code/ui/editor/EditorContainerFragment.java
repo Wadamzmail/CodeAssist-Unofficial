@@ -39,7 +39,7 @@ import com.tyron.common.util.UniqueNameBuilder;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorManager;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;

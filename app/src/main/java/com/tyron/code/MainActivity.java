@@ -20,7 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import com.tyron.code.ui.main.HomeFragment;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 
 public class MainActivity extends AppCompatActivity {
 

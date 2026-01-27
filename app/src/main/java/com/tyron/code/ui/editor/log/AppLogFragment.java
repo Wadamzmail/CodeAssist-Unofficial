@@ -43,7 +43,7 @@ import com.tyron.code.util.ApkInstaller;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.editor.Caret;
 import com.tyron.fileeditor.api.FileEditorManager;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora2.text.EditorUtil;
 import java.io.File;

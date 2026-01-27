@@ -30,7 +30,7 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.editor.Caret;
 import com.tyron.editor.Editor;
 import com.tyron.fileeditor.api.FileEditor;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

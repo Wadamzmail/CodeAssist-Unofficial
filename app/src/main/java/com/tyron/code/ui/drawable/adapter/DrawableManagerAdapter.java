@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.ui.drawable.Drawables;
 import com.tyron.code.ui.drawable.VectorDrawableCreator;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;

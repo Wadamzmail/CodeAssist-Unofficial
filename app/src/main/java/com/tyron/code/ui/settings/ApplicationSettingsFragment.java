@@ -11,7 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.transition.MaterialSharedAxis;
 import com.tyron.common.SharedPreferenceKeys;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 
 public class ApplicationSettingsFragment extends PreferenceFragmentCompat {
 

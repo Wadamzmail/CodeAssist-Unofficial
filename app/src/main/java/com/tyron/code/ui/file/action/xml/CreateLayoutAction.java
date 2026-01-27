@@ -18,7 +18,7 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.code.util.ProjectUtils;
 import com.tyron.ui.treeview.TreeNode;
 import com.tyron.ui.treeview.TreeView;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;

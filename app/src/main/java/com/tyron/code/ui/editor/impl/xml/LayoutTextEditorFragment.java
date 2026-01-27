@@ -12,7 +12,7 @@ import com.tyron.builder.compiler.manifest.xml.XmlPrettyPrinter;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
 import com.tyron.code.ui.layoutEditor.LayoutEditorFragment;
 import com.tyron.code.util.ProjectUtils;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 
 /** A {@link CodeEditorFragment} that supports editing layout files */

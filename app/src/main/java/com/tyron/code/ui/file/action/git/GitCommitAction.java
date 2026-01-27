@@ -7,7 +7,7 @@ import com.tyron.actions.CommonDataKeys;
 import com.tyron.builder.project.Project;
 import com.tyron.code.tasks.git.GitCommitTask;
 import com.tyron.code.ui.file.action.FileAction;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 
 public class GitCommitAction extends FileAction {

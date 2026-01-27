@@ -11,7 +11,7 @@ import com.tyron.actions.Presentation;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.editor.Caret;
 import com.tyron.editor.Editor;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 
 public class CopyAction extends AnAction {
 

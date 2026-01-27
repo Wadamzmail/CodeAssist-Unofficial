@@ -12,7 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.transition.platform.MaterialSharedAxis
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.io.FileUtils
-import dev.mutwakil.codeassist.R
+import com.tyron.resources.R
 import dev.mutwakil.codeassist.databinding.FragmentProgressSheetDialogBinding
 import com.tyron.code.util.TaskExecutor.executeAsyncProvideError
 import java.io.File

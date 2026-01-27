@@ -48,7 +48,7 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.common.util.Decompress;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

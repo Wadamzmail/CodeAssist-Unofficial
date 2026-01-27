@@ -22,7 +22,7 @@ import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.xml.task.InjectResourcesTask;
 import com.tyron.ui.treeview.TreeNode;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.IOException;
 

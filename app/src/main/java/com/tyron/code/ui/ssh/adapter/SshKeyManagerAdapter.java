@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.tyron.code.ui.ssh.SshKeys;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -15,7 +15,7 @@ import com.deenu143.gradle.utils.GradleUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

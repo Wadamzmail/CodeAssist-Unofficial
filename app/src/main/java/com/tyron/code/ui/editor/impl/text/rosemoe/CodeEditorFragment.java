@@ -68,7 +68,7 @@ import com.tyron.completion.progress.ProgressManager;
 import com.tyron.diagnostics.DiagnosticProvider;
 import com.tyron.editor.CharPosition;
 import com.tyron.language.api.CodeAssistLanguage;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import io.github.rosemoe.sora.event.ClickEvent;
 import io.github.rosemoe.sora.event.ContentChangeEvent;
 import io.github.rosemoe.sora.event.EditorKeyEvent;

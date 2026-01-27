@@ -55,7 +55,7 @@ import com.tyron.completion.java.provider.CompletionEngine;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.fileeditor.api.FileEditor;
 import com.tyron.fileeditor.api.FileEditorSavedState;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;

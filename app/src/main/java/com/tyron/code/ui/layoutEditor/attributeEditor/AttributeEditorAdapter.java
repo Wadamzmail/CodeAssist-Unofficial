@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.util.ArrayList;
 import java.util.List;
 import kotlin.Pair;

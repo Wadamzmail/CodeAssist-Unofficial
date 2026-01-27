@@ -18,7 +18,7 @@ import com.tyron.code.template.CodeTemplate;
 import com.tyron.code.template.java.JavaClassTemplate;
 import com.tyron.code.ui.file.RegexReason;
 import com.tyron.common.util.SingleTextWatcher;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

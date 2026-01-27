@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.file.FileManagerAdapter;
 import com.tyron.code.ui.main.MainFragment;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.util.Objects;
 

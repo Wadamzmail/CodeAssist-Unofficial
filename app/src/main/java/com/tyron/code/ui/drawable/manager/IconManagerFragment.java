@@ -25,7 +25,7 @@ import com.tyron.code.ui.drawable.Icons;
 import com.tyron.code.ui.drawable.adapter.IconManagerAdapter;
 import com.tyron.common.util.Decompress;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;

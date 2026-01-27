@@ -21,7 +21,7 @@ import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.ui.treeview.TreeNode;
 import com.tyron.ui.treeview.TreeView;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 
 public class CreateDirectoryAction extends FileAction {

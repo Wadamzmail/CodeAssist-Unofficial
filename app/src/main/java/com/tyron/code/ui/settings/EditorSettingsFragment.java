@@ -23,7 +23,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import io.github.rosemoe.sora.langs.textmate.TextMateColorScheme;
 import io.github.rosemoe.sora.langs.textmate.registry.FileProviderRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;

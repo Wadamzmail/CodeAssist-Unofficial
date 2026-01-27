@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.util.Objects;
 

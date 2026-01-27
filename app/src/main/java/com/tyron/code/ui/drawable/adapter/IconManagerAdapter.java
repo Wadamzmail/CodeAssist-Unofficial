@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.caverock.androidsvg.SVG;
 import com.caverock.androidsvg.SVGParseException;
 import com.tyron.code.ui.drawable.Icons;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

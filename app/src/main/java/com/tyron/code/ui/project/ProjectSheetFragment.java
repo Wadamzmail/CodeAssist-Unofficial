@@ -35,7 +35,7 @@ import com.tyron.code.ui.project.adapter.ProjectManagerAdapter;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
