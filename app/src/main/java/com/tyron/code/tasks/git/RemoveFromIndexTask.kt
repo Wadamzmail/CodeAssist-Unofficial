@@ -7,7 +7,7 @@ import org.eclipse.jgit.api.Git
 import com.blankj.utilcode.util.ThreadUtils
 import com.tyron.code.util.executeAsyncProvideError
 import android.widget.Toast
-import dev.mutwakil.codeassist.R
+import com.tyron.resources.R
 import com.tyron.code.tasks.git.ErrorOutput
 
 object RemoveFromIndexTask {

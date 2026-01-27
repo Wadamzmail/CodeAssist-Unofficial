@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.ThreadUtils
 import com.tyron.code.util.executeAsyncProvideError
 import android.widget.Toast
 import com.tyron.code.ApplicationLoader
-import dev.mutwakil.codeassist.R
+import com.tyron.resources.R
 import com.tyron.code.tasks.git.ErrorOutput
     
 object GitAddAllToStageTask {

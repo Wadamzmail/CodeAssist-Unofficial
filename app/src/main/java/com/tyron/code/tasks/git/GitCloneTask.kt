@@ -4,7 +4,7 @@ import android.os.Build
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import dev.mutwakil.codeassist.R
+import com.tyron.resources.R
 import dev.mutwakil.codeassist.databinding.BaseTextinputLayoutBinding
 import dev.mutwakil.codeassist.databinding.LayoutDialogProgressBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

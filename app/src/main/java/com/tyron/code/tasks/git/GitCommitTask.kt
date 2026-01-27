@@ -6,7 +6,7 @@ import com.tyron.code.tasks.git.ErrorOutput
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import dev.mutwakil.codeassist.R
+import com.tyron.resources.R
 import java.io.File
 import dev.mutwakil.codeassist.databinding.BaseTextinputLayoutBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
