@@ -49,7 +49,7 @@ dependencies {
     api ('org.slf4j:slf4j-api:2.0.16')
     api ("com.blankj:utilcodex:1.31.1")
     api ("org.checkerframework:checker-qual:3.50.0")
-    api ('org.jetbrains.kotlinx:kotlinx-coroutines-android:2.3.0')
+    api ('org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2')
     compileOnly project(path: ':android-stubs')
 	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
 }
