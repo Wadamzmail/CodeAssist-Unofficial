@@ -16,7 +16,7 @@ import com.tyron.builder.project.Project;
 import com.tyron.code.ui.drawable.manager.IconManagerFragment;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 
 public class IconManagerAction extends AnAction {
 

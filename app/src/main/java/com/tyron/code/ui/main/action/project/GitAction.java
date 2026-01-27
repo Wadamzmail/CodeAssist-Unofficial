@@ -11,7 +11,7 @@ import com.tyron.builder.project.Project;
 import com.tyron.code.tasks.git.GitTask;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;
-import dev.mutwakil.codeassist.R;
+import com.tyron.resources.R;
 
 public class GitAction extends AnAction {
 
