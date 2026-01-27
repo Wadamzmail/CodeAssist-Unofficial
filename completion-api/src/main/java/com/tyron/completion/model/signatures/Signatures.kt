@@ -18,7 +18,7 @@
 package com.tyron.completion.model.signatures
 
 import com.tyron.completion.model.CancellableRequestParams
-import com.tyron.completion.model.Position
+import com.tyron.completion.model.location.Position
 import com.tyron.common.progress.ICancelChecker
 import java.nio.file.Path
 import java.util.*

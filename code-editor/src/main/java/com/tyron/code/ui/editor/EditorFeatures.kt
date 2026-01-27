@@ -18,8 +18,8 @@
 package com.tyron.code.ui.editor
 
 import com.tyron.code.ui.editor.IDEEditor.Companion.log
-import com.tyron.completion.model.Position
-import com.tyron.completion.model.Range
+import com.tyron.completion.model.location.Position
+import com.tyron.completion.model.location.Range
 import io.github.rosemoe.sora.widget.SelectionMovement
 import java.io.File
 

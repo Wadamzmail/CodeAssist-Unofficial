@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.tyron.completion.model
+package com.tyron.completion.model.location
 
 import com.google.gson.annotations.SerializedName
 import java.nio.file.Path
