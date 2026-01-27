@@ -32,7 +32,7 @@ class EditorFeatures(
   var editor: IDEEditor? = null
 ) : IEditor {
 
-  override fun getFile(): File? = withEditor { _file }
+  override fun getFile(): File? = withEditor { mCurrentFile }
 
   override fun isModified(): Boolean = withEditor { this.isModified } ?: false
 

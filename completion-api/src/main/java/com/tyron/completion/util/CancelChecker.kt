@@ -14,31 +14,26 @@
  *  You should have received a copy of the GNU General Public License
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.tyron.code.ui.editor
 
-//import com.tyron.builder.model.DiagnosticWrapper
-import java.util.Locale
+package com.tyron.completion.util
 
-/**
- * Popup window used to show diagnostic messages.
- *
- * @author Akash Yadav
- */
-class DiagnosticWindow(editor: IDEEditor) : BaseEditorWindow(editor) {
-  /**
-   * Show the given diagnostic item.
-   *
-   * @param diagnostic The diagnostic item to show.
-   */
-  fun showDiagnostic(diagnostic: String?) {
-    if (diagnostic == null) {
-      if (isShowing) {
-        dismiss()
+import com.tyron.completion.CancelAbort
+import java.util.concurrent.CancellationException
+
+/** @author Akash Yadav */
+class CancelChecker {
+
+  companion object {
+
+    @JvmStatic
+    fun isCancelled(err: Throwable?): Boolean {
+      if (err == null) {
+        return false
       }
-      return
+
+      return err is CancellationException ||
+          err is CancelAbort ||
+          isCancelled(err.cause)
     }
-    val message = diagnostic//.getMessage(Locale.getDefault())
-    text.text = message
-    displayWindow()
   }
 }

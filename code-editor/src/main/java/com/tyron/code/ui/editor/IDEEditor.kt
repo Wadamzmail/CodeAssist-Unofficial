@@ -30,6 +30,7 @@ import com.tyron.common.tasks.JobCancelChecker
 import com.tyron.common.tasks.cancelIfActive
 import java.io.File
 import com.tyron.common.progress.ICancelChecker
+import com.tyron.completion.util.CancelChecker
 
 /*
 *
@@ -73,11 +74,11 @@ abstract class IDEEditor @JvmOverloads constructor(
   companion object {
      private const val SELECTION_CHANGE_DELAY = 500L
      internal val log = LoggerFactory.getLogger(IDEEditor::class.java)
-     init {
-       run {
-         editorFeatures.editor = this
-       }
-     }
+  } 
+  init {
+    run {
+      editorFeatures.editor = this
+    }
   }
   
   val signatureHelpWindow: SignatureHelpWindow
@@ -108,7 +109,7 @@ abstract class IDEEditor @JvmOverloads constructor(
       cancelChecker.job = coroutineContext[Job]
 
       val help = safeGet("signature help request") {
-        val params = SignatureHelpParams(mCurrentFile.toPath(), cursorLSPPosition, cancelChecker)
+        val params = SignatureHelpParams(mCurrentFile?.toPath(), cursorLSPPosition, cancelChecker)
         getSignatureHelp(params)
       }
 
@@ -246,7 +247,7 @@ abstract class IDEEditor @JvmOverloads constructor(
     }
   }
   
-  fun setSelectionAround(line: Int, column: Int) {
+  override fun setSelectionAround(line: Int, column: Int) {
     editorFeatures.setSelectionAround(line, column)
   }
 
