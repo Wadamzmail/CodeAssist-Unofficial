@@ -118,7 +118,7 @@ public class CodeEditorView extends IDEEditor implements Editor {
      if(!isDiagnosticDetailEnabled())return;
        DiagnosticWrapper diagnosticWrapper =
         DiagnosticUtil.getDiagnosticWrapper(
-           if(getEditorLanguage() instanceof KotlinLanguage)
+           getEditorLanguage() instanceof KotlinLanguage
            ? ((KotlinLanguage)getEditorLanguage()).getDiagnostics()
            : mDiagnostics,
             getCursor().getLeft(),
