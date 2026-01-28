@@ -57,6 +57,8 @@ import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import com.tyron.code.ui.editor.IDEEditor;
 import com.tyron.completion.model.signatures.SignatureHelp;
 import com.tyron.completion.model.signatures.SignatureHelpParams;
+import com.tyron.completion.java.util.DiagnosticUtil;
+import com.tyron.code.language.kotlin.KotlinLanguage;
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
@@ -111,13 +113,18 @@ public class CodeEditorView extends IDEEditor implements Editor {
   }
   
   @Override 
-  protected SignatureHelp getSignatureHelp(SignatureHelpParams params){
-    return null;
-  }
-  
-  @Override 
   protected void onSelectionChange(){
-  
+     if(mDiagnostics==null) return;
+     if(!isDiagnosticDetailEnabled())return;
+       DiagnosticWrapper diagnosticWrapper =
+        DiagnosticUtil.getDiagnosticWrapper(
+           if(getEditorLanguage() instanceof KotlinLanguage)
+           ? ((KotlinLanguage)getEditorLanguage()).getDiagnostics()
+           : mDiagnostics,
+            getCursor().getLeft(),
+            getCursor().getRight());
+       if(diagnosticWrapper==null)return;
+        getDiagnosticWindow().showDiagnostic(diagnosticWrapper.getMessage(Locale.getDefault()));
   }
 
   @Override
@@ -543,10 +550,10 @@ public class CodeEditorView extends IDEEditor implements Editor {
               (int) it.getStartPosition(),
               (int) it.getEndPosition(),
               severitySupplier.apply(it.getKind()),
-              0,
-              isDiagnosticDetailEnabled()
-                  ? new DiagnosticDetail("Info", it.getMessage(Locale.getDefault()), null, null)
-                  : null);
+              0,null);
+              //isDiagnosticDetailEnabled()
+              //    ? new DiagnosticDetail("Info", it.getMessage(Locale.getDefault()), null, null)
+              //    : null);
       getDiagnostics().addDiagnostic(region);
     }
   }

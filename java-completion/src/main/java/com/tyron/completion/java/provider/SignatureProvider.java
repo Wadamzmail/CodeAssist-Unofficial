@@ -120,7 +120,6 @@ public class SignatureProvider extends CancelableServiceProvider {
             return new SignatureHelp(signatures, activeSignature, activeParameter);
           }
           return NOT_SUPPORTED;
-        });
   }
 
   private List<ExecutableElement> methodOverloads(

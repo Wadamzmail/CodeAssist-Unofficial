@@ -117,7 +117,7 @@ abstract class IDEEditor @JvmOverloads constructor(
 
       val help = safeGet("signature help request") {
         val params = SignatureHelpParams(file.toPath(), cursorLSPPosition, cancelChecker)
-        getSignatureHelp(params)
+        language.signatureHelp(params)
       }
 
       withContext(Dispatchers.Main) {
@@ -125,10 +125,6 @@ abstract class IDEEditor @JvmOverloads constructor(
       }
     }.logError("signature help request")
   }
-  
-  protected abstract fun getSignatureHelp(
-    params: SignatureHelpParams
-  ): SignatureHelp?
 
   fun showSignatureHelp(help: SignatureHelp?) {
     if (isReleased) {

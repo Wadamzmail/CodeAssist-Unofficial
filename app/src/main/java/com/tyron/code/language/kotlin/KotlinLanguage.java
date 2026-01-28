@@ -57,6 +57,7 @@ import android.util.Log;
 import com.tyron.completion.model.CompletionList;
 import com.tyron.code.language.CachedAutoCompleteProvider;
 import com.tyron.builder.model.DiagnosticWrapper;
+import dev.mutwakil.completion.kotlin.util.KotlinSeverityMapper;
 
 public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
 
@@ -70,6 +71,7 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
     private final Editor editor;
     public boolean createIdentifiers = false;
     private final DiagnosticsContainer container = new DiagnosticsContainer();
+    private final List<DiagnosticWrapper> diagnostics = new ArrayList<>();
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
     private final CachedAutoCompleteProvider autoCompleteProvider;
@@ -149,7 +151,8 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
                                     @NonNull CompletionPublisher publisher,
                                     @NonNull Bundle extraArguments) throws CompletionCancelledException {
        try{
-       container.reset();     
+       container.reset();
+       diagnostics.clear();   
        CompletionList completionList = autoCompleteProvider.getCompletionList(null,
                 position.getLine(),
                 position.getColumn());
@@ -166,6 +169,10 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         }
 //        Objects.requireNonNull((CodeEditorView)editor).post(() -> ((CodeEditorView)editor).setDiagnostics(new ArrayList<DiagnosticWrapper>(kotlinEnvironment.getDiagnostics())));           
         kotlinEnvironment.analysis = null;  
+  }
+  
+  public List<DiagnosticWrapper> getDiagnostics(){
+     return diagnostics;
   }
 
     @Override
@@ -221,6 +228,14 @@ private void destroyAnalysis(){
 
             short severity;
             CompilerMessageSeverity s = issue.getSeverity();
+            
+            DiagnosticWrapper wrapper = new DiagnosticWrapper();
+            wrapper.setStartPosition(issue.getStartOffset());
+            wrapper.setEndPosition(issue.getEndOffset());
+            wrapper.setMessage(issue.getMessage());
+            wrapper.setKind(KotlinSeverityMapper.toKind(issue.getSeverity()));
+            if (wrapper.getKind() == null) return kotlin.Unit.INSTANCE;
+            diagnostics.add(wrapper);
 
             if (s == CompilerMessageSeverity.ERROR) {
                 severity = DiagnosticRegion.SEVERITY_ERROR;
@@ -240,7 +255,7 @@ private void destroyAnalysis(){
                                 issue.getEndOffset(),
                                 severity, 
                                 0,
-                                new DiagnosticDetail("Info",issue.getMessage(),null,null)
+                                null//new DiagnosticDetail("Info",issue.getMessage(),null,null)
                         )
                 );
             });
