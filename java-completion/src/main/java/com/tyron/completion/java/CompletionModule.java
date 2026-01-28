@@ -18,7 +18,7 @@ import com.tyron.completion.java.action.quickfix.ImportClassAction;
 import com.tyron.completion.java.action.quickfix.ImportClassFieldFix;
 import com.tyron.completion.java.action.quickfix.SurroundWithTryCatchAction;
 import java.io.File;
-import com.itsaky.androidide.lsp.java.providers.snippet.JavaSnippetRepository;
+import com.tyron.completion.java.provider.snippet.JavaSnippetRepository;
 
 public class CompletionModule {
 
