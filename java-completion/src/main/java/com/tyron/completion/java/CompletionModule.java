@@ -18,6 +18,7 @@ import com.tyron.completion.java.action.quickfix.ImportClassAction;
 import com.tyron.completion.java.action.quickfix.ImportClassFieldFix;
 import com.tyron.completion.java.action.quickfix.SurroundWithTryCatchAction;
 import java.io.File;
+import com.itsaky.androidide.lsp.java.providers.snippet.JavaSnippetRepository.init;
 
 public class CompletionModule {
 
@@ -42,6 +43,7 @@ public class CompletionModule {
 
   public static void initialize(Context context) {
     sApplicationContext = context.getApplicationContext();
+    init();
   }
 
   public static Context getContext() {

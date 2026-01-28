@@ -34,6 +34,7 @@ public class DependencyUtils {
         try {
           dependencies.add(Dependency.valueOf(declaration));
         } catch (Exception e) {
+           e.printStackTrace();
           logger.warning("Failed to add dependency " + e.toString() + " " + declaration);
         }
       }
@@ -46,6 +47,7 @@ public class DependencyUtils {
         try {
           dependencies.add(Dependency.valueOf(declaration));
         } catch (Exception e) {
+          e.printStackTrace();
           logger.warning("Failed to add dependency " + e.toString() + " " + declaration);
         }
       }
