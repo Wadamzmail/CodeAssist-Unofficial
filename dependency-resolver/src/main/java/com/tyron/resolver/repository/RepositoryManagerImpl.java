@@ -75,7 +75,6 @@ public class RepositoryManagerImpl implements RepositoryManager {
         pomFiles.add(parsed);
         return parsed;
       } catch (IOException | XmlPullParserException | SAXException e) {
-       e.printStackTrace();
         String message =
             "Failed to parse input stream.\n"
                 + "Declaration: "
@@ -98,7 +97,6 @@ public class RepositoryManagerImpl implements RepositoryManager {
           return is;
         }
       } catch (IOException e) {
-        e.printStackTrace();
         if (i == repositories.size() - 1) {
           sLogger.warning("Dependency " + appendUrl + " is not found.");
         }
