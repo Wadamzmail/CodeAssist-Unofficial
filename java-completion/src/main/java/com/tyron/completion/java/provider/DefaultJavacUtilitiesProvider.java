@@ -5,10 +5,10 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.util.Context;
 import com.tyron.builder.project.Project;
+import com.tyron.completion.CompletionParameters;
 import dev.mutwakil.javac.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import com.tyron.completion.CompletionParameters;
 
 public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider {
 
@@ -19,11 +19,14 @@ public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider {
 
   public DefaultJavacUtilitiesProvider(
       JavacTaskImpl task, CompilationUnitTree root, Project project) {
-    this(task,root,project,null);
+    this(task, root, project, null);
   }
-  
+
   public DefaultJavacUtilitiesProvider(
-      JavacTaskImpl task, CompilationUnitTree root, Project project, CompletionParameters parameters) {
+      JavacTaskImpl task,
+      CompilationUnitTree root,
+      Project project,
+      CompletionParameters parameters) {
     this.task = task;
     this.root = root;
     this.project = project;
@@ -64,9 +67,9 @@ public class DefaultJavacUtilitiesProvider implements JavacUtilitiesProvider {
   public Project getProject() {
     return project;
   }
-  
-  @Override 
-  public CompletionParameters getParameters(){
+
+  @Override
+  public CompletionParameters getParameters() {
     return parameters;
   }
 }

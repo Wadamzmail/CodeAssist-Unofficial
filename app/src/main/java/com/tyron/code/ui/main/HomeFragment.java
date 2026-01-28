@@ -36,8 +36,8 @@ import com.tyron.code.ui.wizard.WizardFragment;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.common.util.AndroidUtilities;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.BuildConfig;
 import com.tyron.resources.R;
+import dev.mutwakil.codeassist.BuildConfig;
 import java.io.File;
 import java.util.Objects;
 

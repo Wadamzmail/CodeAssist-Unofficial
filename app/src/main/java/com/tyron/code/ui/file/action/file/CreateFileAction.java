@@ -21,8 +21,8 @@ import com.tyron.code.ui.file.tree.model.TreeFile;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.util.SingleTextWatcher;
 import com.tyron.completion.xml.task.InjectResourcesTask;
-import com.tyron.ui.treeview.TreeNode;
 import com.tyron.resources.R;
+import com.tyron.ui.treeview.TreeNode;
 import java.io.File;
 import java.io.IOException;
 

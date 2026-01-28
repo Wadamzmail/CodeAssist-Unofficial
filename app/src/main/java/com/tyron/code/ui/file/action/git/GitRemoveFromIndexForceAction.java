@@ -11,9 +11,9 @@ import com.tyron.code.ui.file.CommonFileKeys;
 import com.tyron.code.ui.file.action.FileAction;
 import com.tyron.code.ui.file.tree.TreeFileManagerFragment;
 import com.tyron.code.ui.file.tree.model.TreeFile;
+import com.tyron.resources.R;
 import com.tyron.ui.treeview.TreeNode;
 import com.tyron.ui.treeview.TreeView;
-import com.tyron.resources.R;
 import java.io.File;
 
 public class GitRemoveFromIndexForceAction extends FileAction {

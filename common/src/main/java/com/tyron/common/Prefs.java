@@ -1,8 +1,8 @@
 package com.tyron.common;
 
-import android.content.SharedPreferences;
-import android.content.Context;
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 public class Prefs {
   private static volatile SharedPreferences prefs;
@@ -10,7 +10,7 @@ public class Prefs {
 
   private Prefs() {}
 
-  public static void init(Application app,SharedPreferences preferences) {
+  public static void init(Application app, SharedPreferences preferences) {
     application = app;
     prefs = preferences;
   }
@@ -21,12 +21,12 @@ public class Prefs {
     }
     return prefs;
   }
-  
-  public static Application getApplication(){
+
+  public static Application getApplication() {
     return application;
   }
-  
-  public static Context getContext(){
-     return application.getApplicationContext();
+
+  public static Context getContext() {
+    return application.getApplicationContext();
   }
 }

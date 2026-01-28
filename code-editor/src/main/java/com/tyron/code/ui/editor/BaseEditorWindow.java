@@ -29,8 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import com.tyron.resources.R;
 import com.tyron.common.util.ResourceUtilsKt;
+import com.tyron.resources.R;
 import io.github.rosemoe.sora.widget.base.EditorPopupWindow;
 
 /**
@@ -78,8 +78,8 @@ public abstract class BaseEditorWindow extends AbstractPopupWindow {
     text.setFocusable(false);
     text.setPaddingRelative(dp8, dp4, dp8, dp4);
     text.setLayoutParams(
-      new ViewGroup.LayoutParams(
-        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     return text;
   }
 

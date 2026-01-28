@@ -4,19 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.tyron.completion.CompletionPrefixMatcher;
 import com.tyron.completion.DefaultInsertHandler;
 import com.tyron.completion.InsertHandler;
+import com.tyron.completion.drawable.CircleDrawable;
 import com.tyron.completion.util.CompletionUtils;
 import com.tyron.editor.Editor;
-import com.tyron.completion.drawable.CircleDrawable; 
-
+import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.widget.CodeEditor;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import io.github.rosemoe.sora.text.Content;
-import io.github.rosemoe.sora.widget.CodeEditor;
 
 /** A class representing the completion item shown in the user list */
-public class CompletionItem extends io.github.rosemoe.sora.lang.completion.CompletionItem implements Comparable<CompletionItem> {
+public class CompletionItem extends io.github.rosemoe.sora.lang.completion.CompletionItem
+    implements Comparable<CompletionItem> {
 
   @SuppressWarnings("NewApi")
   public static final Comparator<CompletionItem> COMPARATOR =
@@ -39,7 +39,7 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
   }
 
   private InsertHandler insertHandler;
-  
+
   public String commitText;
   public Kind action = Kind.NORMAL;
   public DrawableKind iconKind = DrawableKind.Method;
@@ -55,11 +55,11 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
   }
 
   public CompletionItem(String label) {
-    this(label,"","",DrawableKind.Method);
+    this(label, "", "", DrawableKind.Method);
   }
 
   public CompletionItem(String label, String desc, String commitText, DrawableKind kind) {
-    super(label, desc, new CircleDrawable(kind));  
+    super(label, desc, new CircleDrawable(kind));
     this.commitText = commitText;
     this.cursorOffset = commitText.length();
     this.iconKind = kind;
@@ -74,13 +74,13 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
   public String getSortText() {
     return super.sortText;
   }
-  
+
   public String getLabel() {
     return String.valueOf(super.label);
   }
 
   public String getDesc() {
-      return String.valueOf(super.desc);
+    return String.valueOf(super.desc);
   }
 
   public ImmutableList<String> getFilterTexts() {
@@ -128,7 +128,7 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
     CompletionItem that = (CompletionItem) o;
     return cursorOffset == that.cursorOffset
         && Objects.equals(String.valueOf(label), String.valueOf(that.label))
-        && Objects.equals(desc, that.desc) 
+        && Objects.equals(desc, that.desc)
         && Objects.equals(commitText, that.commitText)
         && action == that.action
         && iconKind == that.iconKind
@@ -150,11 +150,11 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
   public void handleInsert(Editor editor) {
     insertHandler.handleInsert(editor);
   }
-  
+
   public void appendDesc(String extra) {
     super.desc = String.valueOf(super.desc) + extra;
   }
-  
+
   @Override
   public void performCompletion(CodeEditor editor, Content text, int line, int column) {
     if (!(editor instanceof Editor)) {

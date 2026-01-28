@@ -11,6 +11,8 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.completion.java.FindNewTypeDeclarationAt;
 import com.tyron.completion.java.FindTypeDeclarationAt;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.provider.FindHelper;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.util.ActionUtil;
@@ -26,6 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import javax.lang.model.element.Element;
@@ -37,11 +40,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.parse.CompilationInfo; 
 import javax.tools.JavaFileObject;
-import java.util.Optional;
-import com.tyron.completion.java.util.ProjectUtil;
 
 public class ImplementAbstractMethods implements JavaRewrite2 {
 
@@ -83,8 +82,13 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
     if (file == ProjectUtil.NOT_FOUND) {
       return Collections.emptyMap();
     }
-    var unit = CompilationInfo.get(ProjectUtil.getInstance().getModule()).updateFile(ProjectUtil.getInstance().getModule(),file.toFile());
-    return rewriteInternal(new DefaultJavacUtilitiesProvider(task.getTask(), unit,ProjectUtil.getInstance().getProject()), file);
+    var unit =
+        CompilationInfo.get(ProjectUtil.getInstance().getModule())
+            .updateFile(ProjectUtil.getInstance().getModule(), file.toFile());
+    return rewriteInternal(
+        new DefaultJavacUtilitiesProvider(
+            task.getTask(), unit, ProjectUtil.getInstance().getProject()),
+        file);
   }
 
   private Map<Path, TextEdit[]> rewriteInternal(JavacUtilitiesProvider task, Path file) {
@@ -181,9 +185,14 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
     String methodName = method.getSimpleName().toString();
     String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
     Optional<JavaFileObject> sourceFile = ProjectUtil.getInstance().findAnywhere(superClassName);
-        if (!sourceFile.isPresent()) return null;
+    if (!sourceFile.isPresent()) return null;
     var module = ProjectUtil.getInstance().getModule();
     var unit = CompilationInfo.get(module).updateImmediately(sourceFile.get());
-    return FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,ProjectUtil.getInstance().getProject()), superClassName, methodName, erasedParameterTypes);
+    return FindHelper.findMethod(
+        new DefaultJavacUtilitiesProvider(
+            task.getTask(), unit, ProjectUtil.getInstance().getProject()),
+        superClassName,
+        methodName,
+        erasedParameterTypes);
   }
 }

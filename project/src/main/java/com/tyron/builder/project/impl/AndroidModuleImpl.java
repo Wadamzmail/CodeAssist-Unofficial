@@ -25,9 +25,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 
 public class AndroidModuleImpl extends JavaModuleImpl implements AndroidModule {

@@ -11,6 +11,8 @@ import com.sun.source.util.Trees;
 import com.tyron.builder.model.SourceFileObject;
 import com.tyron.completion.java.FindNewTypeDeclarationAt;
 import com.tyron.completion.java.FindTypeDeclarationAt;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.provider.FindHelper;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.util.ActionUtil;
@@ -35,8 +37,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.parse.CompilationInfo; 
 
 public class OverrideInheritedMethod implements JavaRewrite2 {
 
@@ -108,13 +108,19 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
 
     Set<String> typesToImport = ActionUtil.getTypesToImport(parameterizedType);
 
-    Optional<JavaFileObject> sourceFile =
-        ProjectUtil.getInstance().findAnywhere(superClassName);
+    Optional<JavaFileObject> sourceFile = ProjectUtil.getInstance().findAnywhere(superClassName);
     String text;
     if (sourceFile.isPresent()) {
-      var unit = CompilationInfo.get(ProjectUtil.getInstance().getModule()).updateImmediately(sourceFile.get());
+      var unit =
+          CompilationInfo.get(ProjectUtil.getInstance().getModule())
+              .updateImmediately(sourceFile.get());
       MethodTree source =
-          FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,ProjectUtil.getInstance().getProject()), superClassName, methodName, erasedParameterTypes);
+          FindHelper.findMethod(
+              new DefaultJavacUtilitiesProvider(
+                  task.getTask(), unit, ProjectUtil.getInstance().getProject()),
+              superClassName,
+              methodName,
+              erasedParameterTypes);
       if (source == null) {
         text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
       } else {

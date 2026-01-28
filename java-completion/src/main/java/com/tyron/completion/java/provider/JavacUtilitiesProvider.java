@@ -5,9 +5,9 @@ import com.sun.source.util.Trees;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.util.Context;
 import com.tyron.builder.project.Project;
+import com.tyron.completion.CompletionParameters;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import com.tyron.completion.CompletionParameters;
 
 public interface JavacUtilitiesProvider {
 
@@ -24,6 +24,6 @@ public interface JavacUtilitiesProvider {
   CompilationUnitTree root();
 
   Project getProject();
-  
+
   CompletionParameters getParameters();
 }

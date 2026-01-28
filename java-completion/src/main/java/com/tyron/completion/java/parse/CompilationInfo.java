@@ -16,13 +16,11 @@ import com.tyron.common.util.DebouncerStore;
 import com.tyron.completion.java.compiler.Parser;
 import com.tyron.completion.java.compiler.services.NBEnter;
 import com.tyron.completion.java.compiler.services.NBLog;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.provider.PruneMethodBodies;
 import com.tyron.completion.java.util.ProjectUtil;
 import dev.mutwakil.javac.MJavacTrees;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -41,8 +39,6 @@ import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 
 public class CompilationInfo {
 
@@ -80,7 +76,7 @@ public class CompilationInfo {
                   null,
                   null));
       module.putUserData(COMPILATION_INFO_KEY, info);
-      info.indexJavaFiles(module); 
+      info.indexJavaFiles(module);
     }
     return info;
   }
@@ -104,40 +100,40 @@ public class CompilationInfo {
     if (module instanceof AndroidModuleImpl) {
       JavaModule javaModule = (JavaModule) module;
       Set<File> files = new HashSet<>();
-     // files.addAll(javaModule.getInjectedClasses().values());
+      // files.addAll(javaModule.getInjectedClasses().values());
       File buildGenDir = new File(module.getRootFile() + "/build/gen");
       File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
       if (buildGenDir.exists()) {
         files.addAll(getFiles(buildGenDir, ".java"));
       }
       if (viewBindingDir.exists()) {
-         files.addAll(getFiles(viewBindingDir, ".java"));
+        files.addAll(getFiles(viewBindingDir, ".java"));
       }
-      
+
       for (File value : files) {
         javaModule.addJavaFile(value);
-      }     
-      for (File value : javaModule.getJavaFiles().values()){
-        updateFile(module,value);
+      }
+      for (File value : javaModule.getJavaFiles().values()) {
+        updateFile(module, value);
       }
     }
   }
-  
-  public JavacUtilitiesProvider parse(){
+
+  public JavacUtilitiesProvider parse() {
     return null;
   }
-  
-  public synchronized JCCompilationUnit updateFile(Module module, File file){
-  return updateImmediately(
-            new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
-              @Override
-              public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                Parser parser = Parser.parseFile(module.getProject(), file.toPath());
-                // During indexing, statements inside methods are not needed so
-                // it is stripped to speed up the index process
-                return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
-              }
-            });
+
+  public synchronized JCCompilationUnit updateFile(Module module, File file) {
+    return updateImmediately(
+        new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
+          @Override
+          public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+            Parser parser = Parser.parseFile(module.getProject(), file.toPath());
+            // During indexing, statements inside methods are not needed so
+            // it is stripped to speed up the index process
+            return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
+          }
+        });
   }
 
   public final CompilationInfoImpl impl;

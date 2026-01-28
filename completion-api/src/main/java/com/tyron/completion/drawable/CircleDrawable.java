@@ -5,8 +5,8 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import com.tyron.completion.model.DrawableKind;
 import com.tyron.common.Prefs;
+import com.tyron.completion.model.DrawableKind;
 
 public class CircleDrawable extends Drawable {
 
@@ -67,7 +67,6 @@ public class CircleDrawable extends Drawable {
   }
 
   private static float dp(int px) {
-    return Math.round(
-        Prefs.getContext().getResources().getDisplayMetrics().density * px);
+    return Math.round(Prefs.getContext().getResources().getDisplayMetrics().density * px);
   }
 }

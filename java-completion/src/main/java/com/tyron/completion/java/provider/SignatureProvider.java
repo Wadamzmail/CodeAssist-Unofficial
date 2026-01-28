@@ -1,14 +1,32 @@
 package com.tyron.completion.java.provider;
 
 import androidx.annotation.NonNull;
-import com.tyron.completion.java.util.MarkdownHelper;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Scope;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SourcePositions;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.tree.JCTree;
+import com.tyron.builder.project.api.Module;
+import com.tyron.common.progress.ICancelChecker;
 import com.tyron.completion.java.hover.ShortTypePrinter;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.util.MarkdownHelper;
+import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.java.visitors.FindInvocationAt;
 import com.tyron.completion.model.signatures.ParameterInformation;
 import com.tyron.completion.model.signatures.SignatureHelp;
 import com.tyron.completion.model.signatures.SignatureHelpParams;
 import com.tyron.completion.model.signatures.SignatureInformation;
-import com.tyron.common.progress.ICancelChecker;
+import dev.mutwakil.javac.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,31 +45,6 @@ import javax.lang.model.type.ErrorType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
-import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Scope;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.DocTrees;
-import com.sun.source.util.SourcePositions;
-import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
-
-import com.tyron.builder.project.Project;
-import com.tyron.builder.project.api.JavaModule;
-import com.tyron.builder.project.api.Module;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.tree.JCTree;
-import dev.mutwakil.javac.*;
-import com.tyron.completion.java.util.ProjectUtil;
-import com.tyron.completion.java.compiler.Parser;
 
 public class SignatureProvider extends CancelableServiceProvider {
 
@@ -79,47 +72,48 @@ public class SignatureProvider extends CancelableServiceProvider {
 
     // TODO prune
     abortIfCancelled();
-    
-    if(compilationInfo ==null)return NOT_SUPPORTED;
-    JCTree.JCCompilationUnit unit = compilationInfo.updateFile(ProjectUtil.getInstance().getModule(),file.toFile());
-    if (unit == null) return NOT_SUPPORTED; 
-    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask(); 
+
+    if (compilationInfo == null) return NOT_SUPPORTED;
+    JCTree.JCCompilationUnit unit =
+        compilationInfo.updateFile(ProjectUtil.getInstance().getModule(), file.toFile());
+    if (unit == null) return NOT_SUPPORTED;
+    JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
     long cursor = unit.getLineMap().getPosition(line, column);
     TreePath path = new FindInvocationAt(javacTask, this).scan(unit, cursor);
     if (path == null) {
-        return NOT_SUPPORTED;
-     }
-    var task = new DefaultJavacUtilitiesProvider(javacTask, unit,null);
-    
-          if (path.getLeaf() instanceof MethodInvocationTree) {
-            MethodInvocationTree invoke = (MethodInvocationTree) path.getLeaf();
-            List<ExecutableElement> overloads = methodOverloads(task, invoke);
-            List<SignatureInformation> signatures = new ArrayList<>();
-            for (ExecutableElement method : overloads) {
-              SignatureInformation info = info(method);
-              addSourceInfo(task, method, info);
-              addFancyLabel(info);
-              signatures.add(info);
-            }
-            int activeSignature = activeSignature(task, path, invoke.getArguments(), overloads);
-            int activeParameter = activeParameter(task, invoke.getArguments(), cursor);
-            return new SignatureHelp(signatures, activeSignature, activeParameter);
-          }
-          if (path.getLeaf() instanceof NewClassTree) {
-            NewClassTree invoke = (NewClassTree) path.getLeaf();
-            List<ExecutableElement> overloads = constructorOverloads(task, invoke);
-            List<SignatureInformation> signatures = new ArrayList<>();
-            for (ExecutableElement method : overloads) {
-              SignatureInformation info = info(method);
-              addSourceInfo(task, method, info);
-              addFancyLabel(info);
-              signatures.add(info);
-            }
-            int activeSignature = activeSignature(task, path, invoke.getArguments(), overloads);
-            int activeParameter = activeParameter(task, invoke.getArguments(), cursor);
-            return new SignatureHelp(signatures, activeSignature, activeParameter);
-          }
-          return NOT_SUPPORTED;
+      return NOT_SUPPORTED;
+    }
+    var task = new DefaultJavacUtilitiesProvider(javacTask, unit, null);
+
+    if (path.getLeaf() instanceof MethodInvocationTree) {
+      MethodInvocationTree invoke = (MethodInvocationTree) path.getLeaf();
+      List<ExecutableElement> overloads = methodOverloads(task, invoke);
+      List<SignatureInformation> signatures = new ArrayList<>();
+      for (ExecutableElement method : overloads) {
+        SignatureInformation info = info(method);
+        addSourceInfo(task, method, info);
+        addFancyLabel(info);
+        signatures.add(info);
+      }
+      int activeSignature = activeSignature(task, path, invoke.getArguments(), overloads);
+      int activeParameter = activeParameter(task, invoke.getArguments(), cursor);
+      return new SignatureHelp(signatures, activeSignature, activeParameter);
+    }
+    if (path.getLeaf() instanceof NewClassTree) {
+      NewClassTree invoke = (NewClassTree) path.getLeaf();
+      List<ExecutableElement> overloads = constructorOverloads(task, invoke);
+      List<SignatureInformation> signatures = new ArrayList<>();
+      for (ExecutableElement method : overloads) {
+        SignatureInformation info = info(method);
+        addSourceInfo(task, method, info);
+        addFancyLabel(info);
+        signatures.add(info);
+      }
+      int activeSignature = activeSignature(task, path, invoke.getArguments(), overloads);
+      int activeParameter = activeParameter(task, invoke.getArguments(), cursor);
+      return new SignatureHelp(signatures, activeSignature, activeParameter);
+    }
+    return NOT_SUPPORTED;
   }
 
   private List<ExecutableElement> methodOverloads(
@@ -137,7 +131,8 @@ public class SignatureProvider extends CancelableServiceProvider {
   }
 
   @NonNull
-  private List<ExecutableElement> scopeOverloads(@NonNull JavacUtilitiesProvider task, IdentifierTree method) {
+  private List<ExecutableElement> scopeOverloads(
+      @NonNull JavacUtilitiesProvider task, IdentifierTree method) {
     abortIfCancelled();
     Trees trees = task.getTrees();
     TreePath path = trees.getPath(task.root(), method);
@@ -253,8 +248,7 @@ public class SignatureProvider extends CancelableServiceProvider {
   private void addSourceInfo(
       @NonNull JavacUtilitiesProvider task,
       @NonNull ExecutableElement method,
-      @NonNull SignatureInformation info
-  ) {
+      @NonNull SignatureInformation info) {
     abortIfCancelled();
     final var type = (TypeElement) method.getEnclosingElement();
     final var className = type.getQualifiedName().toString();
@@ -266,7 +260,12 @@ public class SignatureProvider extends CancelableServiceProvider {
       return;
     }
     final var unit = compilationInfo.updateImmediately(file.get());
-    final var source = FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,null), className, methodName, erasedParameterTypes);
+    final var source =
+        FindHelper.findMethod(
+            new DefaultJavacUtilitiesProvider(task.getTask(), unit, null),
+            className,
+            methodName,
+            erasedParameterTypes);
     if (source == null) {
       return;
     }
@@ -303,7 +302,9 @@ public class SignatureProvider extends CancelableServiceProvider {
   }
 
   private int activeParameter(
-      @NonNull JavacUtilitiesProvider task, @NonNull List<? extends ExpressionTree> arguments, long cursor) {
+      @NonNull JavacUtilitiesProvider task,
+      @NonNull List<? extends ExpressionTree> arguments,
+      long cursor) {
     abortIfCancelled();
     SourcePositions pos = task.getTrees().getSourcePositions();
     CompilationUnitTree root = task.root();
@@ -341,8 +342,7 @@ public class SignatureProvider extends CancelableServiceProvider {
     }
     for (int i = 0; i < arguments.size(); i++) {
       ExpressionTree argument = arguments.get(i);
-      TypeMirror argumentType =
-           task.getTrees().getTypeMirror(new TreePath(invocation, argument));
+      TypeMirror argumentType = task.getTrees().getTypeMirror(new TreePath(invocation, argument));
       TypeMirror parameterType = overload.getParameters().get(i).asType();
       if (!isCompatible(task, argumentType, parameterType)) {
         return false;
@@ -351,7 +351,8 @@ public class SignatureProvider extends CancelableServiceProvider {
     return true;
   }
 
-  private boolean isCompatible(JavacUtilitiesProvider task, TypeMirror argument, TypeMirror parameter) {
+  private boolean isCompatible(
+      JavacUtilitiesProvider task, TypeMirror argument, TypeMirror parameter) {
     abortIfCancelled();
     if (argument instanceof ErrorType) {
       return true;

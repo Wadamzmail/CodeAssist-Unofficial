@@ -4,6 +4,8 @@ import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTrees;
 import com.sun.source.util.TreePath;
+import com.tyron.completion.java.parse.CompilationInfo;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 import com.tyron.completion.java.provider.FindHelper;
 import com.tyron.completion.java.provider.JavacUtilitiesProvider;
 import com.tyron.completion.java.util.ProjectUtil;
@@ -20,9 +22,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.tyron.completion.java.parse.CompilationInfo;
 
 public class HoverProvider {
 
@@ -36,8 +35,10 @@ public class HoverProvider {
 
   public List<String> hover(Path file, int offset) {
     var module = ProjectUtil.getInstance().getModule();
-    var unit = CompilationInfo.get(module).updateFile(module,file.toFile());
-    Element element = new FindHoverElement(new DefaultJavacUtilitiesProvider(task.getTask(), unit,null)).scan(unit, (long) offset);
+    var unit = CompilationInfo.get(module).updateFile(module, file.toFile());
+    Element element =
+        new FindHoverElement(new DefaultJavacUtilitiesProvider(task.getTask(), unit, null))
+            .scan(unit, (long) offset);
     if (element == null) {
       return NOT_SUPPORTED;
     }
@@ -58,21 +59,23 @@ public class HoverProvider {
     if (element instanceof TypeElement) {
       TypeElement type = (TypeElement) element;
       String className = type.getQualifiedName().toString();
-      Optional<JavaFileObject> file =
-          ProjectUtil.getInstance().findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
       var unit = compilationInfo.updateImmediately(file.get());
-      Tree tree = FindHelper.findType(new DefaultJavacUtilitiesProvider(task.getTask(), unit,project), className);
+      Tree tree =
+          FindHelper.findType(
+              new DefaultJavacUtilitiesProvider(task.getTask(), unit, project), className);
       return docs(task, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
       VariableElement field = (VariableElement) element;
       TypeElement type = (TypeElement) field.getEnclosingElement();
       String className = type.getQualifiedName().toString();
-      Optional<JavaFileObject> file =
-          ProjectUtil.getInstance().findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
       var unit = compilationInfo.updateImmediately(file.get());
-      Tree tree = FindHelper.findType(new DefaultJavacUtilitiesProvider(task.getTask(), unit,project), className);
+      Tree tree =
+          FindHelper.findType(
+              new DefaultJavacUtilitiesProvider(task.getTask(), unit, project), className);
       return docs(task, tree);
     } else if (element instanceof ExecutableElement) {
       ExecutableElement method = (ExecutableElement) element;
@@ -80,11 +83,15 @@ public class HoverProvider {
       String className = type.getQualifiedName().toString();
       String methodName = method.getSimpleName().toString();
       String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
-      Optional<JavaFileObject> file =
-          ProjectUtil.getInstance().findAnywhere(className);
+      Optional<JavaFileObject> file = ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
       var unit = compilationInfo.updateImmediately(file.get());
-      Tree tree = FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,project), className, methodName, erasedParameterTypes);
+      Tree tree =
+          FindHelper.findMethod(
+              new DefaultJavacUtilitiesProvider(task.getTask(), unit, project),
+              className,
+              methodName,
+              erasedParameterTypes);
       return docs(task, tree);
     } else {
       return "";

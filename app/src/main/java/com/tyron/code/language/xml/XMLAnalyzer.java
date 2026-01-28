@@ -26,8 +26,11 @@ import com.tyron.viewbinding.task.InjectViewBindingTask;
 import dev.mutwakil.codeassist.BuildConfig;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
@@ -43,13 +46,6 @@ import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
@@ -248,39 +244,38 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
         new SimpleJavaFileObject(resourceClass.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-//             try{
-//              return readFile(resourceClass);
-//             }catch(IOException e){
-//             e.printStackTrace();
+            //             try{
+            //              return readFile(resourceClass);
+            //             }catch(IOException e){
+            //             e.printStackTrace();
             Parser parser = Parser.parseFile(module.getProject(), resourceClass.toPath());
             // During indexing, statements inside methods are not needed so
             // it is stripped to speed up the index process
             return new PruneMethodBodies(info.impl.getJavacTask()).scan(parser.root, 0L);
-//           } 
+            //           }
           }
         });
   }
-  
+
   public static String readFile(File file) throws IOException {
     long length = file.length();
 
-    StringBuilder builder = new StringBuilder(
-            length > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) length
-    );
+    StringBuilder builder =
+        new StringBuilder(length > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) length);
 
     char[] buffer = new char[16 * 1024]; // 16KB buffer
 
-    try (BufferedReader reader = new BufferedReader(
+    try (BufferedReader reader =
+        new BufferedReader(
             new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8),
             buffer.length)) {
 
-        int read;
-        while ((read = reader.read(buffer, 0, buffer.length)) != -1) {
-            builder.append(buffer, 0, read);
-        }
+      int read;
+      while ((read = reader.read(buffer, 0, buffer.length)) != -1) {
+        builder.append(buffer, 0, read);
+      }
     }
 
     return builder.toString();
-}
-
+  }
 }

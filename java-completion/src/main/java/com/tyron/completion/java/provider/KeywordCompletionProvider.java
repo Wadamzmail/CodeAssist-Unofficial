@@ -99,7 +99,7 @@ public class KeywordCompletionProvider extends BaseCompletionProvider {
     "@interface",
     "extends",
     "implements",
-    //"record",
+    // "record",
     "enum"
   };
 

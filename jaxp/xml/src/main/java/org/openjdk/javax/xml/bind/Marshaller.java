@@ -356,7 +356,8 @@ public interface Marshaller {
    *     element</a>.
    * @throws IllegalArgumentException If any of the method parameters are null
    */
-  public void marshal(Object jaxbElement, org.openjdk.javax.xml.transform.Result result) throws JAXBException;
+  public void marshal(Object jaxbElement, org.openjdk.javax.xml.transform.Result result)
+      throws JAXBException;
 
   /**
    * Marshal the content tree rooted at {@code jaxbElement} into an output stream.

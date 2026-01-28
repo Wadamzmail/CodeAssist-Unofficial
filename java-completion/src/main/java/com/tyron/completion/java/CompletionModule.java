@@ -17,8 +17,8 @@ import com.tyron.completion.java.action.quickfix.ImplementAbstractMethodsFix;
 import com.tyron.completion.java.action.quickfix.ImportClassAction;
 import com.tyron.completion.java.action.quickfix.ImportClassFieldFix;
 import com.tyron.completion.java.action.quickfix.SurroundWithTryCatchAction;
-import java.io.File;
 import com.tyron.completion.java.provider.snippet.JavaSnippetRepository;
+import java.io.File;
 
 public class CompletionModule {
 

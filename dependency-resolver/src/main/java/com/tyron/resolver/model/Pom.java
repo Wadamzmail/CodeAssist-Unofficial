@@ -185,13 +185,13 @@ public class Pom {
   public String getProperty(String key) {
     return properties.get(key);
   }
-  
-  public Map<String, String> getProperties(){
+
+  public Map<String, String> getProperties() {
     return properties;
   }
-  
-  public void setProperties(Map<String, String> props){
-     properties = props;
+
+  public void setProperties(Map<String, String> props) {
+    properties = props;
   }
 
   @Nullable

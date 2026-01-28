@@ -13,13 +13,16 @@ import com.tyron.builder.project.Project;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
 import com.tyron.code.language.HighlightUtil;
+import com.tyron.code.language.kotlin.KotlinLanguage;
 import com.tyron.code.language.xml.LanguageXML;
 import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
 import com.tyron.code.ui.editor.EditorViewModel;
+import com.tyron.code.ui.editor.IDEEditor;
 import com.tyron.code.ui.editor.NoOpTextActionWindow;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
+import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.xml.model.XmlCompletionType;
 import com.tyron.completion.xml.util.XmlUtils;
 import com.tyron.editor.Caret;
@@ -29,13 +32,11 @@ import com.tyron.editor.Editor;
 import com.tyron.xml.completion.util.DOMUtils;
 import io.github.rosemoe.sora.lang.Language;
 import io.github.rosemoe.sora.lang.analysis.AnalyzeManager;
-import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.lang.styling.Styles;
 import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.TextUtils;
-import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
 import io.github.rosemoe.sora.widget.component.EditorTextActionWindow;
@@ -54,11 +55,6 @@ import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DOMParser;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import com.tyron.code.ui.editor.IDEEditor;
-import com.tyron.completion.model.signatures.SignatureHelp;
-import com.tyron.completion.model.signatures.SignatureHelpParams;
-import com.tyron.completion.java.util.DiagnosticUtil;
-import com.tyron.code.language.kotlin.KotlinLanguage;
 
 // import io.github.rosemoe.sora.text.CharPosition;
 
@@ -79,7 +75,7 @@ public class CodeEditorView extends IDEEditor implements Editor {
   private List<DiagnosticWrapper> mDiagnostics = new ArrayList<>();
   private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
   private boolean mStopConv = false;
-  //private File mCurrentFile;
+  // private File mCurrentFile;
   private EditorViewModel mViewModel;
 
   private final Paint mDiagnosticPaint;
@@ -111,20 +107,20 @@ public class CodeEditorView extends IDEEditor implements Editor {
   public Project getProject() {
     return ProjectManager.getInstance().getCurrentProject();
   }
-  
-  @Override 
-  protected void onSelectionChange(){
-     if(mDiagnostics==null) return;
-     if(!isDiagnosticDetailEnabled())return;
-       DiagnosticWrapper diagnosticWrapper =
+
+  @Override
+  protected void onSelectionChange() {
+    if (mDiagnostics == null) return;
+    if (!isDiagnosticDetailEnabled()) return;
+    DiagnosticWrapper diagnosticWrapper =
         DiagnosticUtil.getDiagnosticWrapper(
-           getEditorLanguage() instanceof KotlinLanguage
-           ? ((KotlinLanguage)getEditorLanguage()).getDiagnostics()
-           : mDiagnostics,
+            getEditorLanguage() instanceof KotlinLanguage
+                ? ((KotlinLanguage) getEditorLanguage()).getDiagnostics()
+                : mDiagnostics,
             getCursor().getLeft(),
             getCursor().getRight());
-       if(diagnosticWrapper==null)return;
-        getDiagnosticWindow().showDiagnostic(diagnosticWrapper.getMessage(Locale.getDefault()));
+    if (diagnosticWrapper == null) return;
+    getDiagnosticWindow().showDiagnostic(diagnosticWrapper.getMessage(Locale.getDefault()));
   }
 
   @Override
@@ -550,10 +546,11 @@ public class CodeEditorView extends IDEEditor implements Editor {
               (int) it.getStartPosition(),
               (int) it.getEndPosition(),
               severitySupplier.apply(it.getKind()),
-              0,null);
-              //isDiagnosticDetailEnabled()
-              //    ? new DiagnosticDetail("Info", it.getMessage(Locale.getDefault()), null, null)
-              //    : null);
+              0,
+              null);
+      // isDiagnosticDetailEnabled()
+      //    ? new DiagnosticDetail("Info", it.getMessage(Locale.getDefault()), null, null)
+      //    : null);
       getDiagnostics().addDiagnostic(region);
     }
   }

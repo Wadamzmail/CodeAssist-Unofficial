@@ -31,8 +31,8 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.code.util.ApkInstaller;
 import com.tyron.completion.progress.ProgressIndicator;
 import com.tyron.completion.progress.ProgressManager;
-import dev.mutwakil.codeassist.BuildConfig;
 import com.tyron.resources.R;
+import dev.mutwakil.codeassist.BuildConfig;
 import java.io.File;
 import java.lang.ref.WeakReference;
 

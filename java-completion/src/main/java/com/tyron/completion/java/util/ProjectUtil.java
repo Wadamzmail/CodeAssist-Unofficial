@@ -1,7 +1,6 @@
 package com.tyron.completion.java.util;
 
 import android.annotation.SuppressLint;
-import com.sun.source.tree.CompilationUnitTree;
 import com.tyron.builder.model.SourceFileObject;
 import com.tyron.builder.project.Project;
 import com.tyron.builder.project.api.JavaModule;
@@ -12,6 +11,7 @@ import com.tyron.common.util.StringSearch;
 import com.tyron.completion.java.Docs;
 import com.tyron.completion.java.FindTypeDeclarations;
 import com.tyron.completion.java.compiler.SourceFileManager;
+import com.tyron.completion.java.parse.CompilationInfo;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
-import com.tyron.completion.java.parse.CompilationInfo;
 
 /*
  * @author Wadamzmail
@@ -205,8 +204,7 @@ public class ProjectUtil {
     String simpleName = simpleName(className);
 
     for (Module dependency : dependencies) {
-      Path path =
-          findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className);
+      Path path = findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className);
       if (path != NOT_FOUND) {
         return path;
       }
@@ -216,10 +214,7 @@ public class ProjectUtil {
   }
 
   private Path findPublicTypeDeclarationInModule(
-      Module module,
-      String packageName,
-      String simpleName,
-      String className) {
+      Module module, String packageName, String simpleName, String className) {
     for (File file : SourceFileManager.list(module, packageName)) {
       if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className)) {
         if (file.getName().endsWith(".java")) {
@@ -299,7 +294,7 @@ public class ProjectUtil {
   private boolean containsType(Path file, String className) {
     if (cacheContainsType.needs(file, null)) {
       List<String> types = new ArrayList<>();
-      var unit = CompilationInfo.get(getModule()).updateFile(getModule(),file.toFile());
+      var unit = CompilationInfo.get(getModule()).updateFile(getModule(), file.toFile());
       new FindTypeDeclarations().scan(unit, types);
       cacheContainsType.load(file, null, types);
     }

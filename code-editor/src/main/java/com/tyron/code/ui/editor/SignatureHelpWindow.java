@@ -23,9 +23,9 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.tyron.common.util.ResourceUtilsKt;
 import com.tyron.completion.model.signatures.SignatureHelp;
 import com.tyron.completion.model.signatures.SignatureInformation;
-import com.tyron.common.util.ResourceUtilsKt;
 import io.github.rosemoe.sora.event.SelectionChangeEvent;
 import io.github.rosemoe.sora.widget.base.EditorPopupWindow;
 import org.slf4j.Logger;
@@ -99,7 +99,10 @@ public class SignatureHelpWindow extends BaseEditorWindow {
         info -> {
           final var remove = activeParameter >= info.getParameters().size();
           if (remove) {
-            LOG.debug("Removing {} params={} active={}", info, info.getParameters().size(),
+            LOG.debug(
+                "Removing {} params={} active={}",
+                info,
+                info.getParameters().size(),
                 activeParameter);
           }
           return remove;
@@ -120,20 +123,18 @@ public class SignatureHelpWindow extends BaseEditorWindow {
   /**
    * Formats (highlights) a method signature
    *
-   * @param signature  Signature information
+   * @param signature Signature information
    * @param paramIndex Currently active parameter index
-   * @param result     The builder to append spanned text to.
+   * @param result The builder to append spanned text to.
    */
   private void formatSignature(
-      @NonNull SignatureInformation signature,
-      int paramIndex,
-      SpannableStringBuilder result) {
+      @NonNull SignatureInformation signature, int paramIndex, SpannableStringBuilder result) {
 
     String name = signature.getLabel();
     name = name.substring(0, name.indexOf("("));
 
-    final var foreground = ResourceUtilsKt.resolveAttr(getEditor().getContext(),
-        attr.colorOnSecondaryContainer);
+    final var foreground =
+        ResourceUtilsKt.resolveAttr(getEditor().getContext(), attr.colorOnSecondaryContainer);
     final var paramSelected = 0xffff6060;
     final var operators = 0xff4fc3f7;
 

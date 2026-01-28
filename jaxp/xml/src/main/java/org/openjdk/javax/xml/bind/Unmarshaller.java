@@ -602,8 +602,8 @@ public interface Unmarshaller {
    * @throws IllegalArgumentException If any parameter is null
    * @since 1.6, JAXB 2.0
    */
-  public <T> JAXBElement<T> unmarshal(org.openjdk.javax.xml.transform.Source source, Class<T> declaredType)
-      throws JAXBException;
+  public <T> JAXBElement<T> unmarshal(
+      org.openjdk.javax.xml.transform.Source source, Class<T> declaredType) throws JAXBException;
 
   /**
    * Unmarshal XML data from the specified pull parser and return the resulting content tree.
@@ -659,7 +659,8 @@ public interface Unmarshaller {
    * @since 1.6, JAXB 2.0
    */
   public <T> JAXBElement<T> unmarshal(
-      org.openjdk.javax.xml.stream.XMLStreamReader reader, Class<T> declaredType) throws JAXBException;
+      org.openjdk.javax.xml.stream.XMLStreamReader reader, Class<T> declaredType)
+      throws JAXBException;
 
   /**
    * Unmarshal XML data from the specified pull parser and return the resulting content tree.
@@ -715,7 +716,8 @@ public interface Unmarshaller {
    * @throws IllegalArgumentException If any parameter is null
    * @since 1.6, JAXB 2.0
    */
-  public <T> JAXBElement<T> unmarshal(org.openjdk.javax.xml.stream.XMLEventReader reader, Class<T> declaredType)
+  public <T> JAXBElement<T> unmarshal(
+      org.openjdk.javax.xml.stream.XMLEventReader reader, Class<T> declaredType)
       throws JAXBException;
 
   /**

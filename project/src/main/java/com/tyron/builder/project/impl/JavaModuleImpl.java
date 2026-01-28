@@ -149,11 +149,11 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
     // Calculate file sizes and store them in a map
     for (File file : mLibraries) {
       try {
-        if(file.exists()){
-        long fileSize = Files.size(file.toPath());
-        fileSizeMap.put(fileSize, file);
-        }else{
-        removed.add(file);
+        if (file.exists()) {
+          long fileSize = Files.size(file.toPath());
+          fileSizeMap.put(fileSize, file);
+        } else {
+          removed.add(file);
         }
       } catch (IOException e) {
         e.printStackTrace();
@@ -181,15 +181,15 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
   public List<File> getNativeLibraries() {
     Map<Long, File> fileSizeMap = new HashMap<>();
     Set<File> removed = new HashSet<>();
-     
+
     // Calculate file sizes and store them in a map
     for (File file : mNativeLibraries) {
       try {
-        if(file.exists()){
-        long fileSize = Files.size(file.toPath());
-        fileSizeMap.put(fileSize, file);
-        }else{
-        removed.add(file);
+        if (file.exists()) {
+          long fileSize = Files.size(file.toPath());
+          fileSizeMap.put(fileSize, file);
+        } else {
+          removed.add(file);
         }
       } catch (IOException e) {
         e.printStackTrace();
@@ -198,7 +198,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
 
     // Remove duplicates based on file size
     List<File> uniqueLibraryFiles = fileSizeMap.values().stream().collect(Collectors.toList());
-      for (File rm : removed) {
+    for (File rm : removed) {
       mLibraries.remove(rm);
     }
     return ImmutableList.copyOf(uniqueLibraryFiles);

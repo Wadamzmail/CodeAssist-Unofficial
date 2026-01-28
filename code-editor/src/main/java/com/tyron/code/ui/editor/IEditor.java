@@ -18,11 +18,9 @@
 package com.tyron.code.ui.editor;
 
 import androidx.annotation.NonNull;
-
 import androidx.annotation.Nullable;
 import com.tyron.completion.model.location.Position;
 import com.tyron.completion.model.location.Range;
-
 import io.github.rosemoe.sora.text.CharPosition;
 import java.io.File;
 
@@ -56,7 +54,7 @@ public interface IEditor {
    * @param position The position to select.
    */
   void setSelection(@NonNull Position position);
-  
+
   /**
    * Set selection to the given range.
    *
@@ -70,6 +68,7 @@ public interface IEditor {
 
   /**
    * Set selection around the given position.
+   *
    * @param position The position to set selection around.
    */
   default void setSelectionAround(CharPosition position) {
@@ -78,6 +77,7 @@ public interface IEditor {
 
   /**
    * Set selection around the given position.
+   *
    * @param position The position to set selection around.
    */
   default void setSelectionAround(Position position) {
@@ -86,25 +86,26 @@ public interface IEditor {
 
   /**
    * Set selection around the given position.
+   *
    * @param line The line index.
    * @param column The column index.
    */
   void setSelectionAround(int line, int column);
-  
+
   /**
    * Get the cursor's selection range in the form of {@link Range}.
    *
    * @return The {@link Range} of the cursor.
    */
   Range getCursorLSPRange();
-  
+
   /**
    * Get the cursor's position in the form of {@link Position}.
    *
    * @return The {@link Position} of the cursor.
    */
   Position getCursorLSPPosition();
-  
+
   /**
    * Validates the range if it is invalid and returns a valid range.
    *
@@ -112,7 +113,7 @@ public interface IEditor {
    * @return A new, validated range.
    */
   void validateRange(@NonNull Range range);
-  
+
   /**
    * Checks if the given range is valid for this editor's text.
    *
@@ -122,7 +123,7 @@ public interface IEditor {
   default boolean isValidRange(Range range) {
     return isValidRange(range, false);
   }
-  
+
   /**
    * Checks if the given range is valid for this editor's text.
    *
@@ -132,7 +133,7 @@ public interface IEditor {
    * @return <code>true</code> if valid, <code>false</code> otherwise.
    */
   boolean isValidRange(Range range, boolean allowColumnEqual);
-  
+
   /**
    * Checks if the given position is valid for this editor's text.
    *
@@ -142,7 +143,7 @@ public interface IEditor {
   default boolean isValidPosition(Position position) {
     return isValidPosition(position, false);
   }
-  
+
   /**
    * Checks if the given position is valid for this editor's text.
    *
@@ -152,7 +153,7 @@ public interface IEditor {
    * @return <code>true</code> if valid, <code>false</code> otherwise.
    */
   boolean isValidPosition(Position position, boolean allowColumnEqual);
-  
+
   /**
    * Checks if the given line is valid for this editor's text.
    *
@@ -160,7 +161,7 @@ public interface IEditor {
    * @return <code>true</code> if valid, <code>false</code> otherwise.
    */
   boolean isValidLine(int line);
-  
+
   /**
    * Checks if the given column is valid for this editor's text.
    *
@@ -172,7 +173,7 @@ public interface IEditor {
   default boolean isValidColumn(int line, int column) {
     return isValidColumn(line, column, false);
   }
-  
+
   /**
    * Checks if the given column is valid for this editor's text.
    *
@@ -183,7 +184,7 @@ public interface IEditor {
    * @return <code>true</code> if valid, <code>false</code> otherwise.
    */
   boolean isValidColumn(int line, int column, boolean allowColumnEqual);
-  
+
   /**
    * Append the given text at the end of the editor's content.
    *
@@ -191,14 +192,14 @@ public interface IEditor {
    * @return The line at which the text was appended.
    */
   int append(CharSequence text);
-  
+
   /**
    * Replaces the editor's existing content with the given content.
    *
    * @param newContent The new content to set to the editor.
    */
   void replaceContent(CharSequence newContent);
-  
+
   /** Set the selection of the editor's cursor to the last line of the it's content. */
   void goToEnd();
 }

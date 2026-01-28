@@ -1,7 +1,10 @@
 package com.tyron.completion.java.util;
 
+import com.sun.source.doctree.DocCommentTree;
+import com.sun.source.doctree.DocTree;
 import com.tyron.completion.model.signatures.MarkupContent;
 import com.tyron.completion.model.signatures.MarkupKind;
+import dev.mutwakil.javac.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -21,14 +24,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import com.sun.source.doctree.DocCommentTree;
-import com.sun.source.doctree.DocTree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import dev.mutwakil.javac.*;
 
 public class MarkdownHelper {
 
