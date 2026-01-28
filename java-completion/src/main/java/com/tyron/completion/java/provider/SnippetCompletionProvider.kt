@@ -37,8 +37,8 @@ import com.tyron.completion.model.CompletionList
  * modified by Wadamzmail
  */
 class SnippetCompletionProvider(
-  compiler: JavaCompilerService
-) : BaseCompletionProvider( compiler) {
+  compiler: JavaCompilerService? 
+) : BaseCompletionProvider(compiler) {
 
   override fun complete(
     builder: CompletionList.Builder,

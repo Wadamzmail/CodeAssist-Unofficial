@@ -35,6 +35,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 
 public class OverrideInheritedMethod implements JavaRewrite2 {
 
@@ -108,11 +109,12 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
 
     // TODO: get The Method from Source File if exist
     Optional<JavaFileObject> sourceFile =
-        ProjectUtil.getInstance().findAnywhere(superClassName, task.root());
+        ProjectUtil.getInstance().findAnywhere(superClassName);
     String text;
     if (sourceFile.isPresent()) {
+      var unit = CompilationInfo.get(ProjectUtil.getInstance().getModule()).updateImmediately(sourceFile.get());
       MethodTree source =
-          FindHelper.findMethod(task, superClassName, methodName, erasedParameterTypes);
+          FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,ProjectUtil.getInstance().getProject()), superClassName, methodName, erasedParameterTypes);
       if (source == null) {
         text = PrintHelper.printMethod(superMethod, parameterizedType, superMethod);
       } else {

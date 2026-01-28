@@ -41,6 +41,8 @@ import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
 
 public class CompilationInfo {
 
@@ -121,8 +123,12 @@ public class CompilationInfo {
     }
   }
   
-  public synchronized void updateFile(Module module, File file){
-  updateImmediately(
+  public JavacUtilitiesProvider parse(){
+    return null;
+  }
+  
+  public synchronized JCCompilationUnit updateFile(Module module, File file){
+  return updateImmediately(
             new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
               @Override
               public CharSequence getCharContent(boolean ignoreEncodingErrors) {

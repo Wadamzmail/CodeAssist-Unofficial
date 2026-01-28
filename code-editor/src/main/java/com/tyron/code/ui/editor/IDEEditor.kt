@@ -15,6 +15,7 @@ import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.event.SelectionChangeEvent
 import com.tyron.completion.model.signatures.SignatureHelp
 import com.tyron.completion.model.signatures.SignatureHelpParams
+import com.tyron.completion.model.signatures.SignatureHelpLanguage
 import com.tyron.completion.model.location.Position
 import com.tyron.completion.model.location.Range
 import kotlinx.coroutines.CoroutineName
@@ -102,6 +103,9 @@ abstract class IDEEditor @JvmOverloads constructor(
       return
     }
     val file = this.file ?: return
+    
+    val language = this.editorLanguage as? SignatureHelpLanguage ?: return
+    
     sigHelpCancelChecker?.also { it.cancel() }
 
     val cancelChecker = JobCancelChecker().also {

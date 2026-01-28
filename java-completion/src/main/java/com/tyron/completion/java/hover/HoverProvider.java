@@ -20,6 +20,9 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
+import com.tyron.completion.java.parse.CompilationInfo;
 
 public class HoverProvider {
 
@@ -32,7 +35,9 @@ public class HoverProvider {
   }
 
   public List<String> hover(Path file, int offset) {
-    Element element = new FindHoverElement(task).scan(task.root(), (long) offset);
+    var module = ProjectUtil.getInstance().getModule();
+    var unit = CompilationInfo.get(module).updateFile(module,file.toFile());
+    Element element = new FindHoverElement(new DefaultJavacUtilitiesProvider(task.getTask(), unit,null)).scan(unit, (long) offset);
     if (element == null) {
       return NOT_SUPPORTED;
     }
@@ -47,26 +52,27 @@ public class HoverProvider {
   }
 
   public String docs(JavacUtilitiesProvider task, Element element) {
+    var module = ProjectUtil.getInstance().getModule();
+    var project = ProjectUtil.getInstance().getProject();
+    var compilationInfo = CompilationInfo.get(module);
     if (element instanceof TypeElement) {
       TypeElement type = (TypeElement) element;
       String className = type.getQualifiedName().toString();
-      // TODO
-      // NOTE:
-      // Source lookup outside current CompilationUnit requires JavaCompilerService
-      // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
       Optional<JavaFileObject> file =
-          ProjectUtil.getInstance().findAnywhere(className, task.root());
+          ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
-      Tree tree = FindHelper.findType(task, className);
+      var unit = compilationInfo.updateImmediately(file.get());
+      Tree tree = FindHelper.findType(new DefaultJavacUtilitiesProvider(task.getTask(), unit,project), className);
       return docs(task, tree);
     } else if (element.getKind() == ElementKind.FIELD) {
       VariableElement field = (VariableElement) element;
       TypeElement type = (TypeElement) field.getEnclosingElement();
       String className = type.getQualifiedName().toString();
       Optional<JavaFileObject> file =
-          ProjectUtil.getInstance().findAnywhere(className, task.root());
+          ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
-      Tree tree = FindHelper.findType(task, className);
+      var unit = compilationInfo.updateImmediately(file.get());
+      Tree tree = FindHelper.findType(new DefaultJavacUtilitiesProvider(task.getTask(), unit,project), className);
       return docs(task, tree);
     } else if (element instanceof ExecutableElement) {
       ExecutableElement method = (ExecutableElement) element;
@@ -75,9 +81,10 @@ public class HoverProvider {
       String methodName = method.getSimpleName().toString();
       String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
       Optional<JavaFileObject> file =
-          ProjectUtil.getInstance().findAnywhere(className, task.root());
+          ProjectUtil.getInstance().findAnywhere(className);
       if (!file.isPresent()) return "";
-      Tree tree = FindHelper.findMethod(task, className, methodName, erasedParameterTypes);
+      var unit = compilationInfo.updateImmediately(file.get());
+      Tree tree = FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,project), className, methodName, erasedParameterTypes);
       return docs(task, tree);
     } else {
       return "";

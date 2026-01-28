@@ -40,9 +40,14 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.tyron.completion.model.signatures.SignatureHelpLanguage;
+import com.tyron.completion.model.signatures.SignatureHelpParams;
+import com.tyron.completion.model.signatures.SignatureHelp;
+import com.tyron.completion.java.provider.SignatureProvider;
+import com.tyron.completion.model.signatures.SignatureHelpLanguageKt;
 
 public class JavaLanguage extends EmptyTextMateLanguage
-    implements Language, EditorFormatter, CodeAssistLanguage {
+    implements Language, EditorFormatter, CodeAssistLanguage, SignatureHelpLanguage {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JavaLanguage.class);
 
@@ -95,6 +100,19 @@ public class JavaLanguage extends EmptyTextMateLanguage
   public Formatter getFormatter() {
     return formatter;
   }
+  
+  @Override 
+  public SignatureHelp signatureHelp(SignatureHelpParams params){
+     var signatureHelp = SignatureHelpLanguageKt.unsupportedSignatureHelp(); 
+     if (!com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {  
+     var file = mEditor.getCurrentFile();
+     var project = mEditor.getProject();
+     var module = project.getModule(file);
+     signatureHelp = new SignatureProvider(module,params.getCancelChecker()).signatureHelp(params);
+     }
+     return signatureHelp;
+  }
+  
 
   public JavaLanguage(Editor editor) {
     this.mEditor = editor;

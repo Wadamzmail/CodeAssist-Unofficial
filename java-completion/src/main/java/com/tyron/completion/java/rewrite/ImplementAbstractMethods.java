@@ -37,6 +37,11 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.parse.CompilationInfo; 
+import javax.tools.JavaFileObject;
+import java.util.Optional;
+import com.tyron.completion.java.util.ProjectUtil;
 
 public class ImplementAbstractMethods implements JavaRewrite2 {
 
@@ -177,6 +182,10 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
     String superClassName = superClass.getQualifiedName().toString();
     String methodName = method.getSimpleName().toString();
     String[] erasedParameterTypes = FindHelper.erasedParameterTypes(task, method);
-    return FindHelper.findMethod(task, superClassName, methodName, erasedParameterTypes);
+    Optional<JavaFileObject> sourceFile = ProjectUtil.getInstance().findAnywhere(superClassName);
+        if (!sourceFile.isPresent()) return null;
+    var module = ProjectUtil.getInstance().getModule();
+    var unit = CompilationInfo.get(module).updateImmediately(sourceFile.get());
+    return FindHelper.findMethod(new DefaultJavacUtilitiesProvider(task.getTask(), unit,ProjectUtil.getInstance().getProject()), superClassName, methodName, erasedParameterTypes);
   }
 }

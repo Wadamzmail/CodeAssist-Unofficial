@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
+import com.tyron.completion.java.parse.CompilationInfo;
 
 /*
  * @author Wadamzmail
@@ -162,13 +163,13 @@ public class ProjectUtil {
    * @return Optional of type JavaFileObject that may be empty if the file is not found
    */
   @SuppressLint("NewApi")
-  public Optional<JavaFileObject> findAnywhere(String className, CompilationUnitTree root) {
+  public Optional<JavaFileObject> findAnywhere(String className) {
     Optional<JavaFileObject> fromDocs = findPublicTypeDeclarationInDocPath(className);
     if (fromDocs.isPresent()) {
       return fromDocs;
     }
 
-    Path fromSource = findTypeDeclaration(className, root);
+    Path fromSource = findTypeDeclaration(className);
     if (fromSource != NOT_FOUND) {
       return Optional.of(new SourceFileObject(fromSource, mCurrentModule));
     }
@@ -193,8 +194,8 @@ public class ProjectUtil {
     }
   }
 
-  public Path findTypeDeclaration(String className, CompilationUnitTree root) {
-    Path fastFind = findPublicTypeDeclaration(className, root);
+  public Path findTypeDeclaration(String className) {
+    Path fastFind = findPublicTypeDeclaration(className);
     if (fastFind != NOT_FOUND) {
       return fastFind;
     }
@@ -205,7 +206,7 @@ public class ProjectUtil {
 
     for (Module dependency : dependencies) {
       Path path =
-          findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className, root);
+          findPublicTypeDeclarationInModule(dependency, packageName, simpleName, className);
       if (path != NOT_FOUND) {
         return path;
       }
@@ -218,10 +219,9 @@ public class ProjectUtil {
       Module module,
       String packageName,
       String simpleName,
-      String className,
-      CompilationUnitTree root) {
+      String className) {
     for (File file : SourceFileManager.list(module, packageName)) {
-      if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className, root)) {
+      if (containsWord(file.toPath(), simpleName) && containsType(file.toPath(), className)) {
         if (file.getName().endsWith(".java")) {
           return file.toPath();
         }
@@ -230,7 +230,7 @@ public class ProjectUtil {
     return NOT_FOUND;
   }
 
-  private Path findPublicTypeDeclaration(String className, CompilationUnitTree root) {
+  private Path findPublicTypeDeclaration(String className) {
     JavaFileObject source;
     try {
       source =
@@ -246,7 +246,7 @@ public class ProjectUtil {
       return NOT_FOUND;
     }
     Path file = Paths.get(source.toUri());
-    if (!containsType(file, className, root)) {
+    if (!containsType(file, className)) {
       return NOT_FOUND;
     }
     return file;
@@ -296,10 +296,11 @@ public class ProjectUtil {
 
   private static final Cache<Void, List<String>> cacheContainsType = new Cache<>();
 
-  private boolean containsType(Path file, String className, CompilationUnitTree root) {
+  private boolean containsType(Path file, String className) {
     if (cacheContainsType.needs(file, null)) {
       List<String> types = new ArrayList<>();
-      new FindTypeDeclarations().scan(root, types);
+      var unit = CompilationInfo.get(getModule()).updateFile(getModule(),file.toFile());
+      new FindTypeDeclarations().scan(unit, types);
       cacheContainsType.load(file, null, types);
     }
     return cacheContainsType.get(file, null).contains(className);
