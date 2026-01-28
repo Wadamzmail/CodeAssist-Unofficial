@@ -79,10 +79,7 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
 
   @Override
   public Map<Path, TextEdit[]> rewrite(JavacUtilitiesProvider task) {
-    // NOTE:
-    // Source lookup outside current CompilationUnit requires JavaCompilerService
-    // and SOURCE_PATH (Docs). Not available via JavacUtilitiesProvider.
-    Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile, task.root());
+    Path file = ProjectUtil.getInstance().findTypeDeclaration(mClassFile);
     if (file == ProjectUtil.NOT_FOUND) {
       return Collections.emptyMap();
     }

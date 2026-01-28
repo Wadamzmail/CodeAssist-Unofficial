@@ -357,10 +357,10 @@ public class SignatureProvider extends CancelableServiceProvider {
       return true;
     }
     if (argument instanceof PrimitiveType) {
-      argument = task.task.getTypes().boxedClass((PrimitiveType) argument).asType();
+      argument = task.getTask().getTypes().boxedClass((PrimitiveType) argument).asType();
     }
     if (parameter instanceof PrimitiveType) {
-      parameter = task.task.getTypes().boxedClass((PrimitiveType) parameter).asType();
+      parameter = task.getTask().getTypes().boxedClass((PrimitiveType) parameter).asType();
     }
     if (argument instanceof ArrayType) {
       if (!(parameter instanceof ArrayType)) {

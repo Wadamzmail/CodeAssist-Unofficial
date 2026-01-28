@@ -36,6 +36,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
+import com.tyron.completion.java.parse.CompilationInfo; 
 
 public class OverrideInheritedMethod implements JavaRewrite2 {
 
@@ -107,7 +108,6 @@ public class OverrideInheritedMethod implements JavaRewrite2 {
 
     Set<String> typesToImport = ActionUtil.getTypesToImport(parameterizedType);
 
-    // TODO: get The Method from Source File if exist
     Optional<JavaFileObject> sourceFile =
         ProjectUtil.getInstance().findAnywhere(superClassName);
     String text;

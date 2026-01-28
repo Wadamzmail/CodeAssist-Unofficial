@@ -41,7 +41,7 @@ public class AddException implements JavaRewrite2 {
 
     List<TextEdit> edits = new ArrayList<>();
 
-    Path file = ProjectUtil.getInstance().findTypeDeclaration(className, task.root());
+    Path file = ProjectUtil.getInstance().findTypeDeclaration(className);
     if (file == ProjectUtil.NOT_FOUND) {
       return CANCELLED;
     }
