@@ -51,6 +51,7 @@ dependencies {
     implementation project(path: ':common')
     implementation project(':resources')
     implementation project(':logging') 
+    implementation project(':project') 
     
  	api ('io.github.rosemoe:editor:0.24.4')
     api ('io.github.rosemoe:language-textmate:0.24.4') 

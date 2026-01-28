@@ -228,6 +228,7 @@ public class CodeEditorFragment extends Fragment
 
   public void hideEditorWindows() {
     mEditor.hideAutoCompleteWindow();
+    mEditor.ensureWindowsDismissed();
   }
 
   /**

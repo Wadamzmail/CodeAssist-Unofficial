@@ -76,7 +76,7 @@ public class CodeEditorView extends IDEEditor implements Editor {
 
   private boolean mIsBackgroundAnalysisEnabled;
 
-  private List<DiagnosticWrapper> mDiagnostics;
+  private List<DiagnosticWrapper> mDiagnostics = new ArrayList<>();
   private Consumer<List<DiagnosticWrapper>> mDiagnosticsListener;
   private boolean mStopConv = false;
   //private File mCurrentFile;

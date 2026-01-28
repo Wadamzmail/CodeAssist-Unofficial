@@ -32,6 +32,9 @@ import com.tyron.common.tasks.cancelIfActive
 import java.io.File
 import com.tyron.common.progress.ICancelChecker
 import com.tyron.completion.util.CancelChecker
+import com.tyron.code.ui.editor.snippets.AbstractSnippetVariableResolver
+import com.tyron.code.ui.editor.snippets.FileVariableResolver
+import com.tyron.code.ui.editor.snippets.WorkspaceVariableResolver
 
 /*
 *
@@ -152,6 +155,14 @@ abstract class IDEEditor @JvmOverloads constructor(
     }
 
     super.release()
+    
+    snippetController.apply {
+      (fileVariableResolver as? AbstractSnippetVariableResolver?)?.close()
+      (workspaceVariableResolver as? AbstractSnippetVariableResolver?)?.close()
+
+      fileVariableResolver = null
+      workspaceVariableResolver = null
+    }
 
     _signatureHelpWindow = null
     _diagnosticWindow = null
@@ -172,6 +183,11 @@ abstract class IDEEditor @JvmOverloads constructor(
   
      DiagnosticWindow(this).also { _diagnosticWindow = it }
      SignatureHelpWindow(this).also { _signatureHelpWindow = it }
+     
+     snippetController.apply {
+        fileVariableResolver = FileVariableResolver(this@IDEEditor)
+        workspaceVariableResolver = WorkspaceVariableResolver()
+      }
 
     subscribeEvent(ContentChangeEvent::class.java) { event, _ ->
       if (isReleased) {

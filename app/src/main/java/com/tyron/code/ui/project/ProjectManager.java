@@ -58,6 +58,7 @@ import com.tyron.completion.java.parse.CompilationInfo;
 import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.completion.java.provider.PruneMethodBodies;
 import com.tyron.completion.xml.v2.LayoutRepo;
+import com.tyron.builder.project.IProjectManager;
 
 public class ProjectManager {
 
@@ -125,6 +126,7 @@ public class ProjectManager {
   private void doOpenProject(
       Project project, boolean downloadLibs, TaskListener mListener, ILogger logger) {
     mCurrentProject = project;
+    IProjectManager.getInstance().currentProject = project;
     Module module = mCurrentProject.getMainModule();
 
 
@@ -385,6 +387,7 @@ public class ProjectManager {
   public void closeProject(@NonNull Project project) {
     if (project.equals(mCurrentProject)) {
       mCurrentProject = null;
+      IProjectManager.getInstance().currentProject = null;
     }
   }
 

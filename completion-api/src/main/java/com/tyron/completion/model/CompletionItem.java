@@ -55,7 +55,7 @@ public class CompletionItem extends io.github.rosemoe.sora.lang.completion.Compl
   }
 
   public CompletionItem(String label) {
-    this(label,"","",DrawableKind.Keyword);
+    this(label,"","",DrawableKind.Method);
   }
 
   public CompletionItem(String label, String desc, String commitText, DrawableKind kind) {

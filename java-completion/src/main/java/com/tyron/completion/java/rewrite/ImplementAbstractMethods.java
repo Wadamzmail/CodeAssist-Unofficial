@@ -83,7 +83,8 @@ public class ImplementAbstractMethods implements JavaRewrite2 {
     if (file == ProjectUtil.NOT_FOUND) {
       return Collections.emptyMap();
     }
-    return rewriteInternal(task, file);
+    var unit = CompilationInfo.get(ProjectUtil.getInstance().getModule()).updateFile(ProjectUtil.getInstance().getModule(),file.toFile());
+    return rewriteInternal(new DefaultJavacUtilitiesProvider(task.getTask(), unit,ProjectUtil.getInstance().getProject()), file);
   }
 
   private Map<Path, TextEdit[]> rewriteInternal(JavacUtilitiesProvider task, Path file) {
