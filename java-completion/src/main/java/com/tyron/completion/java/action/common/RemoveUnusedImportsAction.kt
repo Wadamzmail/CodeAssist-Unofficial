@@ -7,12 +7,12 @@ import com.tyron.actions.CommonDataKeys
 import com.tyron.actions.Presentation
 import com.tyron.completion.java.R
 import com.tyron.editor.Editor
-import com.tyron.code.ui.editor.IDEEditor
+import io.github.rosemoe.sora.widget.CodeEditor
 import com.google.googlejavaformat.java.FormatterException
 import com.google.googlejavaformat.java.RemoveUnusedImports
 import org.slf4j.LoggerFactory
 
-class RemoveUnusedImportsAction : AnAction {
+class RemoveUnusedImportsAction : AnAction() {
    val id: String = "javaRemoveUnusedImportsAction"
    
    companion object {
@@ -30,7 +30,7 @@ class RemoveUnusedImportsAction : AnAction {
    }
    
    override fun actionPerformed(event : AnActionEvent){
-     val editor = event.getData(CommonDataKeys.EDITOR) as? IDEEditor ?: return 
+     val editor = event.getData(CommonDataKeys.EDITOR) as? CodeEditor ?: return 
      val text = editor.text
      try{
        val output = RemoveUnusedImports.removeUnusedImports(text.toString())

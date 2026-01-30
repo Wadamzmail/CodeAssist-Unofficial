@@ -7,9 +7,9 @@ import com.tyron.actions.CommonDataKeys
 import com.tyron.actions.Presentation
 import com.tyron.completion.java.R
 import com.tyron.editor.Editor
-import com.tyron.code.ui.editor.IDEEditor
+import io.github.rosemoe.sora.widget.CodeEditor 
 
-class UnommentAction : AnAction {
+class UnommentAction : AnAction() {
    val id: String = "javaUnommentAction"
    override fun update(event : AnActionEvent){
      var presentation = event.presentation
@@ -23,7 +23,7 @@ class UnommentAction : AnAction {
    }
    
    override fun actionPerformed(event : AnActionEvent){
-     val editor = event.getData(CommonDataKeys.EDITOR) as? IDEEditor ?: return 
+     val editor = event.getData(CommonDataKeys.EDITOR) as? CodeEditor ?: return 
      val text = editor.text
      val cursor = editor.cursor
 
