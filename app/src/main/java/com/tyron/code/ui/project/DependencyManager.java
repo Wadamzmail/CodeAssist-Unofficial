@@ -68,13 +68,13 @@ public class DependencyManager {
     List<RepositoryModel> repositoryModels = parseFile(repositoriesFile);
     List<Repository> repositories = new ArrayList<>();
     for (RepositoryModel model : repositoryModels) {
-      if (model.getName() == null) {
+      if (model.getModulePath() == null) {
         continue;
       }
       if (model.getUrl() == null) {
-        repositories.add(new LocalRepository(model.getName()));
+        repositories.add(new LocalRepository(model.getModulePath()));
       } else {
-        repositories.add(new RemoteRepository(model.getName(), model.getUrl()));
+        repositories.add(new RemoteRepository(model.getModulePath(), model.getUrl()));
       }
     }
     return repositories;
@@ -129,7 +129,7 @@ public class DependencyManager {
       throws IOException {
 
     listener.onTaskStarted("Resolving dependencies");
-    logger.debug("> Configure project :" + project.getRootFile().getName());
+    logger.debug("> Configure project :" + project.getModuleName());
 
     resolveMainDependency(
         project,
@@ -137,7 +137,7 @@ public class DependencyManager {
         listener,
         logger,
         project.getGradleFile(),
-        project.getRootFile().getName());
+        project.getModuleName());
 
     List<String> projects = new ArrayList<>();
     projects.addAll(new ArrayList<>(project.getAllProjects(project.getGradleFile())));
@@ -154,7 +154,7 @@ public class DependencyManager {
         if (!includedInBuildGradle.isEmpty()) {
           projects.addAll(includedInBuildGradle);
         }
-        File includeName = new File(project.getProjectDir(), include);
+        File includeName = new File(project.getProjectDir(), include.replace(":","/"));
         String root = include.replaceFirst("/", "").replaceAll("/", ":");
         logger.debug("> Task :" + root + ":" + "resolvingDependencies");
         try {
@@ -185,7 +185,7 @@ public class DependencyManager {
 
     AndroidModule androidModule = (AndroidModule) project;
     if (project instanceof AndroidModule) {
-      if (androidModule.getViewBindingEnabled() && project.getRootFile().getName().equals(name)) {
+      if (androidModule.getViewBindingEnabled() && project.getModuleName().equals(name)) {
         Dependency databindingDependency =
             new Dependency("androidx.databinding", "viewbinding", "8.13.2");
         declaredImplementationDependencies.add(databindingDependency);
@@ -429,7 +429,7 @@ public class DependencyManager {
         new HashSet<>(
             parseLibraries(
                 libraries,
-                new File(idea, root.getName() + "_" + scope + "_libraries.json"),
+                new File(idea, project.getModuleName() + "_" + scope + "_libraries.json"),
                 scope));
 
     md5Map =
@@ -443,7 +443,7 @@ public class DependencyManager {
     saveLibraryToProject(
         project,
         new File(root, "build/libraries/" + scope + "_libs"),
-        new File(idea, root.getName() + "_" + scope + "_libraries.json"),
+        new File(idea, project.getModuleName() + "_" + scope + "_libraries.json"),
         scope,
         md5Map,
         fileLibsHashes);
@@ -456,7 +456,7 @@ public class DependencyManager {
   private void checkLibraries(
       JavaModule project, File root, File idea, ILogger logger, File gradleFile, String scope)
       throws IOException {
-
+    if(root==null)return;
     Set<CodeAssistLibrary> libraries = new HashSet<>();
     Map<String, CodeAssistLibrary> fileLibsHashes = new HashMap<>();
     Map<String, CodeAssistLibrary> md5Map = new HashMap<>();
@@ -470,6 +470,7 @@ public class DependencyManager {
         for (int i = 0; i < dirValue.size(); i++) {
           String dir = dirValue.get(i);
           String include = includeValues.get(i);
+          if(dir==null&&include==null)continue;
           fileLibsHashes =
               new HashMap<>(
                   checkDirLibraries(fileLibsHashes, logger, new File(root, dir), include, scope));
@@ -496,8 +497,8 @@ public class DependencyManager {
         new HashSet<>(
             parseLibraries(
                 libraries,
-                new File(idea, root.getName() + "_" + scope + "_libraries.json"),
-                root.getName()));
+                new File(idea, project.getModuleName() + "_" + scope + "_libraries.json"),
+                project.getModuleName()));
 
     if (!scope.equals(ScopeType.NATIVES.getStringValue())) {
 
@@ -512,7 +513,7 @@ public class DependencyManager {
       saveLibraryToProject(
           project,
           new File(root, "build/libraries/" + scope + "_files/libs"),
-          new File(idea, root.getName() + "_" + scope + "_libraries.json"),
+          new File(idea, project.getModuleName() + "_" + scope + "_libraries.json"),
           scope + "Files",
           md5Map,
           fileLibsHashes);

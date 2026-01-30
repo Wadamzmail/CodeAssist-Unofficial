@@ -596,7 +596,7 @@ public class JavaModuleImpl extends ModuleImpl implements JavaModule {
       }
     }
 
-    if (!getRootFile().getName().equals("app")) {
+    if (!getRootFile().getModuleName().equals("app")) {
       File[] api_files =
           new File(getBuildDirectory(), "libraries/api_files/libs").listFiles(File::isDirectory);
       if (implementation_files != null) {

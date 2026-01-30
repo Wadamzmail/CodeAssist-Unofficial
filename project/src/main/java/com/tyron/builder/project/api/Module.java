@@ -74,6 +74,11 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   void index();
 
   public String getModuleName();
+  //return the module path since project root path
+  default String getModulePath(){
+    return getModuleName().replace(":","/");
+  }
+  void setModuleName(String name);
 
   /**
    * @return The directory that this project can use to compile files

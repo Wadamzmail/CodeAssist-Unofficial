@@ -59,18 +59,18 @@ public class ShortNamesCache {
     }
 
     visitedModules.add(module);
-    for (String path : module.getModuleDependencies()) {
-      Module dependingModule = module.getProject().getModuleByName(path);
+    for (String name : module.getModuleDependencies()) {
+      Module dependingModule = module.getProject().getModuleByName(name);
       if (dependingModule != null && !visitedModules.contains(dependingModule)) {
         // queue.addLast(dependingModule);
         if (dependingModule instanceof JavaModule) {
           classNames.addAll(((JavaModule) dependingModule).getApiClassIndex().getLeafNodes());
           // pending.add(dependingModule);
-          System.out.println("Module Dependency :" + path + " from :" + module.getName());
-          for (String path2 : ((JavaModule) dependingModule).getApiProjects()) {
-            Module dm1 = dependingModule.getProject().getModuleByName(path2);
+          System.out.println("Module Dependency :" + name + " from :" + module.getModuleName());
+          for (String name2 : ((JavaModule) dependingModule).getApiProjects()) {
+            Module dm1 = dependingModule.getProject().getModuleByName(name2);
             pending.add(dm1);
-            System.out.println("added Module Dependency :" + path + " from :" + module.getName());
+            System.out.println("added Module Dependency :" + name + " from :" + module.getModuleName());
           }
         }
       }
@@ -97,17 +97,17 @@ public class ShortNamesCache {
       if (current instanceof JavaModule) {
         JavaModule javaModule = (JavaModule) current;
         classNames.addAll(javaModule.getApiClassIndex().getLeafNodes());
-        System.out.println("Api Module indexed :" + current.getName());
+        System.out.println("Api Module indexed :" + current.getModuleName());
       }
 
       visitedModules.add(current);
-      for (String path : current.getApiProjects()) {
-        Module dependingModule = current.getProject().getModuleByName(path);
-        System.out.println("Api Module Dependency :" + path + " from :" + current.getName());
+      for (String name : current.getApiProjects()) {
+        Module dependingModule = current.getProject().getModuleByName(name);
+        System.out.println("Api Module Dependency :" + name + " from :" + current.getModuleName());
         if (dependingModule != null && !visitedModules.contains(dependingModule)) {
           queue.addLast(dependingModule);
           System.out.println(
-              "Added Api Module Dependency :" + path + " from :" + current.getName());
+              "Added Api Module Dependency :" + name + " from :" + current.getModuleName());
         }
       }
     }

@@ -43,9 +43,11 @@ public class ModuleImpl implements Module {
   private ModuleSettings myModuleSettings;
   private FileManager mFileManager;
   private List<String> excludedClassPaths = new ArrayList<>();
+  private String mModuleName;
 
   public ModuleImpl(File root) {
     mRoot = root;
+    setModuleName(getName());
     mFileManager = new FileManagerImpl(root);
     try {
       if (mRoot == null) return;
@@ -134,7 +136,12 @@ public class ModuleImpl implements Module {
 
   @Override
   public String getModuleName() {
-    return mRoot.getName();
+    return mModuleName;
+  }
+  
+  @Override 
+  public void setModuleName(String name){
+    mModuleName = name;
   }
 
   @Override

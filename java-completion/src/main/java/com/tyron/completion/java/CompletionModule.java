@@ -19,6 +19,9 @@ import com.tyron.completion.java.action.quickfix.ImportClassFieldFix;
 import com.tyron.completion.java.action.quickfix.SurroundWithTryCatchAction;
 import com.tyron.completion.java.provider.snippet.JavaSnippetRepository;
 import java.io.File;
+import com.tyron.completion.java.action.common.CommentAction;
+import com.tyron.completion.java.action.common.UncommentAction;
+import com.tyron.completion.java.action.common.RemoveUnusedImportsAction;
 
 public class CompletionModule {
 
@@ -39,6 +42,10 @@ public class CompletionModule {
         IntroduceLocalVariableAction.ID, new IntroduceLocalVariableAction());
     actionManager.registerAction(
         OverrideInheritedMethodsAction.ID, new OverrideInheritedMethodsAction());
+     //common
+     actionManager.registerAction(new CommentAction());
+     actionManager.registerAction(new UncommentAction());
+     actionManager.registerAction(new RemoveUnusedImportsAction());
   }
 
   public static void initialize(Context context) {

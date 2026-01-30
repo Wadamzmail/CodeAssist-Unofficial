@@ -67,7 +67,7 @@ public class Project {
     assert module.getProject() == null;
     module.setProject(this);
 
-    mModules.put(module.getName(), module);
+    mModules.put(module.getModuleName(), module);
   }
 
   public void removeModule(String name) {
@@ -121,9 +121,9 @@ public class Project {
     //    for (Module module : modules) {
     //      module.setProject(Project.this);
     //      module.open();
-    //      System.out.println("Module opened :" +module.getName());
+    //      System.out.println("Module opened :" +module.getModuleName());
     //      File rootFile = module.getRootFile();
-    //      mModules.put(rootFile.getName(), module);
+    //      mModules.put(getModuleName(), module);
     //    }
   }
 
@@ -179,13 +179,14 @@ public class Project {
       if (name.equals(module.getModuleName())) continue;
       File moduleDir = new File(mRoot, name);
       Module mModule = new AndroidModuleImpl(moduleDir);
+      mModule.setModuleName(name);
       graph.addNode(mModule);
       graph.putEdge(module, mModule);
 
       mModule.setProject(Project.this);
       mModules.put(name, mModule);
       mModule.open();
-      System.out.println("Module opened :" + mModule.getName());
+      System.out.println("Module opened :" + mModule.getModuleName());
     }
   }
 

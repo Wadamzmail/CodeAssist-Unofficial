@@ -109,25 +109,14 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         }
     };
 
-    private KotlinEnvironment kotlinEnvironment;
+    public KotlinEnvironment kotlinEnvironment;
 
     public KotlinLanguage(Editor editor) {
         this.editor = editor;
         delegate = LanguageManager.createTextMateLanguage(SCOPE_NAME);
-        
-        Project project = ProjectManager.getInstance().getCurrentProject();
-        Module currentModule = project.getModule(editor.getCurrentFile());
-        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
         autoCompleteProvider = new CachedAutoCompleteProvider(editor,
-                new KotlinAutoCompleteProvider(editor));
-        if(isHighlightEnabled()){
-//        ProgressManager.getInstance()
-//        .runLater(
-//            () -> {
-             initAnalysis();
-//             },
-//            50);   
-        }
+                new KotlinAutoCompleteProvider(editor)); 
+        initEnv();
     }
     
     private boolean isHighlightEnabled(){
@@ -203,23 +192,34 @@ public class KotlinLanguage extends EmptyTextMateLanguage implements Language {
         return new NewlineHandler[0];
     }
 
-@Override
-public void destroy() {
-    destroyAnalysis();
-    delegate.destroy();
-}
+   @Override
+   public void destroy() {
+      destroyAnalysis();
+      delegate.destroy();
+   }
 
-private void destroyAnalysis(){
-       analysisRunning = false; 
-   if (analysisThread != null && analysisThread.isAlive()) {
+   private void destroyAnalysis(){
+      analysisRunning = false; 
+      if (analysisThread != null && analysisThread.isAlive()) {
         analysisThread.interrupt();  
         try {
             analysisThread.join();  
         } catch (InterruptedException ignore) {}
-    }
-}
+       }
+   }
+
+   public void initEnv(){
+     Project project = ProjectManager.getInstance().getCurrentProject();
+     if(project==null || editor.getCurrentFile()==null)return;
+        Module currentModule = project.getModule(editor.getCurrentFile());
+        kotlinEnvironment = KotlinEnvironment.Companion.get(currentModule);
+        if(isHighlightEnabled()){
+             initAnalysis();
+        }
+   }
     
    private void initAnalysis() {
+    destroyAnalysis(); 
     analysisRunning = true;
     analysisThread = new Thread(() -> {
         kotlinEnvironment.addIssueListener(issue -> {

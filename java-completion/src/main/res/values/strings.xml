@@ -14,4 +14,8 @@
     <string name="import_class_title">Import class</string>
     <string name="menu_action_view_javadoc_title">View javadoc</string>
     <string name="menu_action_no_javadoc_message">No javadoc found.</string>
+    
+    <string name="menu_common_comment_title">Comment</string>
+    <string name="menu_common_uncomment_title">Uncomment</string>
+    <string name="menu_common_remove_unused_imports_title">Remove Unused Imports</string>
 </resources>

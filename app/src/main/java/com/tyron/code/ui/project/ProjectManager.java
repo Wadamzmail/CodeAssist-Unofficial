@@ -159,7 +159,7 @@ public class ProjectManager {
       String pluginType = plugins.toString();
 
       if (gradleFile.exists()) {
-        logger.debug("> Task :" + module.getRootFile().getName() + ":" + "checkingPlugins");
+        logger.debug("> Task :" + module.getModuleName() + ":" + "checkingPlugins");
         if (plugins.isEmpty()) {
           logger.error("No plugins applied");
           shouldReturn = true;
@@ -261,7 +261,7 @@ public class ProjectManager {
         IncrementalAapt2Task task =
             new IncrementalAapt2Task(project, (AndroidModule) module, logger, false);
         try {
-          logger.debug("> Task :" + module.getRootFile().getName() + ":" + "generatingResources");
+          logger.debug("> Task :" + module.getModuleName() + ":" + "generatingResources");
           String packageName = getApplicationId(((AndroidModule) module));
           if (packageName != null) {
             manifestMergeTask.prepare(BuildType.DEBUG);
@@ -269,7 +269,7 @@ public class ProjectManager {
           } else {
             throw new IOException(
                 "Unable to find namespace or applicationId in "
-                    + module.getRootFile().getName()
+                    + module.getModuleName()
                     + "/build.gradle file");
           }
           task.prepare(BuildType.DEBUG);
@@ -295,7 +295,7 @@ public class ProjectManager {
               String packageName = getApplicationId(((AndroidModule) module));
               if (packageName != null) {
                 logger.debug(
-                    "> Task :" + module.getRootFile().getName() + ":" + "indexingResources");
+                    "> Task :" + module.getModuleName() + ":" + "indexingResources");
 //                xmlRepository.initialize((AndroidModule) module);
                 repo.initialize((AndroidModule) module,true);
 
@@ -322,7 +322,7 @@ public class ProjectManager {
                     InjectViewBindingTask.inject(project, (AndroidModule) module);
 //                    mCurrentProject.getEventManager().dispatchEvent(new XmlReparsedEvent(null)); 
                     logger.debug(
-                        "> Task :" + module.getRootFile().getName() + ":" + "injectingResources");
+                        "> Task :" + module.getModuleName() + ":" + "injectingResources");
                   }
                 }
               }
@@ -454,7 +454,7 @@ public class ProjectManager {
         if (content.contains("namespace") && !content.contains("applicationId")) {
           throw new IOException(
               "Unable to find applicationId in "
-                  + module.getRootFile().getName()
+                  + module.getModuleName()
                   + "/build.gradle file");
 
         } else if (content.contains("applicationId") && content.contains("namespace")) {
@@ -464,12 +464,12 @@ public class ProjectManager {
         } else {
           throw new IOException(
               "Unable to find namespace or applicationId in "
-                  + module.getRootFile().getName()
+                  + module.getModuleName()
                   + "/build.gradle file");
         }
       } else {
         throw new IOException(
-            "Unable to read " + module.getRootFile().getName() + "/build.gradle file");
+            "Unable to read " + module.getModuleName() + "/build.gradle file");
       }
     } catch (IOException e) {
 

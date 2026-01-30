@@ -653,9 +653,9 @@ data class KotlinEnvironment(
               jars.add(BuildModule.getLambdaStubs())
               jars.add(BuildModule.getAndroidJar()) 
             val javaSourceRoots = listOf(
-              //    File(currentModule.rootFile, "/src/main/java"),
-              //    File(currentModule.rootFile, "/src/main/kotlin"),
-              //    File(currentModule.rootFile, "/build/gen"),
+                  File(currentModule.rootFile, "/src/main/java"),
+                  File(currentModule.rootFile, "/src/main/kotlin"),
+                  File(currentModule.rootFile, "/build/gen"),
                   File(currentModule.rootFile, "/build/view_binding")
                ).filter { it.exists() }
             val environment = with(jars,javaSourceRoots )

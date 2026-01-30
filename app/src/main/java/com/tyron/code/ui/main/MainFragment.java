@@ -443,23 +443,18 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
       saveAll(false);
       project.getSettings().refresh();
     }
+    
+    IndexServiceConnection.restoreFileEditors(project, mMainViewModel); 
 
     mProject = project;
     mIndexServiceConnection.setProject(project);
-
+    
     mMainViewModel.setToolbarTitle(project.getRootFile().getName());
     mMainViewModel.setIndexing(true);
     CompletionEngine.setIndexing(true);
 
     RefreshRootEvent event = new RefreshRootEvent(project.getRootFile());
     ApplicationLoader.getInstance().getEventManager().dispatchEvent(event);
-
-    ProgressManager.getInstance()
-        .runLater(
-            () -> {
-              IndexServiceConnection.restoreFileEditors(project, mMainViewModel);
-            },
-            50);
 
     Intent intent = new Intent(requireContext(), IndexService.class);
     requireActivity().startService(intent);
