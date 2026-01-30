@@ -57,7 +57,6 @@ dependencies {
     implementation project(':javac')
     implementation project(':logging')
     implementation project(':google-java-format')
-    implementation project(':code-editor')
     compileOnly project(':resources')
 
     api project(':build-logic')
