@@ -16,7 +16,7 @@ import com.tyron.code.ui.editor.IDEEditor
 class RemoveUnusedImportsAction : AnAction() {
    
    companion object {
-    val ID: String = "javaRemoveUnusedImportsAction" 
+    const val ID: String = "javaRemoveUnusedImportsAction" 
     private val log = LoggerFactory.getLogger(RemoveUnusedImportsAction::class.java)
   }
    override fun update(event : AnActionEvent){

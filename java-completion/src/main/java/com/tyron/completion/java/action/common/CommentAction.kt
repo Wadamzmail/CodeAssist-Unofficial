@@ -13,7 +13,7 @@ import com.tyron.code.ui.editor.IDEEditor
 class CommentAction : AnAction() {
 
   companion object {
-   val ID: String = "javaCommentAction"
+      const val ID: String = "javaCommentAction"
   } 
    override fun update(event : AnActionEvent){
      var presentation = event.presentation

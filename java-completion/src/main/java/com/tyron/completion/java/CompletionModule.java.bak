@@ -44,7 +44,7 @@ public class CompletionModule {
         OverrideInheritedMethodsAction.ID, new OverrideInheritedMethodsAction());
      //common
      actionManager.registerAction(CommentAction.ID,new CommentAction());
-     actionManager.registerAction(UncommentAction.ID,new UncommentAction());
+     actionManager.registerAction(UnommentAction.ID,new UncommentAction());
      actionManager.registerAction(RemoveUnusedImportsAction.ID,new RemoveUnusedImportsAction());
   }
 

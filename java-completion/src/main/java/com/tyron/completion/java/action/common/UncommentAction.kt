@@ -13,7 +13,7 @@ import com.tyron.code.ui.editor.IDEEditor
 class UncommentAction : AnAction() {
  
  companion object {
-   val ID: String = "javaUncommentAction"
+   const val ID: String = "javaUncommentAction"
  } 
    override fun update(event : AnActionEvent){
      var presentation = event.presentation
