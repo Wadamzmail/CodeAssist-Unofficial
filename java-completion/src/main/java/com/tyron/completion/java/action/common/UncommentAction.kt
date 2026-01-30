@@ -8,11 +8,12 @@ import com.tyron.actions.Presentation
 import com.tyron.completion.java.R
 import com.tyron.editor.Editor
 import io.github.rosemoe.sora.widget.CodeEditor 
+import com.tyron.code.ui.editor.IDEEditor
 
 class UncommentAction : AnAction() {
  
  companion object {
-   val id: String = "javaUncommentAction"
+   val ID: String = "javaUncommentAction"
  } 
    override fun update(event : AnActionEvent){
      var presentation = event.presentation
@@ -26,7 +27,7 @@ class UncommentAction : AnAction() {
    }
    
    override fun actionPerformed(event : AnActionEvent){
-     val editor = event.getData(CommonDataKeys.EDITOR) as? CodeEditor ?: return 
+     val editor = event.getData(CommonDataKeys.EDITOR) as? IDEEditor ?: return 
      val text = editor.text
      val cursor = editor.cursor
 

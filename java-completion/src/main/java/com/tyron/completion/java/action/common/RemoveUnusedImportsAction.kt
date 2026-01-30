@@ -11,11 +11,12 @@ import io.github.rosemoe.sora.widget.CodeEditor
 import com.google.googlejavaformat.java.FormatterException
 import com.google.googlejavaformat.java.RemoveUnusedImports
 import org.slf4j.LoggerFactory
+import com.tyron.code.ui.editor.IDEEditor 
 
 class RemoveUnusedImportsAction : AnAction() {
    
    companion object {
-    val id: String = "javaRemoveUnusedImportsAction" 
+    val ID: String = "javaRemoveUnusedImportsAction" 
     private val log = LoggerFactory.getLogger(RemoveUnusedImportsAction::class.java)
   }
    override fun update(event : AnActionEvent){
@@ -30,7 +31,7 @@ class RemoveUnusedImportsAction : AnAction() {
    }
    
    override fun actionPerformed(event : AnActionEvent){
-     val editor = event.getData(CommonDataKeys.EDITOR) as? CodeEditor ?: return 
+     val editor = event.getData(CommonDataKeys.EDITOR) as? IDEEditor ?: return 
      val text = editor.text
      try{
        val output = RemoveUnusedImports.removeUnusedImports(text.toString())
