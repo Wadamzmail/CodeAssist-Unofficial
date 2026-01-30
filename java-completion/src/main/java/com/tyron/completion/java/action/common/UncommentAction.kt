@@ -9,8 +9,11 @@ import com.tyron.completion.java.R
 import com.tyron.editor.Editor
 import io.github.rosemoe.sora.widget.CodeEditor 
 
-class UnommentAction : AnAction() {
-   val id: String = "javaUnommentAction"
+class UncommentAction : AnAction() {
+ 
+ companion object {
+   val id: String = "javaUncommentAction"
+ } 
    override fun update(event : AnActionEvent){
      var presentation = event.presentation
      presentation.setVisible(false)

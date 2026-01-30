@@ -10,7 +10,10 @@ import com.tyron.editor.Editor
 import io.github.rosemoe.sora.widget.CodeEditor
 
 class CommentAction : AnAction() {
+
+  companion object {
    val id: String = "javaCommentAction"
+  } 
    override fun update(event : AnActionEvent){
      var presentation = event.presentation
      presentation.setVisible(false)

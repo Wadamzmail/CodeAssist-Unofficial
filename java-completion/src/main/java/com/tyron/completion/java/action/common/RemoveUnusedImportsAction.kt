@@ -13,9 +13,9 @@ import com.google.googlejavaformat.java.RemoveUnusedImports
 import org.slf4j.LoggerFactory
 
 class RemoveUnusedImportsAction : AnAction() {
-   val id: String = "javaRemoveUnusedImportsAction"
    
    companion object {
+    val id: String = "javaRemoveUnusedImportsAction" 
     private val log = LoggerFactory.getLogger(RemoveUnusedImportsAction::class.java)
   }
    override fun update(event : AnActionEvent){
