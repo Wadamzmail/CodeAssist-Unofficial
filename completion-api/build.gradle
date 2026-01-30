@@ -47,8 +47,6 @@ dependencies {
     implementation project(path: ':language-api')
     api ('io.github.rosemoe:editor:0.24.4')
     implementation project(':javac') 
-    
-    implementation ("org.checkerframework:checker-qual:3.50.0") 
 }
 
 spotless {

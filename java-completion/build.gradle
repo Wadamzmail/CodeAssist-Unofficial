@@ -56,12 +56,10 @@ dependencies {
 
     implementation project(':javac')
     implementation project(':logging')
-    implementation project(':googleJavaFormat')
+    implementation project(':google-java-format')
     implementation project(':code-editor')
+    compileOnly project(':resources')
 
     api project(':build-logic')
-
-    compileOnly ('androidx.recyclerview:recyclerview:1.2.1')
     compileOnly project(':android-stubs')
-    implementation("org.checkerframework:checker-qual:3.50.0")
 }

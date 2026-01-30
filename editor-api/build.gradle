@@ -34,7 +34,6 @@ dependencies {
     implementation project(path: ':project')
     implementation project(path: ':language-api')
     implementation project(path: ':common')
-    implementation("org.checkerframework:checker-qual:3.50.0")
     implementation ('it.unimi.dsi:fastutil:8.5.8'){
        exclude group: 'com.google.guava', module: 'guava'
     }   

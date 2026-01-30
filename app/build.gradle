@@ -113,11 +113,6 @@ configurations.implementation {
   //  exclude group: "javax.inject", module: "javax.inject"
   
 }
-configurations.all {
-    resolutionStrategy {
-        force 'com.google.guava:guava:33.5.0-jre'
-    }
-}  
 
 dependencies {
     // TODO: Removed these modules, the features that are using these modules
@@ -179,13 +174,6 @@ dependencies {
     implementation ('com.caverock:androidsvg-aar:1.4')
 
 	implementation ('androidx.documentfile:documentfile:1.1.0')
-    
-	//git
-	implementation ('com.blankj:utilcodex:1.31.1')
-     
-     //for CodeAssist
-     implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
-     implementation 'com.google.guava:guava:33.5.0-jre' 
-
+      
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 }

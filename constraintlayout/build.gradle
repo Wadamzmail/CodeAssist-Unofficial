@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    compileOnly 'androidx.constraintlayout:constraintlayout:2.1.4'
     compileOnly project(path: ':proteus-core')
     compileOnly project(':common') 
+    compileOnly project(':resources')
 }

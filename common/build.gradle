@@ -51,7 +51,7 @@ dependencies {
     api ("org.checkerframework:checker-qual:3.50.0")
     api ('org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2')
     compileOnly project(path: ':android-stubs')
-	implementation ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
+	api ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
 }
 
 spotless {

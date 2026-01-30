@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-
-    compileOnly 'androidx.cardview:cardview:1.0.0'
     compileOnly project(path: ':proteus-core')
+    compileOnly project(':resources')
  }
