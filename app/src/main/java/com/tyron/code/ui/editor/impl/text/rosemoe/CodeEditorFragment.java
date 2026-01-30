@@ -728,8 +728,8 @@ public class CodeEditorFragment extends Fragment
   @Override
   public void onProjectOpen(Project project) {
     ProgressManager.getInstance().runLater(() -> readFile(project, mSavedInstanceState));
-    if(getEditorLanguage() instanceof KotlinLanguage&& ((KotlinLanguage) getEditorLanguage()).kotlinEnvironment==null)
-       ((KotlinLanguage) getEditorLanguage()).initEnv();   
+    if(mEditor.getEditorLanguage() instanceof KotlinLanguage&& ((KotlinLanguage) mEditor.getEditorLanguage()).kotlinEnvironment==null)
+       ((KotlinLanguage) mEditor.getEditorLanguage()).initEnv();   
   }
 
   /**
@@ -739,8 +739,8 @@ public class CodeEditorFragment extends Fragment
   private void readOrWait() {
     if (ProjectManager.getInstance().getCurrentProject() != null) {
       readFile(ProjectManager.getInstance().getCurrentProject(), mSavedInstanceState);
-       if(getEditorLanguage() instanceof KotlinLanguage && ((KotlinLanguage) getEditorLanguage()).kotlinEnvironment==null)
-       ((KotlinLanguage) getEditorLanguage()).initEnv();
+       if(mEditor.getEditorLanguage() instanceof KotlinLanguage && ((KotlinLanguage) mEditor.getEditorLanguage()).kotlinEnvironment==null)
+       ((KotlinLanguage) mEditor.getEditorLanguage()).initEnv();
     } else {
       ProjectManager.getInstance().addOnProjectOpenListener(this);
     }

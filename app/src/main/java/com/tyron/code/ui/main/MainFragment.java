@@ -346,6 +346,8 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
         module.getFileManager().shutdown();
       }
     }
+    project.setIndexing(false);
+    CompletionEngine.setIndexing(false);
     manager.removeOnProjectOpenListener(this);
     startActivity(MainActivity.class, new Bundle());
   }

@@ -68,13 +68,13 @@ public class DependencyManager {
     List<RepositoryModel> repositoryModels = parseFile(repositoriesFile);
     List<Repository> repositories = new ArrayList<>();
     for (RepositoryModel model : repositoryModels) {
-      if (model.getModulePath() == null) {
+      if (model.getName() == null) {
         continue;
       }
       if (model.getUrl() == null) {
-        repositories.add(new LocalRepository(model.getModulePath()));
+        repositories.add(new LocalRepository(model.getName()));
       } else {
-        repositories.add(new RemoteRepository(model.getModulePath(), model.getUrl()));
+        repositories.add(new RemoteRepository(model.getName(), model.getUrl()));
       }
     }
     return repositories;
