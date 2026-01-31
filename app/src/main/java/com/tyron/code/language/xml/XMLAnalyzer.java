@@ -46,6 +46,7 @@ import kotlin.Unit;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
 
@@ -108,7 +109,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
         return;
       }
 
-      ProgressManager.getInstance().runLater(() -> editor.post(()->editor.setAnalyzing(true)));
+      ProgressManager.getInstance().runLater(() -> ((CodeEditorView)editor).post(()->editor.setAnalyzing(true)));
 
       sDebouncer.cancel();
       sDebouncer.schedule(
