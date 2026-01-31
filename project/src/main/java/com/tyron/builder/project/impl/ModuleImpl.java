@@ -47,6 +47,7 @@ public class ModuleImpl implements Module {
 
   public ModuleImpl(File root) {
     mRoot = root;
+    if (mRoot!=null)
     setModuleName(getName());
     mFileManager = new FileManagerImpl(root);
     try {

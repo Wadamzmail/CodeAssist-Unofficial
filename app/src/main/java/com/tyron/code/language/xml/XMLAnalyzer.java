@@ -108,7 +108,7 @@ public class XMLAnalyzer extends DiagnosticTextmateAnalyzer {
         return;
       }
 
-      ProgressManager.getInstance().runLater(() -> editor.setAnalyzing(true));
+      ProgressManager.getInstance().runLater(() -> editor.post(()->editor.setAnalyzing(true)));
 
       sDebouncer.cancel();
       sDebouncer.schedule(

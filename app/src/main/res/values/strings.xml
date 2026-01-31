@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<!-- app name -->
+    <string name="app_name">CodeAssist Pro</string>
+	
+	<!-- home fragment -->
+	<string name="create_new_project">Create new project</string>
+	<string name="git_clone_repo">Clone git repository</string>
+	<string name="open_existing_project">Open existing project</string>
+	<string name="project_manager">Project manager</string>
+	<string name="import_project">Import project</string>
+	<string name="configure_settings">Configure settings</string>
+	<string name="choose_project">Choose project</string>
+	
+	<!-- main fragment -->
+  	<string name="title_confirm_project_close">Close project</string>
+	<string name="msg_confirm_project_close">Are you sure you want to close this project?</string>
+	
+	<!-- file manager -->	
+    <string name="text_title">Title</string>
+    <string name="text_description">Description</string>
+    <string name="text_button">Button</string>
+    <string name="okay">Okay</string>
+    <string name="importing_project">Importing Project...</string>
+    <string name="preparing_for_import">Preparing for Import...</string>
+    <string name="project_imported_successfully">Project imported successfully</string>
+    <string name="import_success">Import Success</string>
+    <string name="import_failed">Import Failed</string>
+    <string name="project_import_cancelled">Project import cancelled</string>
+    <string name="imported">Imported</string>
+    <string name="project_already_exists">Project: %1$s already exists</string>
+    <string name="exporting_project">Exporting Project...</string>
+    <string name="close">Close</string>
+    <string name="exporting">Exporting</string>
+    <string name="project_exported_successfully">Project exported successfully</string>
+    <string name="export_success">Export Success</string>
+    <string name="export_failed">Export Failed</string>
+
+    <string name="add_new_library">Add new library</string>
+	<string name="new_library">New library</string>
+	<string name="project_properties">Project properties</string>
+	<string name="variants">Variants</string>
+	<string name="build_variants">Build variants</string>
+	<string name="switched_to_variant">Switched to build variant</string>
+	<string name="create">Create</string>
+	<string name="name">Name</string>
+	<string name="package_name">Package name</string>
+	<string name="java_library">Java library</string>
+	<string name="android_library">Android library</string>
+	<!-- home menu -->	
+		
+    <string name="hello_world">Hello world!</string>
+    <item name="paste" type="string">Paste</item>
+    <item name="copy" type="string">Copy</item>
+    <item name="selectAll" formatted="true" type="string">Select All</item>
+    <item name="saveToProject" type="string">Project</item>
+    <item name="cut" type="string">Cut</item>
+    <item name="last" type="string">Last</item>
+    <item name="next" type="string">Next</item>
+    <item name="replace" type="string">Replace</item>
+    <item name="replaceAll" type="string">Replace All</item>
+    <item name="replacement" type="string">Replacement</item>
+    <item name="cancel" type="string">Cancel</item>
+    <item name="text_to_search" type="string">Text to search</item>
+    
+ 	<string name="settings_project_title">Project</string>
+	<string name="settings_project_desc">Configure project</string>  
+    <string name="project_title">Custom Project</string>
+    <string name="open_custom_project_title">Open Custom Project</string>
+    <string name="open_custom_project_desc">If enabled you will be able to open project from diffrent locations, By switching this the Project Manager will be hidden</string>
+     <string name="enable_custom_index_title">Enable Custom Index</string>
+	<string name="enable_custom_index_desc">If enabled CodeAssist will ask you to select what you want to index in every time before opening the project</string>
+	<string name="enable_ca_logging_title">Enable Application Logging</string>
+	<string name="enable_ca_logging_des">this option for CodeAssist Developers only</string>
+	
+	<string name="welcome_message">Welcome to CodeAssist</string>
+    <item name="more" type="string">More</item>
+	<item name="rename" type="string">Rename</item>
+    <item name="remove" type="string">Remove</item>
+	<item name="new_name" type="string">New name</item>
+	<item name="rename_success" type="string">Rename success</item>
+	<item name="copied_to_clipboard" type="string">Copied to clipboard</item>
+    <string name="add">Add</string>
+    <string name="added_successfully">Added successfully</string>
+    <string name="extract_icons">Extract icons</string>
+    <string name="extract">Extract</string>
+    <string name="confirm_extract">Do you want to extract all icons from CodeAssist?</string>
+    <string name="extracting_icons">Extracting icons</string>
+    
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+
+    <!-- wizard -->
+    <string name="wizard_next">Next</string>
+    <string name="wizard_finish">Finish</string>
+    <string name="wizard_cancel">Cancel</string>
+    <string name="wizard_templates">Templates</string>
+    <string name="wizard_exit">Exit</string>
+    <string name="wizard_desc">Select from Activity templates</string>
+    <string name="wizard_empty_templates">Templates are empty :(</string>
+    <string name="wizard_loading">Loading templates</string>
+    <string name="wizard_app_name">App name</string>
+    <string name="wizard_package_name">com.my.myapplication</string>
+    <string name="wizard_save_location">Save location</string>
+    <string name="wizard_language">Language</string>
+    <string name="wizard_minimum_sdk">Minimum SDK</string>
+    <string name="wizard_create">Create</string>
+    <string name="wizard_previous">Previous</string>
+    <string name="wizard_scoped_storage_info">Due to Android 11 storage restrictions, you can only save files on the app\'s internal storage.</string>
+    <string name="wizard_file_not_writable">Directory is not writable, select another location</string>
+    <string name="wizard_path_exceeds">Location path exceeds 240 characters.</string>
+    <string name="wizard_package_illegal">Package name contains illegal characters.</string>
+    <string name="wizard_package_too_short">Package name is too short.</string>
+    <string name="wizard_package_contains_spaces">Package name cannot contain spaces.</string>
+    <string name="wizard_error_name_empty">Name cannot be empty.</string>
+    <string name="wizard_error_name_illegal">Name cannot contain illegal characters</string>
+    <string name="wizard_package_empty">Package name cannot be empty.</string>
+    <string name="wizard_select_min_sdk">Select a minimum SDK version.</string>
+    <string name="wizard_select_save_location">Select a save location</string>
+
+    <string name="menu_open_project">Open module</string>
+    <string name="menu_create_project">Create module</string>
+    <string name="menu_run">Run</string>
+    <string name="menu_refresh">Refresh module</string>
+    <string name="menu_library_manager">Library manager</string>
+    <string name="menu_drawable_manager">Drawable manager</string>
+    <string name="menu_icon_manager">Icon manager</string>
+    <string name="menu_format">Format</string>
+    <string name="menu_settings">Settings</string>
+     
+    <!-- preferences -->
+    <string name="settings_title_application">Application</string>
+    <string name="settings_desc_application">General application preferences</string>
+    <string name="settings_title_editor">Editor</string>
+    <string name="settings_desc_editor">Configure the editor</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Application settings -->
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_value_default">System default</string>
+    <string name="settings_theme_value_light">Light</string>
+    <string name="settings_theme_value_dark">Dark</string>
+
+    <string-array name="theme_values">
+        <item>default</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string-array name="theme_entries">
+        <item>@string/settings_theme_value_default</item>
+        <item>@string/settings_theme_value_light</item>
+        <item>@string/settings_theme_value_dark</item>
+    </string-array>
+    
+
+    <!-- Editor settings -->
+    <string name="code_engine_title">Completion Engine</string>
+    <string name="settings_code_completions">Enable code completions</string>
+    <string name="settings_kotlin_completions">Enable code completions for Kotlin</string>
+    <string name="settings_kotlin_completions_desc">This feature is still experimental and may be slow.
+        Requires a powerful device.
+    </string>
+    <string name="settings_case_insensitive_match_title">Case insensitive match</string>
+    <string name="settings_case_insensitive_match_desc">Suggest class names with lowercase prefix.</string>
+    <string name="code_editor_error_highlight">Enable error highlighting</string>
+
+    <string name="editor_settings_title">Code Editor settings</string>
+    <string name="editor_settings_wordwrap">Word wrap mode</string>
+    <string name="editor_delete_whitespaces">Auto delete whitespace</string>
+    <string name="save">Save</string>
+    <string name="defaultString">Default</string>
+    <string name="editor_scheme_title">Editor color scheme</string>
+    <string name="editor_scheme_desc">Change the color scheme</string>
+    <string name="diagnostic_detail_title">Diagnostic Detail</string>
+    <string name="diagnostic_detail_desc">Will show Diagnostic detail window in the Editor.</string>
+    <string name="change_scheme_dialog_title">Paste the path of theme file</string>
+	<string name="set_scheme_file_path">Set scheme file path</string>
+    <string name="font_size_title">Font size</string>
+    <string name="font_size_message">Set editor font size</string>
+    <string name="font_size_summary">Specify the default font size of the editor</string>
+    <string name="kotlin_max_items_count_title">Kotlin max Suggestions count</string>
+    <string name="kotlin_max_items_count_message">Set the max count of Kotlin Suggestions (Default = 50)</string>
+    <string name="kotlin_max_items_count_summary">Specify the default kotlin suggestions list limit, every Decreased means performance++</string>
+    <string name="parallel_backend_threads_title">Parallel Backend Threads</string>
+    <string name="parallel_backend_threads_message">Set Number of Kotlin Completion Threads (Default = 10)</string>
+    <string name="parallel_backend_threads_summary">Specify the default threads number, be careful</string>
+    <string name="keyboard_settings_title">Keyboard</string>
+    <string name="keyboard_enable_suggestions_description">Enable keyboard suggestions</string>
+    <string name="settings_build_run_title">Build &amp; Run</string>
+    <string name="settings_build_run_desc">Configure build and execution settings</string>
+    <string name="run_title">Run</string>
+    <string name="settings_install_apk_title">APK Installation Prompt</string>
+    <string name="settings_install_desc">Show APK installation prompt after successful compilation.</string>
+    <string-array name="java_versions" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+    <string name="completion_settings_kotlin_title">Kotlin</string>
+    <string name="completion_settings_java_title">Java</string>
+    <string name="completion_java_target_version_title">Target version</string>
+    <string name="completion_java_source_version_title">Source version</string>
+    <string name="editor_tabs_settings_title">Editor Tabs</string>
+    <string name="editor_tab_unique_file_name">Show directory for non-unique file names</string>
+    <string name="editor_tab_unique_file_name_summary">Makes displayed file names unique by showing parent folders if files with identical file names are opened.</string>
+
+    <!-- about page -->
+    <string name="settings_about_us_title">About Us</string>
+    <string name="settings_about_us_desc">More info about the developers.</string>
+    <string name="app_description">Powerful and lightweight IDE for Android app development right within your pocket.</string>
+    <string name="app_version">Version</string>
+    <string name="contact_group_title">Contact</string>
+    <string name="app_source_title">Source code</string>
+    <string name="sketchub_team">Sketchub Team</string>
+    <string name="community">Community</string>
+    <string name="rate_us">Rate us</string>
+
+	<!-- Git Settings -->
+	<string name="settings_git_title">Git Source Control</string>
+	<string name="settings_git_desc">Configure the Git Source Control</string>  
+	<string name="git_title">Git</string>
+	<string name="git_user_name_title">User Name</string>
+	<string name="git_user_desc">Full name (recorded with commits)</string> 
+	<string name="enter_full_name">Enter full name</string>
+	<string name="git_user_email_title">User Email</string>
+	<string name="git_email_desc">Email (recorded with commits)</string>  
+	<string name="enter_email">Enter email</string>
+		
+    <!-- file manager menu -->
+    <string name="install">Install</string>
+    <string name="error">Error</string>
+    <string name="error_resource_name_restriction">Resource names must only contain lowercase letters (a–z), digits (0–9), and underscores.</string>
+    <string name="item_project">Project</string>
+	<string name="open_project">Open project</string>
+    <string name="dialog_create_class_title">Create a class</string>
+    <string name="create_class_dialog_class_name">Class name</string>
+    <string name="create_class_dialog_positive">Create</string>
+    <string name="create_class_dialog_class_type">Class type</string>
+    <string name="create_class_dialog_invalid_name">Invalid class name</string>
+
+    <string name="success">Success</string>
+    <string name="delete_success">Delete success.</string>
+    <string name="dialog_confirm_delete">Are you sure you want to delete %1$s?</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="menu_preview_layout">Preview Layout</string>
+
+    <string name="project_manager_alpha_notice_title">Alpha notice</string>
+    <string name="project_manager_alpha_notice">CodeAssist is still in alpha,
+        you may encounter crashes, bugs and incomplete features.\nYou
+        can report these issues at https://github.com/tyron12233/CodeAssist/issues</string>
+    <string name="project_manager_save_location_title">Select save location</string>
+    <string name="project_manager_permission_denied">Permission denied</string>
+    <string name="project_manager_button_request_again">Request again</string>
+    <string name="project_manager_button_continue">Continue</string>
+    <string name="project_manager_rationale_title">Storage permissions</string>
+    <string name="project_manager_button_allow">Allow</string>
+    <string name="project_manager_button_use_internal">Use internal storage</string>
+    <string name="project_manager_permission_rationale">The application needs storage permissions
+        in order to save module files that will not be deleted when you uninstall the
+        app. Alternatively you can choose to save module files into the app\'s internal storage.</string>
+    <string name="project_manager_android11_notice">Projects will be saved to the app\'s internal storage directory.
+        Backup your modules before uninstalling the app.</string>
+    <string name="project_manager_projects">Projects</string>
+    <string name="project_manager_empty">Projects are empty</string>
+    <string name="project_manager_create_project">Create module</string>
+    <string name="project_path_menu_title">Projects Path</string>
+    <string name="project_manager_null_projects">No Projects Found</string>
+    <string name="project_manager_suggestions">Suggestions:\n\n  - Create New Project\n  - Change Projects Path</string>
+    
+
+    <!-- Compiler Service -->
+    <string name="compilation_state_compiling">Compiling</string>
+    <string name="compilation_button_install">INSTALL</string>
+    <string name="compilation_result_success">Compilation success</string>
+    <string name="compilation_result_failed">Compilation failed</string>
+
+    <!-- Library manager -->
+    <string name="library_manager_title">%1s Libraries</string>
+    <string name="group_id">Group Id</string>
+    <string name="artifact_id">Artifact Id</string>
+    <string name="version_name">Version Name</string>
+    <string name="menu_display_dependencies">List dependencies</string>
+    <string name="attributes_editor">Attributes Editor</string>
+    <string name="attribute_value">Attribute value</string>
+    <string name="menu_add_libs_gradle">Add libraries from build.gradle</string>
+
+    <!-- Layout Editor -->
+    <string name="error_no_project_opened">No project opened.</string>
+    <string name="dialog_confirm_save_title">Save to XML</string>
+    <string name="dialog_confirm_save_msg">Do you want to save the layout?</string>
+    <!-- File Editor Manager -->
+    <string name="file_editor_selection_title">Which editor would you like to open?</string>
+
+    <!-- Editor tabs -->
+    <string name="menu_close_file">Close</string>
+    <string name="menu_close_others">Close others</string>
+    <string name="menu_close_all">Close all</string>
+    
+    <string name="menu_close">Close</string>
+    <string name="error_dir_access">Error Dir Access</string>
+
+    <!-- Editor -->
+    <string name="editor_error_file">An error has occurred while reading the file. Changes will not be saved.</string>
+
+    <!-- Bottom Editor Fragment -->
+    <string name="tab_build_logs_title">Build Logs</string>
+    <string name="tab_app_logs_title">App Logs</string>
+    <string name="tab_ide_logs_title">IDE Logs</string>
+    <string name="tab_diagnostics_title">Diagnostics</string>
+	
+	<!-- GIT CLONE MAIN-->
+	<string name="git_clone">Clone</string>
+	<string name="git_clone_repo_url">Repository URL</string>
+	<string name="git_clone_in_progress">Cloning repository</string>
+	<string name="cloned_successfully">Cloned successfully</string>
+	<string name="git_clone_failed">Failed to clone git repository</string>
+    <string name="git_clone_cancled">Cloning cancled</string>
+    
+    <!-- GIT-->
+    <string name="added_to_staged">has been added to staged</string>
+    <string name="all_files_added_to_staged">All files has been added to staged</string>
+    <string name="removed_from_index">has been removed from index</string>
+    <string name="reset_changes_success">Reset changes success</string>
+    <string name="remove_from_index">Remove from index</string>
+    <string name="remove_from_index_force">Remove from index (Force)</string>
+    <string name="remove_from_index_msg">Are you sure you want to remove %1$s from index?</string>
+    <string name="remove_from_index_force_msg">Are you sure you want to remove %1$s from working directory and index?</string>
+    <string name="title_fetching">Fetching...</string>
+    <string name="fetch_completed">Fetch completed</string>
+    <string name="commit_message">Commit message</string>
+    <string name="commit_changes">Commit Changes</string>
+    <string name="title_commit">Commit</string>
+    <string name="empty_commit">Commit message can not be empty</string>
+    <string name="set_user_and_password">Please set Username and Email in settings</string>
+    <string name="reset_changes">Reset Changes</string>
+    <string name="title_reset">Reset</string>
+    <string name="all_changes_discarded">All changes has been discarded</string>
+    <string name="reset_confirm">Are you sure you want to discard all the changes?</string>
+    <string name="pulling">Pulling...</string>
+    <string name="pull_completed">Pull completed</string>
+    <string name="pushing">Pushing...</string>
+    <string name="push_completed">Push completed</string>
+    <string name="branch_name">Branch name</string>
+    <string name="title_create_remove_branch">Create/Remove Branch</string>
+    <string name="empty_branch">Branch name can not be empty</string>
+    <string name="branch_created_successfully">Branch created successfully</string>
+    <string name="branch_removed_successfully">Branch removed successfully</string>
+    <string name="remote_name">Remote name</string>
+    <string name="title_add_remove_remote">Add/Remove Remote</string>
+    <string name="empty_remote">Remote name can not be empty</string>
+    <string name="remote_added_successfully">Remote added successfully</string>
+    <string name="remote_removed_successfully">Remote removed successfully</string>
+   
+    <!-- SSH -->
+	<string name="keyName">Key name</string>
+	<string name="generateKey">Generate Key</string>
+	<string name="generate">Generate</string>
+	<string name="keyExists">Private key already exists</string>
+	<string name="keyEmpty">Key name can not be empty</string>
+	<string name="keyLoaded">Key is loaded</string>
+    <string name="ssh_key_manager">SSH Keys manager</string>
+    <string name="ssh_keys_manager_empty">SSH Keys are empty</string>
+    <string name="ssh_key_manager_null_ssh_keys">No SSH Keys found</string>
+    
+    <!-- Icon Manager -->
+    <string name="icon_manager_empty">Icons folder is empty</string>
+    <string name="icon_manager_null_icons">No Icons found</string>
+ 
+    <!-- Drawable Manager -->
+    <string name="drawable_manager_empty">Drawable folder is empty</string>
+    <string name="drawable_manager_null_drawables">No drawable found</string>
+
+    <string name="no_errors_found">No errors found</string>
+	<string name="errors_found">%1s errors found</string>
+    <string name="please_wait">Please wait</string>
+    <string name="formatting">Formatting Codes</string>
+    
+    <string name="action_menu_build_release">Build release APK</string>
+    <string name="action_menu_build_debug">Build debug APK</string>
+    <string name="action_menu_build_aab">Build AAB</string>
+
+    <!-- Compiler Settings -->
+    <string name="compiler_title">Compiler</string>
+    <string name="settings_title_compiler">Compiler</string>
+    <string name="settings_desc_compiler">Configure Compiler</string>
+    <string name="use_fast_jar_file_system_title">Fast implementation for Jar FS</string>
+    <string name="use_fast_jar_file_system_desc">This experimental mode may speed up compilation time, but use with caution</string>
+    <string name="use_psi_class_files_reading_title">PSI Class Files Reading</string>
+    <string name="use_psi_class_files_reading_desc">Use Program Structure Interface (PSI) to parse and read .class files instead of the standard file system.</string>
+    <string name="use_fir_title">Enable FIR (K2 Compiler)</string>
+    <string name="use_fir_desc">Use the new Frontend Intermediate Representation to improve compilation speed and analysis performance.</string>
+ 
+</resources>
