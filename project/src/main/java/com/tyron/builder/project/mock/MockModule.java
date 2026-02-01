@@ -127,9 +127,9 @@ public class MockModule implements Module {
   public String getModuleName() {
     return mRoot.getName();
   }
-  
-  @Override 
-  public void setModuleName(String name){}
+
+  @Override
+  public void setModuleName(String name) {}
 
   @Override
   public void clear() {}

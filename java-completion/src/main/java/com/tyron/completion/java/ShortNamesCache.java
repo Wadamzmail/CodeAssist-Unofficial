@@ -70,7 +70,8 @@ public class ShortNamesCache {
           for (String name2 : ((JavaModule) dependingModule).getApiProjects()) {
             Module dm1 = dependingModule.getProject().getModuleByName(name2);
             pending.add(dm1);
-            System.out.println("added Module Dependency :" + name + " from :" + module.getModuleName());
+            System.out.println(
+                "added Module Dependency :" + name + " from :" + module.getModuleName());
           }
         }
       }

@@ -47,8 +47,7 @@ public class ModuleImpl implements Module {
 
   public ModuleImpl(File root) {
     mRoot = root;
-    if (mRoot!=null)
-    setModuleName(getName().replace("/",":"));
+    if (mRoot != null) setModuleName(getName().replace("/", ":"));
     mFileManager = new FileManagerImpl(root);
     try {
       if (mRoot == null) return;
@@ -139,9 +138,9 @@ public class ModuleImpl implements Module {
   public String getModuleName() {
     return mModuleName;
   }
-  
-  @Override 
-  public void setModuleName(String name){
+
+  @Override
+  public void setModuleName(String name) {
     mModuleName = name;
   }
 

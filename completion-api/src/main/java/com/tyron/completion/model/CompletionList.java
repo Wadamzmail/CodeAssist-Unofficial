@@ -5,11 +5,11 @@ import com.google.errorprone.annotations.Immutable;
 import com.tyron.completion.CompletionPrefixMatcher;
 import com.tyron.completion.CompletionPrefixMatcher.MatchLevel;
 import com.tyron.completion.CompletionProvider;
+import com.tyron.completion.drawable.CircleDrawable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import com.tyron.completion.drawable.CircleDrawable;
 
 /** Represents a list of completion items to be return from a {@link CompletionProvider} */
 @Immutable

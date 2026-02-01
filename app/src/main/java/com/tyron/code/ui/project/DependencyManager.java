@@ -154,7 +154,7 @@ public class DependencyManager {
         if (!includedInBuildGradle.isEmpty()) {
           projects.addAll(includedInBuildGradle);
         }
-        File includeName = new File(project.getProjectDir(), include.replace(":","/"));
+        File includeName = new File(project.getProjectDir(), include.replace(":", "/"));
         String root = include.replaceFirst("/", "").replaceAll("/", ":");
         logger.debug("> Task :" + root + ":" + "resolvingDependencies");
         try {
@@ -456,7 +456,7 @@ public class DependencyManager {
   private void checkLibraries(
       JavaModule project, File root, File idea, ILogger logger, File gradleFile, String scope)
       throws IOException {
-    if(root==null)return;
+    if (root == null) return;
     Set<CodeAssistLibrary> libraries = new HashSet<>();
     Map<String, CodeAssistLibrary> fileLibsHashes = new HashMap<>();
     Map<String, CodeAssistLibrary> md5Map = new HashMap<>();
@@ -470,7 +470,7 @@ public class DependencyManager {
         for (int i = 0; i < dirValue.size(); i++) {
           String dir = dirValue.get(i);
           String include = includeValues.get(i);
-          if(dir==null&&include==null)continue;
+          if (dir == null && include == null) continue;
           fileLibsHashes =
               new HashMap<>(
                   checkDirLibraries(fileLibsHashes, logger, new File(root, dir), include, scope));

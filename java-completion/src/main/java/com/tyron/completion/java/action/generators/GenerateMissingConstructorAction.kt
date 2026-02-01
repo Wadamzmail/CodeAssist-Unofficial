@@ -14,6 +14,12 @@ import com.tyron.completion.java.rewrite.GenerateRecordConstructor
 import com.tyron.completion.java.util.CodeActionUtils
 import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider
 import com.tyron.completion.util.RewriteUtil
+import com.tyron.completion.java.parse.CompilationInfo
+import com.sun.source.tree.LineMap
+import javax.tools.Diagnostic
+import javax.tools.JavaFileObject
+import com.tyron.completion.model.Position
+import com.tyron.completion.model.Range
 
 class GenerateMissingConstructorAction : AnAction() {
      
@@ -49,7 +55,7 @@ class GenerateMissingConstructorAction : AnAction() {
      val unit = compilationInfo.getCompilationUnit(file.toURI())?: return
      val javacTask = compilationInfo.impl.javacTask
      val needsConstructor =
-        CodeActionUtils.findClassNeedingConstructor(javacTask, diagnostic.range) ?: return
+        CodeActionUtils.findClassNeedingConstructor(javacTask, getDiagnosticRange(unit.lineMap)) ?: return
      val rewrite = GenerateRecordConstructor(needsConstructor)?: return 
      RewriteUtil.performRewrite(
          editor,
@@ -57,5 +63,22 @@ class GenerateMissingConstructorAction : AnAction() {
          DefaultJavacUtilitiesProvider(javacTask, unit, editor.project),
          rewrite)
    }
+   
+   private fun getDiagnosticRange(
+    diagnostic: Diagnostic<out JavaFileObject?>,
+    lines: LineMap
+  ): Range {
+    val start = getPosition(diagnostic.startPosition, lines)
+    val end = getPosition(diagnostic.endPosition, lines)
+    return Range(start, end)
+  }
+
+  private fun getPosition(position: Long, lines: LineMap): Position {
+    // decrement the numbers
+    // to convert 1-based indexes to 0-based
+    val line = (lines.getLineNumber(position) - 1).toInt()
+    val column = (lines.getColumnNumber(position) - 1).toInt()
+    return Position(line, column)
+  }
 
 }

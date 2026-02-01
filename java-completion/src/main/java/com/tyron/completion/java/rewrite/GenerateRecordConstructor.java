@@ -1,10 +1,18 @@
 package com.tyron.completion.java.rewrite;
 
 import androidx.annotation.NonNull;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SourcePositions;
+import com.tyron.common.util.EditorUtilKt;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.tyron.completion.java.util.ProjectUtil;
 import com.tyron.completion.model.Position;
 import com.tyron.completion.model.Range;
 import com.tyron.completion.model.TextEdit;
-import com.tyron.common.util.EditorUtilKt;
+import dev.mutwakil.javac.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,23 +23,8 @@ import java.util.Set;
 import java.util.StringJoiner;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.SourcePositions;
-import com.sun.source.util.Trees;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tyron.completion.java.parse.CompilationInfo;
-import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider;
-import com.tyron.completion.java.provider.FindHelper;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import com.tyron.completion.java.util.ProjectUtil;
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.tree.JCTree;
-import dev.mutwakil.javac.*;
-import com.tyron.completion.java.util.CodeActionUtils;
 
 public class GenerateRecordConstructor extends JavaRewrite2 {
 
@@ -53,32 +46,31 @@ public class GenerateRecordConstructor extends JavaRewrite2 {
       LOG.warn("Unable to find source file for class: {}", this.className);
       return CANCELLED;
     }
-    
-          TypeElement typeElement = task.getTask().getElements().getTypeElement(className);
-          ClassTree typeTree = task.getTrees().getTree(typeElement);
-          List<VariableTree> fields = fieldsNeedingInitialization(typeTree);
-          String parameters = generateParameters(task, fields);
-          String initializers = generateInitializers(fields);
-          StringBuilder buf = new StringBuilder();
-          buf.append("\n");
-          if (typeTree.getModifiers().getFlags().contains(Modifier.PUBLIC)) {
-            buf.append("public ");
-          }
 
-          buf.append(simpleName(className))
-              .append("(")
-              .append(parameters)
-              .append(") {\n    ")
-              .append(initializers)
-              .append("\n}");
-          String string = buf.toString();
-          int indent = EditHelper.indent(task, task.root(), typeTree)
-              +/*tabSize*/ 4;
-          string = string.replaceAll("\n", "\n" + EditorUtilKt.indentationString(indent));
-          string = string + "\n\n";
-          Position insert = insertPoint(task, typeTree);
-          TextEdit[] edits = {new TextEdit(new Range(insert, insert), string)};
-          return Collections.singletonMap(file, edits);
+    TypeElement typeElement = task.getTask().getElements().getTypeElement(className);
+    ClassTree typeTree = task.getTrees().getTree(typeElement);
+    List<VariableTree> fields = fieldsNeedingInitialization(typeTree);
+    String parameters = generateParameters(task, fields);
+    String initializers = generateInitializers(fields);
+    StringBuilder buf = new StringBuilder();
+    buf.append("\n");
+    if (typeTree.getModifiers().getFlags().contains(Modifier.PUBLIC)) {
+      buf.append("public ");
+    }
+
+    buf.append(simpleName(className))
+        .append("(")
+        .append(parameters)
+        .append(") {\n    ")
+        .append(initializers)
+        .append("\n}");
+    String string = buf.toString();
+    int indent = EditHelper.indent(task, task.root(), typeTree) + /*tabSize*/ 4;
+    string = string.replaceAll("\n", "\n" + EditorUtilKt.indentationString(indent));
+    string = string + "\n\n";
+    Position insert = insertPoint(task, typeTree);
+    TextEdit[] edits = {new TextEdit(new Range(insert, insert), string)};
+    return Collections.singletonMap(file, edits);
   }
 
   private List<VariableTree> fieldsNeedingInitialization(ClassTree typeTree) {

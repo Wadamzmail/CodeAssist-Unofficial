@@ -1,20 +1,9 @@
 package com.tyron.completion.java.util;
 
+import static com.tyron.completion.java.util.DiagnosticUtil.MethodPtr;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import dev.mutwakil.androidide.javac.services.util.JavaDiagnosticUtils;
-import com.tyron.completion.model.Rewrite;
-import com.tyron.completion.java.action.FindMethodDeclarationAt;
-import com.tyron.completion.java.FindTypeDeclarationAt;
-import com.tyron.completion.model.Position;
-import com.tyron.completion.model.Range;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LineMap;
@@ -22,12 +11,19 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
-import com.sun.tools.javac.util.JCDiagnostic;
+import com.tyron.completion.java.FindTypeDeclarationAt;
+import com.tyron.completion.java.action.FindMethodDeclarationAt;
+import com.tyron.completion.java.provider.JavacUtilitiesProvider;
+import com.tyron.completion.model.Position;
+import com.tyron.completion.model.Range;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tyron.completion.java.provider.JavacUtilitiesProvider;
-import static com.tyron.completion.java.util.DiagnosticUtil.MethodPtr;
 
 /**
  * @author Akash Yadav
@@ -39,7 +35,6 @@ public class CodeActionUtils {
   private static final Pattern UNREPORTED_EXCEPTION =
       Pattern.compile("unreported exception ((\\w+\\.)*\\w+)");
   private static final Logger LOG = LoggerFactory.getLogger(CodeActionUtils.class);
-
 
   public static boolean isInMethod(@NonNull JavacUtilitiesProvider task, long cursor) {
     MethodTree method = new FindMethodDeclarationAt(task.getTrees()).scan(task.root(), cursor);
@@ -78,7 +73,8 @@ public class CodeActionUtils {
     return qualifiedName(task, type);
   }
 
-  public static ClassTree findClassTree(@NonNull JavacUtilitiesProvider task, @NonNull Range range) {
+  public static ClassTree findClassTree(
+      @NonNull JavacUtilitiesProvider task, @NonNull Range range) {
     final long position =
         task.root()
             .getLineMap()
@@ -117,8 +113,7 @@ public class CodeActionUtils {
   }
 
   public static boolean synthetic(@NonNull JavacUtilitiesProvider task, MethodTree method) {
-    return task.getTrees().getSourcePositions().getStartPosition(task.root(), method)
-        != -1;
+    return task.getTrees().getSourcePositions().getStartPosition(task.root(), method) != -1;
   }
 
   @NonNull
@@ -172,5 +167,4 @@ public class CodeActionUtils {
                 .getPosition(range.getEnd().getLine() + 1, range.getEnd().getColumn() + 1);
     return contents.subSequence(start, end);
   }
-
 }

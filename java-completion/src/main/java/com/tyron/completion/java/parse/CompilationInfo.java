@@ -89,8 +89,7 @@ public class CompilationInfo {
     return get(currentProject, file, false);
   }
 
-  public static CompilationInfo get(
-      Project currentProject, File file, boolean reIndex) {
+  public static CompilationInfo get(Project currentProject, File file, boolean reIndex) {
     final Module module = currentProject.getModule(file);
     ProjectUtil.getInstance().setProject(currentProject).setModule(module);
     return get(module, reIndex);
@@ -135,9 +134,9 @@ public class CompilationInfo {
           }
         });
   }
-  
+
   public updateFile(Module module, File file, Consumer<JCCompilationUnit> treeConsumer) {
-      update(
+    update(
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
@@ -146,7 +145,9 @@ public class CompilationInfo {
             // it is stripped to speed up the index process
             return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
           }
-        },0,treeConsumer);
+        },
+        0,
+        treeConsumer);
   }
 
   public final CompilationInfoImpl impl;

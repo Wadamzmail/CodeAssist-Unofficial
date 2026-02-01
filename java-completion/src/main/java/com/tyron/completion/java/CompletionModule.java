@@ -9,8 +9,13 @@ import androidx.annotation.VisibleForTesting;
 import com.tyron.actions.ActionManager;
 import com.tyron.builder.BuildModule;
 import com.tyron.common.util.Decompress;
+import com.tyron.completion.java.action.common.CommentAction;
+import com.tyron.completion.java.action.common.OrganizeImportsAction;
+import com.tyron.completion.java.action.common.RemoveUnusedImportsAction;
+import com.tyron.completion.java.action.common.UncommentAction;
 import com.tyron.completion.java.action.context.IntroduceLocalVariableAction;
 import com.tyron.completion.java.action.context.OverrideInheritedMethodsAction;
+import com.tyron.completion.java.action.generators.GenerateMissingConstructorAction;
 import com.tyron.completion.java.action.quickfix.AddCatchClauseAction;
 import com.tyron.completion.java.action.quickfix.AddThrowsAction;
 import com.tyron.completion.java.action.quickfix.ImplementAbstractMethodsFix;
@@ -19,11 +24,6 @@ import com.tyron.completion.java.action.quickfix.ImportClassFieldFix;
 import com.tyron.completion.java.action.quickfix.SurroundWithTryCatchAction;
 import com.tyron.completion.java.provider.snippet.JavaSnippetRepository;
 import java.io.File;
-import com.tyron.completion.java.action.common.CommentAction;
-import com.tyron.completion.java.action.common.UncommentAction;
-import com.tyron.completion.java.action.common.RemoveUnusedImportsAction;
-import com.tyron.completion.java.action.common.OrganizeImportsAction;
-import com.tyron.completion.java.action.generators.GenerateMissingConstructorAction;
 
 public class CompletionModule {
 
@@ -44,13 +44,14 @@ public class CompletionModule {
         IntroduceLocalVariableAction.ID, new IntroduceLocalVariableAction());
     actionManager.registerAction(
         OverrideInheritedMethodsAction.ID, new OverrideInheritedMethodsAction());
-     //common
-     actionManager.registerAction(CommentAction.ID,new CommentAction());
-     actionManager.registerAction(UncommentAction.ID,new UncommentAction());
-     actionManager.registerAction(RemoveUnusedImportsAction.ID,new RemoveUnusedImportsAction());
-     actionManager.registerAction(OrganizeImportsAction.ID,new OrganizeImportsAction());
-     //Genetators
-     actionManager.registerAction(GenerateMissingConstructorAction.ID, new GenerateMissingConstructorAction());
+    // common
+    actionManager.registerAction(CommentAction.ID, new CommentAction());
+    actionManager.registerAction(UncommentAction.ID, new UncommentAction());
+    actionManager.registerAction(RemoveUnusedImportsAction.ID, new RemoveUnusedImportsAction());
+    actionManager.registerAction(OrganizeImportsAction.ID, new OrganizeImportsAction());
+    // Genetators
+    actionManager.registerAction(
+        GenerateMissingConstructorAction.ID, new GenerateMissingConstructorAction());
   }
 
   public static void initialize(Context context) {

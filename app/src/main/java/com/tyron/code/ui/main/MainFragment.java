@@ -445,12 +445,12 @@ public class MainFragment extends Fragment implements ProjectManager.OnProjectOp
       saveAll(false);
       project.getSettings().refresh();
     }
-    
-    IndexServiceConnection.restoreFileEditors(project, mMainViewModel); 
+
+    IndexServiceConnection.restoreFileEditors(project, mMainViewModel);
 
     mProject = project;
     mIndexServiceConnection.setProject(project);
-    
+
     mMainViewModel.setToolbarTitle(project.getRootFile().getName());
     mMainViewModel.setIndexing(true);
     CompletionEngine.setIndexing(true);

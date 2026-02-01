@@ -1,6 +1,5 @@
 package com.tyron.completion.model;
 
-
 import androidx.annotation.NonNull;
 import io.github.rosemoe.sora.lang.completion.CompletionItemKind;
 import io.github.rosemoe.sora.lang.completion.SnippetDescription;
