@@ -18,8 +18,8 @@ import com.tyron.completion.java.parse.CompilationInfo
 import com.sun.source.tree.LineMap
 import javax.tools.Diagnostic
 import javax.tools.JavaFileObject
-import com.tyron.completion.model.Position
-import com.tyron.completion.model.Range
+import com.tyron.completion.model.location.Position
+import com.tyron.completion.model.location.Range
 import com.tyron.builder.model.DiagnosticWrapper
 
 class GenerateMissingConstructorAction : AnAction() {
