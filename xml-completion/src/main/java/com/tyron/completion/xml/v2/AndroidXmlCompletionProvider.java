@@ -38,7 +38,7 @@ public class AndroidXmlCompletionProvider extends CompletionProvider {
    *
    * @return the framework resources directory
    */
-  private static File getOrExtractFiles() {
+  private static synchronized File getOrExtractFiles() {
     File filesDir = ApplicationProvider.getApplicationContext().getFilesDir();
     File check = new File(filesDir, "sources/android-36/data/res/values/attrs.xml");
     if (check.exists()) {

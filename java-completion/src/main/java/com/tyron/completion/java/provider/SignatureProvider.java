@@ -74,8 +74,7 @@ public class SignatureProvider extends CancelableServiceProvider {
     abortIfCancelled();
 
     if (compilationInfo == null) return NOT_SUPPORTED;
-    JCTree.JCCompilationUnit unit =
-        compilationInfo.updateFile(ProjectUtil.getInstance().getModule(), file.toFile());
+    JCTree.JCCompilationUnit unit = compilationInfo.getCompilationUnit(file.toFile().toURI());
     if (unit == null) return NOT_SUPPORTED;
     JavacTaskImpl javacTask = compilationInfo.impl.getJavacTask();
     long cursor = unit.getLineMap().getPosition(line, column);

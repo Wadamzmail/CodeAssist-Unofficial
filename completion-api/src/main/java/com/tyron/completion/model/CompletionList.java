@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import com.tyron.completion.drawable.CircleDrawable;
 
 /** Represents a list of completion items to be return from a {@link CompletionProvider} */
 @Immutable
@@ -107,6 +108,7 @@ public class CompletionList {
       Collections.sort(matchLevels);
       MatchLevel matchLevel = matchLevels.get(matchLevels.size() - 1);
       item.setMatchLevel(matchLevel);
+      item.icon = new CircleDrawable(item.iconKind);
       items.add(item);
       return this;
     }

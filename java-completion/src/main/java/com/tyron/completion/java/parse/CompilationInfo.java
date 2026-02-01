@@ -81,15 +81,15 @@ public class CompilationInfo {
     return info;
   }
 
-  public static synchronized CompilationInfo get(Module module) {
+  public static CompilationInfo get(Module module) {
     return get(module, false);
   }
 
-  public static synchronized CompilationInfo get(Project currentProject, File file) {
+  public static CompilationInfo get(Project currentProject, File file) {
     return get(currentProject, file, false);
   }
 
-  public static synchronized CompilationInfo get(
+  public static CompilationInfo get(
       Project currentProject, File file, boolean reIndex) {
     final Module module = currentProject.getModule(file);
     ProjectUtil.getInstance().setProject(currentProject).setModule(module);
@@ -123,7 +123,7 @@ public class CompilationInfo {
     return null;
   }
 
-  public synchronized JCCompilationUnit updateFile(Module module, File file) {
+  public JCCompilationUnit updateFile(Module module, File file) {
     return updateImmediately(
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
@@ -134,6 +134,19 @@ public class CompilationInfo {
             return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
           }
         });
+  }
+  
+  public updateFile(Module module, File file, Consumer<JCCompilationUnit> treeConsumer) {
+      update(
+        new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
+          @Override
+          public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+            Parser parser = Parser.parseFile(module.getProject(), file.toPath());
+            // During indexing, statements inside methods are not needed so
+            // it is stripped to speed up the index process
+            return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
+          }
+        },0,treeConsumer);
   }
 
   public final CompilationInfoImpl impl;

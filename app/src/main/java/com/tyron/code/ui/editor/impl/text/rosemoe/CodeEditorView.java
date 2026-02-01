@@ -169,10 +169,10 @@ public class CodeEditorView extends IDEEditor implements Editor {
     mStopConv = true;
     mDiagnostics = diagnostics;
 
-//    AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
-//    if (manager instanceof DiagnosticTextmateAnalyzer) {
-//      ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
-//    }
+    AnalyzeManager manager = getEditorLanguage().getAnalyzeManager();
+    if (manager instanceof DiagnosticTextmateAnalyzer) {
+      ((DiagnosticTextmateAnalyzer) manager).setDiagnostics(this, diagnostics);
+    }
 
     if (mDiagnosticsListener != null) {
       mDiagnosticsListener.accept(mDiagnostics);

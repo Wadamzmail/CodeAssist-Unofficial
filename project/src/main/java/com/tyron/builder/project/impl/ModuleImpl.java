@@ -48,7 +48,7 @@ public class ModuleImpl implements Module {
   public ModuleImpl(File root) {
     mRoot = root;
     if (mRoot!=null)
-    setModuleName(getName());
+    setModuleName(getName().replace("/",":"));
     mFileManager = new FileManagerImpl(root);
     try {
       if (mRoot == null) return;
