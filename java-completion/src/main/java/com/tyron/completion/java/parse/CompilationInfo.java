@@ -135,7 +135,7 @@ public class CompilationInfo {
         });
   }
 
-  public updateFile(Module module, File file, Consumer<JCCompilationUnit> treeConsumer) {
+  public void updateFile(Module module, File file, Consumer<JCCompilationUnit> treeConsumer) {
     update(
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
