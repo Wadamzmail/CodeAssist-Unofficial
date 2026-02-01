@@ -31,8 +31,7 @@ class GenerateMissingConstructorAction : AnAction() {
    } 
    override fun update(event : AnActionEvent){
      var presentation = event.presentation
-     presentation.setVisible(false)
-     
+     presentation.setVisible(false)  
      if (!ActionPlaces.EDITOR.equals(event.place))return
      
      val editor = event.getData(CommonDataKeys.EDITOR)?: return
@@ -54,13 +53,14 @@ class GenerateMissingConstructorAction : AnAction() {
      val compilationInfo = event.getData(CompilationInfo.COMPILATION_INFO_KEY)?: return
      val unit = compilationInfo.getCompilationUnit(file.toURI())?: return
      val javacTask = compilationInfo.impl.javacTask
+     val task = DefaultJavacUtilitiesProvider(javacTask, unit, editor.project)
      val needsConstructor =
-        CodeActionUtils.findClassNeedingConstructor(javacTask, getDiagnosticRange(unit.lineMap)) ?: return
+        CodeActionUtils.findClassNeedingConstructor(task, getDiagnosticRange(diagnostic)) ?: return
      val rewrite = GenerateRecordConstructor(needsConstructor)?: return 
      RewriteUtil.performRewrite(
          editor,
          file,
-         DefaultJavacUtilitiesProvider(javacTask, unit, editor.project),
+         task,
          rewrite)
    }
    

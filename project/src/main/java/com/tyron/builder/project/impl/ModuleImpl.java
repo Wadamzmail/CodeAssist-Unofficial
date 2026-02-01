@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+ 
 public class ModuleImpl implements Module {
 
   /** Concurrent writes to this field are via CASes only, using the {@link #updater} */
@@ -44,7 +44,7 @@ public class ModuleImpl implements Module {
   private FileManager mFileManager;
   private List<String> excludedClassPaths = new ArrayList<>();
   private String mModuleName;
-
+  
   public ModuleImpl(File root) {
     mRoot = root;
     if (mRoot != null) setModuleName(getName().replace("/", ":"));
