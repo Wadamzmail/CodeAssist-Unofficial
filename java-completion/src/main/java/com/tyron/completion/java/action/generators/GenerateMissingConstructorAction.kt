@@ -56,7 +56,7 @@ class GenerateMissingConstructorAction : AnAction() {
      val javacTask = compilationInfo.impl.javacTask
      val task = DefaultJavacUtilitiesProvider(javacTask, unit, editor.project)
      val needsConstructor =
-        CodeActionUtils.findClassNeedingConstructor(task, getDiagnosticRange(diagnostic)) ?: return
+        CodeActionUtils.findClassNeedingConstructor(task, getDiagnosticRange(diagnostic,unit.lineMap)) ?: return
      val rewrite = GenerateRecordConstructor(needsConstructor)?: return 
      RewriteUtil.performRewrite(
          editor,
