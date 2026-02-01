@@ -35,6 +35,7 @@ import com.tyron.completion.util.CancelChecker
 import com.tyron.code.ui.editor.snippets.AbstractSnippetVariableResolver
 import com.tyron.code.ui.editor.snippets.FileVariableResolver
 import com.tyron.code.ui.editor.snippets.WorkspaceVariableResolver
+import com.tyron.editor.Editor 
 
 /*
 *
@@ -47,7 +48,7 @@ abstract class IDEEditor @JvmOverloads constructor(
   defStyleAttr: Int = 0,
   defStyleRes: Int = 0, 
   private val editorFeatures: EditorFeatures = EditorFeatures()
-) : CodeEditor(context, attrs, defStyleAttr, defStyleRes), IEditor by editorFeatures {
+) : CodeEditor(context, attrs, defStyleAttr, defStyleRes), IEditor by editorFeatures, Editor{
 
   protected var _signatureHelpWindow: SignatureHelpWindow? = null
   protected var _diagnosticWindow: DiagnosticWindow? = null

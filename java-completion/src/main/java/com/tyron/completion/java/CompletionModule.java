@@ -22,6 +22,8 @@ import java.io.File;
 import com.tyron.completion.java.action.common.CommentAction;
 import com.tyron.completion.java.action.common.UncommentAction;
 import com.tyron.completion.java.action.common.RemoveUnusedImportsAction;
+import com.tyron.completion.java.action.common.OrganizeImportsAction;
+import com.tyron.completion.java.action.generators.GenerateMissingConstructorAction;
 
 public class CompletionModule {
 
@@ -46,6 +48,9 @@ public class CompletionModule {
      actionManager.registerAction(CommentAction.ID,new CommentAction());
      actionManager.registerAction(UncommentAction.ID,new UncommentAction());
      actionManager.registerAction(RemoveUnusedImportsAction.ID,new RemoveUnusedImportsAction());
+     actionManager.registerAction(OrganizeImportsAction.ID,new OrganizeImportsAction());
+     //Genetators
+     actionManager.registerAction(GenerateMissingConstructorAction.ID, new GenerateMissingConstructorAction());
   }
 
   public static void initialize(Context context) {

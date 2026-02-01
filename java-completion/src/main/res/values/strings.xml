@@ -18,4 +18,6 @@
     <string name="menu_common_comment_title">Comment</string>
     <string name="menu_common_uncomment_title">Uncomment</string>
     <string name="menu_common_remove_unused_imports_title">Remove Unused Imports</string>
+    <string name="menu_common_organize_imports_title">Organize Imports</string>
+    <string name="menu_generators_generate_missing_constructor_title">Generate Missing Constructor</string>
 </resources>

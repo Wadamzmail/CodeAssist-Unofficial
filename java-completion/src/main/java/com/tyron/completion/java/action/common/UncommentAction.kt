@@ -40,7 +40,8 @@ class UncommentAction : AnAction() {
        }
      }
      text.endBatchEdit()
-     editor.formatCodeAsync(cursor.leftLine,cursor.rightLine)
+     editor.formatCodeAsync()
+    //TODO: editor.formatCodeAsync(cursor.leftLine,cursor.rightLine)
    }
 
 }
