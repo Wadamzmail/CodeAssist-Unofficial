@@ -20,6 +20,7 @@ import javax.tools.Diagnostic
 import javax.tools.JavaFileObject
 import com.tyron.completion.model.Position
 import com.tyron.completion.model.Range
+import com.tyron.builder.model.DiagnosticWrapper
 
 class GenerateMissingConstructorAction : AnAction() {
      
@@ -65,7 +66,7 @@ class GenerateMissingConstructorAction : AnAction() {
    }
    
    private fun getDiagnosticRange(
-    diagnostic: Diagnostic<out JavaFileObject?>,
+    diagnostic: DiagnosticWrapper ,
     lines: LineMap
   ): Range {
     val start = getPosition(diagnostic.startPosition, lines)
