@@ -36,7 +36,11 @@ class SnippetCompletionProvider(
 
     // add global snippets, if any
     JavaSnippetRepository.snippets[JavaSnippetScope.GLOBAL]?.let { snippets.addAll(it) }
-
+    print("snippets work") 
+    for (snippet in snippets) {
+      print(snippet)
+    }
+    
     val snippetScope =
       when (scope.leaf) {
         is CompilationUnitTree -> JavaSnippetScope.TOP_LEVEL

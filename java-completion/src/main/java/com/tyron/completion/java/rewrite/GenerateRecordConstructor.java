@@ -26,7 +26,7 @@ import javax.lang.model.element.TypeElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GenerateRecordConstructor extends JavaRewrite2 {
+public class GenerateRecordConstructor implements JavaRewrite2 {
 
   private static final Logger LOG = LoggerFactory.getLogger(GenerateRecordConstructor.class);
   final String className;

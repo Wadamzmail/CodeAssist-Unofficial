@@ -5,6 +5,7 @@ import static com.tyron.completion.java.util.CompletionItemFactory.importClassIt
 import static com.tyron.completion.java.util.CompletionItemFactory.item;
 import static com.tyron.completion.java.util.CompletionItemFactory.method;
 import static com.tyron.completion.java.util.CompletionItemFactory.packageItem;
+import static com.tyron.completion.java.util.CompletionItemFactory.keyword;
 import static com.tyron.completion.progress.ProgressManager.checkCanceled;
 
 import com.sun.source.tree.CompilationUnitTree;
@@ -54,6 +55,15 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
       String path,
       boolean endsWithParen) {
     checkCanceled();
+    
+    if (!(treePath.getLeaf() instanceof ImportTree)) {
+      return new ArrayList<CompletionItem>();
+    } 
+    var importTree = (ImportTree) treePath.getLeaf(); 
+    
+    if ("static".startsWith(path)||"static".equals(path) && !importTree.isStatic() && path.isEmpty()) {
+        builder.addItem(keyword("static"));
+    }
 
     Set<String> names = new HashSet<>();
     File fileToComplete = new File(task.root().getSourceFile().toUri());
