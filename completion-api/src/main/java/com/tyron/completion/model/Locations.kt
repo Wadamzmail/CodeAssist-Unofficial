@@ -3,19 +3,12 @@ package com.tyron.completion.model
 import com.google.gson.annotations.SerializedName
 import java.nio.file.Path
 
-data class Location(var file: Path, var range: Range) {
-
-    fun getFile(): Path = file
-    fun setFile(value: Path) { file = value }
-
-    fun getRange(): Range = range
-    fun setRange(value: Range) { range = value }
-}
+data class Location(var file: Path, var range: Range)
 
 data class Position @JvmOverloads constructor(
-    @SerializedName("line") var line: Int,
-    @SerializedName("column") var column: Int,
-    @SerializedName("index") var index: Int = -1
+    @SerializedName("line") @JvmField var line: Int,
+    @SerializedName("column") @JvmField var column: Int,
+    @SerializedName("index") @JvmField var index: Int = -1
 ) : Comparable<Position> {
 
     fun getLine(): Int = line
@@ -77,8 +70,8 @@ data class Position @JvmOverloads constructor(
 open class Range
 @JvmOverloads
 constructor(
-    @SerializedName("start") var start: Position = Position(0, 0),
-    @SerializedName("end") var end: Position = Position(0, 0)
+    @SerializedName("start") @JvmField var start: Position = Position(0, 0),
+    @SerializedName("end") @JvmField var end: Position = Position(0, 0)
 ) : Comparable<Range> {
 
     constructor(src: Range) : this(Position(src.start.line, src.start.column),
