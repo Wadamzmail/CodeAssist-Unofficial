@@ -47,6 +47,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.kotlin.com.intellij.openapi.application.PathManager;
 import org.jetbrains.kotlin.com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
+import static com.tyron.completion.progress.ProgressManager.checkCanceled;
 
 /**
  * Repository of resources of the Android framework. Most client code should use the
@@ -107,9 +108,10 @@ public final class FrameworkResourceRepository extends AarSourceResourceReposito
         languagesToLoad == null ? null : getLanguageGroups(languagesToLoad);
 
     Loader loader = new Loader(resourceDirectoryOrFile, languageGroups);
+    checkCanceled();
     FrameworkResourceRepository repository =
         new FrameworkResourceRepository(loader, useCompiled9Patches);
-
+    checkCanceled();
     repository.load(null, cachingData, loader, languageGroups, loader.myLoadedLanguageGroups);
 
     if (LOG.isDebugEnabled()) {

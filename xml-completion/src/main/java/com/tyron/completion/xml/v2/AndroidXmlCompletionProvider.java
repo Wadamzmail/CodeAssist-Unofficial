@@ -15,6 +15,7 @@ import com.tyron.completion.xml.v2.handler.AndroidManifestHandlerKt;
 import java.io.File;
 import java.util.Objects;
 import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
+import static com.tyron.completion.progress.ProgressManager.checkCanceled;
 
 public class AndroidXmlCompletionProvider extends CompletionProvider {
 
@@ -66,6 +67,8 @@ public class AndroidXmlCompletionProvider extends CompletionProvider {
     if (fileType == XmlFileType.UNKNOWN) {
       return CompletionList.EMPTY;
     }
+    
+    checkCanceled();
 
     FrameworkResourceRepository frameworkResourceRepository =
         getFrameworkResourceRepository(module);
