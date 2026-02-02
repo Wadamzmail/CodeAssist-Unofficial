@@ -56,9 +56,6 @@ public class ImportCompletionProvider extends BaseCompletionProvider {
       boolean endsWithParen) {
     checkCanceled();
     
-    if (!(treePath.getLeaf() instanceof ImportTree)) {
-      return new ArrayList<CompletionItem>();
-    } 
     var importTree = (ImportTree) treePath.getLeaf(); 
     
     if ("static".startsWith(path)||"static".equals(path) && !importTree.isStatic() && path.isEmpty()) {

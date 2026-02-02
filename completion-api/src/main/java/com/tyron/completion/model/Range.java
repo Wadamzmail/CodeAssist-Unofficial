@@ -12,6 +12,20 @@ public class Range {
     this.start = start;
     this.end = end;
   }
+  
+  public void setStart(Position start){
+   this.start = start;
+  }
+  public void setEnd(Position end){
+   this.end = end;
+  }
+  
+  public Position getStart(){
+   return start;
+  }
+  public Position getEnd(){
+   return end;
+  }
 
   @Override
   public String toString() {
