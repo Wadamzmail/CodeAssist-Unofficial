@@ -95,7 +95,7 @@ public class CompilationInfo {
       module.putUserData(COMPILATION_INFO_KEY, info);
       // info.indexJavaFiles(module);
       for (File value : javaModule.getJavaFiles().values()) {
-        updateFile(module, value);
+        info.updateFile(module, value);
       }
     }
     return info;
