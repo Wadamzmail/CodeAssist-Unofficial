@@ -11,7 +11,7 @@ public class Position {
 
   public long start;
   public long end;
-  
+
   public int index;
 
   public Position(long start, long end) {
@@ -28,7 +28,7 @@ public class Position {
     start = -1;
     end = -1;
   }
-  
+
   public Position(int line, int column, int index) {
     this.line = line;
     this.column = column;
@@ -36,37 +36,45 @@ public class Position {
     start = -1;
     column = -1;
   }
-  
-  public void setLine(int line){
-   this.line = line;
+
+  public void setLine(int line) {
+    this.line = line;
   }
-  public void setColumn(int column){
-   this.column = column;
+
+  public void setColumn(int column) {
+    this.column = column;
   }
-  public void setIndex(int index){
-   this.index = index;
+
+  public void setIndex(int index) {
+    this.index = index;
   }
-  public void setStart(long start){
-   this.start = start;
+
+  public void setStart(long start) {
+    this.start = start;
   }
-  public void setEnd(long end){
-   this.end = end;
+
+  public void setEnd(long end) {
+    this.end = end;
   }
-  
-  public int getLine(){
-   return line;
+
+  public int getLine() {
+    return line;
   }
-  public int getColumn(){
-   return column;
+
+  public int getColumn() {
+    return column;
   }
-  public int getIndex(){
-   return index;
+
+  public int getIndex() {
+    return index;
   }
-  public long getStart(){
-   return start;
+
+  public long getStart() {
+    return start;
   }
-  public long getEnd(){
-   return end;
+
+  public long getEnd() {
+    return end;
   }
 
   @Override

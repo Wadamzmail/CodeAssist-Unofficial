@@ -2,6 +2,7 @@ package com.tyron.completion.xml.v2.aar;
 
 import static com.android.SdkConstants.DOT_9PNG;
 import static com.android.SdkConstants.FD_RES_RAW;
+import static com.tyron.completion.progress.ProgressManager.checkCanceled;
 
 import com.android.ide.common.rendering.api.ResourceNamespace;
 import com.android.ide.common.resources.ResourceItem;
@@ -47,7 +48,6 @@ import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.kotlin.com.intellij.openapi.application.PathManager;
 import org.jetbrains.kotlin.com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.kotlin.com.intellij.openapi.util.text.StringUtil;
-import static com.tyron.completion.progress.ProgressManager.checkCanceled;
 
 /**
  * Repository of resources of the Android framework. Most client code should use the

@@ -34,7 +34,7 @@ import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
 import org.jetbrains.kotlin.com.intellij.util.keyFMap.KeyFMap;
 import org.json.JSONException;
 import org.json.JSONObject;
- 
+
 public class MockModule implements Module {
 
   /** Concurrent writes to this field are via CASes only, using the {@link #updater} */

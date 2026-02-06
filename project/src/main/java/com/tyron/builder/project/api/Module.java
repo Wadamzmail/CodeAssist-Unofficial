@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.jetbrains.kotlin.com.intellij.openapi.util.UserDataHolderEx;
- 
+
 public interface Module extends UserDataHolderEx, CacheHolder {
 
   ModuleSettings getSettings();
@@ -74,7 +74,7 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   void index();
 
   public String getModuleName();
-   
+
   // return the module path since project root path
   default String getModulePath() {
     return getModuleName().replace(":", "/");

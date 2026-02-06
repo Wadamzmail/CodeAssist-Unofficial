@@ -22,6 +22,7 @@ import com.tyron.completion.java.util.ProjectUtil;
 import dev.mutwakil.javac.MJavacTrees;
 import java.io.File;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,10 +39,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
-import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 import org.apache.commons.io.FileUtils;
-import java.io.File;
-import java.nio.charset.StandardCharsets;
+import org.jetbrains.kotlin.com.intellij.openapi.util.Key;
 
 public class CompilationInfo {
 
@@ -130,11 +129,14 @@ public class CompilationInfo {
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            //Parser parser = Parser.parseFile(module.getProject(), file.toPath());
-            // During indexing, statements inside methods are not needed so
-            // it is stripped to speed up the index process
-            //return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
-            return FileUtils.readFileToString(file,StandardCharsets.UTF_8);
+            try {
+              return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+              Parser parser = Parser.parseFile(module.getProject(), file.toPath());
+              // During indexing, statements inside methods are not needed so
+              // it is stripped to speed up the index process
+              return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
+            }
           }
         });
   }
@@ -144,11 +146,14 @@ public class CompilationInfo {
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            //Parser parser = Parser.parseFile(module.getProject(), file.toPath());
-            // During indexing, statements inside methods are not needed so
-            // it is stripped to speed up the index process
-            //return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
-            return FileUtils.readFileToString(file,StandardCharsets.UTF_8); 
+            try {
+              return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+              Parser parser = Parser.parseFile(module.getProject(), file.toPath());
+              // During indexing, statements inside methods are not needed so
+              // it is stripped to speed up the index process
+              return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
+            }
           }
         },
         0,
