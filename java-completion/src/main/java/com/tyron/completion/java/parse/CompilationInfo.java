@@ -21,6 +21,7 @@ import com.tyron.completion.java.provider.PruneMethodBodies;
 import com.tyron.completion.java.util.ProjectUtil;
 import dev.mutwakil.javac.MJavacTrees;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -66,6 +67,20 @@ public class CompilationInfo {
           libraries.add(kotlinJar);
           javaModule.addLibrary(CodeAssistLibrary.forJar(kotlinJar));
         }
+        Set<File> files = new HashSet<>();
+        File buildGenDir = new File(module.getRootFile() + "/build/gen");
+        File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
+        if (buildGenDir.exists()) {
+          files.addAll(getFiles(buildGenDir, ".java"));
+        }
+        if (viewBindingDir.exists()) {
+          files.addAll(getFiles(viewBindingDir, ".java"));
+        }
+
+        for (File value : files) {
+          javaModule.addJavaFile(value);
+        }
+        libraries.addAll(files);
       }
       info =
           new CompilationInfo(
@@ -78,7 +93,10 @@ public class CompilationInfo {
                   null,
                   null));
       module.putUserData(COMPILATION_INFO_KEY, info);
-      info.indexJavaFiles(module);
+      // info.indexJavaFiles(module);
+      for (File value : javaModule.getJavaFiles().values()) {
+        updateFile(module, value);
+      }
     }
     return info;
   }
@@ -101,7 +119,6 @@ public class CompilationInfo {
     if (module instanceof AndroidModuleImpl) {
       JavaModule javaModule = (JavaModule) module;
       Set<File> files = new HashSet<>();
-      // files.addAll(javaModule.getInjectedClasses().values());
       File buildGenDir = new File(module.getRootFile() + "/build/gen");
       File viewBindingDir = new File(module.getRootFile() + "/build/view_binding");
       if (buildGenDir.exists()) {
