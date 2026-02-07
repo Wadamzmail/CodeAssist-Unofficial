@@ -48,7 +48,7 @@ public class CompilationInfo {
   public static final Key<CompilationInfo> COMPILATION_INFO_KEY = Key.create("compilationInfo");
   private static Set<File> mCachedPaths = new HashSet<>();
 
-  public static CompilationInfo get(Module module, boolean reIndex) {
+  public static synchronized CompilationInfo get(Module module, boolean reIndex) {
     if (!(module instanceof JavaModule)) {
       return null;
     }
@@ -80,7 +80,6 @@ public class CompilationInfo {
         for (File value : files) {
           javaModule.addJavaFile(value);
         }
-        libraries.addAll(files);
       }
       info =
           new CompilationInfo(
@@ -146,14 +145,14 @@ public class CompilationInfo {
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            try {
-              return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-            } catch (IOException e) {
+//            try {
+//              return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+//            } catch (IOException e) {
               Parser parser = Parser.parseFile(module.getProject(), file.toPath());
               // During indexing, statements inside methods are not needed so
               // it is stripped to speed up the index process
               return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
-            }
+//            }
           }
         });
   }
@@ -163,14 +162,14 @@ public class CompilationInfo {
         new SimpleJavaFileObject(file.toURI(), JavaFileObject.Kind.SOURCE) {
           @Override
           public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-            try {
-              return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-            } catch (IOException e) {
+//            try {
+//              return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+//            } catch (IOException e) {
               Parser parser = Parser.parseFile(module.getProject(), file.toPath());
               // During indexing, statements inside methods are not needed so
               // it is stripped to speed up the index process
               return new PruneMethodBodies(impl.getJavacTask()).scan(parser.root, 0L);
-            }
+//            }
           }
         },
         0,

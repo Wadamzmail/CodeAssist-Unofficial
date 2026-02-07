@@ -21,6 +21,7 @@ import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import com.tyron.builder.model.SourceFileObject;
 
 public class CompilationInfoImpl {
 
