@@ -9,6 +9,7 @@ import com.tyron.completion.java.R
 import com.tyron.code.ui.editor.IDEEditor
 import org.slf4j.LoggerFactory
 import com.tyron.completion.java.parse.CompilationInfo
+import com.tyron.completion.java.provider.DefaultJavacUtilitiesProvider
 
 class FieldBasedAction : AnAction() {
 
