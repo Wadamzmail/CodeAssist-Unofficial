@@ -24,7 +24,7 @@ plugins {
 android {
 	namespace = "org.appdevforall.codeonthego.lsp.kotlin"
 
-	compileOptions {
+	compilerOptions {
 		freeCompilerArgs += listOf(
 			"-opt-in=kotlin.contracts.ExperimentalContracts"
 		)
