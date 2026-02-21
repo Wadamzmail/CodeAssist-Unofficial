@@ -23,6 +23,11 @@ plugins {
 
 android {
 	namespace = "org.appdevforall.codeonthego.lsp.kotlin"
+	compileSdk = 36
+	defaultConfig {
+	 minSdk = 26
+	 targetSdk = 36
+	}
 }
 
 kotlin {
