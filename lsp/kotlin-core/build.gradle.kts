@@ -22,14 +22,15 @@ plugins {
 }
 
 android {
-	namespace = "org.appdevforall.codeonthego.lsp.kotlin"
+    namespace = "org.appdevforall.codeonthego.lsp.kotlin"
 
-	kotlinOptions {
-		freeCompilerArgs += listOf(
-			"-opt-in=kotlin.contracts.ExperimentalContracts"
-		)
-	}
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-opt-in=kotlin.contracts.ExperimentalContracts"
+        )
+    }
 }
+
 
 dependencies {
 	implementation(libs.androidide.ts)
