@@ -6,7 +6,12 @@ plugins {
 
 android {
 	namespace = "com.itsaky.androidide.lsp.kotlin"
-
+    compileSdk = 36 
+    defaultConfig {
+     minSdk = 26 
+     targetSdk = 36 
+     
+    } 
 	sourceSets {
 		named("main") {
 			resources.srcDir(
@@ -14,6 +19,17 @@ android {
 					.layout.buildDirectory.dir("generated-resources/stdlib")
 			)
 		}
+	}
+	
+	compileOptions{
+       sourceCompatibility = JavaVersion.VERSION_17
+       targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+kotlin {
+	compilerOptions {
+	    jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
 	}
 }
 
