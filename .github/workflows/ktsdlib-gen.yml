@@ -23,7 +23,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Generate stdlib index
-        run: ./gradlew :lsp:stdlib-generator:generateStdlibIndex
+        run: ./gradlew :lsp:kotlin-stdlib-generator:generateStdlibIndex
 
       - name: Upload stdlib-index.json
         uses: actions/upload-artifact@v4
