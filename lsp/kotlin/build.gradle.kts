@@ -1,0 +1,33 @@
+
+plugins {
+	id("com.android.library")
+	id("kotlin-android")
+}
+
+android {
+	namespace = "com.itsaky.androidide.lsp.kotlin"
+
+	sourceSets {
+		named("main") {
+			resources.srcDir(
+				project(":lsp:kotlin-stdlib-generator")
+					.layout.buildDirectory.dir("generated-resources/stdlib")
+			)
+		}
+	}
+}
+
+afterEvaluate {
+	tasks.matching { it.name.startsWith("process") && it.name.endsWith("JavaRes") }.configureEach {
+		dependsOn(":lsp:kotlin-stdlib-generator:generateStdlibIndex")
+	}
+}
+
+dependencies {
+	implementation(libs.common.lsp4j)
+	implementation(libs.common.jsonrpc)
+	implementation(libs.common.kotlin)
+	implementation(libs.common.kotlin.coroutines.core)
+	implementation(libs.common.kotlin.coroutines.android)
+	implementation(project(":completion-api"))
+}
