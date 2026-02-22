@@ -51,7 +51,7 @@ public interface ILanguageClient {
    * @return The diagnostic item or <code>null</code> if none was found.
    */
   @Nullable
-  DiagnosticItem getDiagnosticAt(File file, int line, int column){
+  default DiagnosticItem getDiagnosticAt(File file, int line, int column){
     return null;
   }
 
