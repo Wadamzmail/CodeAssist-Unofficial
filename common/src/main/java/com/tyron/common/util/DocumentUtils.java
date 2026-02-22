@@ -26,6 +26,12 @@ public class DocumentUtils {
         && Files.exists(file)
         && !Files.isDirectory(file);
   }
+  
+  public static boolean isKotlinFile(Path file) {
+    return PathsKt.getExtension(file).equals("kt")
+        && Files.exists(file)
+        && !Files.isDirectory(file);
+  }
 
   public static boolean isSameFile(Path first, Path second) {
     try {

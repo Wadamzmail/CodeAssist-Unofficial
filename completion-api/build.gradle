@@ -47,6 +47,7 @@ dependencies {
     implementation project(path: ':language-api')
     api ('io.github.rosemoe:editor:0.24.4')
     implementation project(':javac') 
+    implementation project(':event:eventbus-events') 
 }
 
 spotless {

@@ -37,6 +37,17 @@ import com.tyron.code.ui.editor.snippets.FileVariableResolver
 import com.tyron.code.ui.editor.snippets.WorkspaceVariableResolver
 import com.tyron.editor.Editor 
 
+import com.itsaky.androidide.eventbus.events.editor.ChangeType
+import com.itsaky.androidide.eventbus.events.editor.ColorSchemeInvalidatedEvent
+import com.itsaky.androidide.eventbus.events.editor.DocumentChangeEvent
+import com.itsaky.androidide.eventbus.events.editor.DocumentCloseEvent
+import com.itsaky.androidide.eventbus.events.editor.DocumentOpenEvent
+import com.itsaky.androidide.eventbus.events.editor.DocumentSaveEvent
+import com.itsaky.androidide.eventbus.events.editor.DocumentSelectedEvent
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+
 /*
 *
 * @author Wadamzmail
@@ -63,6 +74,8 @@ abstract class IDEEditor @JvmOverloads constructor(
    * All the jobs in this scope are cancelled when the editor is released.
    */
   val editorScope = CoroutineScope(Dispatchers.Default + CoroutineName("IDEEditor"))
+  
+  protected val eventDispatcher = EditorEventDispatcher()
        
   private val selectionChangeHandler = Handler(Looper.getMainLooper())
   private var selectionChangeRunner: Runnable? = Runnable {
@@ -85,6 +98,8 @@ abstract class IDEEditor @JvmOverloads constructor(
   init {
     run {
       editorFeatures.editor = this
+      eventDispatcher.editor = this
+      eventDispatcher.init(editorScope)
       initEditor()
     }
   }
@@ -214,6 +229,64 @@ abstract class IDEEditor @JvmOverloads constructor(
         selectionChangeHandler.postDelayed(it, SELECTION_CHANGE_DELAY)
       }
     }
+  }
+  
+  protected open fun dispatchDocumentOpenEvent() {
+    if (isReleased) {
+      return
+    }
+
+    val file = this.file ?: return
+
+    this.fileVersion = 0
+
+    val openEvent = DocumentOpenEvent(file.toPath(), text.toString(), fileVersion)
+
+    eventDispatcher.dispatch(openEvent)
+  }
+
+  protected open fun dispatchDocumentChangeEvent(event: ContentChangeEvent) {
+    if (isReleased) {
+      return
+    }
+
+    val file = file?.toPath() ?: return
+    var type = ChangeType.INSERT
+    if (event.action == ContentChangeEvent.ACTION_DELETE) {
+      type = ChangeType.DELETE
+    } else if (event.action == ContentChangeEvent.ACTION_SET_NEW_TEXT) {
+      type = ChangeType.NEW_TEXT
+    }
+    var changeDelta = if (type == ChangeType.NEW_TEXT) 0 else event.changedText.length
+    if (type == ChangeType.DELETE) {
+      changeDelta = -changeDelta
+    }
+    val start = event.changeStart
+    val end = event.changeEnd
+    val changeRange = Range(Position(start.line, start.column, start.index),
+      Position(end.line, end.column, end.index))
+    val changedText = event.changedText.toString()
+    val changeEvent = DocumentChangeEvent(file, changedText, text.toString(), ++fileVersion, type,
+      changeDelta, changeRange)
+
+    eventDispatcher.dispatch(changeEvent)
+  }
+
+  protected open fun dispatchDocumentSelectedEvent() {
+    if (isReleased) {
+      return
+    }
+    val file = file ?: return
+    eventDispatcher.dispatch(DocumentSelectedEvent(file.toPath()))
+  }
+
+  protected open fun dispatchDocumentCloseEvent() {
+    if (isReleased) {
+      return
+    }
+    val file = file ?: return
+
+    eventDispatcher.dispatch(DocumentCloseEvent(file.toPath(), cursorLSPRange))
   }
   
   

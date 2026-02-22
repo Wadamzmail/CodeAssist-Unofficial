@@ -53,6 +53,8 @@ dependencies {
     implementation project(':logging') 
     implementation project(':project') 
     implementation project(':editor-api') 
+    implementation project(':event:eventbus-android') 
+    implementation project(':event:eventbus-events') 
     
  	api ('io.github.rosemoe:editor:0.24.4')
     api ('io.github.rosemoe:language-textmate:0.24.4') 

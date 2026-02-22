@@ -43,6 +43,8 @@ import com.tyron.resources.R;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import com.tyron.code.ui.editor.impl.text.rosemoe.RosemoeCodeEditor;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 public class EditorContainerFragment extends Fragment
     implements FileListener,
@@ -321,6 +323,21 @@ public class EditorContainerFragment extends Fragment
         ((Savable) fragment).save(true);
       }
     }
+  }
+  
+  public CodeEditorView getEditorForFile(File file){
+    List<FileEditor> editors = mMainViewModel.getFiles().getValue();
+    if (editors == null) {
+      return;
+    }
+
+    for (int i = 0; i < editors.size(); i++) {
+      FileEditor editor = editors.get(i);
+      if (file.equals(editor.getFile())) {
+        return ((RosemoeCodeEditor)editor).getEditor();
+      }
+    }
+    return null;
   }
 
   @Override

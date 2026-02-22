@@ -81,6 +81,10 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   }
 
   void setModuleName(String name);
+  
+  default List<Module> getSubprojects(){
+    return new Collections.emptyList();
+  }
 
   /**
    * @return The directory that this project can use to compile files
