@@ -39,7 +39,7 @@ public class Position implements Comparable<Position> {
   
   public int requireIndex() {
     if (index == -1) {
-      throw IllegalArgumentException("No index provided");
+      throw new IllegalArgumentException("No index provided");
     }
     return index;
   }
