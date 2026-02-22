@@ -49,7 +49,6 @@ dependencies {
     implementation(libs.common.kotlin)
    // implementation(projects.logging.logger)
    // implementation(projects.utilities.shared)
-   implementation(project(":completion-api"))
 
     api(project(":event:eventbus"))
 }

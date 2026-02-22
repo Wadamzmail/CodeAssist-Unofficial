@@ -35,4 +35,5 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
     implementation(libs.common.jkotlin)
+    implementation(project(":completion-api"))
 }
