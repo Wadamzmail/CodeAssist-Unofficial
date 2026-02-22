@@ -29,7 +29,7 @@ dependencies {
     implementation project(path: ':common')
     implementation project(path: ':manifmerger')
 
-    api files('libs/org.eclipse.lemminx-0.11.0-uber.jar')
+    //api files('libs/org.eclipse.lemminx-0.11.0-uber.jar')
     api ('org.apache.commons:commons-lang3:3.12.0')
     implementation ('xerces:xercesImpl:2.12.2')
     implementation project(path: ':project')
@@ -37,6 +37,28 @@ dependencies {
     compileOnly project(path: ':android-stubs')
     compileOnly project(path: ':kotlinc')
     implementation("com.google.code.findbugs:jsr305:3.0.2")
+    
+    //lemminix
+    // LSP4J (Language Server Protocol)
+    implementation(libs.common.lsp4j)
+	implementation(libs.common.jsonrpc)
+
+    // XML & HTML Processing
+    api 'xerces:xercesImpl:2.12.2'
+    api 'xml-apis:xml-apis:1.4.01'
+    api 'com.kotcrab.remark:remark:1.0.0'
+    api 'org.jsoup:jsoup:1.14.2'
+    
+    // XML Resolver (Runtime only as per POM)
+    runtimeOnly 'xml-resolver:xml-resolver:1.2'
+
+    // RelaxNG Validation (with exclusions)
+    implementation('org.relaxng:jing:20220510') {
+        exclude group: 'net.sf.saxon', module: 'Saxon-HE'
+        exclude group: 'xerces', module: 'xercesImpl'
+        exclude group: 'xml-apis', module: 'xml-apis'
+    }
+    
 }
 
 spotless {
