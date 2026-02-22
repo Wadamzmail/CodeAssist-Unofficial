@@ -36,6 +36,23 @@ public class Position {
     start = -1;
     column = -1;
   }
+  
+  public int requireIndex() {
+    if (index == -1) {
+      throw IllegalArgumentException("No index provided");
+    }
+    return index;
+  }
+  
+  public void zeroIfNegative() {
+    if (line < 0) {
+      line = 0;
+    }
+
+    if (column < 0) {
+      column = 0;
+    }
+  }
 
   public void setLine(int line) {
     this.line = line;

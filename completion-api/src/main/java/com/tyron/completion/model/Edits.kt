@@ -15,17 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.tyron.completion.model.document
-
-/**
- * Represents a line-column based text edit. The text in the given [range] must be replaced with the
- * [newText].
- */
-data class TextEdit(var range: com.tyron.completion.model.Range, var newText: String) {
-  companion object {
-    @JvmField val NONE: TextEdit = TextEdit(com.tyron.completion.model.Range.NONE, "")
-  }
-}
+package com.tyron.completion.model
 
 /**
  * Represents an index-based text edit. The text from index [start] to [end] must be replaced with

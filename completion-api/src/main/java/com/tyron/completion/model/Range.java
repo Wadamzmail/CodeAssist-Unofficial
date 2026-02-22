@@ -12,6 +12,19 @@ public class Range {
     this.start = start;
     this.end = end;
   }
+  
+  public void validate() {
+    start.zeroIfNegative();
+    end.zeroIfNegative();
+  }
+  
+  public Range pointRange(int line,int column){
+    return pointRange(new Position(line, column));
+  }
+    
+  public Range pointRange(Position position) {
+    return new Range(position, position);
+  }
 
   public void setStart(Position start) {
     this.start = start;

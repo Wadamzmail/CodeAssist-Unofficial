@@ -272,6 +272,28 @@ public class StringSearch {
     // TODO fall back on parsing file
     return "";
   }
+  
+  public static String packageName(final BufferedReader reader) {
+    try (reader) {
+      final var packagePattern = Pattern.compile("^package +(.*);");
+      final var startOfClass = Pattern.compile("^[\\w ]*class +\\w+");
+      for (var line = reader.readLine(); line != null; line = reader.readLine()) {
+        if (startOfClass.matcher(line).find()) {
+          return "";
+        }
+
+        final var matchPackage = packagePattern.matcher(line);
+        if (matchPackage.matches()) {
+          return matchPackage.group(1);
+        }
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    // TODO fall back on parsing file
+    return "";
+  }
 
   // TODO this doesn't work for inner classes, eliminate
   public static String mostName(String name) {
