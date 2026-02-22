@@ -51,5 +51,5 @@ dependencies {
    // implementation(projects.utilities.shared)
    implementation(project(":completion-api"))
 
-    api(projects.event.eventbus)
+    api(project(":event:eventbus"))
 }

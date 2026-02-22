@@ -46,5 +46,5 @@ kotlin {
 }
 
 dependencies {
-    api(projects.event.eventbus)
+    api(project(":event:eventbus"))
 }
