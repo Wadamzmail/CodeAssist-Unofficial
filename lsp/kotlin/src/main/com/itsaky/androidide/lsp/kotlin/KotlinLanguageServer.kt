@@ -33,7 +33,7 @@ import com.tyron.completion.model.CompletionList
 import com.tyron.completion.model.DefinitionParams
 import com.tyron.completion.model.DefinitionResult
 import com.tyron.completion.model.DiagnosticResult
-import com.itsaky.androidide.lsp.models.ExpandSelectionParams
+import com.tyron.completion.model.ExpandSelectionParams
 import com.tyron.completion.model.references.ReferenceParams
 import com.tyron.completion.model.references.ReferenceResult
 import com.tyron.completion.model.signatures.SignatureHelp
