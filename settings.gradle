@@ -47,4 +47,5 @@ include ':lsp:kotlin'
 
 include ':event:eventbus' 
 include ':event:eventbus-android'
-include ':event:eventbus-events' 
+include ':event:eventbus-events'
+include ':event:wrapper' 

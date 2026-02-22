@@ -51,4 +51,6 @@ dependencies {
    // implementation(projects.utilities.shared)
 
     api(project(":event:eventbus"))
+    api(project(":event:wrapper"))
+    
 }
