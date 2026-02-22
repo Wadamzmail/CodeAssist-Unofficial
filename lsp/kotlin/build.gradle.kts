@@ -46,7 +46,7 @@ dependencies {
 	implementation(libs.common.kotlin.coroutines.core)
 	implementation(libs.common.kotlin.coroutines.android)
 	implementation(project(":completion-api"))
-	implementation project(':event:eventbus-events') 
-	implementation project(':lsp:kotlin-core') 
-	implementation project(':project')
+	implementation(project(":event:eventbus-events")) 
+	implementation(project(":lsp:kotlin-core")) 
+	implementation(project(":project")) 
 }
