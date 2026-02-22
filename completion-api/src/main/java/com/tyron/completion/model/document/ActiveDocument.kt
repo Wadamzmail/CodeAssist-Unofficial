@@ -35,7 +35,7 @@ open class ActiveDocument(
 ) {
 
   var content: String = content
-    internal set
+    public set
 
   fun inputStream(): BufferedInputStream {
     return content.byteInputStream().buffered()

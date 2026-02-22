@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.itsaky.androidide.lsp.api;
+package com.tyron.completion.lsp.api;
 
 //import com.itsaky.androidide.lsp.models.CompletionsKt;
 //import com.itsaky.androidide.preferences.internal.EditorPreferences;

@@ -106,7 +106,7 @@ interface ILanguageServer {
    * @param cancelChecker
    * @return The completion provider.
    */
-  fun complete(params: CompletionParameters?): CompletionResult
+  fun complete(params: CompletionParameters?): CompletionList
 
   /**
    * Find references using the given params.
