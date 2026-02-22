@@ -240,7 +240,7 @@ public class ModuleImpl implements Module {
   
   @Override List<Module> getSubprojects(){
      ArrayList<Module> subprojects = new ArrayList<>();
-     for (p : getAllProjects()){
+     for ( String p : getAllProjects()){
       subprojects.add(getProject().getModuleByName(p));
      }
      return subprojects;
