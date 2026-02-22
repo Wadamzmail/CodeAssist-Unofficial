@@ -83,7 +83,7 @@ public interface Module extends UserDataHolderEx, CacheHolder {
   void setModuleName(String name);
   
   default List<Module> getSubprojects(){
-    return new Collections.emptyList();
+    return Collections.emptyList();
   }
 
   /**
