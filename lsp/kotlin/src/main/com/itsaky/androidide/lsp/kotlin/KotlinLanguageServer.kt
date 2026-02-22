@@ -38,7 +38,7 @@ import com.tyron.completion.model.references.ReferenceParams
 import com.tyron.completion.model.references.ReferenceResult
 import com.tyron.completion.model.signatures.SignatureHelp
 import com.tyron.completion.model.signatures.SignatureHelpParams
-import com.tyron.completion.model.location.Range
+import com.tyron.completion.model.Range
 import com.tyron.builder.project.api.AndroidModule
 import com.tyron.builder.project.api.Module
 import com.tyron.builder.project.api.JavaModule

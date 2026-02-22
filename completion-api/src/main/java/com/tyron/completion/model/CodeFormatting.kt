@@ -24,7 +24,7 @@ package com.tyron.completion.model
  */
 data class FormatCodeParams
 @JvmOverloads
-constructor(val content: CharSequence, val range: com.tyron.completion.model.location.Range = com.tyron.completion.model.location.Range.NONE)
+constructor(val content: CharSequence, val range: com.tyron.completion.model.Range = com.tyron.completion.model.Range.NONE)
 
 /** The code formatting result. */
 data class CodeFormatResult

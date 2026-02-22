@@ -28,7 +28,11 @@ public class DocumentUtils {
   }
   
   public static boolean isKotlinFile(Path file) {
-    return PathsKt.getExtension(file).equals("kt")
+    if (file == null) {
+      return false;
+    }
+    final var extension = PathsKt.getExtension(file);
+    return (extension.equals("kt") || extension.equals("kts"))
         && Files.exists(file)
         && !Files.isDirectory(file);
   }

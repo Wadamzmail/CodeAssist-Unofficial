@@ -21,7 +21,7 @@ import com.tyron.completion.model.DiagnosticSeverity.ERROR
 import com.tyron.completion.model.DiagnosticSeverity.HINT
 import com.tyron.completion.model.DiagnosticSeverity.INFO
 import com.tyron.completion.model.DiagnosticSeverity.WARNING
-import com.tyron.completion.model.location.Range
+import com.tyron.completion.model.Range
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion.SEVERITY_ERROR
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion.SEVERITY_NONE

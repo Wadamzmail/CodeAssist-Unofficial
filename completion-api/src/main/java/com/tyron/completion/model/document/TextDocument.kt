@@ -17,7 +17,7 @@
 
 package com.tyron.completion.model.document
 
-import com.tyron.completion.model.location.Range
+import com.tyron.completion.model.Range
 import java.nio.file.Path
 
 data class ShowDocumentParams(var file: Path, var selection: Range)

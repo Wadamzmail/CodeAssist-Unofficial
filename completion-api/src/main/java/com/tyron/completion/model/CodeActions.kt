@@ -53,3 +53,17 @@ enum class CodeActionKind {
 data class DocumentChange(var file: Path?, var edits: List<TextEdit>) {
   constructor() : this(null, ArrayList())
 }
+
+data class Command(var title: String, var command: String) {
+  companion object {
+
+    /** Action for triggering a signature help request to the language server. */
+    const val TRIGGER_PARAMETER_HINTS = "editor.action.triggerParameterHints"
+
+    /** Action for triggering a completion request to the language server. */
+    const val TRIGGER_COMPLETION = "editor.action.triggerCompletionRequest"
+
+    /** Action for triggering code format action automatically. */
+    const val FORMAT_CODE = "editor.action.formatCode"
+  }
+}

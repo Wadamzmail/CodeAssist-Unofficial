@@ -16,8 +16,8 @@ import io.github.rosemoe.sora.event.SelectionChangeEvent
 import com.tyron.completion.model.signatures.SignatureHelp
 import com.tyron.completion.model.signatures.SignatureHelpParams
 import com.tyron.completion.model.signatures.SignatureHelpLanguage
-import com.tyron.completion.model.location.Position
-import com.tyron.completion.model.location.Range
+import com.tyron.completion.model.Position
+import com.tyron.completion.model.Range
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

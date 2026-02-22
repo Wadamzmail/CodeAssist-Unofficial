@@ -19,8 +19,8 @@ package com.tyron.completion.lsp.util;
 
 import androidx.annotation.NonNull;
 import com.itsaky.androidide.lsp.models.DiagnosticItem;
-import com.tyron.completion.model.location.Position;
-import com.tyron.completion.model.location.Range;
+import com.tyron.completion.model.Position;
+import com.tyron.completion.model.Range;
 import java.util.Collections;
 import java.util.List;
 

@@ -29,8 +29,8 @@ import com.tyron.completion.model.signatures.ParameterInformation
 import com.tyron.completion.model.signatures.SignatureHelp
 import com.tyron.completion.model.signatures.SignatureInformation
 import com.tyron.completion.model.location.Location
-import com.tyron.completion.model.location.Position
-import com.tyron.completion.model.location.Range
+import com.tyron.completion.model.Position
+import com.tyron.completion.model.Range
 import org.appdevforall.codeonthego.lsp.kotlin.semantic.Diagnostic
 import org.appdevforall.codeonthego.lsp.kotlin.semantic.DiagnosticSeverity as KtDiagnosticSeverity
 import java.net.URI
