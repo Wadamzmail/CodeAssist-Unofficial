@@ -7,7 +7,7 @@ apply plugin: 'com.diffplug.spotless'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-	namespace = "com.tyron.completion"
+	namespace = "com.tyron.completion.lsp"
 	
     defaultConfig {
         minSdk rootProject.ext.minSdkVersion
@@ -47,6 +47,8 @@ dependencies {
     implementation project(path: ':language-api')
     api ('io.github.rosemoe:editor:0.24.4')
     implementation project(':javac') 
+    implementation project(':event:eventbus-events') 
+    implementation project(":completion-api")
 }
 
 spotless {

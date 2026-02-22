@@ -15,7 +15,7 @@
  *   along with AndroidIDE.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.tyron.completion.util;
+package com.tyron.completion.lsp.util;
 
 import androidx.annotation.NonNull;
 import com.itsaky.androidide.lsp.models.DiagnosticItem;

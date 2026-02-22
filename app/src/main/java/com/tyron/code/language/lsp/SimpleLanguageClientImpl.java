@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.tyron.code.ui.editor.EditorContainerFragment;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
-import com.tyron.completion.util.DiagnosticUtil;
+import com.tyron.completion.lsp.util.DiagnosticUtil;
 
 public class SimpleLanguageClientImpl extends ILanguageClient {
   

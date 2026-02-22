@@ -48,5 +48,6 @@ dependencies {
 	implementation(project(":completion-api"))
 	implementation(project(":event:eventbus-events")) 
 	implementation(project(":lsp:kotlin-core")) 
+	implementation(project(":lsp:api"))
 	implementation(project(":project")) 
 }
