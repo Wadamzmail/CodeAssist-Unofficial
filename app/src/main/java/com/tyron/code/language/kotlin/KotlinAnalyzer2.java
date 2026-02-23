@@ -91,3 +91,4 @@ public class KotlinAnalyzer2 extends DiagnosticTextmateAnalyzer {
   private void doAnalysis() {
      ((IDEEditor)editor).analyze();
   }
+}
