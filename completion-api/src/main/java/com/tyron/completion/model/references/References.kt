@@ -18,8 +18,8 @@
 package com.tyron.completion.model.references
 
 import com.tyron.completion.model.CancellableRequestParams
-import com.tyron.completion.model.location.Location
-import com.tyron.completion.model.location.Position
+import com.tyron.completion.model.Location
+import com.tyron.completion.model.Position
 import com.tyron.common.progress.ICancelChecker
 import java.nio.file.Path
 

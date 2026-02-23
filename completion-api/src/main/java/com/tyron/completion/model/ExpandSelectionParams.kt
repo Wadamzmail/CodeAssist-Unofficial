@@ -19,4 +19,4 @@ package com.tyron.completion.model
 
 import java.nio.file.Path
 
-data class ExpandSelectionParams(var file: Path, var selection: com.tyron.completion.model.location.Range)
+data class ExpandSelectionParams(var file: Path, var selection: com.tyron.completion.model.Range)

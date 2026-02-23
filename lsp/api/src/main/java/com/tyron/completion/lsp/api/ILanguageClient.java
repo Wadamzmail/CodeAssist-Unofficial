@@ -24,7 +24,7 @@ import com.tyron.completion.model.DiagnosticResult;
 import com.tyron.completion.model.PerformCodeActionParams;
 import com.tyron.completion.model.document.ShowDocumentParams;
 import com.tyron.completion.model.document.ShowDocumentResult;
-import com.tyron.completion.model.location.Location;
+import com.tyron.completion.model.Location;
 import java.io.File;
 import java.util.List;
 

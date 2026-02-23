@@ -17,7 +17,7 @@
 
 package com.itsaky.androidide.lsp.kotlin
 
-import com.tyron.completion.util.PrefBasedServerSettings
+import com.tyron.completion.lsp.util.PrefBasedServerSettings
 
 class KotlinServerSettings private constructor() : PrefBasedServerSettings() {
 

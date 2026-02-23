@@ -1,4 +1,4 @@
-package com.tyron.completion.model.location
+package com.tyron.completion.model
 
 import com.google.gson.annotations.SerializedName
 import java.nio.file.Path

@@ -7,7 +7,7 @@ import com.tyron.completion.model.DiagnosticResult;
 import com.tyron.completion.model.PerformCodeActionParams;
 import com.tyron.completion.model.document.ShowDocumentParams;
 import com.tyron.completion.model.document.ShowDocumentResult;
-import com.tyron.completion.model.location.Location;
+import com.tyron.completion.model.Location;
 import com.tyron.completion.lsp.api.ILanguageClient;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import io.github.rosemoe.sora.text.Content;

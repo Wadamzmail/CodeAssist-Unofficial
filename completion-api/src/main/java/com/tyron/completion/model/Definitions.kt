@@ -24,8 +24,8 @@ import java.nio.file.Path
 /** @author Akash Yadav */
 data class DefinitionParams(
   var file: Path,
-  var position: com.tyron.completion.model.location.Position,
+  var position: com.tyron.completion.model.Position,
   override val cancelChecker: ICancelChecker
 ) : CancellableRequestParams
 
-data class DefinitionResult(var locations: List<com.tyron.completion.model.location.Location>)
+data class DefinitionResult(var locations: List<com.tyron.completion.model.Location>)

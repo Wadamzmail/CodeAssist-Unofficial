@@ -50,4 +50,8 @@ dependencies {
 	implementation(project(":lsp:kotlin-core")) 
 	implementation(project(":lsp:api"))
 	implementation(project(":project")) 
+	implementation(project("common")) 
+	implementation(project(":build-logic")) 
+	implementation(libs.androidx.core)
+	
 }

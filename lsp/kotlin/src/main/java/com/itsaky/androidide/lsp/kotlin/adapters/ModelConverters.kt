@@ -28,7 +28,7 @@ import com.tyron.completion.model.signatures.MatchLevel
 import com.tyron.completion.model.signatures.ParameterInformation
 import com.tyron.completion.model.signatures.SignatureHelp
 import com.tyron.completion.model.signatures.SignatureInformation
-import com.tyron.completion.model.location.Location
+import com.tyron.completion.model.Location
 import com.tyron.completion.model.Position
 import com.tyron.completion.model.Range
 import org.appdevforall.codeonthego.lsp.kotlin.semantic.Diagnostic
@@ -64,11 +64,7 @@ fun Lsp4jLocation.toIde(): Location {
 
 fun Lsp4jCompletionItem.toIde(prefix: String): CompletionItem {
 //    val matchLevel = CompletionItem.matchLevel(label, prefix)
-    var CompletionItem item = CompletionItem(label,
-                                detail,
-                                label,
-                                kind?.toIde() ?: DrawableKind.Method
-                                )
+    var CompletionItem item = CompletionItem(label,detail,label,kind?.toIde() ?: DrawableKind.Method)
     return item
 }
 
