@@ -34,7 +34,7 @@ public class Position implements Comparable<Position> {
     this.column = column;
     this.index = index;
     start = -1;
-    column = -1;
+    end = -1;
   }
   
   public int requireIndex() {

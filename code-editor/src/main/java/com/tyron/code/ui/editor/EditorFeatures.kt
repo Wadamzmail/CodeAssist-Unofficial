@@ -49,14 +49,14 @@ class EditorFeatures(
 
   override fun getCursorLSPRange(): Range = withEditor {
     val end = cursor.right().let {
-      Position(line = it.line, column = it.column, index = it.index)
+      Position(it.line,it.column,it.index)
     }
     return@withEditor Range(cursorLSPPosition, end)
   } ?: Range.NONE
 
   override fun getCursorLSPPosition(): Position = withEditor {
     return@withEditor cursor.left().let {
-      Position(line = it.line, column = it.column, index = it.index)
+      Position(it.line,it.column,it.index)
     }
   } ?: Position.NONE
 
