@@ -61,6 +61,7 @@ import com.tyron.completion.xml.v2.LayoutRepo;
 import com.tyron.builder.project.IProjectManager;
 import com.tyron.completion.lsp.api.ILanguageServerRegistry;
 import com.itsaky.androidide.eventbus.events.project.ProjectInitializedEvent;
+import com.tyron.completion.lsp.api.DefaultLanguageServerRegistry;
 
 public class ProjectManager {
 
@@ -342,7 +343,7 @@ public class ProjectManager {
    // mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
     var projectInitializedEvent = new ProjectInitializedEvent();
     projectInitializedEvent.put(Module.class,module);
-    ILanguageServerRegistry.getDefault().onProjectInitialized(projectInitializedEvent);
+    ((DefaultLanguageServerRegistry)ILanguageServerRegistry.getDefault()).onProjectInitialized(projectInitializedEvent);
     mCurrentProject.setIndexing(false);
     mListener.onComplete(project, true, "Index successful");
 
