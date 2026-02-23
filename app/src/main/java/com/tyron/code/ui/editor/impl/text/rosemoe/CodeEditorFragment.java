@@ -107,6 +107,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+import com.tyron.completion.lsp.api.LspLanguage;
 
 // import com.tyron.editor.Content;
 
@@ -761,8 +762,10 @@ public class CodeEditorFragment extends Fragment
     if (mEditor.getEditorLanguage() instanceof KotlinLanguage
         && ((KotlinLanguage) mEditor.getEditorLanguage()).kotlinEnvironment == null)
       ((KotlinLanguage) mEditor.getEditorLanguage()).initEnv();
-    if (mEditor.getEditorLanguage() instanceof KotlinLanguage2) {
-      mEditor.setLanguageServer(createLanguageServer(mCurrentFile));
+    if (mEditor.getEditorLanguage() instanceof LspLanguage) {
+      ILanguageServer languageServer = createLanguageServer(mCurrentFile);
+      mEditor.setLanguageServer(languageServer);
+      ((LspLanguage)mEditor.getEditorLanguage()).setLanguageServer(languageServer);
       if (SimpleLanguageClientImpl.isInitialized()) {
         mEditor.setLanguageClient(SimpleLanguageClientImpl.getInstance());
       }
@@ -780,8 +783,10 @@ public class CodeEditorFragment extends Fragment
       if (mEditor.getEditorLanguage() instanceof KotlinLanguage
           && ((KotlinLanguage) mEditor.getEditorLanguage()).kotlinEnvironment == null)
         ((KotlinLanguage) mEditor.getEditorLanguage()).initEnv();
-      if (mEditor.getEditorLanguage() instanceof KotlinLanguage2) {
-        mEditor.setLanguageServer(createLanguageServer(mCurrentFile));
+      if (mEditor.getEditorLanguage() instanceof LspLanguage) {
+        ILanguageServer languageServer = createLanguageServer(mCurrentFile);
+        mEditor.setLanguageServer(languageServer);
+        ((LspLanguage)mEditor.getEditorLanguage()).setLanguageServer(languageServer);
         if (SimpleLanguageClientImpl.isInitialized()) {
           mEditor.setLanguageClient(SimpleLanguageClientImpl.getInstance());
         }

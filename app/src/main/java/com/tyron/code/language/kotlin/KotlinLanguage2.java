@@ -41,8 +41,6 @@ import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.Project;
-
-//for analysis 
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity;
 import org.jetbrains.kotlin.com.intellij.openapi.progress.ProcessCanceledException;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticDetail;
@@ -50,7 +48,6 @@ import io.github.rosemoe.sora.lang.diagnostic.DiagnosticRegion;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.common.SharedPreferenceKeys;
-//test
 import android.widget.Toast;
 import com.tyron.code.MainActivity;
 import android.util.Log;
@@ -68,14 +65,10 @@ import com.tyron.completion.model.signatures.SignatureHelpLanguage;
 import com.tyron.completion.model.signatures.SignatureHelpLanguageKt;
 import com.tyron.completion.model.signatures.SignatureHelpParams;
 import com.tyron.completion.lsp.util.DiagnosticUtil;
+import com.tyron.completion.lsp.api.LspLanguage;
 
+public class KotlinLanguage2 extends EmptyTextMateLanguage implements Language, SignatureHelpLanguage, LspLanguage{
 
-public class KotlinLanguage2 extends EmptyTextMateLanguage implements Language, SignatureHelpLanguage{
-
-    private static final String GRAMMAR_NAME = "kotlin.tmLanguage";
-    private static final String LANGUAGE_PATH = "textmate/kotlin/syntaxes/kotlin.tmLanguage";
-    private static final String CONFIG_PATH = "textmate/kotlin/language-configuration.json";
-    private static final String SCOPE_NAME = "source.kotlin";
     public static final String TAG = "KotlinLanguage2";
 
     private final TextMateLanguage delegate;
@@ -130,6 +123,16 @@ public class KotlinLanguage2 extends EmptyTextMateLanguage implements Language, 
           server.signatureHelpBlocking(params);
     }
     return signatureHelp;
+  }
+  
+  @Override 
+  public void setLanguageServer(ILanguageServer server){
+    this.server = server;
+  }
+  
+  @Override 
+  public ILanguageServer getLanguageServer(){
+    return server;
   }
 
 
