@@ -133,7 +133,7 @@ class KotlinLanguageServer : ILanguageServer {
         this._settings = settings
     }
 
-    override fun setupWithProject(workspace: Module) {
+    override fun setupWorkspace(workspace: Module) {
         log.info("setupWithProject called, initialized={}", initialized)
         if (!initialized) {
             loadStdlibIndex()
@@ -178,7 +178,7 @@ class KotlinLanguageServer : ILanguageServer {
                 val bootClasspaths = mutableSetOf<File>()
                 
                     classpaths.addAll(workspace.getLibraries().toMutableList())
-                    bootclasspaths.add(BuildModule.getLambdaStubs())
+                    bootClasspaths.add(BuildModule.getLambdaStubs())
                     bootClasspaths.add(BuildModule.getAndroidJar()) 
 
                 for (project in workspace.getSubprojects()) {
@@ -224,7 +224,7 @@ class KotlinLanguageServer : ILanguageServer {
             return CompletionList.EMPTY
         }
 
-        if (!DocumentUtils.isKotlinFile(params.file)) {
+        if (!DocumentUtils.isKotlinFile(params.file.toPath())) {
             log.debug("complete() returning EMPTY: not a Kotlin file")
             return CompletionList.EMPTY
         }

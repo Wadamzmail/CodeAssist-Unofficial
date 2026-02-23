@@ -52,6 +52,6 @@ dependencies {
 	implementation(project(":project")) 
 	implementation(project(":common")) 
 	implementation(project(":build-logic")) 
-	implementation(libs.androidx.core)
+	implementation(libs.androidx.core.ktx)
 	
 }
