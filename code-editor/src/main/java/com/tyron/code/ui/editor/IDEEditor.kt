@@ -132,7 +132,7 @@ abstract class IDEEditor @JvmOverloads constructor(
     val languageClient = languageClient ?: return ""
     val cursor = this.cursor ?: return ""
     val file = this.file ?: return "" 
-    return languageClient.getDiagnosticAt(file, cursor.leftLine, cursor.leftColumn).message
+    return languageClient.getDiagnosticAt(file, cursor.leftLine, cursor.leftColumn)?.message ?: ""
   }
     
   fun setLanguageServer(server: ILanguageServer?) {
