@@ -1,9 +1,8 @@
 package com.tyron.completion.lsp.api;
 
-public interface LspLanguage{
+public interface LspLanguage {
 
   void setLanguageServer(ILanguageServer server);
-  
-  ILanguageServer getLanguageServer();
 
+  ILanguageServer getLanguageServer();
 }

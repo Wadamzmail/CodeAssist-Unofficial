@@ -43,7 +43,6 @@ import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.language.kotlin.KotlinLanguage;
-import com.tyron.code.language.kotlin.KotlinLanguage2;
 import com.tyron.code.language.lsp.SimpleLanguageClientImpl;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.language.xml.LanguageXML;
@@ -67,8 +66,9 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.common.util.DebouncerStore;
 import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.java.util.JavaDataContextUtil;
-import com.tyron.completion.lsp.api.ILanguageServerRegistry;
 import com.tyron.completion.lsp.api.ILanguageServer;
+import com.tyron.completion.lsp.api.ILanguageServerRegistry;
+import com.tyron.completion.lsp.api.LspLanguage;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.diagnostics.DiagnosticProvider;
 import com.tyron.editor.CharPosition;
@@ -107,7 +107,6 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
 import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
-import com.tyron.completion.lsp.api.LspLanguage;
 
 // import com.tyron.editor.Content;
 
@@ -765,7 +764,7 @@ public class CodeEditorFragment extends Fragment
     if (mEditor.getEditorLanguage() instanceof LspLanguage) {
       ILanguageServer languageServer = createLanguageServer(mCurrentFile);
       mEditor.setLanguageServer(languageServer);
-      ((LspLanguage)mEditor.getEditorLanguage()).setLanguageServer(languageServer);
+      ((LspLanguage) mEditor.getEditorLanguage()).setLanguageServer(languageServer);
       if (SimpleLanguageClientImpl.isInitialized()) {
         mEditor.setLanguageClient(SimpleLanguageClientImpl.getInstance());
       }
@@ -786,7 +785,7 @@ public class CodeEditorFragment extends Fragment
       if (mEditor.getEditorLanguage() instanceof LspLanguage) {
         ILanguageServer languageServer = createLanguageServer(mCurrentFile);
         mEditor.setLanguageServer(languageServer);
-        ((LspLanguage)mEditor.getEditorLanguage()).setLanguageServer(languageServer);
+        ((LspLanguage) mEditor.getEditorLanguage()).setLanguageServer(languageServer);
         if (SimpleLanguageClientImpl.isInitialized()) {
           mEditor.setLanguageClient(SimpleLanguageClientImpl.getInstance());
         }

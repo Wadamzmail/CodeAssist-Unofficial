@@ -8,18 +8,17 @@ import com.tyron.builder.project.api.Module;
 import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
+import com.tyron.code.ui.editor.IDEEditor;
 import com.tyron.code.ui.project.ProjectManager;
 import com.tyron.common.SharedPreferenceKeys;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.editor.Editor;
 import com.tyron.kotlin.completion.KotlinEnvironment;
-import dev.mutwakil.completion.kotlin.util.KotlinSeverityMapper;
 import io.github.rosemoe.sora.langs.textmate.registry.GrammarRegistry;
 import io.github.rosemoe.sora.langs.textmate.registry.ThemeRegistry;
 import java.util.ArrayList;
 import org.eclipse.tm4e.core.grammar.IGrammar;
 import org.eclipse.tm4e.languageconfiguration.internal.model.LanguageConfiguration;
-import com.tyron.code.ui.editor.IDEEditor;
 
 public class KotlinAnalyzer2 extends DiagnosticTextmateAnalyzer {
 
@@ -89,6 +88,6 @@ public class KotlinAnalyzer2 extends DiagnosticTextmateAnalyzer {
   }
 
   private void doAnalysis() {
-     ((IDEEditor)editor).analyze();
+    ((IDEEditor) editor).analyze();
   }
 }

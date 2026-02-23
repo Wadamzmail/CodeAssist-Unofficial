@@ -296,7 +296,7 @@ public class DOMElementFormatter {
             indentLevel + getSplitAttributesIndentSize(), startTagOpen, startTagClose, true, edits);
         return (indentLevel + getSplitAttributesIndentSize()) * getTabSize();
       } else {
-          /* splitAttributes == alignWithFirstAttr */
+        /* splitAttributes == alignWithFirstAttr */
         int indentOffset = indentLevel * getTabSize() + element.getTagName().length() + 2;
         replaceLeftSpacesWithIndentationWithOffsetSpaces(
             indentOffset, startTagOpen, startTagClose, edits);

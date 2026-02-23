@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.lemminx.services.extensions.rename;
 
-
 import org.eclipse.lsp4j.ResourceOperation;
 import org.eclipse.lsp4j.TextDocumentEdit;
 

@@ -46,9 +46,9 @@ public enum RelaxNGErrorCode implements IXMLErrorCode {
 
   unknown_element, // element {0} not allowed anywhere{1}
   unexpected_element_required_element_missing, // , element {0} not allowed yet; missing required
-                                               // element {1}
+  // element {1}
   unexpected_element_required_elements_missing, // element {0} not allowed yet; missing required
-                                                // elements {1}
+  // elements {1}
   element_not_allowed_yet, // element {0} not allowed yet{1}
   out_of_context_element, // element {0} not allowed here{1}
   no_attributes_allowed, // found attribute {0}, but no attributes allowed here
@@ -59,9 +59,9 @@ public enum RelaxNGErrorCode implements IXMLErrorCode {
   required_attributes_missing, // element {0} missing required attributes {1}
   incomplete_element_required_elements_missing_expected, // element {0} incomplete{1}
   incomplete_element_required_element_missing, // element {0} incomplete; missing required element
-                                               // {1}
+  // {1}
   incomplete_element_required_elements_missing, // element {0} incomplete; missing required elements
-                                                // {1}
+  // {1}
   text_not_allowed, // text not allowed here{0}
   document_incomplete, // document incompletely matched
   invalid_element_value, // character content of element {0} invalid{1}
