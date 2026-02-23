@@ -70,6 +70,7 @@ import com.tyron.completion.lsp.api.LspLanguage;
 public class KotlinLanguage2 extends EmptyTextMateLanguage implements Language, SignatureHelpLanguage, LspLanguage{
 
     public static final String TAG = "KotlinLanguage2";
+    public static final String SCOPE_NAME = "source.kotlin";
 
     private final TextMateLanguage delegate;
     private final KotlinAnalyzer2 analyzer;
@@ -80,7 +81,8 @@ public class KotlinLanguage2 extends EmptyTextMateLanguage implements Language, 
     private Thread analysisThread;
     private volatile boolean analysisRunning = true;
     private final CachedAutoCompleteProvider autoCompleteProvider;
-    public KotlinLanguageServer server;
+    //public KotlinLanguageServer server;
+    public ILanguageServer server;
      
     
     private final Formatter formatter = new AsyncFormatter() {
