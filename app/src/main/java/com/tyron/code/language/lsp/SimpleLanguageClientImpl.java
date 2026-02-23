@@ -29,7 +29,7 @@ import com.tyron.code.ui.editor.EditorContainerFragment;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 import com.tyron.completion.lsp.util.DiagnosticUtil;
 
-public class SimpleLanguageClientImpl extends ILanguageClient {
+public class SimpleLanguageClientImpl implements ILanguageClient {
   
   public static final int MAX_DIAGNOSTIC_FILES = 10;
   public static final int MAX_DIAGNOSTIC_ITEMS_PER_FILE = 20;
@@ -39,11 +39,11 @@ public class SimpleLanguageClientImpl extends ILanguageClient {
   protected EditorContainerFragment fragment;
   
   private SimpleLanguageClientImpl(EditorContainerFragment provider) {
-    setActivity(provider);
+    setFragment(provider);
   }
 
   public void setFragment(EditorContainerFragment provider) {
-    this.activity = provider;
+    this.fragment = provider;
   }
 
   public static SimpleLanguageClientImpl initialize(EditorContainerFragment provider) {
@@ -127,7 +127,7 @@ public class SimpleLanguageClientImpl extends ILanguageClient {
     return fragment != null
         && !fragment.getActivity().isFinishing()
         && !fragment.getActivity().isDestroyed()
-        && !fragment.getAactivity().getSupportFragmentManager().isDestroyed()
+        && !fragment.getActivity().getSupportFragmentManager().isDestroyed()
         && !fragment.getActivity().getSupportFragmentManager().isStateSaved();
   }
 

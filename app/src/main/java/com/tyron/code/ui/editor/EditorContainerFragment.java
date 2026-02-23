@@ -328,7 +328,7 @@ public class EditorContainerFragment extends Fragment
   public CodeEditorView getEditorForFile(File file){
     List<FileEditor> editors = mMainViewModel.getFiles().getValue();
     if (editors == null) {
-      return;
+      return null;
     }
 
     for (int i = 0; i < editors.size(); i++) {
