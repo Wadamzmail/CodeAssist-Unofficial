@@ -120,6 +120,7 @@ public class DefaultLanguageServerRegistry extends ILanguageServerRegistry {
   public void onProjectInitialized(ProjectInitializedEvent event) {
     final var workspace = event.get(Module.class);
     if (workspace == null) {
+      System.out.println("workspace is null");
       return;
     }
 

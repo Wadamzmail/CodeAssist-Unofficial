@@ -144,6 +144,7 @@ class KotlinLanguageServer : ILanguageServer {
             ktLspServer.initialize(initParams).get()
             ktLspServer.initialized(null)
             log.info("Kotlin LSP initialized with stdlib index")
+            print("Kotlin LSP initialized with stdlib index")
             initialized = true
         }
         var javaModule = workspace as? JavaModule?:return
@@ -199,6 +200,7 @@ class KotlinLanguageServer : ILanguageServer {
                 classpaths.addAll(bootClasspaths.filter { it.exists() })
 
                 log.info("Total classpath entries found: {} (including {} boot classpaths)", classpaths.size, bootClasspaths.size)
+                print("Total classpath entries") 
                 if (classpaths.isNotEmpty()) {
                     val files = classpaths.filter { it.exists() }
                     log.info("Indexing {} existing classpath entries for Kotlin LSP", files.size)

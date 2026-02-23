@@ -39,6 +39,7 @@ import io.github.rosemoe.sora.widget.SymbolPairMatch;
 import java.util.ArrayList;
 import java.util.List;
 import org.jetbrains.kotlin.com.intellij.openapi.progress.ProcessCanceledException;
+//import com.tyron.completion.lsp.util.CompletionHelper;
 
 public class KotlinLanguage2 extends EmptyTextMateLanguage
     implements Language, SignatureHelpLanguage, LspLanguage {
@@ -154,8 +155,7 @@ public class KotlinLanguage2 extends EmptyTextMateLanguage
       if (!isAutoCompleteChar(c)) {
         return;
       }
-      String prefix =
-          CompletionHelper.computePrefix(content, position, MyCharacter::isJavaIdentifierPart);
+      String prefix = CompletionHelper.computePrefix(content, position, MyCharacter::isJavaIdentifierPart);
       CompletionParameters parameters =
           CompletionParameters.builder()
               .setColumn(position.getColumn())
