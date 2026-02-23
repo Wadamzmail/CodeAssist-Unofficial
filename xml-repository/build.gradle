@@ -40,8 +40,8 @@ dependencies {
     
     //lemminix
     // LSP4J (Language Server Protocol)
-    implementation(libs.common.lsp4j)
-	implementation(libs.common.jsonrpc)
+    api(libs.common.lsp4j)
+	api(libs.common.jsonrpc)
 
     // XML & HTML Processing
     api 'xerces:xercesImpl:2.12.2'
