@@ -59,6 +59,8 @@ import com.tyron.kotlin.completion.KotlinEnvironment;
 import com.tyron.completion.java.provider.PruneMethodBodies;
 import com.tyron.completion.xml.v2.LayoutRepo;
 import com.tyron.builder.project.IProjectManager;
+import com.tyron.completion.lsp.api.ILanguageServerRegistry;
+import com.itsaky.androidide.eventbus.events.project.ProjectInitializedEvent;
 
 public class ProjectManager {
 
@@ -338,6 +340,9 @@ public class ProjectManager {
     }
 
    // mProjectOpenListeners.forEach(it -> it.onProjectOpen(mCurrentProject));
+    var projectInitializedEvent = new ProjectInitializedEvent();
+    projectInitializedEvent.put(Module.class,module);
+    ILanguageServerRegistry.getDefault().onProjectInitialized(projectInitializedEvent);
     mCurrentProject.setIndexing(false);
     mListener.onComplete(project, true, "Index successful");
 
