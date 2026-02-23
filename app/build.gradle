@@ -178,7 +178,8 @@ dependencies {
 	//lsp
 	implementation project(':event:eventbus')
 	implementation project(':event:eventbus-events') 
-	implementation project(':lsp:kotlin')  
+	implementation project(':lsp:kotlin') 
+	implementation project(':lsp:kotlin-core')  
 	implementation project(':lsp:api') 
       
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
