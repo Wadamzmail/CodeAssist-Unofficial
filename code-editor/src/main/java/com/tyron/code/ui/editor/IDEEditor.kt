@@ -65,6 +65,9 @@ abstract class IDEEditor @JvmOverloads constructor(
   protected var _diagnosticWindow: DiagnosticWindow? = null
   private var sigHelpCancelChecker: ICancelChecker? = null
   
+  private var fileVersion = 0
+  internal var isModified = false
+  
   @JvmField 
   var mCurrentFile: File? = null
   
@@ -171,6 +174,8 @@ abstract class IDEEditor @JvmOverloads constructor(
     }
 
     super.release()
+    
+    fileVersion = 0 
     
     snippetController.apply {
       (fileVariableResolver as? AbstractSnippetVariableResolver?)?.close()
