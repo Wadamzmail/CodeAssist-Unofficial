@@ -127,7 +127,7 @@ public class KotlinLanguage2 extends EmptyTextMateLanguage implements Language, 
     var signatureHelp = SignatureHelpLanguageKt.unsupportedSignatureHelp();
     if (!com.tyron.completion.java.provider.CompletionEngine.isIndexing()) {
       signatureHelp =
-          server.signatureHelp(params);
+          server.signatureHelpBlocking(params);
     }
     return signatureHelp;
   }

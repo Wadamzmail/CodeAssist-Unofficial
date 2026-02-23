@@ -311,6 +311,11 @@ class KotlinLanguageServer : ILanguageServer {
     override suspend fun expandSelection(params: ExpandSelectionParams): Range {
         return params.selection
     }
+    
+    fun signatureHelpBlocking(params: SignatureHelpParams): SignatureHelp =
+      kotlinx.coroutines.runBlocking {
+         signatureHelp(params)
+      }
 
     override suspend fun signatureHelp(params: SignatureHelpParams): SignatureHelp {
         if (!settings.signatureHelpEnabled()) {
