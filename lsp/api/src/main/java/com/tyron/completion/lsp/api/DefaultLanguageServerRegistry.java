@@ -19,21 +19,18 @@ package com.tyron.completion.lsp.api;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.itsaky.androidide.eventbus.events.project.ProjectInitializedEvent;
-//import com.itsaky.androidide.projects.IWorkspace;
+// import com.itsaky.androidide.projects.IWorkspace;
 import com.tyron.builder.project.api.Module;
-//import com.itsaky.androidide.utils.ILogger;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
+// import com.itsaky.androidide.utils.ILogger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Thread-safe implementation of {@link ILanguageServerRegistry}.
@@ -126,7 +123,7 @@ public class DefaultLanguageServerRegistry extends ILanguageServerRegistry {
       return;
     }
 
-   // ILogger.ROOT.debug("Dispatching ProjectInitializedEvent to language servers...");
+    // ILogger.ROOT.debug("Dispatching ProjectInitializedEvent to language servers...");
     for (final var server : mRegister.values()) {
       server.setupWorkspace(workspace);
     }

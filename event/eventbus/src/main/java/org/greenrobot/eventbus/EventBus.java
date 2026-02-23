@@ -15,7 +15,6 @@
  */
 package org.greenrobot.eventbus;
 
-import org.greenrobot.eventbus.android.AndroidDependenciesDetector;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
+import org.greenrobot.eventbus.android.AndroidDependenciesDetector;
 
 /**
  * EventBus is a central publish/subscribe event system for Java and Android. Events are posted
@@ -303,7 +303,8 @@ public class EventBus {
     PostingThreadState postingState = currentPostingThreadState.get();
     if (!postingState.isPosting) {
       throw new EventBusException(
-          "This method may only be called from inside event handling methods on the posting thread");
+          "This method may only be called from inside event handling methods on the posting"
+              + " thread");
     } else if (event == null) {
       throw new EventBusException("Event may not be null");
     } else if (postingState.event != event) {

@@ -47,6 +47,8 @@ import com.itsaky.androidide.eventbus.events.editor.DocumentSelectedEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import com.tyron.completion.lsp.api.ILanguageClient
+import com.tyron.completion.lsp.api.ILanguageServer
 
 /*
 *
@@ -70,6 +72,12 @@ abstract class IDEEditor @JvmOverloads constructor(
   
   @JvmField 
   var mCurrentFile: File? = null
+  
+  var languageServer: ILanguageServer? = null
+    private set
+
+  var languageClient: ILanguageClient? = null
+    private set
   
    /**
    * The [CoroutineScope] for the editor.
@@ -119,6 +127,34 @@ abstract class IDEEditor @JvmOverloads constructor(
     get() {
       return _diagnosticWindow ?: DiagnosticWindow(this).also { _diagnosticWindow = it }
     }
+    
+  fun getCurrentDiagnosticMessage(): String{
+    val languageClient = languageClient ?: return ""
+    val cursor = this.cursor ?: return ""
+    val file = this.file ?: return "" 
+    return languageClient.getDiagnosticAt(file, cursor.leftLine, cursor.leftColumn)
+  }
+    
+  fun setLanguageServer(server: ILanguageServer?) {
+    if (isReleased) {
+      return
+    }
+    this.languageServer = server
+    server?.also {
+      this.languageClient = it.client
+      snippetController.apply {
+        fileVariableResolver = FileVariableResolver(this@IDEEditor)
+        workspaceVariableResolver = WorkspaceVariableResolver()
+      }
+    }
+  }
+
+  fun setLanguageClient(client: ILanguageClient?) {
+    if (isReleased) {
+      return
+    }
+    this.languageClient = client
+  }  
     
   fun signatureHelp() {
     if (isReleased) {
@@ -188,6 +224,9 @@ abstract class IDEEditor @JvmOverloads constructor(
     _signatureHelpWindow = null
     _diagnosticWindow = null
     editorFeatures.editor = null
+    
+    languageServer = null
+    languageClient = null
 
     selectionChangeRunner?.also { selectionChangeHandler.removeCallbacks(it) }
     selectionChangeRunner = null
@@ -216,6 +255,7 @@ abstract class IDEEditor @JvmOverloads constructor(
       }
 
       editorScope.launch {
+        dispatchDocumentChangeEvent(event)
         checkForSignatureHelp(event)
       }
     }
@@ -236,7 +276,7 @@ abstract class IDEEditor @JvmOverloads constructor(
     }
   }
   
-  protected open fun dispatchDocumentOpenEvent() {
+  open fun dispatchDocumentOpenEvent() {
     if (isReleased) {
       return
     }
@@ -250,7 +290,7 @@ abstract class IDEEditor @JvmOverloads constructor(
     eventDispatcher.dispatch(openEvent)
   }
 
-  protected open fun dispatchDocumentChangeEvent(event: ContentChangeEvent) {
+  open fun dispatchDocumentChangeEvent(event: ContentChangeEvent) {
     if (isReleased) {
       return
     }
@@ -277,7 +317,7 @@ abstract class IDEEditor @JvmOverloads constructor(
     eventDispatcher.dispatch(changeEvent)
   }
 
-  protected open fun dispatchDocumentSelectedEvent() {
+  open fun dispatchDocumentSelectedEvent() {
     if (isReleased) {
       return
     }
@@ -285,13 +325,25 @@ abstract class IDEEditor @JvmOverloads constructor(
     eventDispatcher.dispatch(DocumentSelectedEvent(file.toPath()))
   }
 
-  protected open fun dispatchDocumentCloseEvent() {
+  open fun dispatchDocumentCloseEvent() {
     if (isReleased) {
       return
     }
     val file = file ?: return
 
     eventDispatcher.dispatch(DocumentCloseEvent(file.toPath(), cursorLSPRange))
+  }
+  
+   /**
+   * Dispatches the [DocumentSaveEvent] for this editor.
+   */
+  open fun dispatchDocumentSaveEvent() {
+    if (isReleased) {
+      return
+    }
+    val file = file ?: return
+    
+    eventDispatcher.dispatch(DocumentSaveEvent(file.toPath()))
   }
   
   
@@ -321,6 +373,26 @@ abstract class IDEEditor @JvmOverloads constructor(
     if (ch == '(' || ch == ',') {
       signatureHelp()
     }
+  }
+  
+  /**
+   * Analyze the opened file and publish the diagnostics result.
+   */
+  open fun analyze() {
+    if (isReleased) {
+      return
+    }
+    //if (editorLanguage !is IDELanguage) {
+   //   return
+  //  }
+
+    val languageServer = languageServer ?: return
+    val file = file ?: return
+
+    editorScope.launch {
+      val result = safeGet("LSP file analysis") { languageServer.analyze(file.toPath()) }
+      languageClient?.publishDiagnostics(result)
+    }.logError("LSP file analysis")
   }
 
   private inline fun <T> safeGet(name: String, action: () -> T): T? {

@@ -13,44 +13,39 @@
  *******************************************************************************/
 package org.eclipse.lemminx.utils;
 
-import org.eclipse.lemminx.settings.FaultTolerantTypeAdapterFactory;
-import org.eclipse.lsp4j.jsonrpc.json.adapters.EitherTypeAdapter;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import org.eclipse.lemminx.settings.FaultTolerantTypeAdapterFactory;
+import org.eclipse.lsp4j.jsonrpc.json.adapters.EitherTypeAdapter;
 
-/**
- * JSONUtility
- */
+/** JSONUtility */
 public class JSONUtility {
 
-	private JSONUtility() {
-	}
+  private JSONUtility() {}
 
-	public static <T> T toModel(Object object, Class<T> clazz) {
-		if (object == null) {
-			return null;
-		}
-		if (clazz == null) {
-			throw new IllegalArgumentException("Class can not be null");
-		}
-		if (object instanceof JsonElement) {
-			Gson gson = getDefaultGsonBuilder().create();
-			return gson.fromJson((JsonElement) object, clazz);
-		}
-		if (clazz.isInstance(object)) {
-			return clazz.cast(object);
-		}
-		return null;
-	}
+  public static <T> T toModel(Object object, Class<T> clazz) {
+    if (object == null) {
+      return null;
+    }
+    if (clazz == null) {
+      throw new IllegalArgumentException("Class can not be null");
+    }
+    if (object instanceof JsonElement) {
+      Gson gson = getDefaultGsonBuilder().create();
+      return gson.fromJson((JsonElement) object, clazz);
+    }
+    if (clazz.isInstance(object)) {
+      return clazz.cast(object);
+    }
+    return null;
+  }
 
-	private static GsonBuilder getDefaultGsonBuilder() {
-		return new GsonBuilder() //
-				// required to deserialize XMLFormattingOptions which extends FormattingOptions
-				// which uses Either
-				.registerTypeAdapterFactory(new EitherTypeAdapter.Factory()) //
-				.registerTypeAdapterFactory(new FaultTolerantTypeAdapterFactory());
-	}
-
+  private static GsonBuilder getDefaultGsonBuilder() {
+    return new GsonBuilder() //
+        // required to deserialize XMLFormattingOptions which extends FormattingOptions
+        // which uses Either
+        .registerTypeAdapterFactory(new EitherTypeAdapter.Factory()) //
+        .registerTypeAdapterFactory(new FaultTolerantTypeAdapterFactory());
+  }
 }

@@ -12,6 +12,6 @@ public class Kotlin implements Language {
 
   @Override
   public io.github.rosemoe.sora.lang.Language get(Editor editor) {
-    return new KotlinLanguage(editor);
+    return new KotlinLanguage2(editor);
   }
 }

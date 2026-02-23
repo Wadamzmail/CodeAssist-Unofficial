@@ -14,6 +14,7 @@ import com.tyron.code.ApplicationLoader;
 import com.tyron.code.analyzer.DiagnosticTextmateAnalyzer;
 import com.tyron.code.language.HighlightUtil;
 import com.tyron.code.language.kotlin.KotlinLanguage;
+import com.tyron.code.language.kotlin.KotlinLanguage2;
 import com.tyron.code.language.xml.LanguageXML;
 import com.tyron.code.ui.editor.CodeAssistCompletionAdapter;
 import com.tyron.code.ui.editor.CodeAssistCompletionWindow;
@@ -112,6 +113,12 @@ public class CodeEditorView extends IDEEditor implements Editor {
   protected void onSelectionChange() {
     if (mDiagnostics == null) return;
     if (!isDiagnosticDetailEnabled()) return;
+    if (getEditorLanguage() instanceof KotlinLanguage2) {
+      String msg = getCurrentDiagnosticMessage();
+      if (msg.equals("")) return;
+      getDiagnosticWindow().showDiagnostic(msg);
+      return;
+    }
     DiagnosticWrapper diagnosticWrapper =
         DiagnosticUtil.getDiagnosticWrapper(
             getEditorLanguage() instanceof KotlinLanguage

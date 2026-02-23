@@ -15,12 +15,12 @@
  */
 package org.greenrobot.eventbus;
 
-import org.greenrobot.eventbus.android.AndroidComponents;
-import org.greenrobot.eventbus.meta.SubscriberInfoIndex;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.greenrobot.eventbus.android.AndroidComponents;
+import org.greenrobot.eventbus.meta.SubscriberInfoIndex;
 
 /**
  * Creates EventBus instances with custom parameters and also allows to install a custom default
@@ -186,8 +186,8 @@ public class EventBusBuilder {
         }
 
         throw new EventBusException(
-            "Default instance already exists."
-                + " It may be only set once before it's used the first time to ensure consistent behavior.");
+            "Default instance already exists. It may be only set once before it's used the first"
+                + " time to ensure consistent behavior.");
       }
       EventBus.defaultInstance = build();
       return EventBus.defaultInstance;

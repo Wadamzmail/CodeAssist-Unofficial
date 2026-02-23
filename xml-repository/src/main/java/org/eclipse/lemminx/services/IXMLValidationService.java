@@ -14,32 +14,29 @@ package org.eclipse.lemminx.services;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.eclipse.lemminx.dom.DOMDocument;
 
 /**
  * XML Document validation service available to XML LS extensions
- * 
- * @author Alex Boyko
  *
+ * @author Alex Boyko
  */
 public interface IXMLValidationService {
 
-	/**
-	 * Performs XML document validation
-	 * 
-	 * @param document       the XML document
-	 * @param validationArgs validation arguments.
-	 */
-	void validate(DOMDocument document, Map<String, Object> validationArgs);
+  /**
+   * Performs XML document validation
+   *
+   * @param document the XML document
+   * @param validationArgs validation arguments.
+   */
+  void validate(DOMDocument document, Map<String, Object> validationArgs);
 
-	/**
-	 * Performs XML document validation
-	 * 
-	 * @param document the XML document
-	 */
-	default void validate(DOMDocument document) {
-		validate(document, Collections.emptyMap());
-	}
-
+  /**
+   * Performs XML document validation
+   *
+   * @param document the XML document
+   */
+  default void validate(DOMDocument document) {
+    validate(document, Collections.emptyMap());
+  }
 }

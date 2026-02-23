@@ -21,10 +21,10 @@ import androidx.annotation.Nullable;
 import com.tyron.completion.model.CodeActionItem;
 import com.tyron.completion.model.DiagnosticItem;
 import com.tyron.completion.model.DiagnosticResult;
+import com.tyron.completion.model.Location;
 import com.tyron.completion.model.PerformCodeActionParams;
 import com.tyron.completion.model.document.ShowDocumentParams;
 import com.tyron.completion.model.document.ShowDocumentResult;
-import com.tyron.completion.model.Location;
 import java.io.File;
 import java.util.List;
 
@@ -40,18 +40,18 @@ public interface ILanguageClient {
    *
    * @param result The diagnostic result.
    */
-  default void publishDiagnostics(DiagnosticResult result){}
+  default void publishDiagnostics(DiagnosticResult result) {}
 
   /**
    * Get the diagnostic item in the given file at the given character position.
    *
-   * @param file   The file to search diagnostics in.
-   * @param line   The line.
+   * @param file The file to search diagnostics in.
+   * @param line The line.
    * @param column The column.
    * @return The diagnostic item or <code>null</code> if none was found.
    */
   @Nullable
-  default DiagnosticItem getDiagnosticAt(File file, int line, int column){
+  default DiagnosticItem getDiagnosticAt(File file, int line, int column) {
     return null;
   }
 
@@ -60,7 +60,7 @@ public interface ILanguageClient {
    *
    * @param params The parameters describing the actions to perform.
    */
-  default void performCodeAction(PerformCodeActionParams params){}
+  default void performCodeAction(PerformCodeActionParams params) {}
 
   default void performCodeAction(CodeActionItem actionItem) {
     if (actionItem == null) {
@@ -72,7 +72,7 @@ public interface ILanguageClient {
   /**
    * Perform the given code action.
    *
-   * @param file       The file in which the given action must be performed.
+   * @param file The file in which the given action must be performed.
    * @param actionItem The action item describing the action.
    */
   @Deprecated
@@ -86,9 +86,9 @@ public interface ILanguageClient {
    *
    * @param params The params for showing the document.
    * @return The result of the show document request. Servers can use this result to perform further
-   * action.
+   *     action.
    */
-  default ShowDocumentResult showDocument(ShowDocumentParams params){
+  default ShowDocumentResult showDocument(ShowDocumentParams params) {
     return new ShowDocumentResult(false);
   }
 
@@ -98,5 +98,5 @@ public interface ILanguageClient {
    *
    * @param locations The location to show.
    */
-  default void showLocations(List<Location> locations){} 
+  default void showLocations(List<Location> locations) {}
 }

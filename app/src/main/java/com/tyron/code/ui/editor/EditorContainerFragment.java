@@ -27,9 +27,13 @@ import com.tyron.builder.project.api.FileManager;
 import com.tyron.builder.project.api.Module;
 import com.tyron.builder.project.listener.FileListener;
 import com.tyron.code.ApplicationLoader;
+import com.tyron.code.handlers.LspHandler;
+import com.tyron.code.language.lsp.SimpleLanguageClientImpl;
 import com.tyron.code.ui.editor.adapter.PageAdapter;
 import com.tyron.code.ui.editor.impl.FileEditorManagerImpl;
 import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorFragment;
+import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
+import com.tyron.code.ui.editor.impl.text.rosemoe.RosemoeCodeEditor;
 import com.tyron.code.ui.editor.impl.xml.LayoutTextEditorFragment;
 import com.tyron.code.ui.main.MainFragment;
 import com.tyron.code.ui.main.MainViewModel;
@@ -43,8 +47,6 @@ import com.tyron.resources.R;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
-import com.tyron.code.ui.editor.impl.text.rosemoe.RosemoeCodeEditor;
-import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
 
 public class EditorContainerFragment extends Fragment
     implements FileListener,
@@ -77,6 +79,8 @@ public class EditorContainerFragment extends Fragment
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    LspHandler.INSTANCE.registerLanguageServers();
+
     pref = ApplicationLoader.getDefaultPreferences();
     mMainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
     requireActivity().getOnBackPressedDispatcher().addCallback(this, mOnBackPressedCallback);
@@ -87,6 +91,13 @@ public class EditorContainerFragment extends Fragment
     super.onSaveInstanceState(outState);
 
     outState.putInt("bottom_sheet_state", mBehavior.getState());
+  }
+
+  private void initLspClient() {
+    if (!SimpleLanguageClientImpl.isInitialized()) {
+      SimpleLanguageClientImpl.initialize(this);
+    }
+    LspHandler.INSTANCE.connectClient(SimpleLanguageClientImpl.getInstance());
   }
 
   @Nullable
@@ -178,6 +189,7 @@ public class EditorContainerFragment extends Fragment
     if (savedInstanceState != null) {
       restoreViewState(savedInstanceState);
     }
+    initLspClient();
     return root;
   }
 
@@ -324,8 +336,8 @@ public class EditorContainerFragment extends Fragment
       }
     }
   }
-  
-  public CodeEditorView getEditorForFile(File file){
+
+  public CodeEditorView getEditorForFile(File file) {
     List<FileEditor> editors = mMainViewModel.getFiles().getValue();
     if (editors == null) {
       return null;
@@ -334,7 +346,7 @@ public class EditorContainerFragment extends Fragment
     for (int i = 0; i < editors.size(); i++) {
       FileEditor editor = editors.get(i);
       if (file.equals(editor.getFile())) {
-        return ((RosemoeCodeEditor)editor).getEditor();
+        return ((RosemoeCodeEditor) editor).getEditor();
       }
     }
     return null;
@@ -384,7 +396,12 @@ public class EditorContainerFragment extends Fragment
 
   @Override
   public void onDestroy() {
+
+    if (SimpleLanguageClientImpl.isInitialized()) {
+      SimpleLanguageClientImpl.shutdown();
+    }
     super.onDestroy();
+    LspHandler.INSTANCE.destroyLanguageServers(false);
 
     ApplicationLoader.getDefaultPreferences().unregisterOnSharedPreferenceChangeListener(this);
   }

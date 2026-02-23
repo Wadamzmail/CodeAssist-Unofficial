@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.itsaky.androidide.lsp.kotlin.KotlinLanguageServer;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.tyron.actions.ActionManager;
 import com.tyron.actions.ActionPlaces;
@@ -42,6 +43,8 @@ import com.tyron.code.analyzer.BaseTextmateAnalyzer;
 import com.tyron.code.language.LanguageManager;
 import com.tyron.code.language.java.JavaLanguage;
 import com.tyron.code.language.kotlin.KotlinLanguage;
+import com.tyron.code.language.kotlin.KotlinLanguage2;
+import com.tyron.code.language.lsp.SimpleLanguageClientImpl;
 import com.tyron.code.language.textmate.EmptyTextMateLanguage;
 import com.tyron.code.language.xml.LanguageXML;
 import com.tyron.code.ui.editor.CodeAssistCompletionLayout;
@@ -64,6 +67,7 @@ import com.tyron.common.util.AndroidUtilities;
 import com.tyron.common.util.DebouncerStore;
 import com.tyron.completion.java.util.DiagnosticUtil;
 import com.tyron.completion.java.util.JavaDataContextUtil;
+import com.tyron.completion.lsp.ILanguageServerRegistry;
 import com.tyron.completion.progress.ProgressManager;
 import com.tyron.diagnostics.DiagnosticProvider;
 import com.tyron.editor.CharPosition;
@@ -90,6 +94,7 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.concurrent.Executors;
@@ -116,6 +121,27 @@ public class CodeEditorFragment extends Fragment
   public static final String KEY_LINE = "line";
   public static final String KEY_COLUMN = "column";
   public static final String KEY_PATH = "path";
+
+  private static final Map<String, String> SERVER_MAP =
+      Map.of(
+          //    "java", JavaLanguageServer.SERVER_ID,
+          //     "xml", XMLLanguageServer.SERVER_ID,
+          "kt", KotlinLanguageServer.SERVER_ID);
+
+  private ILanguageServer createLanguageServer(File file) {
+    if (!file.isFile()) return null;
+
+    String serverID = SERVER_MAP.get(getExtension(file));
+    if (serverID == null) return null;
+
+    return ILanguageServerRegistry.getDefault().getServer(serverID);
+  }
+
+  private static String getExtension(File file) {
+    String name = file.getName();
+    int lastDot = name.lastIndexOf('.');
+    return lastDot == -1 ? "" : name.substring(lastDot + 1);
+  }
 
   public static CodeEditorFragment newInstance(File file) {
     CodeEditorFragment fragment = new CodeEditorFragment();
@@ -645,8 +671,10 @@ public class CodeEditorFragment extends Fragment
                       .getModule(mCurrentFile)
                       .getFileManager()
                       .closeFileForSnapshot(mCurrentFile));
+      mEditor.dispatchDocumentSaveEvent();
     }
     ApplicationLoader.getDefaultPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    mEditor.dispatchDocumentCloseEvent();
   }
 
   @Override
@@ -723,6 +751,7 @@ public class CodeEditorFragment extends Fragment
                 }
               });
     }
+    mEditor.dispatchDocumentSaveEvent();
   }
 
   @Override
@@ -731,6 +760,13 @@ public class CodeEditorFragment extends Fragment
     if (mEditor.getEditorLanguage() instanceof KotlinLanguage
         && ((KotlinLanguage) mEditor.getEditorLanguage()).kotlinEnvironment == null)
       ((KotlinLanguage) mEditor.getEditorLanguage()).initEnv();
+    if (mEditor.getEditorLanguage() instanceof KotlinLanguage2) {
+      mEditor.setLanguageServer(createLanguageServer(mCurrentFile));
+      if (SimpleLanguageClientImpl.isInitialized()) {
+        mEditor.setLanguageClient(SimpleLanguageClientImpl.getInstance());
+      }
+      mEditor.dispatchDocumentOpenEvent();
+    }
   }
 
   /**
@@ -743,6 +779,13 @@ public class CodeEditorFragment extends Fragment
       if (mEditor.getEditorLanguage() instanceof KotlinLanguage
           && ((KotlinLanguage) mEditor.getEditorLanguage()).kotlinEnvironment == null)
         ((KotlinLanguage) mEditor.getEditorLanguage()).initEnv();
+      if (mEditor.getEditorLanguage() instanceof KotlinLanguage2) {
+        mEditor.setLanguageServer(createLanguageServer(mCurrentFile));
+        if (SimpleLanguageClientImpl.isInitialized()) {
+          mEditor.setLanguageClient(SimpleLanguageClientImpl.getInstance());
+        }
+        mEditor.dispatchDocumentOpenEvent();
+      }
     } else {
       ProjectManager.getInstance().addOnProjectOpenListener(this);
     }

@@ -237,14 +237,14 @@ public class ModuleImpl implements Module {
   public Set<String> getApiProjects(File gradleFile) {
     return parseApiProjects(gradleFile);
   }
-  
+
   @Override
-  public List<Module> getSubprojects(){
-     ArrayList<Module> subprojects = new ArrayList<>();
-     for ( String p : getAllProjects()){
+  public List<Module> getSubprojects() {
+    ArrayList<Module> subprojects = new ArrayList<>();
+    for (String p : getAllProjects()) {
       subprojects.add(getProject().getModuleByName(p));
-     }
-     return subprojects;
+    }
+    return subprojects;
   }
 
   @Override

@@ -16,9 +16,8 @@
 package org.greenrobot.eventbus.android;
 
 import android.util.Log;
-import org.greenrobot.eventbus.Logger;
-
 import java.util.logging.Level;
+import org.greenrobot.eventbus.Logger;
 
 public class AndroidLogger implements Logger {
 

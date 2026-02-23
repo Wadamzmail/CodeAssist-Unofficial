@@ -24,6 +24,7 @@ public class SubscriberMethod {
   final Class<?> eventType;
   final int priority;
   final boolean sticky;
+
   /** Used for efficient comparison */
   String methodString;
 

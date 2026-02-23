@@ -17,10 +17,10 @@
 
 package com.tyron.completion.lsp.util;
 
-import androidx.annotation.Nullable;
-//import com.itsaky.androidide.app.BaseApplication;
+// import com.itsaky.androidide.app.BaseApplication;
 import com.tyron.completion.lsp.api.IServerSettings;
-//import com.itsaky.androidide.managers.PreferenceManager;
+
+// import com.itsaky.androidide.managers.PreferenceManager;
 
 /**
  * {@link IServerSettings} implementation which uses {@link
@@ -30,26 +30,26 @@ import com.tyron.completion.lsp.api.IServerSettings;
  */
 public abstract class PrefBasedServerSettings extends DefaultServerSettings {
 
- // private PreferenceManager prefs;
+  // private PreferenceManager prefs;
 
   @Override
   public boolean shouldMatchAllLowerCase() {
-//    final var prefs = getPrefs();
-//    if (prefs != null) {
-//      return prefs.getBoolean(KEY_COMPLETIONS_MATCH_LOWER, true);
-//    }
+    //    final var prefs = getPrefs();
+    //    if (prefs != null) {
+    //      return prefs.getBoolean(KEY_COMPLETIONS_MATCH_LOWER, true);
+    //    }
 
     return false;
   }
 
-//  @Nullable
-//  public PreferenceManager getPrefs() {
-//    if (prefs == null) {
-//      final var app = BaseApplication.getBaseInstance();
-//      if (app != null) {
-//        prefs = app.getPrefManager();
-//      }
-//    }
-//    return prefs;
-//  }
+  //  @Nullable
+  //  public PreferenceManager getPrefs() {
+  //    if (prefs == null) {
+  //      final var app = BaseApplication.getBaseInstance();
+  //      if (app != null) {
+  //        prefs = app.getPrefManager();
+  //      }
+  //    }
+  //    return prefs;
+  //  }
 }

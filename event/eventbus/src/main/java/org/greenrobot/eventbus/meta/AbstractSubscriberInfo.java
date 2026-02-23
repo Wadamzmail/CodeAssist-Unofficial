@@ -15,11 +15,10 @@
  */
 package org.greenrobot.eventbus.meta;
 
+import java.lang.reflect.Method;
 import org.greenrobot.eventbus.EventBusException;
 import org.greenrobot.eventbus.SubscriberMethod;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.reflect.Method;
 
 /** Base class for generated subscriber meta info classes created by annotation processing. */
 public abstract class AbstractSubscriberInfo implements SubscriberInfo {

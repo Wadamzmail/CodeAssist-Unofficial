@@ -15,8 +15,8 @@
  */
 package org.greenrobot.eventbus;
 
-import org.greenrobot.eventbus.android.AndroidComponents;
 import java.util.logging.Level;
+import org.greenrobot.eventbus.android.AndroidComponents;
 
 public interface Logger {
 

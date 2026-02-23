@@ -2,7 +2,7 @@ package com.tyron.completion.model;
 
 public class Range implements Comparable<Range> {
   public Position start, end;
-  public static final Range NONE = new Range(Position.NONE, Position.NONE); 
+  public static final Range NONE = new Range(Position.NONE, Position.NONE);
 
   public Range(long startPosition, long endPosition) {
     start = new Position(startPosition, startPosition);
@@ -13,16 +13,16 @@ public class Range implements Comparable<Range> {
     this.start = start;
     this.end = end;
   }
-  
+
   public void validate() {
     start.zeroIfNegative();
     end.zeroIfNegative();
   }
-  
-  public Range pointRange(int line,int column){
+
+  public Range pointRange(int line, int column) {
     return pointRange(new Position(line, column));
   }
-    
+
   public Range pointRange(Position position) {
     return new Range(position, position);
   }
@@ -47,23 +47,23 @@ public class Range implements Comparable<Range> {
   public String toString() {
     return start + "-" + end;
   }
-  
-  @Override 
+
+  @Override
   public int hashCode() {
     var result = start.hashCode();
     result = 31 * result + end.hashCode();
     return result;
   }
-  
-  @Override 
-  public int compareTo(Range other){
+
+  @Override
+  public int compareTo(Range other) {
     return start.compareTo(other.start);
   }
-  
-  public int compareByEnd(Range other){
+
+  public int compareByEnd(Range other) {
     return end.compareTo(other.end);
   }
-  
+
   public boolean contains(Position position) {
     if (position.line < start.line || position.line > end.line) {
       return false;
@@ -75,7 +75,7 @@ public class Range implements Comparable<Range> {
 
     return false;
   }
-  
+
   public int containsForBinarySearch(Position position) {
 
     // The position might appear before this range
@@ -103,7 +103,7 @@ public class Range implements Comparable<Range> {
     // This range definitely contains the position.
     return 0;
   }
-  
+
   public boolean containsLine(int line) {
     return start.line <= line && end.line >= line;
   }
@@ -124,7 +124,7 @@ public class Range implements Comparable<Range> {
     return other.isBiggerThan(this);
   }
 
-  public boolean isBiggerThan(Range other){
+  public boolean isBiggerThan(Range other) {
 
     if (equals(other)) {
       return false;
@@ -142,5 +142,4 @@ public class Range implements Comparable<Range> {
 
     return false;
   }
-
 }

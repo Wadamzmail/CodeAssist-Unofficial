@@ -45,7 +45,7 @@ public class RosemoeCodeEditor implements TextEditor {
   public Content getContent() {
     return ((CodeEditorFragment) getFragment()).getEditor().getContent();
   }
-  
+
   public CodeEditorView getEditor() {
     return (CodeEditorView) ((CodeEditorFragment) getFragment()).getEditor();
   }

@@ -1,12 +1,12 @@
 /*******************************************************************************
-* Copyright (c) 2022 Red Hat Inc. and others.
-* All rights reserved. This program and the accompanying materials
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v20.html
-*
-* Contributors:
-*     Red Hat Inc. - initial API and implementation
-*******************************************************************************/
+ * Copyright (c) 2022 Red Hat Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * Contributors:
+ *     Red Hat Inc. - initial API and implementation
+ *******************************************************************************/
 
 package org.eclipse.lemminx.extensions.xinclude;
 
@@ -15,7 +15,6 @@ import static org.eclipse.lemminx.utils.XMLPositionUtility.createDocumentLink;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.apache.xerces.impl.XMLEntityManager;
 import org.apache.xerces.util.URI.MalformedURIException;
 import org.eclipse.lemminx.commons.BadLocationException;
@@ -28,47 +27,45 @@ import org.eclipse.lemminx.services.extensions.IDocumentLinkParticipant;
 import org.eclipse.lemminx.utils.StringUtils;
 import org.eclipse.lsp4j.DocumentLink;
 
-/**
- * Document links that are specific to xi:include
- */
+/** Document links that are specific to xi:include */
 public class XIncludeDocumentLinkParticipant implements IDocumentLinkParticipant {
 
-	private static Logger LOGGER = Logger.getLogger(XIncludeDocumentLinkParticipant.class.getName());
+  private static Logger LOGGER = Logger.getLogger(XIncludeDocumentLinkParticipant.class.getName());
 
-	@Override
-	public void findDocumentLinks(DOMDocument document, List<DocumentLink> links) {
-		findDocumentLinks(document, document, links);
-	}
+  @Override
+  public void findDocumentLinks(DOMDocument document, List<DocumentLink> links) {
+    findDocumentLinks(document, document, links);
+  }
 
-	public void findDocumentLinks(DOMNode parent, DOMDocument document, List<DocumentLink> links) {
-		for (DOMNode child : parent.getChildren()) {
-			if (child.isElement()) {
-				DOMElement xincludeElement = (DOMElement) child;
-				if (XIncludeUtils.isInclude(xincludeElement)) {
-					DOMAttr hrefAttr = XIncludeUtils.getHref(xincludeElement);
-					if (hrefAttr != null && !StringUtils.isEmpty(hrefAttr.getValue())) {
-						String location = getResolvedLocation(document.getDocumentURI(), hrefAttr.getValue());
-						DOMRange hrefRange = hrefAttr.getNodeAttrValue();
-						try {
-							links.add(createDocumentLink(hrefRange, location, true));
-						} catch (BadLocationException e) {
-							LOGGER.log(Level.SEVERE, "Creation of document link failed", e);
-						}
-					}
-				}
-				findDocumentLinks(xincludeElement, document, links);
-			}
-		}
-	}
+  public void findDocumentLinks(DOMNode parent, DOMDocument document, List<DocumentLink> links) {
+    for (DOMNode child : parent.getChildren()) {
+      if (child.isElement()) {
+        DOMElement xincludeElement = (DOMElement) child;
+        if (XIncludeUtils.isInclude(xincludeElement)) {
+          DOMAttr hrefAttr = XIncludeUtils.getHref(xincludeElement);
+          if (hrefAttr != null && !StringUtils.isEmpty(hrefAttr.getValue())) {
+            String location = getResolvedLocation(document.getDocumentURI(), hrefAttr.getValue());
+            DOMRange hrefRange = hrefAttr.getNodeAttrValue();
+            try {
+              links.add(createDocumentLink(hrefRange, location, true));
+            } catch (BadLocationException e) {
+              LOGGER.log(Level.SEVERE, "Creation of document link failed", e);
+            }
+          }
+        }
+        findDocumentLinks(xincludeElement, document, links);
+      }
+    }
+  }
 
-	private static String getResolvedLocation(String documentURI, String location) {
-		if (location == null) {
-			return null;
-		}
-		try {
-			return XMLEntityManager.expandSystemId(location, documentURI, false);
-		} catch (MalformedURIException e) {
-			return location;
-		}
-	}
+  private static String getResolvedLocation(String documentURI, String location) {
+    if (location == null) {
+      return null;
+    }
+    try {
+      return XMLEntityManager.expandSystemId(location, documentURI, false);
+    } catch (MalformedURIException e) {
+      return location;
+    }
+  }
 }

@@ -272,7 +272,7 @@ public class StringSearch {
     // TODO fall back on parsing file
     return "";
   }
-  
+
   public static String packageName(final BufferedReader reader) {
     try (reader) {
       final var packagePattern = Pattern.compile("^package +(.*);");

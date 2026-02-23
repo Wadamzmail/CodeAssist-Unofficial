@@ -16,82 +16,79 @@ package org.eclipse.lemminx.dom;
 import org.eclipse.lemminx.utils.XMLPositionUtility;
 import org.eclipse.lsp4j.Range;
 
-/**
- * DTDDeclParameter
- */
+/** DTDDeclParameter */
 public class DTDDeclParameter implements DOMRange, TargetRange {
 
-	private final DTDDeclNode ownerNode;
+  private final DTDDeclNode ownerNode;
 
-	String parameter;
+  String parameter;
 
-	int start, end;
+  int start, end;
 
-	public DTDDeclParameter(DTDDeclNode ownerNode, int start, int end) {
-		this.ownerNode = ownerNode;
-		this.start = start;
-		this.end = end;
-	}
+  public DTDDeclParameter(DTDDeclNode ownerNode, int start, int end) {
+    this.ownerNode = ownerNode;
+    this.start = start;
+    this.end = end;
+  }
 
-	@Override
-	public int getStart() {
-		return start;
-	}
+  @Override
+  public int getStart() {
+    return start;
+  }
 
-	@Override
-	public int getEnd() {
-		return end;
-	}
+  @Override
+  public int getEnd() {
+    return end;
+  }
 
-	@Override
-	public DOMDocument getOwnerDocument() {
-		return getOwnerNode().getOwnerDocument();
-	}
+  @Override
+  public DOMDocument getOwnerDocument() {
+    return getOwnerNode().getOwnerDocument();
+  }
 
-	public DOMDocumentType getOwnerDocType() {
-		return getOwnerNode().getOwnerDocType();
-	}
+  public DOMDocumentType getOwnerDocType() {
+    return getOwnerNode().getOwnerDocType();
+  }
 
-	public DTDDeclNode getOwnerNode() {
-		return ownerNode;
-	}
+  public DTDDeclNode getOwnerNode() {
+    return ownerNode;
+  }
 
-	public String getParameter() {
-		if (parameter == null) {
-			parameter = getOwnerDocType().getSubstring(start, end);
-		}
-		return parameter;
-	}
+  public String getParameter() {
+    if (parameter == null) {
+      parameter = getOwnerDocType().getSubstring(start, end);
+    }
+    return parameter;
+  }
 
-	/**
-	 * Will get the parameter with the first and last character removed
-	 * 
-	 * Can be used to remove the quotations from a URL value...
-	 */
-	public String getParameterWithoutFirstAndLastChar() {
-		if (parameter == null) {
-			parameter = getOwnerDocType().getSubstring(start + 1, end - 1);
-		}
-		return parameter;
-	}
+  /**
+   * Will get the parameter with the first and last character removed
+   *
+   * <p>Can be used to remove the quotations from a URL value...
+   */
+  public String getParameterWithoutFirstAndLastChar() {
+    if (parameter == null) {
+      parameter = getOwnerDocType().getSubstring(start + 1, end - 1);
+    }
+    return parameter;
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof DTDDeclParameter)) {
-			return false;
-		}
-		DTDDeclParameter temp = (DTDDeclParameter) obj;
-		return start == temp.start && end == temp.end;
-	}
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof DTDDeclParameter)) {
+      return false;
+    }
+    DTDDeclParameter temp = (DTDDeclParameter) obj;
+    return start == temp.start && end == temp.end;
+  }
 
-	@Override
-	public Range getTargetRange() {
-		return XMLPositionUtility.createRange(this);
-	}
+  @Override
+  public Range getTargetRange() {
+    return XMLPositionUtility.createRange(this);
+  }
 
-	@Override
-	public String getTargetURI() {
-		return getOwnerDocument().getDocumentURI();
-	}
-
+  @Override
+  public String getTargetURI() {
+    return getOwnerDocument().getDocumentURI();
+  }
 }

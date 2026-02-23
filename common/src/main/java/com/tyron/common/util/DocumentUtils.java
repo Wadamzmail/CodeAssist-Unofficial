@@ -26,7 +26,7 @@ public class DocumentUtils {
         && Files.exists(file)
         && !Files.isDirectory(file);
   }
-  
+
   public static boolean isKotlinFile(Path file) {
     if (file == null) {
       return false;

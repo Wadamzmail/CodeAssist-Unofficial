@@ -13,15 +13,15 @@ package org.eclipse.lemminx.customservice;
 import org.eclipse.lsp4j.Range;
 
 public class AutoCloseTagResponse {
-	public String snippet;
-	public Range range;
+  public String snippet;
+  public Range range;
 
-	public AutoCloseTagResponse(String snippet, Range range) {
-		this.snippet = snippet;
-		this.range = range;
-	}
+  public AutoCloseTagResponse(String snippet, Range range) {
+    this.snippet = snippet;
+    this.range = range;
+  }
 
-	public AutoCloseTagResponse(String snippet) {
-		this.snippet = snippet;
-	}
+  public AutoCloseTagResponse(String snippet) {
+    this.snippet = snippet;
+  }
 }

@@ -1,18 +1,17 @@
 /*******************************************************************************
-* Copyright (c) 2019 Red Hat Inc. and others.
-* All rights reserved. This program and the accompanying materials
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v20.html
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*     Red Hat Inc. - initial API and implementation
-*******************************************************************************/
+ * Copyright (c) 2019 Red Hat Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Red Hat Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.lemminx.extensions.dtd.participants;
 
 import java.util.List;
-
 import org.eclipse.lemminx.dom.DOMDocument;
 import org.eclipse.lemminx.dom.DOMNode;
 import org.eclipse.lemminx.dom.DTDElementDecl;
@@ -26,30 +25,35 @@ import org.eclipse.lsp4j.jsonrpc.CancelChecker;
 
 /**
  * DTD reference
- * 
- * @author Angelo ZERR
  *
+ * @author Angelo ZERR
  */
 public class DTDReferenceParticipant extends AbstractReferenceParticipant {
 
-	@Override
-	protected boolean match(DOMDocument document) {
-		return true;
-	}
+  @Override
+  protected boolean match(DOMDocument document) {
+    return true;
+  }
 
-	@Override
-	protected void findReferences(DOMNode node, Position position, int offset, ReferenceContext context,
-			List<Location> locations, CancelChecker cancelChecker) {
-		// DTD reference works only when references is done on an <!ELEMENT name
-		if (!node.isDTDElementDecl()) {
-			return;
-		}
-		DTDElementDecl elementDecl = (DTDElementDecl) node;
-		if (!elementDecl.isInNameParameter(offset)) {
-			return;
-		}
-		DTDUtils.searchDTDOriginElementDecls(elementDecl,
-				(origin, target) -> locations.add(XMLPositionUtility.createLocation(origin)), cancelChecker);
-	}
-
+  @Override
+  protected void findReferences(
+      DOMNode node,
+      Position position,
+      int offset,
+      ReferenceContext context,
+      List<Location> locations,
+      CancelChecker cancelChecker) {
+    // DTD reference works only when references is done on an <!ELEMENT name
+    if (!node.isDTDElementDecl()) {
+      return;
+    }
+    DTDElementDecl elementDecl = (DTDElementDecl) node;
+    if (!elementDecl.isInNameParameter(offset)) {
+      return;
+    }
+    DTDUtils.searchDTDOriginElementDecls(
+        elementDecl,
+        (origin, target) -> locations.add(XMLPositionUtility.createLocation(origin)),
+        cancelChecker);
+  }
 }

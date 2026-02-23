@@ -1,14 +1,14 @@
 /*******************************************************************************
-* Copyright (c) 2022, 2023 Red Hat Inc. and others.
-* All rights reserved. This program and the accompanying materials
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v20.html
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*     Red Hat Inc. - initial API and implementation
-*******************************************************************************/
+ * Copyright (c) 2022, 2023 Red Hat Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Red Hat Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.lemminx.extensions.references;
 
 import org.eclipse.lemminx.extensions.references.participants.XMLReferencesCodeLensParticipant;
@@ -35,24 +35,18 @@ import org.eclipse.lsp4j.InitializeParams;
 
 /**
  * XML references plugin.
- * 
- * This plugin provides the capability to support completion, definition, etc
- * for references between 2 attributes declared in a 'xml.references' settings.
- * 
- * Given this XML:
- * 
- * <code>
- * <div id="MyId" /><xref linkend="MyId" />
- * </code>
- * 
- * To benefit with:
- * 
- * - completion support when @linkend value will be trigger
- * - go to the definition of MyId from the @linked attribute
- * 
- * the following xml references settings must be configured:
  *
- * <code>
+ * <p>This plugin provides the capability to support completion, definition, etc for references
+ * between 2 attributes declared in a 'xml.references' settings.
+ *
+ * <p>Given this XML: <code>
+ * <div id="MyId" /><xref linkend="MyId" />
+ * </code> To benefit with:
+ *
+ * <p>- completion support when @linkend value will be trigger - go to the definition of MyId from
+ * the @linked attribute
+ *
+ * <p>the following xml references settings must be configured: <code>
  * "xml.references": [
  * // references for docbook.xml files
  * {
@@ -64,82 +58,80 @@ import org.eclipse.lsp4j.InitializeParams;
  *     }
  *   ]
  * }
- *]
- * 
- * </code>
- * 
- * 
- * @author Angelo ZERR
+ * ]
  *
+ * </code>
+ *
+ * @author Angelo ZERR
  */
 public class XMLReferencesPlugin implements IXMLExtension {
 
-	private final ICompletionParticipant completionParticipant;
-	private final IDefinitionParticipant definitionParticipant;
-	private final IReferenceParticipant referenceParticipant;
-	private final ICodeLensParticipant codeLensParticipant;
-	private final IHighlightingParticipant highlightingParticipant;
-	private final IRenameParticipant renameParticipant;
-	private final ILinkedEditingRangesParticipant linkedEditingRangesParticipant;
-	private final IDiagnosticsParticipant diagnosticsParticipant;
+  private final ICompletionParticipant completionParticipant;
+  private final IDefinitionParticipant definitionParticipant;
+  private final IReferenceParticipant referenceParticipant;
+  private final ICodeLensParticipant codeLensParticipant;
+  private final IHighlightingParticipant highlightingParticipant;
+  private final IRenameParticipant renameParticipant;
+  private final ILinkedEditingRangesParticipant linkedEditingRangesParticipant;
+  private final IDiagnosticsParticipant diagnosticsParticipant;
 
-	private XMLReferencesSettings referencesSettings;
+  private XMLReferencesSettings referencesSettings;
 
-	public XMLReferencesPlugin() {
-		completionParticipant = new XMLReferencesCompletionParticipant(this);
-		definitionParticipant = new XMLReferencesDefinitionParticipant(this);
-		referenceParticipant = new XMLReferencesReferenceParticipant(this);
-		codeLensParticipant = new XMLReferencesCodeLensParticipant(this);
-		highlightingParticipant = new XMLReferencesHighlightingParticipant(this);
-		renameParticipant = new XMLReferencesRenameParticipant(this);
-		linkedEditingRangesParticipant = new XMLReferencesLinkedEditingRangesParticipant(this);
-		diagnosticsParticipant = new XMLReferencesDiagnosticParticipant(this);
-	}
+  public XMLReferencesPlugin() {
+    completionParticipant = new XMLReferencesCompletionParticipant(this);
+    definitionParticipant = new XMLReferencesDefinitionParticipant(this);
+    referenceParticipant = new XMLReferencesReferenceParticipant(this);
+    codeLensParticipant = new XMLReferencesCodeLensParticipant(this);
+    highlightingParticipant = new XMLReferencesHighlightingParticipant(this);
+    renameParticipant = new XMLReferencesRenameParticipant(this);
+    linkedEditingRangesParticipant = new XMLReferencesLinkedEditingRangesParticipant(this);
+    diagnosticsParticipant = new XMLReferencesDiagnosticParticipant(this);
+  }
 
-	@Override
-	public void doSave(ISaveContext context) {
-		if (context.getType() != ISaveContext.SaveContextType.DOCUMENT) {
-			// Settings
-			updateSettings(context);
-		}
-	}
+  @Override
+  public void doSave(ISaveContext context) {
+    if (context.getType() != ISaveContext.SaveContextType.DOCUMENT) {
+      // Settings
+      updateSettings(context);
+    }
+  }
 
-	private void updateSettings(ISaveContext saveContext) {
-		Object initializationOptionsSettings = saveContext.getSettings();
-		XMLReferencesSettings referencesSettings = XMLReferencesSettings
-				.getXMLReferencesSettings(initializationOptionsSettings);
-		updateSettings(referencesSettings, saveContext);
-	}
+  private void updateSettings(ISaveContext saveContext) {
+    Object initializationOptionsSettings = saveContext.getSettings();
+    XMLReferencesSettings referencesSettings =
+        XMLReferencesSettings.getXMLReferencesSettings(initializationOptionsSettings);
+    updateSettings(referencesSettings, saveContext);
+  }
 
-	private void updateSettings(XMLReferencesSettings settings, ISaveContext context) {
-		this.referencesSettings = settings;
-	}
+  private void updateSettings(XMLReferencesSettings settings, ISaveContext context) {
+    this.referencesSettings = settings;
+  }
 
-	@Override
-	public void start(InitializeParams params, XMLExtensionsRegistry registry) {
-		registry.registerCompletionParticipant(completionParticipant);
-		registry.registerDefinitionParticipant(definitionParticipant);
-		registry.registerReferenceParticipant(referenceParticipant);
-		registry.registerCodeLensParticipant(codeLensParticipant);
-		registry.registerHighlightingParticipant(highlightingParticipant);
-		registry.registerRenameParticipant(renameParticipant);
-		registry.registerLinkedEditingRangesParticipants(linkedEditingRangesParticipant);
-		registry.registerDiagnosticsParticipant(diagnosticsParticipant);
-	}
+  @Override
+  public void start(InitializeParams params, XMLExtensionsRegistry registry) {
+    registry.registerCompletionParticipant(completionParticipant);
+    registry.registerDefinitionParticipant(definitionParticipant);
+    registry.registerReferenceParticipant(referenceParticipant);
+    registry.registerCodeLensParticipant(codeLensParticipant);
+    registry.registerHighlightingParticipant(highlightingParticipant);
+    registry.registerRenameParticipant(renameParticipant);
+    registry.registerLinkedEditingRangesParticipants(linkedEditingRangesParticipant);
+    registry.registerDiagnosticsParticipant(diagnosticsParticipant);
+  }
 
-	@Override
-	public void stop(XMLExtensionsRegistry registry) {
-		registry.unregisterCompletionParticipant(completionParticipant);
-		registry.unregisterDefinitionParticipant(definitionParticipant);
-		registry.unregisterReferenceParticipant(referenceParticipant);
-		registry.unregisterCodeLensParticipant(codeLensParticipant);
-		registry.unregisterHighlightingParticipant(highlightingParticipant);
-		registry.unregisterRenameParticipant(renameParticipant);
-		registry.unregisterLinkedEditingRangesParticipants(linkedEditingRangesParticipant);
-		registry.unregisterDiagnosticsParticipant(diagnosticsParticipant);
-	}
+  @Override
+  public void stop(XMLExtensionsRegistry registry) {
+    registry.unregisterCompletionParticipant(completionParticipant);
+    registry.unregisterDefinitionParticipant(definitionParticipant);
+    registry.unregisterReferenceParticipant(referenceParticipant);
+    registry.unregisterCodeLensParticipant(codeLensParticipant);
+    registry.unregisterHighlightingParticipant(highlightingParticipant);
+    registry.unregisterRenameParticipant(renameParticipant);
+    registry.unregisterLinkedEditingRangesParticipants(linkedEditingRangesParticipant);
+    registry.unregisterDiagnosticsParticipant(diagnosticsParticipant);
+  }
 
-	public XMLReferencesSettings getReferencesSettings() {
-		return referencesSettings;
-	}
+  public XMLReferencesSettings getReferencesSettings() {
+    return referencesSettings;
+  }
 }

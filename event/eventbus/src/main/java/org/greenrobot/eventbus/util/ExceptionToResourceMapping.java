@@ -16,13 +16,12 @@
 
 package org.greenrobot.eventbus.util;
 
-import org.greenrobot.eventbus.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
+import org.greenrobot.eventbus.Logger;
 
 /**
  * Maps throwables to texts for error dialogs. Use Config to configure the mapping.

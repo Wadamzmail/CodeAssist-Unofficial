@@ -13,60 +13,58 @@
  *******************************************************************************/
 package org.eclipse.lemminx.dom;
 
-/**
- * DTDNotationDecl
- */
+/** DTDNotationDecl */
 public class DTDNotationDecl extends DTDDeclNode {
 
-	/**
-	 * Format:
-	 * 
-	 * <!NOTATION Name PUBLIC PublicID>
-	 * 
-	 * or
-	 * 
-	 * <!NOTATION Name PUBLIC PublicID SystemID>
-	 * 
-	 * or
-	 * 
-	 * <!NOTATION Name SYSTEM SystemID>
-	 */
+  /**
+   * Format:
+   *
+   * <p><!NOTATION Name PUBLIC PublicID>
+   *
+   * <p>or
+   *
+   * <p><!NOTATION Name PUBLIC PublicID SystemID>
+   *
+   * <p>or
+   *
+   * <p><!NOTATION Name SYSTEM SystemID>
+   */
+  DTDDeclParameter kind;
 
-	DTDDeclParameter kind;
-	DTDDeclParameter publicId;
-	DTDDeclParameter systemId;
+  DTDDeclParameter publicId;
+  DTDDeclParameter systemId;
 
-	public DTDNotationDecl(int start, int end) {
-		super(start, end);
-		setDeclType(start + 2, start + 10);
-	}
+  public DTDNotationDecl(int start, int end) {
+    super(start, end);
+    setDeclType(start + 2, start + 10);
+  }
 
-	void setKind(int start, int end) {
-		kind = addNewParameter(start, end);
-	}
+  void setKind(int start, int end) {
+    kind = addNewParameter(start, end);
+  }
 
-	public String getKind() {
-		return kind != null ? kind.getParameter() : null;
-	}
+  public String getKind() {
+    return kind != null ? kind.getParameter() : null;
+  }
 
-	void setPublicId(int start, int end) {
-		publicId = addNewParameter(start, end);
-	}
+  void setPublicId(int start, int end) {
+    publicId = addNewParameter(start, end);
+  }
 
-	public String getPublicId() {
-		return publicId != null ? publicId.getParameterWithoutFirstAndLastChar() : null;
-	}
+  public String getPublicId() {
+    return publicId != null ? publicId.getParameterWithoutFirstAndLastChar() : null;
+  }
 
-	void setSystemId(int start, int end) {
-		systemId = addNewParameter(start, end);
-	}
+  void setSystemId(int start, int end) {
+    systemId = addNewParameter(start, end);
+  }
 
-	public String getSystemId() {
-		return systemId != null ? systemId.getParameterWithoutFirstAndLastChar() : null;
-	}
+  public String getSystemId() {
+    return systemId != null ? systemId.getParameterWithoutFirstAndLastChar() : null;
+  }
 
-	@Override
-	public short getNodeType() {
-		return DOMNode.DTD_NOTATION_DECL;
-	}
+  @Override
+  public short getNodeType() {
+    return DOMNode.DTD_NOTATION_DECL;
+  }
 }

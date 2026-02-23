@@ -15,12 +15,11 @@
  */
 package org.greenrobot.eventbus.util;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.lang.reflect.Constructor;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Executes an {@link RunnableEx} using a thread pool. Thrown exceptions are propagated by posting

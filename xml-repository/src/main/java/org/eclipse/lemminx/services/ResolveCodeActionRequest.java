@@ -1,14 +1,14 @@
 /*******************************************************************************
-* Copyright (c) 2022 Red Hat Inc. and others.
-* All rights reserved. This program and the accompanying materials
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v20.html
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*     Red Hat Inc. - initial API and implementation
-*******************************************************************************/
+ * Copyright (c) 2022 Red Hat Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v20.html
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Red Hat Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.lemminx.services;
 
 import org.eclipse.lemminx.commons.BadLocationException;
@@ -24,60 +24,68 @@ import org.eclipse.lsp4j.Range;
 
 /**
  * Resolve code action request implementation.
- * 
- * @author Angelo ZERR
  *
+ * @author Angelo ZERR
  */
-public class ResolveCodeActionRequest extends BaseCodeActionRequest implements ICodeActionResolverRequest {
+public class ResolveCodeActionRequest extends BaseCodeActionRequest
+    implements ICodeActionResolverRequest {
 
-	private final CodeAction unresolved;
+  private final CodeAction unresolved;
 
-	private final String participantId;
+  private final String participantId;
 
-	private Range range;
+  private Range range;
 
-	private XMLGenerator generator;
+  private XMLGenerator generator;
 
-	private LineIndentInfo indentInfo;
+  private LineIndentInfo indentInfo;
 
-	public ResolveCodeActionRequest(CodeAction unresolved, DOMDocument document, IComponentProvider componentProvider,
-			SharedSettings sharedSettings) {
-		super(document, componentProvider, sharedSettings);
-		this.unresolved = unresolved;
-		this.participantId = DataEntryField.getParticipantId(unresolved.getData());
-	}
+  public ResolveCodeActionRequest(
+      CodeAction unresolved,
+      DOMDocument document,
+      IComponentProvider componentProvider,
+      SharedSettings sharedSettings) {
+    super(document, componentProvider, sharedSettings);
+    this.unresolved = unresolved;
+    this.participantId = DataEntryField.getParticipantId(unresolved.getData());
+  }
 
-	@Override
-	public CodeAction getUnresolved() {
-		return unresolved;
-	}
+  @Override
+  public CodeAction getUnresolved() {
+    return unresolved;
+  }
 
-	@Override
-	public String getParticipantId() {
-		return participantId;
-	}
+  @Override
+  public String getParticipantId() {
+    return participantId;
+  }
 
-	@Override
-	public String getDataProperty(String property) {
-		return DataEntryField.getProperty(unresolved.getData(), property);
-	}
+  @Override
+  public String getDataProperty(String property) {
+    return DataEntryField.getProperty(unresolved.getData(), property);
+  }
 
-	public XMLGenerator getXMLGenerator(Range range) throws BadLocationException {
-		if (generator == null) {
-			this.range = range;
-			generator = new XMLGenerator(getSharedSettings(),
-					getSharedSettings().getCompletionSettings().isAutoCloseTags(),
-					getLineIndentInfo().getWhitespacesIndent(), getLineIndentInfo().getLineDelimiter(),
-					false, Integer.MAX_VALUE, null);
-		}
-		return generator;
-	}
+  public XMLGenerator getXMLGenerator(Range range) throws BadLocationException {
+    if (generator == null) {
+      this.range = range;
+      generator =
+          new XMLGenerator(
+              getSharedSettings(),
+              getSharedSettings().getCompletionSettings().isAutoCloseTags(),
+              getLineIndentInfo().getWhitespacesIndent(),
+              getLineIndentInfo().getLineDelimiter(),
+              false,
+              Integer.MAX_VALUE,
+              null);
+    }
+    return generator;
+  }
 
-	private LineIndentInfo getLineIndentInfo() throws BadLocationException {
-		if (indentInfo == null) {
-			int lineNumber = range.getStart().getLine();
-			indentInfo = getDocument().getLineIndentInfo(lineNumber);
-		}
-		return indentInfo;
-	}
+  private LineIndentInfo getLineIndentInfo() throws BadLocationException {
+    if (indentInfo == null) {
+      int lineNumber = range.getStart().getLine();
+      indentInfo = getDocument().getLineIndentInfo(lineNumber);
+    }
+    return indentInfo;
+  }
 }

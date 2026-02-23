@@ -36,14 +36,14 @@ public class Position implements Comparable<Position> {
     start = -1;
     end = -1;
   }
-  
+
   public int requireIndex() {
     if (index == -1) {
       throw new IllegalArgumentException("No index provided");
     }
     return index;
   }
-  
+
   public void zeroIfNegative() {
     if (line < 0) {
       line = 0;
@@ -102,13 +102,13 @@ public class Position implements Comparable<Position> {
     Position that = (Position) object;
     return (this.line == that.line && this.column == that.column);
   }
-  
+
   @Override
   public int compareTo(Position other) {
     int byLine = Integer.compare(this.line, other.line);
-      if (byLine != 0) {
-        return byLine;
-      }
+    if (byLine != 0) {
+      return byLine;
+    }
     return Integer.compare(this.column, other.column);
   }
 

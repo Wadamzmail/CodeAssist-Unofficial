@@ -1,43 +1,30 @@
 package com.tyron.code.language.lsp;
 
 import androidx.annotation.Nullable;
-import com.tyron.completion.model.CodeActionItem;
+import com.tyron.code.ui.editor.EditorContainerFragment;
+import com.tyron.completion.lsp.api.ILanguageClient;
+import com.tyron.completion.lsp.util.DiagnosticUtil;
 import com.tyron.completion.model.DiagnosticItem;
 import com.tyron.completion.model.DiagnosticResult;
-import com.tyron.completion.model.PerformCodeActionParams;
-import com.tyron.completion.model.document.ShowDocumentParams;
-import com.tyron.completion.model.document.ShowDocumentResult;
-import com.tyron.completion.model.Location;
-import com.tyron.completion.lsp.api.ILanguageClient;
 import io.github.rosemoe.sora.lang.diagnostic.DiagnosticsContainer;
-import io.github.rosemoe.sora.text.Content;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 import kotlin.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.tyron.code.ui.editor.EditorContainerFragment;
-import com.tyron.code.ui.editor.impl.text.rosemoe.CodeEditorView;
-import com.tyron.completion.lsp.util.DiagnosticUtil;
 
 public class SimpleLanguageClientImpl implements ILanguageClient {
-  
+
   public static final int MAX_DIAGNOSTIC_FILES = 10;
   public static final int MAX_DIAGNOSTIC_ITEMS_PER_FILE = 20;
   protected static final Logger LOG = LoggerFactory.getLogger(SimpleLanguageClientImpl.class);
   private static SimpleLanguageClientImpl mInstance;
   private final Map<File, List<DiagnosticItem>> diagnostics = new HashMap<>();
   protected EditorContainerFragment fragment;
-  
+
   private SimpleLanguageClientImpl(EditorContainerFragment provider) {
     setFragment(provider);
   }
@@ -74,7 +61,7 @@ public class SimpleLanguageClientImpl implements ILanguageClient {
   public static boolean isInitialized() {
     return mInstance != null;
   }
-  
+
   @Override
   public void publishDiagnostics(DiagnosticResult result) {
     if (result == DiagnosticResult.NO_UPDATE || !canUseActivity()) {
@@ -83,7 +70,7 @@ public class SimpleLanguageClientImpl implements ILanguageClient {
     }
 
     boolean error = result == null;
-   // activity.handleDiagnosticsResultVisibility(error || result.getDiagnostics().isEmpty());
+    // activity.handleDiagnosticsResultVisibility(error || result.getDiagnostics().isEmpty());
 
     if (error) {
       return;
@@ -96,7 +83,7 @@ public class SimpleLanguageClientImpl implements ILanguageClient {
 
     final var editorView = fragment.getEditorForFile(file);
     if (editorView != null) {
-      final var editor = editorView; //editorView.getEditor();
+      final var editor = editorView; // editorView.getEditor();
       if (editor != null) {
         final var container = new DiagnosticsContainer();
         try {
@@ -112,7 +99,7 @@ public class SimpleLanguageClientImpl implements ILanguageClient {
     }
 
     diagnostics.put(file, result.getDiagnostics());
-   // activity.setDiagnosticsAdapter(newDiagnosticsAdapter());
+    // activity.setDiagnosticsAdapter(newDiagnosticsAdapter());
   }
 
   @Nullable
@@ -120,9 +107,7 @@ public class SimpleLanguageClientImpl implements ILanguageClient {
   public DiagnosticItem getDiagnosticAt(final File file, final int line, final int column) {
     return DiagnosticUtil.binarySearchDiagnostic(this.diagnostics.get(file), line, column);
   }
-  
-  
-  
+
   private boolean canUseActivity() {
     return fragment != null
         && !fragment.getActivity().isFinishing()

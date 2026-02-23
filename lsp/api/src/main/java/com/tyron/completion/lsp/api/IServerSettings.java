@@ -17,8 +17,8 @@
 
 package com.tyron.completion.lsp.api;
 
-//import com.itsaky.androidide.lsp.models.CompletionsKt;
-//import com.itsaky.androidide.preferences.internal.EditorPreferences;
+// import com.itsaky.androidide.lsp.models.CompletionsKt;
+// import com.itsaky.androidide.preferences.internal.EditorPreferences;
 
 /**
  * Settings contain preferences for the language server. Clients can use settings to enable/disable
@@ -28,7 +28,9 @@ package com.tyron.completion.lsp.api;
  */
 public interface IServerSettings {
 
-  String KEY_COMPLETIONS_MATCH_LOWER = "idepref_editor_completions_matchLower" ;/*EditorPreferences.COMPLETIONS_MATCH_LOWER*/;
+  String KEY_COMPLETIONS_MATCH_LOWER =
+      "idepref_editor_completions_matchLower"; /*EditorPreferences.COMPLETIONS_MATCH_LOWER*/
+  ;
 
   /**
    * Called by language server to check if the completions are enabled. If not enabled, the server
@@ -102,6 +104,6 @@ public interface IServerSettings {
    * @return The match ratio. Betweeen 0 and 100.
    */
   default int completionFuzzyMatchMinRatio() {
-    return 59; //CompletionsKt.DEFAULT_MIN_MATCH_RATIO;
+    return 59; // CompletionsKt.DEFAULT_MIN_MATCH_RATIO;
   }
 }

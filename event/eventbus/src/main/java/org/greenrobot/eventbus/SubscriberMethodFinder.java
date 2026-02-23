@@ -15,9 +15,6 @@
  */
 package org.greenrobot.eventbus;
 
-import org.greenrobot.eventbus.meta.SubscriberInfo;
-import org.greenrobot.eventbus.meta.SubscriberInfoIndex;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -25,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.greenrobot.eventbus.meta.SubscriberInfo;
+import org.greenrobot.eventbus.meta.SubscriberInfoIndex;
 
 class SubscriberMethodFinder {
   /*
@@ -171,7 +170,8 @@ class SubscriberMethodFinder {
           msg += ". Please consider using EventBus annotation processor to avoid reflection.";
         } else {
           msg +=
-              ". Please make this class visible to EventBus annotation processor to avoid reflection.";
+              ". Please make this class visible to EventBus annotation processor to avoid"
+                  + " reflection.";
         }
         throw new EventBusException(msg, error);
       }

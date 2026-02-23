@@ -1,14 +1,11 @@
 /**
- *  Copyright (c) 2018 Angelo ZERR.
- *  All rights reserved. This program and the accompanying materials
- *  are made available under the terms of the Eclipse Public License v2.0
- *  which accompanies this distribution, and is available at
- *  http://www.eclipse.org/legal/epl-v20.html
+ * Copyright (c) 2018 Angelo ZERR. All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v2.0 which accompanies this
+ * distribution, and is available at http://www.eclipse.org/legal/epl-v20.html
  *
- * SPDX-License-Identifier: EPL-2.0
+ * <p>SPDX-License-Identifier: EPL-2.0
  *
- *  Contributors:
- *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ * <p>Contributors: Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
 package org.eclipse.lemminx.extensions.dtd;
 
@@ -31,60 +28,60 @@ import org.eclipse.lemminx.services.extensions.diagnostics.IDiagnosticsParticipa
 import org.eclipse.lemminx.uriresolver.URIResolverExtensionManager;
 import org.eclipse.lsp4j.InitializeParams;
 
-/**
- * DTD plugin.
- */
+/** DTD plugin. */
 public class DTDPlugin implements IXMLExtension {
 
-	private IDiagnosticsParticipant diagnosticsParticipant;
-	private final IDefinitionParticipant definitionParticipant;
-	private final IHighlightingParticipant highlightingParticipant;
-	private final IReferenceParticipant referenceParticipant;
-	private final ICodeLensParticipant codeLensParticipant;
-	private DTDDocumentLinkParticipant documentLinkParticipant;
+  private IDiagnosticsParticipant diagnosticsParticipant;
+  private final IDefinitionParticipant definitionParticipant;
+  private final IHighlightingParticipant highlightingParticipant;
+  private final IReferenceParticipant referenceParticipant;
+  private final ICodeLensParticipant codeLensParticipant;
+  private DTDDocumentLinkParticipant documentLinkParticipant;
 
-	public DTDPlugin() {
-		definitionParticipant = new DTDDefinitionParticipant();
-		highlightingParticipant = new DTDHighlightingParticipant();
-		referenceParticipant = new DTDReferenceParticipant();
-		codeLensParticipant = new DTDCodeLensParticipant();
-	}
+  public DTDPlugin() {
+    definitionParticipant = new DTDDefinitionParticipant();
+    highlightingParticipant = new DTDHighlightingParticipant();
+    referenceParticipant = new DTDReferenceParticipant();
+    codeLensParticipant = new DTDCodeLensParticipant();
+  }
 
-	@Override
-	public void start(InitializeParams params, XMLExtensionsRegistry registry) {
-		// register DTD content model provider
-		ContentModelProvider modelProvider = new CMDTDContentModelProvider(registry.getResolverExtensionManager());
-		ContentModelManager modelManager = registry.getComponent(ContentModelManager.class);
-		modelManager.registerModelProvider(modelProvider);
-		// register diagnostic participant
-		diagnosticsParticipant = new DTDDiagnosticsParticipant(modelManager);
-		registry.registerDiagnosticsParticipant(diagnosticsParticipant);
-		// register definition participant
-		registry.registerDefinitionParticipant(definitionParticipant);
-		// register highlighting participant
-		registry.registerHighlightingParticipant(highlightingParticipant);
-		// register reference participant
-		registry.registerReferenceParticipant(referenceParticipant);
-		// register codelens participant
-		registry.registerCodeLensParticipant(codeLensParticipant);
-		// register document link participant
-		URIResolverExtensionManager resolverManager = registry.getComponent(URIResolverExtensionManager.class);
-		documentLinkParticipant = new DTDDocumentLinkParticipant(resolverManager);
-	}
+  @Override
+  public void start(InitializeParams params, XMLExtensionsRegistry registry) {
+    // register DTD content model provider
+    ContentModelProvider modelProvider =
+        new CMDTDContentModelProvider(registry.getResolverExtensionManager());
+    ContentModelManager modelManager = registry.getComponent(ContentModelManager.class);
+    modelManager.registerModelProvider(modelProvider);
+    // register diagnostic participant
+    diagnosticsParticipant = new DTDDiagnosticsParticipant(modelManager);
+    registry.registerDiagnosticsParticipant(diagnosticsParticipant);
+    // register definition participant
+    registry.registerDefinitionParticipant(definitionParticipant);
+    // register highlighting participant
+    registry.registerHighlightingParticipant(highlightingParticipant);
+    // register reference participant
+    registry.registerReferenceParticipant(referenceParticipant);
+    // register codelens participant
+    registry.registerCodeLensParticipant(codeLensParticipant);
+    // register document link participant
+    URIResolverExtensionManager resolverManager =
+        registry.getComponent(URIResolverExtensionManager.class);
+    documentLinkParticipant = new DTDDocumentLinkParticipant(resolverManager);
+  }
 
-	@Override
-	public void stop(XMLExtensionsRegistry registry) {
-		// unregister diagnostic participant
-		registry.unregisterDiagnosticsParticipant(diagnosticsParticipant);
-		// unregister definition participant
-		registry.unregisterDefinitionParticipant(definitionParticipant);
-		// unregister highlighting participant
-		registry.unregisterHighlightingParticipant(highlightingParticipant);
-		// register reference participant
-		registry.unregisterReferenceParticipant(referenceParticipant);
-		// unregister codelens participant
-		registry.unregisterCodeLensParticipant(codeLensParticipant);
-		// unregister document link participant
-		registry.unregisterDocumentLinkParticipant(documentLinkParticipant);
-	}
+  @Override
+  public void stop(XMLExtensionsRegistry registry) {
+    // unregister diagnostic participant
+    registry.unregisterDiagnosticsParticipant(diagnosticsParticipant);
+    // unregister definition participant
+    registry.unregisterDefinitionParticipant(definitionParticipant);
+    // unregister highlighting participant
+    registry.unregisterHighlightingParticipant(highlightingParticipant);
+    // register reference participant
+    registry.unregisterReferenceParticipant(referenceParticipant);
+    // unregister codelens participant
+    registry.unregisterCodeLensParticipant(codeLensParticipant);
+    // unregister document link participant
+    registry.unregisterDocumentLinkParticipant(documentLinkParticipant);
+  }
 }
