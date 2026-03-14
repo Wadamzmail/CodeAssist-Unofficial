@@ -1,0 +1,50 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.actions"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.8.2'
+    implementation project(path: ':build-logic')
+    implementation project(path: ':project')
+    implementation project(path: ':logging')
+    // needed for UserDataHolder class
+    implementation project(path: ':kotlinc')
+    implementation project(path: ':fileeditor-api')
+    implementation project(path: ':editor-api')
+    compileOnly project(path: ':android-stubs')
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17 
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

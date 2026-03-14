@@ -1,0 +1,65 @@
+plugins {
+    id 'com.android.library'
+}
+
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdk rootProject.ext.compileSdkVersion
+    namespace = "com.tyron.completion.java"
+
+    spotless {
+        java {
+            target "**/*.java"
+            googleJavaFormat()
+        }
+    }
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+}
+
+dependencies {
+    implementation project(':actions-api')
+    implementation project(':editor-api')
+    implementation project(':treeview')
+    implementation project(':kotlin-completion')
+
+    api ('com.github.javaparser:javaparser-core:3.26.1')
+
+    implementation project(':common')
+    implementation project(':completion-api')
+    implementation project(':language-api')
+    implementation project(':fileeditor-api')
+
+    implementation project(':javac')
+    implementation project(':logging')
+    implementation project(':google-java-format')
+    compileOnly project(':resources')
+    implementation project(':code-editor')
+
+    api project(':build-logic')
+    compileOnly project(':android-stubs')
+}

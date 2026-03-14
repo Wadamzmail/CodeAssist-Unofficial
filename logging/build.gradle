@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.library'
+}
+ 
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.builder.log"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+     
+}
+
+dependencies {
+    compileOnly project(path: ':android-stubs')
+
+    // diagnostics
+    implementation project(path: ':javac')
+	 
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

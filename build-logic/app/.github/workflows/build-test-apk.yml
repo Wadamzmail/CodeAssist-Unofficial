@@ -1,0 +1,81 @@
+name: Build Test APK CI
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Debug APKs
+        run: ./gradlew assembleDebug -Penable-updater
+
+      # ===== Print APK list (IMPORTANT) =====
+      - name: List generated APK files
+        run: |
+          echo "===== APK files ====="
+          ls -lh app/build/outputs/apk/debug/
+          echo "====================="
+
+      # ===== Upload APKs (each ABI separately) =====
+
+      - name: Upload ARM64 APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-debug-arm64-v8a
+          path: app/build/outputs/apk/debug/*arm64-v8a*.apk
+          if-no-files-found: ignore
+
+      - name: Upload ARMv7 APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-debug-armeabi-v7a
+          path: app/build/outputs/apk/debug/*armeabi-v7a*.apk
+          if-no-files-found: ignore
+
+      - name: Upload x86 APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-debug-x86
+          path: app/build/outputs/apk/debug/*-x86-*.apk
+          if-no-files-found: ignore
+
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-debug-x86_64
+          path: app/build/outputs/apk/debug/*-x86_64*.apk
+          if-no-files-found: ignore
+
+      - name: Upload Universal APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: app-debug-universal
+          path: app/build/outputs/apk/debug/*universal*.apk
+          if-no-files-found: ignore

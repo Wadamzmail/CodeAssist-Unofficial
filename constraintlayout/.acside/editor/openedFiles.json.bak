@@ -1,0 +1,20 @@
+{
+  "allFiles": [
+    {
+      "file": "/storage/emulated/0/AndroidIDEProjects/CodeAssist-Unofficial-rewrite/app/build.gradle",
+      "selection": {
+        "end": {
+          "column": 1,
+          "index": 7095,
+          "line": 214
+        },
+        "start": {
+          "column": 1,
+          "index": 7095,
+          "line": 214
+        }
+      }
+    }
+  ],
+  "selectedFile": "/storage/emulated/0/AndroidIDEProjects/CodeAssist-Unofficial-rewrite/app/build.gradle"
+}

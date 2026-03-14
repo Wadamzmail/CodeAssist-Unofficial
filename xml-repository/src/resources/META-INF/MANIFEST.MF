@@ -1,0 +1,2139 @@
+Manifest-Version: 1.0
+Created-By: Maven Source Plugin 3.3.0
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/diagnostics/XSDVal
+ idator.java
+SHA-256-Digest: 9UXoYbWdvmJqEdzsmgTd9DDjTbNp9Gx1LzlBqpdFhGI=
+
+Name: org/eclipse/lemminx/commons/TextDocuments.java
+SHA-256-Digest: xs9c/Z+afZ33HMV5UkaWOY8vCArPw+VOeBDXuECe5G8=
+
+Name: org/eclipse/lemminx/commons/config/ConfigurationItemValueKind.java
+SHA-256-Digest: irqooUyElUNplfAwQ19FCV4umT8I1y+6/hhabImy8E8=
+
+Name: schemas/relaxng/relaxng.rng
+SHA-256-Digest: f6WDDU4232TXIETVNAM9ruTnUWaabL0JR4pC3sqydXQ=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/CMXSDAttributeDecl
+ aration.java
+SHA-256-Digest: A6XKyxPXgi1IMFwX7RRFDo3EqUOseeknxCuw17bYIIo=
+
+Name: org/eclipse/lemminx/services/extensions/completion/ICompletionRequ
+ est.java
+SHA-256-Digest: D8hsO531IybInW2uexzAcFoGzN6VcETfJhiBb72EUaA=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/DTDErrorC
+ ode.java
+SHA-256-Digest: vPvBQKrzNAIX+Bmf1R9kcLjXZvAMoW93Fp8VO9qG6jk=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/toremove/MyCompactSche
+ maReader.java
+SHA-256-Digest: GdwFRXx6KOY+RGrcH2gE0j0tpT3lGvLbrKDKFVfj4f0=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDCodeLensPartici
+ pant.java
+SHA-256-Digest: 8HgNzKW1ZazF73TXQwQhcV9QTjZ9yJFIzgIXyBUKqNM=
+
+Name: org/eclipse/lemminx/services/DocumentSymbolsResult.java
+SHA-256-Digest: vCnB+cQM48XqHNmU64WBu/spOjqzfc3ALEohuyBdcn0=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/EqRequiredInAttributeCodeAction.java
+SHA-256-Digest: xWebiZjP8RIFkHW4yBxsT4dmaVlB+irazC92bJaA+MY=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esDiagnosticParticipant.java
+SHA-256-Digest: Zs861hWYRP6VjQKun5n+NyVqDe3jINvB8XUjPSgEGP0=
+
+Name: org/eclipse/lemminx/services/snippets/DocTypeSnippetContext.java
+SHA-256-Digest: nmkxwWOVtHmUWxrLaYldP9IBZKuXxjBdPqiQ3q0hU7M=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/AbstractFixMissingGrammarCodeAction.java
+SHA-256-Digest: n02EgLqZim7kTYOnM24wPR3DFlFmDHLEtBdWUKM4fAA=
+
+Name: org/eclipse/lemminx/uriresolver/IExternalGrammarLocationProvider.j
+ ava
+SHA-256-Digest: CUL1XUVHYvqbxsZpL8syjISRASSimL+KQqcx8A+ThXE=
+
+Name: org/eclipse/lemminx/extensions/filepath/IFilePathSupportParticipan
+ t.java
+SHA-256-Digest: Flr7da579g0KafkUVD6fAU6eY0uSACGfjIYbAGv4svE=
+
+Name: org/eclipse/lemminx/services/XMLFormatter.java
+SHA-256-Digest: DeIZXcAp2xIAtvEH9vSGR2ckgsTlW5aW79SsAo5m94E=
+
+Name: org/eclipse/lemminx/dom/parser/XMLScanner.java
+SHA-256-Digest: /0Fk5uVx1gCVlzwYfrz/r9of9L++z7SfCbAqQ9H1SxY=
+
+Name: org/eclipse/lemminx/services/XMLRename.java
+SHA-256-Digest: UnFnWfQ4/ulD9rBR2sAvZcJ/EHxkEsBUy8a/LFTgppo=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/diagnostics/XSDDia
+ gnosticsParticipant.java
+SHA-256-Digest: a5QZFng1uUBeCBZ2gNTgFn+vpMbjxcCHypV7dvP3ons=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delCompletionParticipant.java
+SHA-256-Digest: W2TIBgGdZSAFRbOP9ODCPvsZG2yQlo5YSmp2DnT2JqU=
+
+Name: org/eclipse/lemminx/services/XMLDocumentColor.java
+SHA-256-Digest: vzHGQvfGreAnK68BpSIOoHXAoP7NhHCj6YmjKRTgeTI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missingelement/required_element_missingCodeAction.java
+SHA-256-Digest: Lc1/eNn2eJb94X3dosUWhqUadIiyxM6dHGUqhlgvFVg=
+
+Name: org/eclipse/lemminx/settings/capabilities/ClientCapabilitiesWrappe
+ r.java
+SHA-256-Digest: 0/yU7Aafrp+0gjq3cwSjHL41kzn8i/fVOZp10HH7IRo=
+
+Name: META-INF/services/org.eclipse.lemminx.extensions.filepath.IFilePat
+ hSupportParticipant
+SHA-256-Digest: o29W5bJmamYBp/xEIzozGkFZytXjFiW+k6uLGx5emR4=
+
+Name: org/eclipse/lemminx/uriresolver/CacheResourceDownloadedException.j
+ ava
+SHA-256-Digest: uMl4TjU8qbERiCiE2ydPXNGttEmMRtjxu3YYNFPQKog=
+
+Name: org/eclipse/lemminx/services/XMLDefinition.java
+SHA-256-Digest: exFbqfSfUZtvxPW4WlihXhPcIrSvkcIdqXKEr6Fd7r4=
+
+Name: org/eclipse/lemminx/telemetry/TelemetryManager.java
+SHA-256-Digest: avv8GEwmQzdzrxfcIqYRjpf1Bx5BpJigi28vpCuLKWY=
+
+Name: org/eclipse/lemminx/extensions/dtd/contentmodel/CMDTDDocument.java
+SHA-256-Digest: Lw/KiLOvYTJ8RPj05LyQpLE0FzxkxdENUi0aXIJXFQ4=
+
+Name: org/eclipse/lemminx/services/extensions/codelens/ReferenceCommand.
+ java
+SHA-256-Digest: ia7OTiRCqm//VJNx5uipZGiR3eDe7FagBP29LZPx0c8=
+
+Name: org/eclipse/lemminx/settings/capabilities/ServerCapabilitiesInitia
+ lizer.java
+SHA-256-Digest: pN7qKZCbDC3NctD8868r+7s5BpexJf/L52cx+WGsOfQ=
+
+Name: org/eclipse/lemminx/services/format/FormatElementCategory.java
+SHA-256-Digest: /lhjzHfTPyUktMWy3yNOVSacIAouoL15rl0PWSl7UFE=
+
+Name: org/eclipse/lemminx/extensions/catalog/participants/XMLCatalogCode
+ LensParticipant.java
+SHA-256-Digest: qjHIKPMMc7RcQcX7McDo9Nw3+TRj3pnUMt7Oc4H5XWM=
+
+Name: org/eclipse/lemminx/extensions/catalog/XMLCatalogErrorCode.java
+SHA-256-Digest: UTIBJhM15AkK3b/oI/H1lRyVBkJXPfBRMxPu0T34xIY=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGReferencePar
+ ticipant.java
+SHA-256-Digest: A3MDKTtEbf+VHw/V5Q9m1AYLaPn9MCnWGcD58zyH2pw=
+
+Name: org/eclipse/lemminx/services/extensions/IDocumentLinkParticipant.j
+ ava
+SHA-256-Digest: n8BcnyfaaqrWtNHA7P7bmyQQUkkK9gLUTkJX5zx5WW0=
+
+Name: org/eclipse/lemminx/dom/DOMDocument.java
+SHA-256-Digest: 8zWTRtvq444HnPQmmVZhqUkti4A3fBuC4eFOZIkpstA=
+
+Name: org/eclipse/lemminx/services/extensions/IXMLExtension.java
+SHA-256-Digest: UnDaaaqjVSCbTn1/2O45SeZeUbhkBUDLuQh/KGYyoqg=
+
+Name: org/eclipse/lemminx/services/CodeActionRequest.java
+SHA-256-Digest: 9a/cmD+zGwzrYq4LCrEbMXgl/tHquLDHllHYkQE27uQ=
+
+Name: org/eclipse/lemminx/dom/parser/Constants.java
+SHA-256-Digest: s9x4coeR2NCzqTXprbomWQdd5ywSg+aLMs/oLjKsLTo=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/toremove/MyCombineSche
+ ma.java
+SHA-256-Digest: jdwakYuA567/c22dNgLJiQimVAZ5It3ro/VZVSqI9WE=
+
+Name: org/eclipse/lemminx/services/extensions/AbstractDefinitionParticip
+ ant.java
+SHA-256-Digest: h3Wfuxr4dSxLV9nUXC1G9LDlK4m0e0XSSVp3cmYZSKI=
+
+Name: org/eclipse/lemminx/services/XMLLanguageService.java
+SHA-256-Digest: MOlEAoELXyTDkpcRJAmI2WCzc86oQtEmj6JMs3Yzjuo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_complex_type_2_3CodeAction.java
+SHA-256-Digest: gXmn+8SygynHWC+olF3Wl1DseT46hdvLurbhdB5P0Eo=
+
+Name: org/eclipse/lemminx/dom/DOMElement.java
+SHA-256-Digest: RU3eUnb2kF39Q1DEwzWBA+SM5ifRRDBWYGsLjdTyZ8w=
+
+Name: META-INF/extra.json
+SHA-256-Digest: cW2wPWChI0I2r+kn7/79nF4la772Z4GqsDHER+2LT3g=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGFilePathSupp
+ ortParticipant.java
+SHA-256-Digest: PdwpcAfXBEq2m6D6v4JSZUjvh0FcgZ7JfiXORQ+qvEM=
+
+Name: org/eclipse/lemminx/customservice/AutoCloseTagResponse.java
+SHA-256-Digest: 0xMoWnAmgKRzPhEqB7oZg/rlhisNhQrQGpGsBFr+jPs=
+
+Name: org/eclipse/lemminx/settings/LogsSettings.java
+SHA-256-Digest: UMvqZ4hiR4XGayXGTX6Pyj7tv1ePa2VH7lKk4IzA10U=
+
+Name: org/eclipse/lemminx/services/XMLSelectionRanges.java
+SHA-256-Digest: eJBqXnrumbTrVK5wkuuxrDXsefZtuUJ12yoGLCDDuUw=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGValidator.ja
+ va
+SHA-256-Digest: DqORLhKndJ+UNy5jEWgFgm/uRBuB5sPIkUhz3q8R9Pc=
+
+Name: org/eclipse/lemminx/extensions/catalog/XMLCatalogPlugin.java
+SHA-256-Digest: 5DIFvsEnNYqVDl88hr4BDP0NQJabM8ONNRNL89//DGI=
+
+Name: org/eclipse/lemminx/utils/LevenshteinDistance.java
+SHA-256-Digest: 1u0gGgSxfzIhVGnCVZmXWDPCBTPegbX+tuVPeeVo0do=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_elt_1_aCodeAction.java
+SHA-256-Digest: gsl3HzL3jQdGV+EEWN8YXvK2UIGFUYdKqb9IyLvPkRY=
+
+Name: org/eclipse/lemminx/dom/TargetRange.java
+SHA-256-Digest: mF3suHK8zoLQdbjc4gUddpYvzXv5t91mh/EzrLpmpbQ=
+
+Name: org/eclipse/lemminx/extensions/filepath/IFilePathExpression.java
+SHA-256-Digest: oGPrh4idMgvKxjiTQ4P/gLi3eqweGxqM3lV8IJsZVVw=
+
+Name: org/eclipse/lemminx/services/extensions/ISymbolsProviderParticipan
+ t.java
+SHA-256-Digest: SaySxjE3tbjJHVjV836fa+FnH+0foO1b/MJ9Opcn5IA=
+
+Name: org/eclipse/lemminx/settings/EnforceQuoteStyle.java
+SHA-256-Digest: IlIh4pfV1L7sfOKUvWjrZsMgz/tfMVLSthPHU9mn4Es=
+
+Name: org/eclipse/lemminx/services/snippets/processing-instruction-snipp
+ ets.json
+SHA-256-Digest: VBv+W5PyZ6Kxp+hP1+8pkJL3txY9GMGACUVqrKGa4gs=
+
+Name: org/eclipse/lemminx/services/ResolveCodeActionRequest.java
+SHA-256-Digest: BhwyOrdDsvWBNTXicIGYZuKEwNjN0Z5bneCzGrn9NEo=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDReferencePartic
+ ipant.java
+SHA-256-Digest: EJepgSCB0I7rV4CjRnFSoF7hib7IChn9BF4oLMXN5a0=
+
+Name: org/eclipse/lemminx/settings/XMLSymbolFilter.java
+SHA-256-Digest: i92zJ6CTagmXS7ymILqBsV7Bun0+NODHsW1UHJ/4b78=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/GenerateDocTypeCodeActionResolver.java
+SHA-256-Digest: fsECfAKyFLtCint0mR4VJaNvYR7Y+qIqgm22LjTc+6w=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_type_3_1_1CodeAction.java
+SHA-256-Digest: ZuYP4yxjzZk+BKYOpfC/W5/vpNepVf5PbAx+93xF0FU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ExternalR
+ esourceErrorCode.java
+SHA-256-Digest: 0aVkntFufC9OKl1Uf+YJ/3U+NEltT82oFy7cF4L4tSg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/EntityNotDeclaredCodeAction.java
+SHA-256-Digest: +PuhPb9auEEOhcF01pwFftbCyTef6Zcl+WQK87wUIcc=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/GenerateXSINoNamespaceSchemaCodeActionResolver.
+ java
+SHA-256-Digest: +nm6FRBzBJpp7/uVw5ZqehnkUvOq07Cja69RET48948=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/XSDDocumentation.j
+ ava
+SHA-256-Digest: wT6oeVoKNySkuEwfZ5Nmzmg37ZfLXyDBz2uQoqyBIPY=
+
+Name: org/eclipse/lemminx/client/PathFeature.java
+SHA-256-Digest: 8T3CQ3LnQGJmTXq9wfeXChdcgz5/P4QthVSiYkGgkBA=
+
+Name: org/eclipse/lemminx/extensions/prolog/PrologModel.java
+SHA-256-Digest: xA7Q66e7x5jrqIjOtuXPUw6YcXrQG9shUdzIh0qXMzQ=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLValidation
+ RootSettings.java
+SHA-256-Digest: zhUmjZ7hkBBmgx6TZ8WXiXERd7jjCQJPKGCUiDrf/Dw=
+
+Name: org/eclipse/lemminx/services/extensions/diagnostics/IDiagnosticsPa
+ rticipant.java
+SHA-256-Digest: mz3/jSt5KDAgPTPmThrjQ+gyLzUrGmFcmE/OW5PF1c4=
+
+Name: org/eclipse/lemminx/services/snippets/SnippetContextUtils.java
+SHA-256-Digest: Oe3jscvwLJKpLGtyDEue0HLe6+KWIsK1i1gDzUCLpTo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/GenerateDTDCodeActionResolver.java
+SHA-256-Digest: TkFV2cvVTAEehpIqU1GATT8uLIjJ/FPjz3iZAH2TvaQ=
+
+Name: org/eclipse/lemminx/settings/SchemaDocumentationType.java
+SHA-256-Digest: og+YFbYTOnqRMidNGNR+DtuGGfVLLd5kDyz0ljdHee8=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/FilesChangedTrac
+ ker.java
+SHA-256-Digest: EH9FuNJ4kRKLksNaXZ+IOsbe0BOSTPc8oEd4IWSDGXI=
+
+Name: org/eclipse/lemminx/services/XMLFoldings.java
+SHA-256-Digest: hlTzN19pL+iPuq8uil216KPighrjryc1Rrvhtt4MI0w=
+
+Name: org/eclipse/lemminx/settings/XMLExcludedSymbolFile.java
+SHA-256-Digest: 0pskXWtc2znddmyao4OFS7af+z4FDEMlIODzjDRoRMU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/SchemaEnabled
+ .java
+SHA-256-Digest: EKoVZ12qSunVft2O2KhvPZpGARxqMp3sbaUaeP1q/cg=
+
+Name: org/eclipse/lemminx/extensions/filepath/participants/FilePathCompl
+ etionResult.java
+SHA-256-Digest: aJvMxNaZQXrvBJljAG3jEbjDt/WutrxC0jvkYU+p5Ns=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDDocumentLinkPar
+ ticipant.java
+SHA-256-Digest: mOhszfHeRbWUVU4rEt2PUN/zpK4ztbE+3YPlMbcM16o=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGCompletionPa
+ rticipant.java
+SHA-256-Digest: I/ckGbuKPbl8ffr/2ctZH4GCh8QQiJ38XUAW6BPSxt4=
+
+Name: schemas/xslt/xslt-3.0.xsd
+SHA-256-Digest: tdhAA0BDo9f3O27gPZVdgyHgwxFMnx2yBO24sqhN1f8=
+
+Name: com/thaiopensource/relaxng/pattern/MyRequiredElementsFunction.java
+SHA-256-Digest: DxcngD0PEGPaHI80WAgi7NDlHMrF7Asy1bODFZ8sgC4=
+
+Name: org/eclipse/lemminx/extensions/relaxng/xmlmodel/XMLModelRelaxNGVal
+ idator.java
+SHA-256-Digest: 53IjSF5mggrrxelxYj61b6Y1j3vMWdeCVvVt9SpZMBE=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_attribute_3CodeAction.java
+SHA-256-Digest: slLlZcNeccZprjZfrCbbJzq4RbHlcfX6zozW65zZxyo=
+
+Name: org/eclipse/lemminx/extensions/xerces/ExternalXMLDTDValidator.java
+SHA-256-Digest: ghwsuF1XsmtsK8gNEoUrRcPKLgt/ZjCNXDkdmE9stLg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLDownloadEx
+ ternalResourcesSettings.java
+SHA-256-Digest: OuKG2CRk/AE8cVt68lfhqhhdX+neMFINpzY98DS4lEE=
+
+Name: org/eclipse/lemminx/extensions/xsd/DataType.java
+SHA-256-Digest: blZozCeB9TkwTdgh6MwogQb3EzQVuCXufNWLkSHdboI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/ContentModelS
+ ettings.java
+SHA-256-Digest: eIV2GcNRQDNLFz5K564ziTOd7rzavajMy+FmKBJBUZE=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLNamespaces
+ Settings.java
+SHA-256-Digest: Cj1F/A52lrhVNgrRT4jiv5RoIDNtEmEIL6lplPOuvcQ=
+
+Name: org/eclipse/lemminx/services/format/DOMElementFormatter.java
+SHA-256-Digest: GN9yPQlkKOs8C5ZvP9en8A09TE78OSnnTLLugz9/M40=
+
+Name: org/eclipse/lemminx/services/extensions/codeaction/ICodeActionReso
+ lverRequest.java
+SHA-256-Digest: oaTekJH/ishrT+ssBWGfrRC1uaKiAV/rJETlfjVxH6o=
+
+Name: org/eclipse/lemminx/services/IXMLFullFormatter.java
+SHA-256-Digest: 3f7wG21fKvMsX30vLDDsPcLSAzoIAThb/NvSn4QvoD0=
+
+Name: org/eclipse/lemminx/services/extensions/completion/ICompletionPart
+ icipant.java
+SHA-256-Digest: adfEeQN+2ru4rgqMrLX6NgDF2+lXFtNE7sS0KIH1iIU=
+
+Name: org/eclipse/lemminx/telemetry/DocumentTelemetryInfo.java
+SHA-256-Digest: vgwhTrDq/DjMClAOCjrcCqnCWZs6NU6nwru20Hahc+M=
+
+Name: org/eclipse/lemminx/extensions/generators/ElementDeclaration.java
+SHA-256-Digest: MdvqXl4gPz09t5a9ueTlehgJ3qeUN1v9fVw14W+qUyE=
+
+Name: org/eclipse/lemminx/extensions/references/search/IXMLReferenceColl
+ ector.java
+SHA-256-Digest: PzQTZ5w7E3mF0DSjtv4FY72uUzO6IQOaQ7kV/CdcbFI=
+
+Name: org/eclipse/lemminx/extensions/xsi/XSISchemaModel.java
+SHA-256-Digest: uk+uPGWnHrlaMkptN200iL3laQZFVVxdz1Z90nlnQgI=
+
+Name: org/eclipse/lemminx/extensions/dtd/contentmodel/CMDTDElementDeclar
+ ation.java
+SHA-256-Digest: qJlQgVGXCIbxr0izvfPK6LCME9+AVifQeXY44/qo308=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/AbstractGenerateGrammarCodeActionResolver.java
+SHA-256-Digest: Yok8e73DWazWZAcXvZvEeSPE3Ju5c0jXr8fiYUiN9uQ=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/XMLValidator.java
+SHA-256-Digest: bcC46+/vKnPtPld67Y4rRJOr7OEg8FA6IqhrTS2mxN8=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/OpenQuoteExpectedCodeAction.java
+SHA-256-Digest: hsPEtOdg0EnDQg41ByPs51a882FL65JZBDPBmW2rdPc=
+
+Name: org/eclipse/lemminx/extensions/relaxng/xml/validator/ExternalRelax
+ NGValidator.java
+SHA-256-Digest: k88YESe7s1kfhzGnxOgEEU8k6g308IwEVll9lozr5Bg=
+
+Name: org/eclipse/lemminx/settings/XMLCompletionSettings.java
+SHA-256-Digest: MDGucpAjOdpUwJcXjxwVNARbrYsvlgy0zrNMmSddCRE=
+
+Name: org/eclipse/lemminx/extensions/filepath/settings/FilePathExpressio
+ n.java
+SHA-256-Digest: BzRf8wMikKsNug/zEW0iO2re39/v+bIxAVa3Mt8MWC0=
+
+Name: org/eclipse/lemminx/services/extensions/codeaction/ICodeActionRequ
+ est.java
+SHA-256-Digest: Nn42ePO4fij6dZg+2D3b2SdjdGGAj0B7Pc4wZPPeky0=
+
+Name: org/eclipse/lemminx/services/extensions/save/ISaveContext.java
+SHA-256-Digest: gXNyoKEjKdwyr6hHuk3ojAuOUrrzbs4CcmQq6K6i4ZI=
+
+Name: org/eclipse/lemminx/extensions/generators/Cardinality.java
+SHA-256-Digest: tZlzHjCPHGAMp0vQMAU0x5aorr3y2Y9zcWMN9JDhKEo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/GenerateRelaxNGSchemaCodeActionResolver.java
+SHA-256-Digest: XacdROuyhd4Km+57SYMg1wJTPaUSazLcKIPg3LVBKkg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/GrammarCacheInfo
+ .java
+SHA-256-Digest: kWNKcxbMcoFi3W4ndXU9HWAnxX29SvfmInAeBJjzo1E=
+
+Name: org/eclipse/lemminx/extensions/generators/xml2relaxng/XML2RelaxNGG
+ enerator.java
+SHA-256-Digest: cFbCvuN9k6GOaDWiDOPUIuuyc0yhj5OxCtDMMAQCLHU=
+
+Name: org/eclipse/lemminx/utils/platform/JVM.java
+SHA-256-Digest: QmTkE/lhWa5PP/FrngR526e4nN935I3BKmyPZaEr3HA=
+
+Name: org/eclipse/lemminx/utils/JSONUtility.java
+SHA-256-Digest: twK9abddCg6I2WKfx0lO23dnZal23RyV/oDkTDn9YRc=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delCodeLensParticipant.java
+SHA-256-Digest: mVrwr7ah4EQiAvWspggk/piqFGLNJmCcNja236IuAgg=
+
+Name: org/eclipse/lemminx/utils/URIUtils.java
+SHA-256-Digest: xx1cPGy5XyEmbARJOTnGzyIYFy+ORt7Zn+VSs9Mk8AY=
+
+Name: org/eclipse/lemminx/client/CodeLensKindCapabilities.java
+SHA-256-Digest: +EcWnt7QMR4sAYkNbv5/nqBVaeNo1iaHV+UPOwvGDuw=
+
+Name: org/eclipse/lemminx/services/snippets/ProcessingInstructionSnippet
+ Context.java
+SHA-256-Digest: 7sDMiBnYH/J28dVkjWtTmWaP2MNpVrCeXQ9NYMNaHl4=
+
+Name: META-INF/native-image/resource-config.json
+SHA-256-Digest: Hdt1D5cQRtl7VpU2NWl1eAcEk7Sm4aSQ654pD5iSbFE=
+
+Name: org/eclipse/lemminx/extensions/references/search/SearchEngine.java
+SHA-256-Digest: ZlN8Lx3mw6ZRwt69HNIE8g0GPobN6dOZKLmWqp0zWJI=
+
+Name: org/eclipse/lemminx/extensions/xerces/LSPXMLEntityResolver.java
+SHA-256-Digest: pXHNG2HHiFcPab/jD3QeeqlQumfaXwyqVzfsC+YaRjU=
+
+Name: org/eclipse/lemminx/services/RenameRequest.java
+SHA-256-Digest: S1zYObpOXgWrV6YXqWUC8xC7beLo+PE4C52DOb3nCGk=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/msg/XMLMessages.pro
+ perties
+SHA-256-Digest: sMFyyZR/XyrL6mdRe//TpSHkXN1uGOiy1jGyIgdXKK4=
+
+Name: org/eclipse/lemminx/xpath/matcher/XPathTextMatcher.java
+SHA-256-Digest: K52yalU8hHRFxC2pYQi6OrPAFlyi9hueQSxcFXrQv6w=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/diagnostics/LSPErr
+ orReporterForXSD.java
+SHA-256-Digest: dEsV1R2ZN1FCidde0mGaDCnxfBOGqHSG3KUW48HF1pg=
+
+Name: org/eclipse/lemminx/settings/XMLSymbolExpressionFilter.java
+SHA-256-Digest: jzgcgE+3K+28yrNY5GjTa9cRfk7BDQNLKXD431MA+1o=
+
+Name: org/eclipse/lemminx/dom/DOMRange.java
+SHA-256-Digest: uq8tToms7/swAcjcpeq/srY/u9qZUKt23hBDW89mPdI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/GenerateXSDCodeActionResolver.java
+SHA-256-Digest: lLNsQ5jtzmOSpat+2pkUK9F5+kBxryh9zQXxUEa+7ng=
+
+Name: org/eclipse/lemminx/settings/capabilities/XMLCapabilityManager.jav
+ a
+SHA-256-Digest: fEUR8bqeLksoG75v51yFxSejeL3Ixg3U+bPSCT0rN08=
+
+Name: org/eclipse/lemminx/utils/MarkdownConverter.java
+SHA-256-Digest: v47ko1qCVazsLKiREMcH/rIXgtzAODrs2xdQTI5RvmE=
+
+Name: org/eclipse/lemminx/NoOpPrintStream.java
+SHA-256-Digest: 7xg9P7fPPT27dqe/eQvl++UfnmStPtb1BURMDOTmITU=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGRenamePartic
+ ipant.java
+SHA-256-Digest: W14D0g/IKlRJdG3mNZESrYc5fLVPGFUvJBaX3WQG1GE=
+
+Name: org/eclipse/lemminx/services/format/DOMCDATAFormatter.java
+SHA-256-Digest: MrsETOunTd52+WFvvodW6ygBtwRNKDXndaRZ0vJuzNQ=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/DocumentT
+ elemetryParticipant.java
+SHA-256-Digest: gIcPOZwUM9uZP+SE6mo5csQJTWnbFSzkqh847oSTFwg=
+
+Name: org/eclipse/lemminx/xpath/matcher/XPathAttributeMatcher.java
+SHA-256-Digest: lYCLLI8EpM2IO+gNjHP5Ojvse8UDCmAMVIOLTEsh1wc=
+
+Name: org/eclipse/lemminx/commons/ModelTextDocument.java
+SHA-256-Digest: XjpFy6pv7JfY+4xIts295SSQ2knHIuHZRu0wDMKCMTI=
+
+Name: org/eclipse/lemminx/extensions/dtd/DTDPlugin.java
+SHA-256-Digest: 4LbzjoOu7YFrupUPlIdPguuIUpNzeULjbMwEyro9fTY=
+
+Name: org/eclipse/lemminx/services/extensions/completion/ElementEndTagCo
+ mpletionResolver.java
+SHA-256-Digest: vVKW+YCsKloqclFQ81jhhQLjx1JvWbBp1HTLdjSBhGg=
+
+Name: META-INF/native-image/proxy-config.json
+SHA-256-Digest: x6+y/J9o6pbmzZDG30eqHZPetcUt/88T65v337Jt0Ek=
+
+Name: org/eclipse/lemminx/telemetry/InitializationTelemetryInfo.java
+SHA-256-Digest: virtI3um6kMZAYWPITEa9jnVB+j7PmijcQ4EuI2/adY=
+
+Name: org/eclipse/lemminx/uriresolver/URIResolverExtensionManager.java
+SHA-256-Digest: Dgy84M9DjdHq02NsoDV41bFVQ6HkuTyqdky1ocyGd9E=
+
+Name: org/eclipse/lemminx/services/snippets/new-rng-snippets.json
+SHA-256-Digest: Uau2kB97udDrX1hVLnBqQBy67qEwk57WHP4Ya7agF04=
+
+Name: org/eclipse/lemminx/services/snippets/DTDNodeSnippetContext.java
+SHA-256-Digest: YPvQg0VxnWZ4vWGHoPomG5RNCax59ycK5fb7MQV4RJI=
+
+Name: org/eclipse/lemminx/services/extensions/IWorkspaceServiceParticipa
+ nt.java
+SHA-256-Digest: hEfTltEd9A9aH54bkkoglCPct20DtLJUCldft/SlY2Q=
+
+Name: org/eclipse/lemminx/uriresolver/CacheResourceDownloadingException.
+ java
+SHA-256-Digest: Lk81NOAlpbv/t5fLhmC9MiDSXxadJ+wmp4wfYIdALaM=
+
+Name: org/eclipse/lemminx/dom/DOMComment.java
+SHA-256-Digest: mq1lqAjTlKeb+SkkVYlhmcfu/edNICS/pXYwbbnxUcM=
+
+Name: org/eclipse/lemminx/XMLTextDocumentService.java
+SHA-256-Digest: mPLHNiZfKJd3KQo24WGmCkjMDLtcvgSnojXGqazPGww=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLValidation
+ Settings.java
+SHA-256-Digest: Ryo4PkbZ4PWWHpHZhrlBNUOR+crM874Dv9hvkdTgDP0=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/DTDCodeLensPartici
+ pant.java
+SHA-256-Digest: 4wsqoytGMCCXHrNJivTd9CkvRq17yChf/HuomPR43uU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delDocumentLinkParticipant.java
+SHA-256-Digest: OI8rEC+f7sfKkan80mFeFPcjiQPFDD5c5QROaahZBjY=
+
+Name: org/eclipse/lemminx/settings/LSPFormattingOptions.java
+SHA-256-Digest: 6X0HY6ea8iI0u9isH+5QT+KIa8qdcNpma37L5+XLeIw=
+
+Name: org/eclipse/lemminx/extensions/xinclude/XIncludeErrorCode.java
+SHA-256-Digest: K0N/+Y2MjmOYV7GdRL/CluReyOugrLBdYmX/kReKyvU=
+
+Name: org/eclipse/lemminx/extensions/colors/participants/XMLDocumentColo
+ rParticipant.java
+SHA-256-Digest: dwOBwStqCoYbP2hpvYeXXwT7QluLeVOAtwyoxodRGb4=
+
+Name: org/eclipse/lemminx/services/AbstractPositionRequest.java
+SHA-256-Digest: dAvzPSxfIPBRp9f6HtMKkOVjqxNX2f60xBiDg6vX/oQ=
+
+Name: org/eclipse/lemminx/extensions/generators/AttributeDeclaration.jav
+ a
+SHA-256-Digest: P8XKAk5cEYdVuajNalKe790nHnPN77svS9xHTebcUmE=
+
+Name: org/eclipse/lemminx/services/format/DOMTextFormatter.java
+SHA-256-Digest: rBJ+0Ox1gMmqrdwjmwzfXES0Hl0Bg/pbT2wKlVR8RSc=
+
+Name: org/eclipse/lemminx/extensions/xinclude/XIncludeUtils.java
+SHA-256-Digest: sLWxkBadCoSJ+j716kctS+J6A1tgngqwBEIf7sHjgjA=
+
+Name: schemas/xsd/xml.xsd
+SHA-256-Digest: csb36LWqPQ+ezebbBNvtFQgjSrd7f4+/c8ZnJ0ae5BY=
+
+Name: com/thaiopensource/relaxng/pattern/CMRelaxNGAttributeDeclaration.j
+ ava
+SHA-256-Digest: CanXf7hIh3yfJxMe45L7LJ2CuRMHlBXYMJu1XJj7LfI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/NoGrammarConstraintsCodeAction.java
+SHA-256-Digest: N3IOrFHudHLXDl4gbS0f6GC5Ku/55YxFflMGScZJtko=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/SchemaProvider.java
+SHA-256-Digest: 1u38wScVWNFrY8cssKZf5zdwEB9GziBmpTSH7rk4XLs=
+
+Name: org/eclipse/lemminx/services/PrepareRenameRequest.java
+SHA-256-Digest: lpIlyoOs0Uyd9EUjcs/Bx9NAaeVr6mo84DBx8L2WiSs=
+
+Name: org/eclipse/lemminx/client/ExtendedCodeLensCapabilities.java
+SHA-256-Digest: WzM+fTo/N8mXYSgI3FW/vAl6pqdgf3//YfS1MyHdPuo=
+
+Name: org/eclipse/lemminx/services/format/DOMAttributeFormatter.java
+SHA-256-Digest: dvv2u53sV/v28olO8l15hdJ7YDY5eZC4gudrMQ964RE=
+
+Name: org/eclipse/lemminx/customservice/ActionableNotification.java
+SHA-256-Digest: u7QqQbWX8dIqhWhJWTIHJcxp8aezXqWfNgCMGBsBg+E=
+
+Name: org/eclipse/lemminx/commons/TreeLineTracker.java
+SHA-256-Digest: dT4gP1OFsNNZbk8zEYIBTcpZBThOlcAiyJLV+cv/mUw=
+
+Name: org/eclipse/lemminx/settings/XMLGeneralClientSettings.java
+SHA-256-Digest: rIlPXqYxFmfrFUlGcM4pXuAGc7ifEHrEKex/k+EzCoU=
+
+Name: org/eclipse/lemminx/XMLServerLauncher.java
+SHA-256-Digest: qoCjUwcCOCmuXqErXz6Set84Zoua/trakqh/r3jnhrU=
+
+Name: org/eclipse/lemminx/xpath/matcher/XPathElementMatcher.java
+SHA-256-Digest: iY4tU2dLsIa1U1GKNYFpUXTzwG93XCzFpxTRs79X+mw=
+
+Name: org/eclipse/lemminx/extensions/colors/settings/XMLColorsSettings.j
+ ava
+SHA-256-Digest: 3rEx4gdYCoxYbN1XRKSvLVvq1JDM55Rl8FPV16zgipw=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missingelement/required_element_missingCodeActionResolver.java
+SHA-256-Digest: gruBpCD/ER3kwVrwmV1E0gzFinpkqR4IKQITeQFzBgM=
+
+Name: org/eclipse/lemminx/extensions/catalog/participants/XMLCatalogDiag
+ nosticsParticipant.java
+SHA-256-Digest: WOHAkChsEdtC9nKy6nyudDOabMlO4n4q57XOYLvaqpU=
+
+Name: org/eclipse/lemminx/extensions/xsi/settings/XSISchemaLocationSplit
+ .java
+SHA-256-Digest: REAv37hHJTtPv3Jaac82YT5hvRzQkQbc6Rb0ALr6KaQ=
+
+Name: org/eclipse/lemminx/extensions/generators/xml2xsd/XML2XMLSchemaGen
+ erator.java
+SHA-256-Digest: L3RMOVDlRN8r7OQoqseVXViYBzDC6m7IW4AXaEKH0is=
+
+Name: org/eclipse/lemminx/extensions/xmlmodel/contentmodel/CMXMLModelCon
+ tentModelProvider.java
+SHA-256-Digest: MYo65z99yPQlkK2pKOvWFE+O/cuhNjSqIBlLJB7G3Oc=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/CMXSDDocument.java
+SHA-256-Digest: K0eJ+K1kwxJ6ybqE+DAXv/tzlZrS3ezeXohw6Cq5r7Y=
+
+Name: org/eclipse/lemminx/extensions/generators/AbstractXML2GrammarGener
+ ator.java
+SHA-256-Digest: Xnc+1vhBdIhYrNINguGSut+8hZmRg3dlTqK5EHlryFs=
+
+Name: org/eclipse/lemminx/extensions/generators/xml2relaxng/RelaxNGGener
+ atorSettings.java
+SHA-256-Digest: rxrzXcDzf/FUUg1pXciSIiY4Jzfs1xT5NbyJAhfYFmw=
+
+Name: org/eclipse/lemminx/dom/parser/ScannerState.java
+SHA-256-Digest: 9UHiTqWie9S6lm5atJeXTiNx8qRUlvmsyjJut338pB4=
+
+Name: org/eclipse/lemminx/services/CompletionRequest.java
+SHA-256-Digest: YQLl7FGIQrABU+TqcET/xb3DYGK7vM0Ynrx31rPLfGQ=
+
+Name: org/eclipse/lemminx/services/ResolveCompletionItemRequest.java
+SHA-256-Digest: B7ZKduM8B2Wv7BT7nEzv7qgCszCd8Y9aOKliokCGYwE=
+
+Name: org/eclipse/lemminx/commons/ModelTextDocuments.java
+SHA-256-Digest: fpEXTlgFoua4k9e6x+U/aN5zvwXJjEkXbr6iDVv4JfM=
+
+Name: org/eclipse/lemminx/services/XMLLinkedEditing.java
+SHA-256-Digest: 2rCr/fDjsVzakfm7edEMGqGhtU8SwKt73xacJMRHNEM=
+
+Name: org/eclipse/lemminx/settings/XMLPreferences.java
+SHA-256-Digest: uMADt8QF43Bd2ADXSRywpYLqGyWkAoYlPpaeLHo/8Hk=
+
+Name: schemas/xsd/XMLSchema.dtd
+SHA-256-Digest: IDLq2f1Hphsi/laqAr4YQL2buQFbDA0/Hoqsdd2Rw7k=
+
+Name: org/eclipse/lemminx/extensions/entities/participants/EntitiesDefin
+ itionParticipant.java
+SHA-256-Digest: zstBZK6vOOpZ2HSTHtEeRBInrK0pJsiUfnKwsNYUj5Q=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/LSPErrorReporterForXML.java
+SHA-256-Digest: NkgYa/Ss1X5dw+NyFpLLG6LEQyeLa4zmysRWHVLn/NQ=
+
+Name: org/eclipse/lemminx/extensions/generators/FileContentGeneratorPlug
+ in.java
+SHA-256-Digest: G0IZ71U4uSw4CxhWb7D1AfUoeqfVvjvv0MSiPb1jte8=
+
+Name: org/eclipse/lemminx/services/snippets/new-xsd-snippets.json
+SHA-256-Digest: 14lx+S6eOCv7dURLCO+ZSOsORD0vuOaAlE2LYFGDEpo=
+
+Name: org/eclipse/lemminx/services/TypeDefinitionRequest.java
+SHA-256-Digest: +4mRgOHiAsjYhOEvRa4NA8v82wUuVeF+/jR+A27IHmM=
+
+Name: org/eclipse/lemminx/uriresolver/ResolvedURIInfo.java
+SHA-256-Digest: YzAyjuIbql5NSA4zId9gNJtdlHD8ewmcqhE6/2ZE9yc=
+
+Name: org/eclipse/lemminx/services/snippets/new-xml-snippets.json
+SHA-256-Digest: RgZ64iAh/wwVvPQU0MRYiCFPoBOORIRXK62i4zCzwlg=
+
+Name: org/eclipse/lemminx/extensions/catalog/URICatalogEntry.java
+SHA-256-Digest: Z8RNiLRj8+qJrq+rzVtdtmswjWdFeJASLwwbybdfgPg=
+
+Name: org/eclipse/lemminx/utils/platform/Version.java
+SHA-256-Digest: greI7cnyFYF/UUFPRDSTiqGs6veuOeHdVhxysz7RqjY=
+
+Name: org/eclipse/lemminx/dom/DOMCharacterData.java
+SHA-256-Digest: KM8E2ZoK+3KeDdrGh9lW9VDyw1QR0210EvcU9fwk9GU=
+
+Name: org/eclipse/lemminx/services/HoverRequest.java
+SHA-256-Digest: jvn/lbjZ5IR20VpC8yXZy+gs+AWRcCupNlxVFYL+lWw=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/uriresolver/XMLCacheRe
+ solverExtension.java
+SHA-256-Digest: tOlcu0CeI6i/K7TUQsjjC7YGTPsstGVZYbnnIwWIdwA=
+
+Name: org/eclipse/lemminx/services/data/DataEntryField.java
+SHA-256-Digest: Tsx+VcuscuD8f8y0uclMz0n02DCOx7VhOMfgk/2vpxI=
+
+Name: org/eclipse/lemminx/services/extensions/ITypeDefinitionRequest.jav
+ a
+SHA-256-Digest: AhSsU9BQny6fk7EL5yiuDBSTCAYS97tXS3MO7BRJJWo=
+
+Name: org/eclipse/lemminx/services/IXMLNotificationService.java
+SHA-256-Digest: 3AFVDPwzbdr1zShzAgr8/6GiU5AACwF9w4bMaiB58n0=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/IRelatedI
+ nfoFinder.java
+SHA-256-Digest: xYe50oN6NHkaWaOR0pi06ouv7UK06Gx9/1DamfuENBU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/XMLSyntax
+ ErrorCode.java
+SHA-256-Digest: orAs2lxiIMJKunOaQMGyUM+UwO7maWUd0SnTwzy1Up4=
+
+Name: org/eclipse/lemminx/services/extensions/codeaction/ICodeActionPart
+ icipant.java
+SHA-256-Digest: 6WLR8/ngIO7tVRqzb+K7bgEcJV0tqCYsuOnufY0Ix34=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_complex_type_2_4_bCodeAction.java
+SHA-256-Digest: UmxGYVUM3o/Al4WIG+sWeNSLR7BrxB29JGL80mhBRhs=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/MarkupEntityMismatchCodeAction.java
+SHA-256-Digest: snaYplSCM2kMfXSYipA7eBGz6uH7EqsWEO10pSH/4HQ=
+
+Name: org/eclipse/lemminx/extensions/filepath/settings/FilePathSupportSe
+ ttings.java
+SHA-256-Digest: MRc1oQK5F6g6KdSZs26TZXATNGtZ9V13Qd//TagXcHk=
+
+Name: org/eclipse/lemminx/extensions/references/search/SearchQuery.java
+SHA-256-Digest: VSuDVqI3MoIr2xdAkq+5KMtNJrWSpC5c3i/vfSbXzso=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGXMLReaderCre
+ ator.java
+SHA-256-Digest: nqYmvObaIUhbWS6UjT5ltWAWWYnIBoqhzX/FrCPedHs=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/XMLModelHandler.jav
+ a
+SHA-256-Digest: ulMcpbQZWN2cIwSI0Xm8ecw1Y8m+KMkc08HJdbBykso=
+
+Name: org/eclipse/lemminx/extensions/dtd/xmlmodel/XMLModelDTDValidatorFa
+ ctory.java
+SHA-256-Digest: F1veQxCz7Y6qi8QqLCk/q0GfWQ3JZwAFkHe7aFg0I3E=
+
+Name: org/eclipse/lemminx/services/extensions/completion/ICompletionResp
+ onse.java
+SHA-256-Digest: 4Foqc0h8AgIXPlxVnRXR9oLXJlGD8//ENXlYhYtBzjI=
+
+Name: org/eclipse/lemminx/services/extensions/completion/AttributeComple
+ tionItem.java
+SHA-256-Digest: rOfb15B/jNDuTb8U1+h45PVuYtxaUXGvUCywYNih+Ts=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/ContentModelDiagnosticsParticipant.java
+SHA-256-Digest: yGa23g5kHAMcXCdsfKukc+qfU0MoVRp1xpSeE2qpEvg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/ElementUnterminatedCodeAction.java
+SHA-256-Digest: SrWd05gTfJPTP/Fqkz1lMDun2WL1JCsCY14VaOO3xXo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/uriresolver/LSPXMLCata
+ logResolver.java
+SHA-256-Digest: beiRwYlUJjGILSroVc5laK17nPz/KJpEdfA0Eju6N54=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/RelaxNGGrammar.java
+SHA-256-Digest: LwJwwwCBAhDW0OjFrSeFr52X9781l7SsPDT/mnl2Mls=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/ContentModelProv
+ ider.java
+SHA-256-Digest: bDjQi6HI3PO57GTTpZrTqrVMLZ9D7VI+SgovcYppGUk=
+
+Name: org/eclipse/lemminx/extensions/relaxng/RelaxNGPlugin.java
+SHA-256-Digest: 4YHdLA2ABdXv64ODNfDHIfDCUQKgE1CJXg7q2BDIbzw=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delCodeActionParticipant.java
+SHA-256-Digest: HtLsJXop4gu5DR/4ZPkeoXVqMrb7s+XthoRQ7THjg3k=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/XMLSchema
+ ErrorCode.java
+SHA-256-Digest: kkzedMIIlCQdOK25c+NfKHN56DdFrmDf5EstkWKUSpQ=
+
+Name: org/eclipse/lemminx/services/extensions/IDefinitionRequest.java
+SHA-256-Digest: otTDAPVpji+yZJoni5h2nG0rnqfkgDzBGuLR+r8GMao=
+
+Name: org/eclipse/lemminx/extensions/entities/EntitiesPlugin.java
+SHA-256-Digest: MSP9012OWQmUp92xZCPfcaBdUJnuQZ0t4kSB33NRbSs=
+
+Name: org/eclipse/lemminx/services/extensions/AbstractReferenceParticipa
+ nt.java
+SHA-256-Digest: VGUL7wgEB6vXN1Cl6hr/mgWryi3DfKAuyoOJ5CiZGFI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missingelement/required_elements_missing_expectedCodeAction.java
+SHA-256-Digest: 7enZvz0OAtbEm1otBqA6y/Idol9+eyvcosF8K/hhYIA=
+
+Name: org/eclipse/lemminx/settings/XMLCodeActionSettings.java
+SHA-256-Digest: cb3URYxMfdK9HbOCQF5MMcj8U6OktbMpCkVm5elJYNo=
+
+Name: org/eclipse/lemminx/services/RenameResponse.java
+SHA-256-Digest: F6kIap4JTQIRbv5BAER4p3zI8QA/2kFvtOwlEKJXE8c=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_enumeration_validCodeAction.java
+SHA-256-Digest: YjxvX6Tcb1LH3t08vfesaLtw63nQ4lX+TnpyaSsvP+Y=
+
+Name: org/eclipse/lemminx/extensions/xerces/LSPSchemaParsingConfig.java
+SHA-256-Digest: WivOIxayyxUZP7qgQsrahnUuV56pX9qYxPHejcgqmYU=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esDefinitionParticipant.java
+SHA-256-Digest: E8ysiJYOk6ArJvB8+H918YvoZ31aP18ueSe/jGoh0nc=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delFormatterParticipant.java
+SHA-256-Digest: jZ0EepHwpd5YwbyDjzmeMf4xqS2kitFYt7ijV2iGE8Y=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDErrorCode.java
+SHA-256-Digest: iCYOzjE/R0ILvbRhYJbIjuZPlmItrQvdhH6GIasUWEo=
+
+Name: org/eclipse/lemminx/services/extensions/hover/IHoverRequest.java
+SHA-256-Digest: M4vTSulUUpt7HXmi3M3rQYuZDjlURqHkKBfKbtFiRe4=
+
+Name: org/eclipse/lemminx/extensions/prolog/PrologPlugin.java
+SHA-256-Digest: bwFPW5++tXUaOEj2pJ8WmK0ug2dp1PH7o32VzDNgMxE=
+
+Name: org/eclipse/lemminx/services/XMLSymbolsProvider.java
+SHA-256-Digest: jaCKLYN7ki1Q6yS5PG4G4n6QQ/w+SNLFHLtTWWaRgwI=
+
+Name: org/eclipse/lemminx/utils/CompletionItemDefaultsUtils.java
+SHA-256-Digest: 8MFzs533mLSkqJmoaszjxgQWn8e2/+X4ykI8Ty/CNO8=
+
+Name: org/eclipse/lemminx/commons/ParentProcessWatcher.java
+SHA-256-Digest: 6EA5B+6LhGtdtUGRuAlsfUMG9I3hse9oL9NRZZty0GY=
+
+Name: org/eclipse/lemminx/services/extensions/rename/IRenameResponse.jav
+ a
+SHA-256-Digest: W7TygbOpeguzYP9SLHnKGfJaDC+0BIYTlGp468Ku6dQ=
+
+Name: org/eclipse/lemminx/extensions/generators/ChildrenProperties.java
+SHA-256-Digest: 810M3j762p9vBHQnwQb8sAOeRgwOwA2/CJ6aRr8NdZ0=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/CMXSDContentModelP
+ rovider.java
+SHA-256-Digest: cjCAqGxyHgYkI2YX2TeVoK5wcPztTJyF3HEyrNk23WU=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/CMXSDElementDeclar
+ ation.java
+SHA-256-Digest: yip8X3QMGL07AbFrmv787XpwwsL7/RAdgWWLy8fk0fI=
+
+Name: org/eclipse/lemminx/dom/DTDEntityDecl.java
+SHA-256-Digest: 614qn8XAYUaGCc0knAoV6TeztJO4H5qv75SDaq6h/G8=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLFileAssoci
+ ation.java
+SHA-256-Digest: Yxjj/OG9w3H+y5itvgThqm4bf52SBajG+bAYY7DezC8=
+
+Name: org/eclipse/lemminx/services/XMLCompletions.java
+SHA-256-Digest: atSpoEl8AIqEU+cem+KBOY6y4T4KGltsTj7AXYFkW5w=
+
+Name: org/eclipse/lemminx/extensions/xmlmodel/XMLModelPlugin.java
+SHA-256-Digest: oXz6njY8gVEMk8LQuq8msnkR7e6yO1z80vcI7QLE904=
+
+Name: org/eclipse/lemminx/services/extensions/IDefinitionParticipant.jav
+ a
+SHA-256-Digest: 2sNY4Sl+ou+FB6mc3ORUhZ4iCw7l9sobDYniBwJuYW4=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/ContentModelMana
+ ger.java
+SHA-256-Digest: w0ufAr8Wx0PTLIbKWA5OBXNceVU9f42VyQYthaiiYUw=
+
+Name: org/eclipse/lemminx/services/XMLTypeDefinition.java
+SHA-256-Digest: tJ9gXGk800O+Ivi9Yyim+x9MQ+hZgdeXAgNCEqUphos=
+
+Name: org/eclipse/lemminx/services/snippets/CDATASnippetContext.java
+SHA-256-Digest: AyuLz/1onuCYsNGVpNpvZZR8jQxQcJH/7PPnio/4L00=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/ElementDeclUnterminatedCodeAction.java
+SHA-256-Digest: wzwBVclwmY8lJsXx5nmvgMoJu/gUyQEZImY/pmT7f/g=
+
+Name: org/eclipse/lemminx/services/extensions/completion/CompletionParti
+ cipantAdapter.java
+SHA-256-Digest: i+mC7ZHHuNxcBPno0RfGpQN2l2imNCMAtLdRRFbfSO8=
+
+Name: org/eclipse/lemminx/extensions/xsl/participants/XSLFilePathSupport
+ Participant.java
+SHA-256-Digest: lPUfkhDghggqEYu+kj7T6uTD1Z3txaf6UvQrxtGLxzo=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDRenameParticipa
+ nt.java
+SHA-256-Digest: cyMBVUEjUUsZRg9nIct+3OapIxVCxN0WYIDeEVo/ym0=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/toremove/MyPatternSche
+ ma.java
+SHA-256-Digest: eKOfSiXSCSX0HI/dGYuSRF2hRcDzVBpr5N+kAp2js2E=
+
+Name: org/eclipse/lemminx/extensions/xsl/XSLURIResolverExtension.java
+SHA-256-Digest: DGv+LgAGSTpyWnQYFOf7llUlSo1jr+iz39ygG7vBk6o=
+
+Name: org/eclipse/lemminx/services/extensions/completion/ICompletionItem
+ ResolveParticipant.java
+SHA-256-Digest: 0AT9LAm+DweIbRnl8HLGNjyAYbslO5xmUglb92f4fJI=
+
+Name: com/thaiopensource/relaxng/pattern/AbstractCMRelaxNGCollector.java
+SHA-256-Digest: 7A6+90mH3Giw58/PhljhvjgUqIccdT3r64ZYsqdXh2g=
+
+Name: org/eclipse/lemminx/services/IXMLDocumentProvider.java
+SHA-256-Digest: M8Gd0BLKf/MZYOYgS/UnPaQ+i1VTeOlXGqjeO8bwzDs=
+
+Name: org/eclipse/lemminx/utils/ExceptionUtils.java
+SHA-256-Digest: YR4Wk7YrNb10z5Gd9Bj3AlCOJeLNZ5EPyL8hefBP3GA=
+
+Name: version.properties
+SHA-256-Digest: TmCau+VX81H/kOIvpfmJToOFeioraGu+pU2abTNm57U=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/MissingGrammarDataConstants.java
+SHA-256-Digest: L6S2eAZ7y5UQDK2oWa48dpoH2VJiJ/KrCtUBVjyo69I=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/LSPXMLGrammarPool.java
+SHA-256-Digest: GvcWlGGxc0JSi3Fr59odQQVrM772M0Cofn3+fJcR01Q=
+
+Name: org/eclipse/lemminx/services/extensions/hover/IHoverParticipant.ja
+ va
+SHA-256-Digest: snu3PwP1Ryt7DmIlY+3TnebJn4pghBVLh+VDlJWQKCU=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/diagnostics/DTDVal
+ idator.java
+SHA-256-Digest: lN9FiJUnb/X1BZPiTs0xqMQJhl4DE/jpkqnu7yK7Iro=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/utils/XMLGenerator.jav
+ a
+SHA-256-Digest: 5snaTX2oUAKMeuH6VOu4qBAdywYbmbX016ZYi92EwRY=
+
+Name: org/eclipse/lemminx/extensions/xsd/XSDPlugin.java
+SHA-256-Digest: mhK2OCU/IwkOqPKSFFF9zzvvQq6dOCqSOCgkPF+U2h0=
+
+Name: org/eclipse/lemminx/services/XMLCodeActions.java
+SHA-256-Digest: q4DUThfqunLIf2dxhI8Ul6n+mIHOTzBrdd7hoHVKyBM=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/GenerateXMLModelWithXSDCodeActionResolver.java
+SHA-256-Digest: +VXmFUvbBolJSVo9f0MFYMjIkKcHLZ5oQ2njWcZ7MzY=
+
+Name: org/eclipse/lemminx/services/snippets/dtdnode-snippets.json
+SHA-256-Digest: he7eJPUyHrEv1jvM8Xkgp7rgtvjZ+/7SnvR1JBEZRek=
+
+Name: org/eclipse/lemminx/dom/DOMCDATASection.java
+SHA-256-Digest: YlE9hg+euNCrQm/99P4S2iRLRsvpmN6MkU4HNt5sFaE=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLSymbolsSet
+ tings.java
+SHA-256-Digest: LK+HrS42jojS/+QXK+fcBhaur54KZthMyAec5zicxZE=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/DTDNotFoundCodeAction.java
+SHA-256-Digest: 3hqITkd3Qmbe9Td84Z7VS8aEmzjEGAz9Qsb5P5OHshs=
+
+Name: org/eclipse/lemminx/services/extensions/rename/IPrepareRenameReque
+ st.java
+SHA-256-Digest: kBiC8B9Ss415zUieuCYpcbAOwuVSX4hrIZiIdnNBcK0=
+
+Name: org/eclipse/lemminx/services/extensions/IComponentProvider.java
+SHA-256-Digest: olnR1rHxEx5mNFaU3QZXmHwiJW/OzC2oCwC89qw/dMQ=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/ContentModelPlugin.jav
+ a
+SHA-256-Digest: h9wfqYrX67mZWepWju1VpAPKMpoVXdV4cdGVHKGSwro=
+
+Name: org/eclipse/lemminx/extensions/colors/XMLColorsPlugin.java
+SHA-256-Digest: 5WxpkX0E8dgAyvrW0O/PeCejSOpvZbEVAQEqmX1Wxzo=
+
+Name: org/eclipse/lemminx/services/extensions/codeaction/ICodeActionReso
+ lvesParticipant.java
+SHA-256-Digest: bP7/MivoMLRQytni8BYSbVvseTBYPZ+HLV6uRqsOq04=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/completio
+ n/AttributeValueCompletionResolver.java
+SHA-256-Digest: 7TR0TifLzvXNLQR9Zwr5UYOF3u42vbOI81J85kA1g9k=
+
+Name: org/eclipse/lemminx/services/format/DOMProcessingInstructionFormat
+ ter.java
+SHA-256-Digest: vce9cXQGe4/chAGIT+L/Ddx3IVttCVVU/DFuGyqS+5o=
+
+Name: org/eclipse/lemminx/extensions/xerces/AbstractReferencedGrammarLSP
+ ErrorReporter.java
+SHA-256-Digest: MiwRNWSHMwwTf1oVwWh9zVoD7JAXFBSUOgPWNy7k6+Q=
+
+Name: org/eclipse/lemminx/extensions/xsl/XSLPlugin.java
+SHA-256-Digest: Ep9PjEWeK/9ChSaW2ZW5vjLlnDovu23if8CpSBexvps=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/RelaxNGDescription.jav
+ a
+SHA-256-Digest: BMRZacTV77YE8fGI0s6NnLa3+KZjlsI91Yzlb8aJHDA=
+
+Name: org/eclipse/lemminx/client/LimitExceededWarner.java
+SHA-256-Digest: WuCsdGamyOQ8K3BeZwlAqL2gCobyCdpBVVmyftS3JYk=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RelaxNGURIResol
+ verExtension.java
+SHA-256-Digest: ODZROELoOez+dKx3q8vWbM8mspXv24TVkGRrjwm2wsg=
+
+Name: org/eclipse/lemminx/commons/MultiCancelChecker.java
+SHA-256-Digest: 86SZVYhqLOsqjS8d0HkyhQ3+phbtki1AdKPke0/JIaE=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGSAXParser.ja
+ va
+SHA-256-Digest: OhpR6sPXQ/jQh1VF+BGlB3ABEgyhgafo1msAH5SRe7g=
+
+Name: org/eclipse/lemminx/services/extensions/XMLExtensionsRegistry.java
+SHA-256-Digest: MfZUB+4J31oXe0NRaVJ+7ITMmC3u9BGQBpNwjf4aQcg=
+
+Name: org/eclipse/lemminx/telemetry/TelemetryEvent.java
+SHA-256-Digest: y37DKgPpzLdbznt884+Av31VA0IgtBTcCz8bIm37VjI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missingelement/MissingElementDataConstants.java
+SHA-256-Digest: WEsSSwfFlsEqHX7xmYZGd3QEv7dZztrCUS6ymJTz46o=
+
+Name: org/eclipse/lemminx/utils/XMLPositionUtility.java
+SHA-256-Digest: hnkdHErpWpv/9+R657Gw0EjeBH7kpqUx4+vRjbYqCEU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/NoGrammarConstraintsDataConstants.java
+SHA-256-Digest: ulbQkE5PJ69wDmk1ZjO/Ul+POgt6saRq7KnJP6ixzpo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_complex_type_2_4_aCodeAction.java
+SHA-256-Digest: 6uIw+j/S5akqMW8yUStRhU37AUAB6MvKNHG1omH/GOs=
+
+Name: org/eclipse/lemminx/services/extensions/codelens/ICodeLensParticip
+ ant.java
+SHA-256-Digest: 3khcFJzwV3ypKkWqWCcCGiqiEoYfjGZqh4kA7g74hxo=
+
+Name: org/eclipse/lemminx/services/BaseCodeActionRequest.java
+SHA-256-Digest: iYH/RWM+RykAD3B2iWis2E8jFLH39DS8QZPioLkX6mg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/TargetNamespace_1CodeAction.java
+SHA-256-Digest: nBS11fCOBWqRzDZA3aW5AX1wAH1eJMTdybRm1y7uu7A=
+
+Name: org/eclipse/lemminx/services/extensions/diagnostics/IXMLErrorCode.
+ java
+SHA-256-Digest: VLu/iT+S6sU3LhD4B09zEkSDYBt5ZLzrLoON4vemS1s=
+
+Name: org/eclipse/lemminx/commons/ListLineTracker.java
+SHA-256-Digest: 0VlC458Uva5OHK6HCOmi83e11zh+MrulX81LquInNd0=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esCodeLensParticipant.java
+SHA-256-Digest: sk25Lh0uQnnRBp2fWdyBGZ+HU/U0l+N88V2BUw6xJZg=
+
+Name: org/eclipse/lemminx/settings/CompositeSettings.java
+SHA-256-Digest: 4gseqBkMoY8mlJkd57wyBoUI+i6xBMgpgGWO0VEqwyU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/s4s_elt_invalid_content_3CodeAction.java
+SHA-256-Digest: hnYK6J3VpF7AKqJonZTt0l3QW78SVKtZtaDJpsPZTro=
+
+Name: org/eclipse/lemminx/dom/DTDDeclNode.java
+SHA-256-Digest: 62wriCJGy5SuBToIbvxkuo0mA/P55+2YJ/JjDPT2jDo=
+
+Name: org/eclipse/lemminx/services/LinkedEditingRangesRequest.java
+SHA-256-Digest: AFh0Z/dV8Hhs3jhXD+RdNFVKm6CEGfgbyqHBqFfWbzQ=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLValidation
+ Filter.java
+SHA-256-Digest: GMYDVMFWSbMjvOl7Wue1PCk7JzV6sFMgbPt0esaefm8=
+
+Name: org/eclipse/lemminx/settings/XMLSymbolSettings.java
+SHA-256-Digest: v7wwC9yae/0zaOngIKLfnfdINZMGtHweG6lkymYsiKQ=
+
+Name: org/eclipse/lemminx/services/extensions/ILinkedEditingRangesReques
+ t.java
+SHA-256-Digest: dmo1l2iMvUByDcfP+EDKE0L8rUUQt7XltojBxwHWAbo=
+
+Name: org/eclipse/lemminx/services/format/XMLFormattingConstraints.java
+SHA-256-Digest: 2AIykVAwdiiK3fLv2Ys5DTXjPu+VPcdlXGpgq03yaNg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/TargetNamespace_2CodeAction.java
+SHA-256-Digest: uZ+j0T+oMCLp+vRJNMSQvOkl8TUAEOVxynIknrndNUM=
+
+Name: org/eclipse/lemminx/extensions/dtd/utils/DTDUtils.java
+SHA-256-Digest: t4pq0GO6GFbwjM6Y/u8Fj2HhenJNnJ8QIQhWmyjVG5o=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esLinkedEditingRangesParticipant.java
+SHA-256-Digest: u0WCBY9/QAGK8WnnBai8vNqGqzpD+NAPUWK33xW3VSc=
+
+Name: org/eclipse/lemminx/services/XMLPrepareRename.java
+SHA-256-Digest: 7xwwM2jDzYXVRKlHXSzQqnONr9vLqUBYxkl50yhgIS0=
+
+Name: org/eclipse/lemminx/settings/ServerSettings.java
+SHA-256-Digest: z/XHaEqewwfSiCUBH3Dyyqn2UG4DpHS1t5jA0/6wFlw=
+
+Name: META-INF/services/org.eclipse.lemminx.commons.snippets.ISnippetReg
+ istryLoader
+SHA-256-Digest: nAymLRQqHiwFwfu4T7ZvrIRJhbKjj/hrgsUFjfcXMFw=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/FixMissingSpaceCodeAction.java
+SHA-256-Digest: URT7Iep21Uj9RVwjZjjHsdMOf8F1vU2WPDa2mS+625k=
+
+Name: org/eclipse/lemminx/services/extensions/IHighlightingParticipant.j
+ ava
+SHA-256-Digest: VOyl9As3UNfo1LQHdPy4h3AZPBqUcwdWv/D9TmneGak=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esCompletionParticipant.java
+SHA-256-Digest: pnMWfqnJv7aqw2ML4iQmppdIfXEHQrHGkQM0q/iUa/w=
+
+Name: org/eclipse/lemminx/extensions/xerces/AbstractLSPErrorReporter.jav
+ a
+SHA-256-Digest: ICZujMNO7wUoRAlS8MwGL6WRrGynW9pmx/jn+qdaP68=
+
+Name: org/eclipse/lemminx/extensions/xinclude/XIncludePlugin.java
+SHA-256-Digest: T/oMYClhiLRaepMKxG+oTJuz6e0bGceT2U7dlz11u+k=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/SemicolonRequiredInReferenceCodeAction.java
+SHA-256-Digest: Op2AXPqaZmYOQPymcCzVZQ0JPKk97oGV4NprTA7YC60=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/uriresolver/XMLFileAss
+ ociationResolverExtension.java
+SHA-256-Digest: ttt43vgOEfq3SaM2gYJ+KhIL36y87kGc/41cR071XeE=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delSymbolsProviderParticipant.java
+SHA-256-Digest: X4TdL4aGmCe5ZEpORvRIu+B9g7SJ1DFUGtIJEmwGFms=
+
+Name: org/eclipse/lemminx/services/snippets/XMLSnippetRegistryLoader.jav
+ a
+SHA-256-Digest: EZgQaWa0fmd2HBH8p+gmthkD0SZTU3Z8nggZxzwHrdg=
+
+Name: org/eclipse/lemminx/dom/parser/MultiLineStream.java
+SHA-256-Digest: 5nt136H/ic8aTx11lzIH99PUUyKCoRm55uzdzCiYuC0=
+
+Name: org/eclipse/lemminx/commons/ModelValidatorDelayer.java
+SHA-256-Digest: TaBQ0hq7ZKWeibq6E9KDRD+1dTxUVhQzpWbzw/rCgWc=
+
+Name: org/eclipse/lemminx/services/extensions/hover/HoverParticipantAdap
+ ter.java
+SHA-256-Digest: +bk03cGsQ8/FAtqMKOeoangsL4DrkObLfaV7vct52Vo=
+
+Name: org/eclipse/lemminx/services/CompletionResponse.java
+SHA-256-Digest: jqcve1gnC+gOfBaKYqBKrjJ2uFmz39GjC5X7MveXS50=
+
+Name: org/eclipse/lemminx/utils/platform/Memory.java
+SHA-256-Digest: Sx+Cd2xCGofUFsIPZ3NszvVrKc1u0tpPFXf1vX684dk=
+
+Name: org/eclipse/lemminx/uriresolver/CacheResourceException.java
+SHA-256-Digest: tDKYkD1Nu7ehIym7OIpcwAIv47zADCGMy2bXtxqOk2g=
+
+Name: org/eclipse/lemminx/dom/DOMText.java
+SHA-256-Digest: iOuvt52d0aSns2w2JTZBnTxfIqzbPiJnAJZss2VDFUk=
+
+Name: org/eclipse/lemminx/extensions/filepath/SimpleFilePathExpression.j
+ ava
+SHA-256-Digest: AqRAYaQnDvkdmFWmi5arineVX2Lnl9dbdJn1CVeyVzk=
+
+Name: org/eclipse/lemminx/services/IXMLValidationService.java
+SHA-256-Digest: OU7C7BalhN/X70HUVtNqPjTKTyoWj0UQaItE8raXy78=
+
+Name: org/eclipse/lemminx/settings/SharedSettings.java
+SHA-256-Digest: geocYpUz+LFpG0sKmSPJtwpU0uoMhJwPdf6e1KZepRM=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esRenameParticipant.java
+SHA-256-Digest: WTZKv8c/uoLmXxtB7bAV8q0FCwufCz+PgKVhl/0OSPQ=
+
+Name: org/eclipse/lemminx/services/extensions/rename/IRenameParticipant.
+ java
+SHA-256-Digest: +Qjd+1Pjex4NtU5zgI78mD6IRG8SLBuS5m3ja4bN760=
+
+Name: org/eclipse/lemminx/settings/PathPatternMatcher.java
+SHA-256-Digest: 30ebp8WrNbbHM0rvRLLPXjdAoB0p9u///OFIQk1nCxo=
+
+Name: org/eclipse/lemminx/services/snippets/NewFileSnippetContext.java
+SHA-256-Digest: dtoWIwUVZZyBbdv3OImmsgbMT4zuGIXB5Zlka19BPjY=
+
+Name: org/eclipse/lemminx/services/LimitList.java
+SHA-256-Digest: +B77vD5wCMPmZ2dD584zgbslci5mQaXpocgThC1CQ5w=
+
+Name: org/eclipse/lemminx/extensions/generators/xml2xsd/XMLSchemaGenerat
+ orSettings.java
+SHA-256-Digest: YgP3vKIPJ0/8QFs7/0rAmJvaBhNdt7uyCE3twB4vOhA=
+
+Name: schemas/xsd/XMLSchema.xsd
+SHA-256-Digest: tvdEEXkvKlzsUJ2ERRIx6Qp3M8qIlIHeHnz6+pbrWC0=
+
+Name: org/eclipse/lemminx/services/extensions/diagnostics/LSPContentHand
+ ler.java
+SHA-256-Digest: 5jwVhLosO1lJ+cOBKncvUn/w5NghaMPvP2XJzWJFA0s=
+
+Name: org/eclipse/lemminx/extensions/references/search/SearchNodeFactory
+ .java
+SHA-256-Digest: CaP+poZizAOE+nah4gmmJ9GtLsr2iZdOB1XRGEhkqNM=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/commands/SurroundWithC
+ ommand.java
+SHA-256-Digest: e+UUNyeyV0iFy6UYIekRUvGCk6FDDhoZ5Te3h0nAePU=
+
+Name: org/eclipse/lemminx/commons/config/ConfigurationItemEditType.java
+SHA-256-Digest: HKZWpJ6j480ONEDCl6SGoxYUX05JtN/09Nttguk0dyY=
+
+Name: org/eclipse/lemminx/extensions/catalog/participants/XMLCatalogDocu
+ mentLinkParticipant.java
+SHA-256-Digest: tXNS1uL39k1ff1canh+ZBvEkSWlOPSnKTfKGiuWrRog=
+
+Name: org/eclipse/lemminx/settings/XMLFoldingSettings.java
+SHA-256-Digest: pcfPzZSujfNY1IPUiqgCsIjR5I/k80VX1cDB93AqA88=
+
+Name: org/eclipse/lemminx/services/format/DOMDocTypeFormatter.java
+SHA-256-Digest: cqbC4Cj81xhDWfvoibT7w6890a6b/l7OQz/IGReGdAc=
+
+Name: org/eclipse/lemminx/utils/IOUtils.java
+SHA-256-Digest: IXdP1F5xF5FT8gdryIE7ygjQ4v02F6+HRy9GYHA+R3g=
+
+Name: org/eclipse/lemminx/extensions/generators/FileContentGeneratorSett
+ ings.java
+SHA-256-Digest: Pz1X8/tepVlyKep4bX5SRabCqxhQaYZECq1vyBr8/BA=
+
+Name: org/eclipse/lemminx/client/ClientCommands.java
+SHA-256-Digest: IeCpqHA+I3KdpeEEbJRO3E08BIIOSjhTlBXHS+rrWjQ=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/commands/XMLValidation
+ FileCommand.java
+SHA-256-Digest: FfOZ7mfNRBe0YRy5vx8Bp+JdRbpBxWW5CZsrtqwp2s0=
+
+Name: org/eclipse/lemminx/dom/parser/Scanner.java
+SHA-256-Digest: 5/tVBmJGaNDj5P3BA7Q42aDXad1ZEQOccdZLB9F6Thk=
+
+Name: org/eclipse/lemminx/NoOpOutputStream.java
+SHA-256-Digest: Qc7tgMDm67g6UUKuH7lTckbV2VDT9FtUwJ52IwTrgCQ=
+
+Name: org/eclipse/lemminx/extensions/catalog/XMLCatalogURIResolverExtens
+ ion.java
+SHA-256-Digest: 79vcV73Fe+lvHfLBR7FIKgMRz2uIYECsTmgSVv0e8PI=
+
+Name: org/eclipse/lemminx/XMLLanguageServer.java
+SHA-256-Digest: 5j2F59KU9Rs+1zXdf5kCccks9BENLHZyR50Mmamiq00=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/MultipleContentHandler.java
+SHA-256-Digest: +5KpXGiEEqBXePvUGOZb4VikE4CUaR+aZCPdePByhPw=
+
+Name: META-INF/services/org.eclipse.lemminx.extensions.xerces.xmlmodel.X
+ MLModelValidatorFactory
+SHA-256-Digest: TvvE9klJFHdzTWSA4E48if0a1TGyXXzjSjULOYSf9Bk=
+
+Name: org/eclipse/lemminx/extensions/filepath/settings/FilePathSupport.j
+ ava
+SHA-256-Digest: Kj0cU5GaLyA4r9TBPLxQiHhOi7i4pcDCRpGchOi4zbk=
+
+Name: org/eclipse/lemminx/utils/platform/Platform.java
+SHA-256-Digest: zHz6TI7+0AymIOeMI+x8H16zI5cxMtXBUbCXPGjjEJU=
+
+Name: org/eclipse/lemminx/extensions/xerces/ReferencedGrammarDiagnostics
+ Info.java
+SHA-256-Digest: Rqr4hKDdqPV63+hA654/+1xplVZ2zs8ZqqA2wO77uZY=
+
+Name: org/eclipse/lemminx/services/SymbolInformationResult.java
+SHA-256-Digest: cmPOMxeCdzTMi5raH+jODnekmxt7e3/yIYeccA7mQTU=
+
+Name: org/eclipse/lemminx/extensions/relaxng/xml/validator/RelaxNGErrorC
+ ode.java
+SHA-256-Digest: bWid5mJf5FmWQUw22CWVyII86NnMtglV9TMvkpzxE7c=
+
+Name: org/eclipse/lemminx/services/extensions/commands/AbstractDOMDocume
+ ntCommandHandler.java
+SHA-256-Digest: PA2fJ+F7afFdjb9VeqfgikAY0gCn7vmbjnSgLNevMvs=
+
+Name: com/thaiopensource/relaxng/pattern/CMRelaxNGAttributeDeclarationCo
+ llector.java
+SHA-256-Digest: Bbvu07jXeefQIN1WlMfSMhwcwbnc27BUYWzbydN2ndQ=
+
+Name: META-INF/maven/org.eclipse.lemminx/org.eclipse.lemminx/pom.propert
+ ies
+SHA-256-Digest: kGz0cwOS30SOtVRC3O8lG3aRlgM0PgyIz67Qb5zIS/Y=
+
+Name: org/eclipse/lemminx/extensions/entities/EntitiesDocumentationUtils
+ .java
+SHA-256-Digest: AQON/+95Xwikt5IVPIRPtWYoLw0gs56nCUadDl2QqiE=
+
+Name: org/eclipse/lemminx/dom/DOMAttr.java
+SHA-256-Digest: 8qgsWVaUC5Ti60nWI3R6nT5WkX66PHoMHX9M1hvmBXI=
+
+Name: org/eclipse/lemminx/XMLServerSocketLauncher.java
+SHA-256-Digest: oOP7dWFeCSXgmCKAmIeWuXLrvHEzUA7d92JDRGsCjCI=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/CloseTagCodeAction.java
+SHA-256-Digest: eyo8TgQfi4Vnskc2BWd/yIqTUtaDuwdXRaWCgfetVv0=
+
+Name: org/eclipse/lemminx/extensions/generators/xml2dtd/XML2DTDGenerator
+ .java
+SHA-256-Digest: 58YE465JDAgxUzq5Au0n9YfFepYo1DcTfbfY2LMvjf8=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/completio
+ n/AttributeNameCompletionResolver.java
+SHA-256-Digest: 9ku2P4PBJD+2PKa26gCTbF5FHBGQSccsjEBse82koUc=
+
+Name: org/eclipse/lemminx/settings/InitializationOptionsSettings.java
+SHA-256-Digest: oLL3PGEN+XhyaHFM9qW9V5o4zjS3FE+LCw20N9AWKg4=
+
+Name: org/eclipse/lemminx/settings/QuoteStyle.java
+SHA-256-Digest: VnXf5y8Me4+VZZwP8BoBi+stBXaC47fD4cE/04BGzwo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/DownloadDisabledResourceCodeAction.java
+SHA-256-Digest: hcLJDgwgaa74QEEM7U9KLA1CJtu1uDGZq2sCbpQQWCw=
+
+Name: org/eclipse/lemminx/extensions/xsd/xmlmodel/XMLModelSchemaValidato
+ rFactory.java
+SHA-256-Digest: 72DyS42uO+tjmWpoZ+pwimD6WVDJZJ4r1qyL0yKCPt8=
+
+Name: org/eclipse/lemminx/services/DefinitionRequest.java
+SHA-256-Digest: onCuGn5dZQtv8xDKadqH6qNjkcAxSTrqdk5T4mjNCxs=
+
+Name: org/eclipse/lemminx/commons/Line.java
+SHA-256-Digest: PerIP7sDVOJ1oACPg17ewuZBOK2y+4qg6DiumBk/swk=
+
+Name: org/eclipse/lemminx/services/snippets/comment-snippets.json
+SHA-256-Digest: VTEdvDkngqz9Cj9fIRA6VXdOp3UX7yYvQz6Vgx+6nRY=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDHighlightingPar
+ ticipant.java
+SHA-256-Digest: WbEkihJ2/uGuXBZpheCDOCrOrB1XRwK3FpljC40cCxw=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/CMElementDeclara
+ tion.java
+SHA-256-Digest: xNIH/RvzKZS/i4NM27M5c+Jzyr14UoUrPyS08x6H3GI=
+
+Name: org/eclipse/lemminx/dom/DTDDeclParameter.java
+SHA-256-Digest: OcLOyWzpLFI3FdtHphQB7M0vLid5kzW7nY6IsYj7fbc=
+
+Name: com/thaiopensource/relaxng/pattern/CMRelaxNGElementDeclarationColl
+ ector.java
+SHA-256-Digest: 9gB8pCOXQduqlZABRNppKMVYqh5eZMxLUp3uNGqi6v0=
+
+Name: org/eclipse/lemminx/extensions/colors/settings/XMLColorExpression.
+ java
+SHA-256-Digest: nKBLnPszXkjkpon4IG36cQL4DYMQh6fbgiE0NR26kA4=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/XMLModelValidator.j
+ ava
+SHA-256-Digest: DiRCJXwuHho8DLkWR9HYcwXByZEF8nqEnT0DU7SM+hk=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/completio
+ n/ContentModelElementCompletionItem.java
+SHA-256-Digest: aTHEgu/+vuaCka5uHftLA9Ap1UVZeILZ2zm+cr7wZWY=
+
+Name: org/eclipse/lemminx/extensions/xerces/LSPMessageFormatter.java
+SHA-256-Digest: YqkiHco6I2BZYt6ukhWIcvH1stVkk2isYR8+A621+04=
+
+Name: org/eclipse/lemminx/services/snippets/new-xsl-snippets.json
+SHA-256-Digest: QvEP0WKQ3lyBW5h+Ti/gbDu/f2xRGrU5lZzFTL6RUQc=
+
+Name: org/eclipse/lemminx/extensions/filepath/FilePathPlugin.java
+SHA-256-Digest: JKsaw9XzaiqNgjbMLjWqx1FzdO3Y2LA3L51x7w7IcU4=
+
+Name: org/eclipse/lemminx/commons/snippets/ISuffixPositionProvider.java
+SHA-256-Digest: +NjwH/ohbrGRd5cONd1Yxf9y/Gn0QswAzlyk5ADJbAk=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/DTDReferencePartic
+ ipant.java
+SHA-256-Digest: nE3duSoQc5TTBWO4Tf3ps5PzR0HbeAV3i7lNT9HXvlk=
+
+Name: org/eclipse/lemminx/xpath/matcher/XPathMatcher.java
+SHA-256-Digest: jISBjUbyhYplAXS6H36FWsfHQTqDU1rUUqPTFPWP82I=
+
+Name: org/eclipse/lemminx/services/snippets/xml-declaration-snippets.jso
+ n
+SHA-256-Digest: NiUak5Me7n6RP5vGs5exsnMI7sVsDXeOLlTg45Tx15c=
+
+Name: org/eclipse/lemminx/extensions/catalog/CatalogEntry.java
+SHA-256-Digest: b7DVUvn9ALAPJgRDzlOPj8SU1mornd8X4+0i5YYDUk0=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/RootElementTypeMustMatchDoctypedeclCodeAction.java
+SHA-256-Digest: UxgjNg4hq3LNOD2KyqBRbH9wWwPLj6KmA8PQe75dnek=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/XSDAnnotationModel
+ .java
+SHA-256-Digest: HjsZgzRn/VaEAviiNjMgAcX4dBi09ZXvUFKNJ/yciN4=
+
+Name: org/eclipse/lemminx/extensions/generators/Grammar.java
+SHA-256-Digest: eTo1YxmoS6DKwjNi7c796Prq+eRIbOB2xYPqq7XR0MM=
+
+Name: META-INF/native-image/reflect-config.json
+SHA-256-Digest: 3/8mSzFnG8dlU7w8W7FYCQL1EDbINVHgue7zHuEjTkc=
+
+Name: org/eclipse/lemminx/services/CodeLensRequest.java
+SHA-256-Digest: EYh4LqHxAmBBeg66WI9A5fCyWb3jf2hv7AIPj+n3lH4=
+
+Name: org/eclipse/lemminx/xpath/matcher/XPathAttributeNameMatcher.java
+SHA-256-Digest: FrEgCiNdWmOw4OO2VPDeHoAsNufj1MspEhe8J3MsK4c=
+
+Name: org/eclipse/lemminx/customservice/XMLLanguageServerAPI.java
+SHA-256-Digest: +Krn3Uqzekz5tRx24m9Lwr2izsepAPKZywc9UQzR/A0=
+
+Name: org/eclipse/lemminx/dom/XMLModel.java
+SHA-256-Digest: Hn47BoXR62e9BFD3q95GUqCtnRfWYRjBM6V8db1IMtg=
+
+Name: org/eclipse/lemminx/settings/FaultTolerantTypeAdapterFactory.java
+SHA-256-Digest: pRPQYMQye+9xQdQK/kkxnBgQu6ZMWbVQtzZhTXYcCdg=
+
+Name: schemas/xsd/datatypes.dtd
+SHA-256-Digest: aUZDLKevLpWE+RtIVkER/SxzyN67vNmg4/Xd04LutRw=
+
+Name: com/thaiopensource/relaxng/pattern/CMRelaxNGAttributeValuesCollect
+ or.java
+SHA-256-Digest: zcw9fw9T7f6+v5E64p7WG+scUIvHDjXBwTr9lPHT4Bw=
+
+Name: org/eclipse/lemminx/extensions/xerces/ReflectionUtils.java
+SHA-256-Digest: KrfvJwFH/k9AC21YqyvMLb3VnOCiSM/FZBFJ+HGJkUs=
+
+Name: org/eclipse/lemminx/extensions/references/settings/XMLReferenceExp
+ ression.java
+SHA-256-Digest: SJKPNpk6FdLW1SEiNcCTpcWznTc3MGHQhJDPHc9/DEs=
+
+Name: org/eclipse/lemminx/extensions/references/XMLReferencesPlugin.java
+SHA-256-Digest: NpOPnWkKYo4iRYY8vYnHvb/Jet/pBqMB3XID43YaWy4=
+
+Name: org/eclipse/lemminx/xpath/matcher/AbstractXPathNodeMatcher.java
+SHA-256-Digest: H5COpOJ44fyvlaqIfcDmwhsdm2ysDcjLjvyKrArRiTg=
+
+Name: META-INF/native-image/jni-config.json
+SHA-256-Digest: P7vUxtdhMDmbDHnN9BdYZpIkqR4Ft7IWlT8Mlyh1CGU=
+
+Name: org/eclipse/lemminx/extensions/filepath/settings/FilePathMapping.j
+ ava
+SHA-256-Digest: xrl+lE9kgwK3bgV7eYQZHBNa+AcSzPNaA+Ool1DwrbY=
+
+Name: org/eclipse/lemminx/settings/XMLWorkspaceSettings.java
+SHA-256-Digest: H8eMmcg+Z8OtQmdyhjrpFkpj/M+k+d9cLnQO76cCNuE=
+
+Name: org/eclipse/lemminx/services/extensions/completion/ICompletionItem
+ ResolverRequest.java
+SHA-256-Digest: yq7pL5aoO2iBk7I9VKYSB4CaAqpWEOCswS83UTB2+dk=
+
+Name: org/eclipse/lemminx/commons/TextDocumentVersionChecker.java
+SHA-256-Digest: hoMYD/dD8+ug7AH9DKbMun6cgQvvN7+BVe5oOYkxpgU=
+
+Name: org/eclipse/lemminx/dom/DOMDocumentType.java
+SHA-256-Digest: 97fsbcXG0wSI0HQYnmtRVLM/0V/lijARmtSO960DeSY=
+
+Name: org/eclipse/lemminx/extensions/references/search/SearchQueryFactor
+ y.java
+SHA-256-Digest: nPj27Rzsj3+8ajh4sW5Bc1JKj656UMf4Y+Kbliz1klc=
+
+Name: org/eclipse/lemminx/extensions/references/search/ReferenceLink.jav
+ a
+SHA-256-Digest: w1Cd2AMXsm3pnS5m2tQoPNOUaUUkd3Qggu97wHQacio=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/XMLModelValidatorFa
+ ctory.java
+SHA-256-Digest: Vy/n3n37q9o/aV0/gkuPHzx8dYsjas7Oit/OSsaPKtM=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGDiagnosticsP
+ articipant.java
+SHA-256-Digest: ECI1jkXChSsjjA9L4LBzCgNKMwvpS1XZlqy+4oId/1Y=
+
+Name: org/eclipse/lemminx/services/extensions/format/IFormatterParticipa
+ nt.java
+SHA-256-Digest: Y31BqWNgiyLfOGWpWp2q/nYTBwmyNVU7JDRZfmQhTNE=
+
+Name: org/eclipse/lemminx/dom/SchemaLocation.java
+SHA-256-Digest: tGwv2UndDZ276GXj+NzsjPR6QlrCZ9Ai9NMpOxKzQXw=
+
+Name: org/eclipse/lemminx/utils/DOMUtils.java
+SHA-256-Digest: CsoFAQTwbbr2kHQx7ydBgw3w2Mqm73mDpSQZuOa7dCs=
+
+Name: org/eclipse/lemminx/services/extensions/IDocumentColorParticipant.
+ java
+SHA-256-Digest: Bdd1sb9r0gSZ7LGgmpaMfVpNtzmloT23qqpepCdIB8I=
+
+Name: org/eclipse/lemminx/extensions/entities/participants/EntitiesCompl
+ etionParticipant.java
+SHA-256-Digest: Zj4zXEXgJuj/AbsLNf9ijo0vCT4JPrAzw/8RmYkfTdw=
+
+Name: org/eclipse/lemminx/extensions/entities/participants/EntitiesHover
+ Participant.java
+SHA-256-Digest: ag58E57o8iTz23EL74f4pw/dJ9DKlQTC4O1Wey6O0AU=
+
+Name: org/eclipse/lemminx/extensions/xinclude/XIncludeDocumentLinkPartic
+ ipant.java
+SHA-256-Digest: XbsYUMOWQ64i8qCcpvl/Gg4XFplmVYfmF4TOfB0RqWU=
+
+Name: org/eclipse/lemminx/extensions/xsd/xmlmodel/XMLModelSchemaValidato
+ r.java
+SHA-256-Digest: UoVhkO+4avnkUpv4zYNuMcpBlXA/3wpmQDTJhxztwr0=
+
+Name: org/eclipse/lemminx/services/XMLCodeLens.java
+SHA-256-Digest: 6h25CYsZQRA+mw6IBSDE5MooGjgWush08WAJTdOdZao=
+
+Name: META-INF/services/org.eclipse.lemminx.services.extensions.IXMLExte
+ nsion
+SHA-256-Digest: h0rjJq4BM2iVxIZ5OqUWYUpfwvsqWCTT0QH/+HMsX+E=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/AbstractGenerateGrammarAndAssociationResolveCod
+ eActionParticipant.java
+SHA-256-Digest: Pq26KuOxnF/QBxwKkC/sSX+XDXpWSLmHIj5Fus4iFVs=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/Aggregate
+ RelatedInfoFinder.java
+SHA-256-Digest: lWzEbY6PnAfDeOkqyPQde4b3WniEB2qdHJhNGXcZbOo=
+
+Name: schemas/xslt/xslt-1.0.xsd
+SHA-256-Digest: xQpGbq6y5lkvo7W2Gn+Tq8I/bFPJH2plSvH8JrKWMzo=
+
+Name: org/eclipse/lemminx/commons/BadLocationException.java
+SHA-256-Digest: KY9v0xf3G/E9wqWVUMlaFvfGl3c+oCwcFIhsGFb/PEw=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_complex_type_3_2_2CodeAction.java
+SHA-256-Digest: xQYH5W958mlyE4JSy8IRoF9Nr7TIHz3XNeHVUB/qIko=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDCompletionParti
+ cipant.java
+SHA-256-Digest: 7rCbyKr9DhnD+5HjZZNDiOLPAviX1X2ZXXrlE4DEv0U=
+
+Name: org/eclipse/lemminx/client/IXMLSettingFeature.java
+SHA-256-Digest: b1qZ00AOZBdWUTjNK4T715gitTwZxsc3Ktw5QjDE2ks=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLXIncludeSe
+ ttings.java
+SHA-256-Digest: ZmvZ+qB9ffyWX+jDC2HBoAkb1DqLwX5+LTleatVhY34=
+
+Name: org/eclipse/lemminx/services/extensions/ILinkedEditingRangesPartic
+ ipant.java
+SHA-256-Digest: RFOf/GXHqWnh3Tj88JEBRbmGV2OgpCz74QnokKobJDM=
+
+Name: org/eclipse/lemminx/services/XMLReference.java
+SHA-256-Digest: yHl+VVJWUcKAznL/TJVW2VSG7CoWac7rUQhM6+ry/aw=
+
+Name: org/eclipse/lemminx/uriresolver/URIResolverExtension.java
+SHA-256-Digest: 1bxWkdabS2koYpmVDu0v4jm51oEiCjuHtZvwd6/3q+E=
+
+Name: org/eclipse/lemminx/client/LimitFeature.java
+SHA-256-Digest: 400z3nz/YAnzzJHpLXweq0jTt1aZIVqOj0mMJpPxI/o=
+
+Name: org/eclipse/lemminx/telemetry/TelemetryCache.java
+SHA-256-Digest: 7UrAHihZuC4lAsxOaT6eFJAtCjcqQ/Ge61iy2tsUig8=
+
+Name: org/eclipse/lemminx/services/snippets/CommentSnippetContext.java
+SHA-256-Digest: sMHMsvo3nW1f3ZPtTbv2Mvw02iqnpQxF9vC9eWBshUs=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/diagnostics/LSPXML
+ 11DTDProcessor.java
+SHA-256-Digest: PYGRocSaPRUANX7jfqcnd4sDfOC+jPFMOD4rTOdDmQk=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/XMLModelConstants.j
+ ava
+SHA-256-Digest: YkjQZC8XEQAb2Uq5mrw3NeRWUzA3mFW57Bi96KDBA2Y=
+
+Name: org/eclipse/lemminx/extensions/xsd/utils/XSDUtils.java
+SHA-256-Digest: L9bbQ1OInq/6ypqlB2uApmD2C145IHOOmMJlT5R9/Rc=
+
+Name: org/eclipse/lemminx/extensions/xsi/participants/XSICompletionParti
+ cipant.java
+SHA-256-Digest: xVv68hccTYHa9XaK+9SGJr+atkwPBWfugFVxXZ/or0E=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGParserConfig
+ uration.java
+SHA-256-Digest: b4pfSQRGlstu9DhkVtoNuFkgT1hJMdfDyD8dvoTfd9s=
+
+Name: org/eclipse/lemminx/services/XMLHighlighting.java
+SHA-256-Digest: dzAro8VWRddzMOXbKLC0nNXq5AEFaoIvHWwM14dFqVM=
+
+Name: org/eclipse/lemminx/client/CodeLensKind.java
+SHA-256-Digest: HupemXk1qCXrTNHHyo8A8FKFit12VLWRZFmkF42d3kw=
+
+Name: com/thaiopensource/relaxng/pattern/PossibleRequiredElementsFunctio
+ n.java
+SHA-256-Digest: c8DWjU+M2mqDlcXJ9IuoDCJKOhF+oryf92pSajAoqr0=
+
+Name: org/eclipse/lemminx/utils/MarkupContentFactory.java
+SHA-256-Digest: 2nUVnXK4gghSsPoMRcef82i71zuAPHCPMBiZJ+DgFJ4=
+
+Name: org/eclipse/lemminx/extensions/dtd/contentmodel/CMDTDContentModelP
+ rovider.java
+SHA-256-Digest: GmYVp76jCx9Da1yqpNZl06M0lPV9XSXsMY+t5sC4BnU=
+
+Name: com/thaiopensource/relaxng/pattern/CMRelaxNGElementDeclaration.jav
+ a
+SHA-256-Digest: eUtK+1p3yhgIES0RfuolVIM0zOqQ2TYpL7R9XQe+i+s=
+
+Name: org/eclipse/lemminx/dom/LineIndentInfo.java
+SHA-256-Digest: 4XIoliMCKsIRZ79Q+9oq1x+BmkZAFZa/wDyzCitVi8s=
+
+Name: org/eclipse/lemminx/dom/DTDAttlistDecl.java
+SHA-256-Digest: tb3c7EwUHPFzSuo1L/4f7VWnpGMDNjcftl5N3imAWPo=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/XMLModelAwareParser
+ Configuration.java
+SHA-256-Digest: tawLCQ9JLmVUGTmxQKGQMuS6zD5KH9twtt7jmnWhPpw=
+
+Name: org/eclipse/lemminx/extensions/generators/IFileContentGenerator.ja
+ va
+SHA-256-Digest: /L7Uctw4zRMPgGghyqbKsQ7BRzybdDGAh9plX8KsWgo=
+
+Name: org/eclipse/lemminx/commons/snippets/ISnippetContext.java
+SHA-256-Digest: ES1AkrFJ4ANx6hcWmfwjnKjsqwZzjZ22qhENpEUHs0U=
+
+Name: org/eclipse/lemminx/services/extensions/codeaction/IBaseCodeAction
+ Request.java
+SHA-256-Digest: /gmHp2j7qVtHxkRrtlxYPttrN9mh0q7zOGG7glEyT50=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/commands/AssociateGram
+ marCommand.java
+SHA-256-Digest: OPMRq3PrBM+Bt1y2XxroScjr7OIsxzpDTjRGVivKx98=
+
+Name: org/eclipse/lemminx/utils/StringUtils.java
+SHA-256-Digest: tA9dtaGGq6CB6SuXWkOf5cNp9ZwECYCY5wJTqIVc8wo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/uriresolver/XMLCatalog
+ ResolverExtension.java
+SHA-256-Digest: 6pHFBmq7z9Y2CBjElnRXEq44BOjJcLWM3eFM2RPQ3bM=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDFilePathSupport
+ Participant.java
+SHA-256-Digest: AFDXHxAKjkUK/Qqiik+ZjWxCqe0OhLFYDL/6d28XyYo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delTypeDefinitionParticipant.java
+SHA-256-Digest: Q80g61ppFs3HnECmKCQlwv5O93uTeBbNdPmF+at1Qg4=
+
+Name: org/eclipse/lemminx/settings/ClientSettingsManager.java
+SHA-256-Digest: 6vyZjwhqPmlHC7ezZR7otsUDdRmw7/Bmcn+ZLg5+JBM=
+
+Name: org/eclipse/lemminx/commons/snippets/Snippet.java
+SHA-256-Digest: vNPibJPyAAkVwu55F/kdIBx4m++h3K1z1x3znaiMLUs=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/XMLSyntax
+ RelatedInfoFinder.java
+SHA-256-Digest: n8+aJh7LR1lUD6sjQKMwEYvEpdLEzIiZSfqcQPlDZfQ=
+
+Name: org/eclipse/lemminx/settings/AllXMLSettings.java
+SHA-256-Digest: zvhzton4Nny9B8RJQKOkRy69VNcwKxONt+pZ5+Gt+W4=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/LSPXMLGrammarPoolWrapper.java
+SHA-256-Digest: wo1IqwcpKhcbww6+rHXEHWyihs4Poa5aVyv89dukqQw=
+
+Name: org/eclipse/lemminx/services/extensions/rename/IRenameRequest.java
+SHA-256-Digest: o71PjKpUS/lwswBipUDLqGo8c+C1Ka7M3xJUsgfw/6k=
+
+Name: org/eclipse/lemminx/extensions/xerces/LSPSecurityManager.java
+SHA-256-Digest: jUG0FFFohb1859pbwxY8gvOb+e3ljmC2LHy6SI7I9OA=
+
+Name: org/eclipse/lemminx/services/extensions/codelens/ICodeLensRequest.
+ java
+SHA-256-Digest: jtpjjKUgG+VXzO1E/Py9tIgnRaz82Q1qBx1GvBiomHo=
+
+Name: org/eclipse/lemminx/extensions/dtd/contentmodel/CMDTDAttributeDecl
+ aration.java
+SHA-256-Digest: NNq98o5bRKz6Et8UE5chWoe4XuO/jtjr1DNWN7Ts3Lk=
+
+Name: org/eclipse/lemminx/client/InvalidPathWarner.java
+SHA-256-Digest: kJhZ5pLc1awko77axzMwjb91a/7C20A/sFF0WcUN7xU=
+
+Name: org/eclipse/lemminx/settings/XMLHoverSettings.java
+SHA-256-Digest: MXcPbXXsK70524SCu00QrFxU5T/Y82zwpnFOOpJ4djs=
+
+Name: org/eclipse/lemminx/commons/progress/ProgressSupport.java
+SHA-256-Digest: OAJjM2cmBMMzz0J36BVPT8XBNcceFxvZa+k2Z07N3vA=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/nogrammarconstraints/GenerateXMLModelWithDTDCodeActionResolver.java
+SHA-256-Digest: ks/fZtFtAVNv3F88Lf1ojHy8rso9FsX2e1krwuDeCxQ=
+
+Name: org/eclipse/lemminx/xpath/matcher/IXPathNodeMatcher.java
+SHA-256-Digest: wrROo77ahY/D1w+b0YUBd/PPz80qmrf4JI22/3XsAJ4=
+
+Name: org/eclipse/lemminx/extensions/catalog/participants/CatalogFilePat
+ hSupportParticipant.java
+SHA-256-Digest: X3F5ncGW2i0R3227nLqf1c/QDthhHDQtcGDC86KA08Q=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGDefinitionPa
+ rticipant.java
+SHA-256-Digest: 82LeCOuxlJNsKRIXa+qNBXStY5bBva4nKyJ6lw87sao=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/diagnostics/LSPXML
+ GrammarPreparser.java
+SHA-256-Digest: c9MRXKwEBmH3hL4oaqKp82WqUjmKFRPLUPAH4a5lZvg=
+
+Name: org/eclipse/lemminx/settings/capabilities/CompletionResolveSupport
+ Property.java
+SHA-256-Digest: E3Hctc/AbpAePyKdrqRAcT3B+I5vzA3EGrHUyyS6YvY=
+
+Name: org/eclipse/lemminx/client/ExtendedClientCapabilities.java
+SHA-256-Digest: qV+NIxFoCoWUMvcZUwkuwHNK81xpuVfiTdXWd3nLj1o=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/XMLSchemaSett
+ ings.java
+SHA-256-Digest: 0bOtwAmmmgsKS7bA8vXXHpJAIBT/D04yEejz7jqmryo=
+
+Name: org/eclipse/lemminx/utils/platform/OS.java
+SHA-256-Digest: TLWeK6UdtefbxZDtYxcbeX3Ae0KG+xZ34+YuraIn8OE=
+
+Name: org/eclipse/lemminx/dom/DOMNode.java
+SHA-256-Digest: dQStbfFVlE1ZDaaUcn3WX8ld7cemOUUHREzjL8ZYVEo=
+
+Name: org/eclipse/lemminx/extensions/relaxng/utils/RelaxNGUtils.java
+SHA-256-Digest: fsnPKcAE5aCkcY7tgd4K4UHjH7FNelVdBlNLm4O0mH0=
+
+Name: org/eclipse/lemminx/services/XMLHover.java
+SHA-256-Digest: FOl5kmQFWFncW9tmnM8Dpkrdf8473lJKI6fzVODQcFs=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGCodeLensPart
+ icipant.java
+SHA-256-Digest: V10hijplj0oi06V9vxLmkkBrO32dvtwP1X7ptbCx/UQ=
+
+Name: org/eclipse/lemminx/utils/FilesUtils.java
+SHA-256-Digest: tz5uPdRfgPjoBmVy6C5J+Ygys2ZBjkNNDwjgA7EIViI=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/toremove/MySAXSchemaRe
+ ader.java
+SHA-256-Digest: idRnVlr3uAFgAl5YW4FUK+5aT+7wa03gWAHD11GUh8g=
+
+Name: org/eclipse/lemminx/services/extensions/completion/AbstractComplet
+ ionResolver.java
+SHA-256-Digest: 15A25IiUo9pqdmOQZPt26ACplgg2taCeXJxqWM70qJI=
+
+Name: org/eclipse/lemminx/settings/capabilities/ServerCapabilitiesConsta
+ nts.java
+SHA-256-Digest: RzOJXU9cs2qVgHsYwqEoGL9RjIVu1Z54L21cbipvudA=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/settings/NamespacesEna
+ bled.java
+SHA-256-Digest: 2ejqOHUkyUmzPeyQv1Ss9dP2rn6ZbK9ZyjLLZgGaWBo=
+
+Name: schemas/xslt/xslt-2.0.xsd
+SHA-256-Digest: 36UVWPNr4jL+ekWBHlr2CeE+FfY38VYnFyF1KbbvKgg=
+
+Name: org/eclipse/lemminx/commons/progress/ProgressMonitor.java
+SHA-256-Digest: Wi0V8EOGB4CRyGWf/wlLjdPj1DfRhQkc2NCygNz7OVo=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGDocumentLink
+ Participant.java
+SHA-256-Digest: SJ3O55Ye/IHjwUBinmALtSfu3nxDYEin7gu6TyCvICU=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/XMLModelU
+ tils.java
+SHA-256-Digest: BpW5DZjo4JNHGroA3Bq2oz9UHwjOUbXpf36LsqUJEK0=
+
+Name: org/eclipse/lemminx/commons/TextDocument.java
+SHA-256-Digest: 9dNNVylrCkozirplTZWJYUVpBIekEhs880XuDjLqvN4=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/ETagRequiredCodeAction.java
+SHA-256-Digest: 6uGtmuhlLJSyvGDwpDgvzQtXUH3sedgs6XTo4bhSXIg=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_complex_type_2_1CodeAction.java
+SHA-256-Digest: GvioKMCtISKStLvnDTcHjlybp9EqfVdQKvOM8PeTnmM=
+
+Name: org/eclipse/lemminx/extensions/references/search/SearchNode.java
+SHA-256-Digest: b3Qb1dCWju5PdvHdJCnVJrGsjFOwgkNtdMgR8mUawYQ=
+
+Name: org/eclipse/lemminx/extensions/xsi/participants/XSIFormatterPartic
+ ipant.java
+SHA-256-Digest: e7pGGQIztSGLOJMNmKhOoh7p9m9WXa0QRfoz5oJ3IrI=
+
+Name: org/eclipse/lemminx/extensions/filepath/participants/FilePathCompl
+ etionParticipant.java
+SHA-256-Digest: sx4JdYph9uHB8swlSyblv/pbGmNtmhB0vD0tLMRfGnY=
+
+Name: org/eclipse/lemminx/logs/LSPClientLogHandler.java
+SHA-256-Digest: aJzOoXU889fkXxSqqzrzkGAoGMLrnuKPxh6Rkx7VDFY=
+
+Name: org/eclipse/lemminx/commons/CodeActionFactory.java
+SHA-256-Digest: nHDPbJlDCA1AqzN6X1UmVolI3QE8qfHXsaBIEQP9bjY=
+
+Name: org/eclipse/lemminx/extensions/relaxng/jing/toremove/MySchemaReade
+ rImpl.java
+SHA-256-Digest: VQ1IOTSbmctoArgNHJVkj4x6zEbdoY1nrHubI+89P3c=
+
+Name: org/eclipse/lemminx/extensions/xsd/contentmodel/HtmlToPlainText.ja
+ va
+SHA-256-Digest: H/ZVPuQdrMs3weAmcT6dGhE1eegyB+9vc24efqH60/Q=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/ETagUnterminatedCodeAction.java
+SHA-256-Digest: 8qttOz9F1GGgogoWVCO/100HpQKCAf2pTe/UhP87ihA=
+
+Name: org/eclipse/lemminx/services/snippets/cdata-snippets.json
+SHA-256-Digest: IqxLQLRnjpxupo05UNCw+cbrPkxbqk0wM8KqzQQXnAs=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/DTDDocumentLinkPar
+ ticipant.java
+SHA-256-Digest: s482PWo0kHNvB4UqP39Z8rQ17TFqQ5Xbl5mood38RXE=
+
+Name: org/eclipse/lemminx/extensions/xsd/participants/XSDDefinitionParti
+ cipant.java
+SHA-256-Digest: 0OpGY6/iVyJpJtJ59LscMtCHHSF8+AF8+JkhPOmijnc=
+
+Name: org/eclipse/lemminx/utils/TextEditUtils.java
+SHA-256-Digest: pXoHrMOAVuzy7UhWBZ3EmQImNcu/ZfbS8rFLMnskkfQ=
+
+Name: org/eclipse/lemminx/extensions/relaxng/xmlmodel/XMLModelRelaxNGVal
+ idatorFactory.java
+SHA-256-Digest: CdhN6m+bVcshM2rkTf8ZlxHusPUhA0eMZ3V8mJMAB34=
+
+Name: org/eclipse/lemminx/settings/XMLCodeLensSettings.java
+SHA-256-Digest: Ni49Yh5IydDnLuC1yMwfb+mJ7Kf0BkRO1+zWsEEBTqE=
+
+Name: org/eclipse/lemminx/extensions/relaxng/grammar/rng/RNGHighlighting
+ Participant.java
+SHA-256-Digest: uvpVq7iQGrwWcxHAbLfj2Tevrrk5+v7vAC9NB8E9pnw=
+
+Name: org/eclipse/lemminx/services/extensions/commands/ArgumentsUtils.ja
+ va
+SHA-256-Digest: gXDrH/jcWA27HfQlIEa/ADqMmglmm5BP0iGYwexL46s=
+
+Name: org/eclipse/lemminx/uriresolver/InvalidURIException.java
+SHA-256-Digest: uXSbqYGLIvD7NIANAPX3KvrECnvrlyZhNhu3J6aVeA4=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esReferenceParticipant.java
+SHA-256-Digest: g9QxAjPXR4kXmam98y+6THRds187hhjT9Zpo1ikWbIU=
+
+Name: schemas/xsd/datatypes.xml
+SHA-256-Digest: nIAfPZDSHjyWpZNnoIW6v/knwLP0+38aV4+bmjSaX3U=
+
+Name: org/eclipse/lemminx/services/extensions/completion/AbstractElement
+ CompletionItem.java
+SHA-256-Digest: Zo9oZET7a75fktfLz2G+GRQ29b2iyUlVqhlp3YHOqv0=
+
+Name: org/eclipse/lemminx/dom/DOMParser.java
+SHA-256-Digest: OZY+FD/XSs05SdONsYqSHz/ijeOC53lSEZM8HBrt2Lk=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/src_annotationCodeAction.java
+SHA-256-Digest: qAvbHV6aKHvT+YMQ1/x8NI4CKNWAzSQcKFy17Z1ZA8Q=
+
+Name: org/eclipse/lemminx/services/snippets/doctype-snippets.json
+SHA-256-Digest: pYL0gOjsFznqFAQZ/vBBmsOUCutUJQcbsUGxqJi5tO0=
+
+Name: org/eclipse/lemminx/settings/capabilities/InitializationOptionsExt
+ endedClientCapabilities.java
+SHA-256-Digest: z5KehaVVkZAodnwqUUTVPfhHJOHIRaZEFvgwlAMwokU=
+
+Name: org/eclipse/lemminx/extensions/prolog/PrologCompletionParticipant.
+ java
+SHA-256-Digest: q4Shlu9Eppwq29IiKaPR3h3Z4XCEVie0lRWBEC2hxBw=
+
+Name: org/eclipse/lemminx/dom/parser/TokenType.java
+SHA-256-Digest: ZWRC0SOhspn3BEhECixAMOZ2828Z3CERtndesYVGLAc=
+
+Name: org/eclipse/lemminx/services/snippets/catalog-snippets.json
+SHA-256-Digest: xyrlEILp9IFakoiq/wZCR27zQqZ726wz/xLa4U8qSCY=
+
+Name: org/eclipse/lemminx/services/XMLDocumentLink.java
+SHA-256-Digest: slb2EWy4iSa1qvYdSd+qYD9VY1woxwYuW62JelkFqCo=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/commands/CheckFilePatt
+ ernCommand.java
+SHA-256-Digest: wQ2DTLb9FSBZtHPsjMAcuJhF3mUMiHrmr+dRLTQwp0k=
+
+Name: org/eclipse/lemminx/dom/DOMProcessingInstruction.java
+SHA-256-Digest: iMdpjsgT66jUIDX5y7nV3H1cJjN0cOiqRYZEOtK6Pgs=
+
+Name: org/eclipse/lemminx/extensions/references/settings/XMLReferencesSe
+ ttings.java
+SHA-256-Digest: 89IYQ+DEAf4Iiw86O9uA3SI8e8XUh9L/KwFwfXezHIk=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esErrorCode.java
+SHA-256-Digest: eNmXll8JuySkUCS3WgAUsJ31BA8EwPCrlP72K1tSsq4=
+
+Name: org/eclipse/lemminx/extensions/xerces/LSPXMLEntityManager.java
+SHA-256-Digest: zGBRH8gKmsuAK9gwYE7K46OGpE07SRLpPlttvqI5e90=
+
+Name: org/eclipse/lemminx/dom/NoNamespaceSchemaLocation.java
+SHA-256-Digest: Dh4/MBHgpjIgAePu9IKePJB8wJNqPlvpotQskxwSEYc=
+
+Name: META-INF/maven/org.eclipse.lemminx/org.eclipse.lemminx/pom.xml
+SHA-256-Digest: 50n9zlt3k7Gd2axgg4gXcT1O5s8WkYLnSEecfYw4Ilw=
+
+Name: org/eclipse/lemminx/services/XMLDiagnostics.java
+SHA-256-Digest: 0y+rmPSuAh0W06Y2DbBM7aHapOz+Y7PiQDzgMSRhkIw=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/DTDHighlightingPar
+ ticipant.java
+SHA-256-Digest: rK/pJQhQ0CEW2xrMSV/6/6OKSSG7Fq+9Mb/MPRTXf7c=
+
+Name: org/eclipse/lemminx/settings/XMLTelemetrySettings.java
+SHA-256-Digest: GvknB90n5EZCB2KMPqz/nQaq2p8JOzxYYh3tKO6YlXw=
+
+Name: org/eclipse/lemminx/services/snippets/IXMLSnippetContext.java
+SHA-256-Digest: mqXbPhBU8utEr+joj2NrJxb4rectUyTwI3W87ow44Y8=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/XMLModelDeclaration
+ .java
+SHA-256-Digest: +WHu9OO1jAu+UExeKn7nDv1VudwIMIyEvCYTSKWSGM0=
+
+Name: com/thaiopensource/relaxng/pattern/MySchemaPatternBuilder.java
+SHA-256-Digest: 7IoCt2+or+ribSC81vlJz5P+CgKsX6nXP7ca/JKy2j4=
+
+Name: org/eclipse/lemminx/extensions/generators/xml2dtd/DTDGeneratorSett
+ ings.java
+SHA-256-Digest: FQfsEAJKKReDPc2V7gSsA87E3YKyObhYwg81WV44ODY=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/LSPXMLParserConfiguration.java
+SHA-256-Digest: YvmM6A05j684Go5AjUsjByAK07lfEpg8nQW2Nn0jmo4=
+
+Name: org/eclipse/lemminx/XMLWorkspaceService.java
+SHA-256-Digest: nM5mUVTbpQdtIMEchiLnF74Xg2U8VNgcB9wYv97DWWM=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missinggrammar/schema_reference_4CodeAction.java
+SHA-256-Digest: Zm6Wh8BEpignlwlvBvxwJjwoa/nieMVH0vHp4eAYcA4=
+
+Name: org/eclipse/lemminx/extensions/xsi/XSISchemaPlugin.java
+SHA-256-Digest: eT7nsUvYea9urEElHqgCWmAtzefQCUMK2/b5l54CHAI=
+
+Name: org/eclipse/lemminx/extensions/relaxng/xml/contentmodel/CMRelaxNGC
+ ontentModelProvider.java
+SHA-256-Digest: LuJ0jclkYvyf2FrTrRVSBl4Ix6kXy6brjug0Eq78jmI=
+
+Name: org/eclipse/lemminx/extensions/xerces/xmlmodel/msg/XMLModelMessage
+ Formatter.java
+SHA-256-Digest: c0roXxovphOH2JgKB/Y99h1OZSWXEKT4DOskFXsnnsE=
+
+Name: org/eclipse/lemminx/services/extensions/completion/DOMElementCompl
+ etionItem.java
+SHA-256-Digest: lDNshoxihYGRpy2IKTK0R2eIqns8nZVHbh9nJ5Q/bIQ=
+
+Name: org/eclipse/lemminx/commons/ILineTracker.java
+SHA-256-Digest: RiEIElF4cggZdugZN0Bj3ZN2TL66nrNaxZDOoMVcigY=
+
+Name: org/eclipse/lemminx/extensions/generators/FileContentGeneratorMana
+ ger.java
+SHA-256-Digest: CBQ/gp0kgW69FCl+kDTKTV8Ce6iHkCB11sLvP9kdYTU=
+
+Name: org/eclipse/lemminx/services/extensions/save/AbstractSaveContext.j
+ ava
+SHA-256-Digest: G/vAxpi5FbqMv1lQd05qLsQqJ2g0a4WfU0I0i1YDXWQ=
+
+Name: org/eclipse/lemminx/services/extensions/AbstractTypeDefinitionPart
+ icipant.java
+SHA-256-Digest: LiGszhgrMB+Im/selfVh/M0yQrzjjBJaUpFwp1zdGkg=
+
+Name: org/eclipse/lemminx/services/format/DOMCommentFormatter.java
+SHA-256-Digest: 7GBey3DxobovkivbCFF1u8MQGXBuhUnlLD0Ps2W8L+c=
+
+Name: org/eclipse/lemminx/extensions/xsd/XSDURIResolverExtension.java
+SHA-256-Digest: LheEqyNM01aMgQLolLLKKn6QbbYkJh2bntWTW7hYjc8=
+
+Name: org/eclipse/lemminx/services/snippets/XMLDeclarationSnippetContext
+ .java
+SHA-256-Digest: W6sV6PnpQ/7wcej8jhMPxyOVzGUiEPRpcXbpLmJ8dD4=
+
+Name: org/eclipse/lemminx/settings/XMLFormattingOptions.java
+SHA-256-Digest: loCw5++FiUiI3+XQDJjwktkD7N6HMFv5fo8kLxRdMy0=
+
+Name: org/eclipse/lemminx/logs/LogHelper.java
+SHA-256-Digest: +PXy6ZWLvaLPXVrHv10sNdWUCr1rvmWo5RtwT0VIiPA=
+
+Name: org/eclipse/lemminx/services/extensions/IReferenceParticipant.java
+SHA-256-Digest: Sec5H3Hg5wQu32jGJkZe/+sTOTQMxvLrEOjYrtvEQjw=
+
+Name: org/eclipse/lemminx/extensions/relaxng/RelaxNGConstants.java
+SHA-256-Digest: igVHmtXZmOIwX7UMoK+nI0riiFRfmXsVvoV5ww4KpJ0=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/src_import_1_2CodeAction.java
+SHA-256-Digest: KZAtyk9MUzpP54anU4qXSz9yJSDwUwviLJJypJCn9wU=
+
+Name: org/eclipse/lemminx/extensions/references/participants/XMLReferenc
+ esHighlightingParticipant.java
+SHA-256-Digest: 97P/KdAqLcc//H7ygnAvFfrMSvWAI0GoJpLXey3QkdI=
+
+Name: org/eclipse/lemminx/utils/CompletionSortTextHelper.java
+SHA-256-Digest: zKik8faOacjharqto5mDAs0PEPCYSuug14M9i+usNos=
+
+Name: org/eclipse/lemminx/customservice/XMLLanguageClientAPI.java
+SHA-256-Digest: iBo3NWRHt/d6CZO4SR9AB83URT4GucOx8cS4Rs4tk8Q=
+
+Name: org/eclipse/lemminx/extensions/generators/XMLChar.java
+SHA-256-Digest: wZlLeSpkkdF36o0CaMra7bEVDgfLT5/Ari9KzvDHYCA=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/ReferencedGramma
+ rInfo.java
+SHA-256-Digest: nMzBWRZf6wKHtHFFllgdvz8amzvjzZU48UC/0PLx0T4=
+
+Name: org/eclipse/lemminx/services/extensions/IPositionRequest.java
+SHA-256-Digest: pWnZz+4OYtDr22hT7lY02E6N2rMPf1MHVjPDx97Dy28=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/CMDocument.java
+SHA-256-Digest: Q1jUWxJTgDkMv5pkPY/g/bs6o22HI3BbDyzeGmmd3fc=
+
+Name: org/eclipse/lemminx/services/extensions/diagnostics/DiagnosticsRes
+ ult.java
+SHA-256-Digest: wI6XfpjzRDgWpdwO1nS6Q7nvnPSz5KcZXFs8QUq2KnY=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/commands/CheckBoundGra
+ mmarCommand.java
+SHA-256-Digest: lXwlrWruqcI+AlHeJU36kBdZlF6Eb86C2qQeKoEdAiQ=
+
+Name: org/eclipse/lemminx/extensions/references/settings/XMLReferences.j
+ ava
+SHA-256-Digest: XJNKkOg+r21n2iEitauUxK5r6fw+MD4xYnweJHCM1Mk=
+
+Name: org/eclipse/lemminx/dom/SchemaLocationHint.java
+SHA-256-Digest: QuU8Ne8Vulv1eTSTWxyXyrVGhq/Y+ghdkr7okF+uMtQ=
+
+Name: org/eclipse/lemminx/commons/config/ConfigurationItemEdit.java
+SHA-256-Digest: cX0aLX3AmuCWX41M7k37gOyYSuSwlSwiA6iqrpy+4Ho=
+
+Name: org/eclipse/lemminx/services/format/XMLFormatterDocument.java
+SHA-256-Digest: lgm7J72zSOS4cfb4OEyXyq2dR4FCw4vjXdVoHcI1+Fc=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/ContentMo
+ delHoverParticipant.java
+SHA-256-Digest: UpcgtM5jlcrkIN7qXukZxGIHSKYyhbxqyNuufMFcQP4=
+
+Name: org/eclipse/lemminx/services/extensions/commands/IXMLCommandServic
+ e.java
+SHA-256-Digest: LgV0Mpk9e8wql7Ry2w4cx+g1XfOivPIGC7V7eK2PpX0=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/commands/XMLValidation
+ AllFilesCommand.java
+SHA-256-Digest: eA9RDrOMHgyud9x1wu3lDyoL35sa5ft5hqzZinZvU1w=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/missingelement/required_elements_missing_expectedCodeActionResolver.
+ java
+SHA-256-Digest: JhTKIrZxVPO8w7eDWah1+5n5/PnnBjz5bm4OZIo9h/4=
+
+Name: org/eclipse/lemminx/extensions/catalog/CatalogUtils.java
+SHA-256-Digest: ZGgymP1fnD0IQdnDs3D1jOCSy6Gvc5ERktKtu43WBps=
+
+Name: XMLSchemaMessagesReformatted.properties
+SHA-256-Digest: syYsG1NnV1wFvLW0T6E25tPk8NsYNObDW7v0t2HMLLc=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/DTDDefinitionParti
+ cipant.java
+SHA-256-Digest: qKfMD6A5zz+60bBxCy81gVsuEInd+61NKbPMpfNfuv8=
+
+Name: org/eclipse/lemminx/uriresolver/CacheResourcesManager.java
+SHA-256-Digest: CZODK4dT1tg7fiIGrCm6NFi8H2wN2FoWlO/K5b2L+p4=
+
+Name: org/eclipse/lemminx/extensions/dtd/xmlmodel/XMLModelDTDValidator.j
+ ava
+SHA-256-Digest: 18k40ELBy2GhsHNB6+x5lnI/9sJp8HqA4EI0T/gVeuo=
+
+Name: org/eclipse/lemminx/services/extensions/ISharedSettingsRequest.jav
+ a
+SHA-256-Digest: 99foVmA4iWz3tqG99KryjAtCqn01SHV8P53DTEpfbBQ=
+
+Name: org/eclipse/lemminx/services/extensions/IDocumentLifecycleParticip
+ ant.java
+SHA-256-Digest: wnVZFwlTv+EWuj6kYI8XMM1HxtywccWt85g7Stw7bqg=
+
+Name: about.html
+SHA-256-Digest: RvukeXiD1GnUclxaggNaNsE9vlj0EQRiCopdFNLCinM=
+
+Name: com/thaiopensource/relaxng/pattern/CMRelaxNGDocument.java
+SHA-256-Digest: Oo85h3OXk8ZuzsNkCBHMndhXdKccyPBCHPbRSnwVxzQ=
+
+Name: org/eclipse/lemminx/commons/snippets/SnippetRegistry.java
+SHA-256-Digest: 9IIkkW3/ZPpRjd/fLC1nkazkdN2h7QWg0337Yf8gob0=
+
+Name: org/eclipse/lemminx/extensions/colors/utils/ColorUtils.java
+SHA-256-Digest: Ys+/FTLup18VtEA7Ry/dDkDVjtlqyptaStw7W/OAYEk=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/codeactio
+ ns/cvc_complex_type_4CodeAction.java
+SHA-256-Digest: piptc+hqSlAe0jV9PcLNfGfn0ow9jmvSMFjRnPcBOMw=
+
+Name: org/eclipse/lemminx/NoOpInputStream.java
+SHA-256-Digest: hVdR+uS9ok8lVWaAP3jgQdKtmmF0c02CI0j7k8K5gPI=
+
+Name: org/eclipse/lemminx/commons/snippets/SnippetDeserializer.java
+SHA-256-Digest: UuhgC3hsUKiRQuBciHc/lr+vuuvDhNXjIs/rTtg8EoM=
+
+Name: org/eclipse/lemminx/extensions/colors/settings/XMLColors.java
+SHA-256-Digest: Z1OF5FRMNKWf/vL8dHgy66r0gP3THd7Vi5PnDkZRXwI=
+
+Name: org/eclipse/lemminx/extensions/dtd/participants/diagnostics/DTDDia
+ gnosticsParticipant.java
+SHA-256-Digest: RBNYrbXL/RJWLm06L5c9oasJU9q/OPY14SoVAl/zC8A=
+
+Name: org/eclipse/lemminx/commons/snippets/ISnippetRegistryLoader.java
+SHA-256-Digest: MJbv6UHR28fJiwpsRd9mb+JazdrUmj6k928XDGAmI2o=
+
+Name: org/eclipse/lemminx/extensions/xsi/participants/XSIHoverParticipan
+ t.java
+SHA-256-Digest: S1lrgCVPQlFanYXcMFcI06s75MC6c15eSqeyfzF4L18=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/model/CMAttributeDecla
+ ration.java
+SHA-256-Digest: CPTgs45FftRhMZYIMXy4WsnxZD26D/egpXw4v6TS1VY=
+
+Name: org/eclipse/lemminx/services/extensions/ITypeDefinitionParticipant
+ .java
+SHA-256-Digest: 42wCbwgNSmsTEFtE12yxCISegz/Q3qNhPrPNo0JINz8=
+
+Name: org/eclipse/lemminx/services/format/XMLFormatterDocumentOld.java
+SHA-256-Digest: hQhQR8qNs8q4W1jkFcq37IIkS8/UEgeUqUADC795ANw=
+
+Name: org/eclipse/lemminx/dom/DTDElementDecl.java
+SHA-256-Digest: VuL3kRjApJDCnFWcuaSe97NHldZJg2Rwf8rh5Y1ToHs=
+
+Name: org/eclipse/lemminx/services/extensions/completion/AbstractAttribu
+ teCompletionResolver.java
+SHA-256-Digest: bLCpXvrxnV9gJTnegEMdonIQ+EEubvX802FRLj8shDg=
+
+Name: org/eclipse/lemminx/commons/SnippetsBuilder.java
+SHA-256-Digest: zWUGgTq35LJ08FNi63lNd1KUlQU+Kqi+OCET0KtYBzw=
+
+Name: org/eclipse/lemminx/client/AbstractXMLNotifier.java
+SHA-256-Digest: Nxtb067jdab+b8chEbA2qzWuif8silXivuTMAn5g8sc=
+
+Name: org/eclipse/lemminx/dom/DTDNotationDecl.java
+SHA-256-Digest: bNO2664o3xSaoYdE883q8wEsF3V4j7Ua11Z40Z/21o8=
+
+Name: org/eclipse/lemminx/extensions/contentmodel/participants/diagnosti
+ cs/LSPSAXParser.java
+SHA-256-Digest: 87kQj9aThZX4xwCsrt3BtvRjKIoJ5Fea2CmVH1OMO9s=
+
+Name: org/eclipse/lemminx/extensions/generators/ContainerDeclaration.jav
+ a
+SHA-256-Digest: Dn2FZXB3V5eEvsNqOE7ViCYeUYy5QaW54qpszSBhGVU=
+
+Name: org/eclipse/lemminx/extensions/catalog/CatalogCatalogEntry.java
+SHA-256-Digest: BHqJlPgwYWTpXMW1yi9AYF+Hyf00M0HiHnF/G28X9oE=
+
+Name: org/eclipse/lemminx/extensions/relaxng/xml/validator/RelaxNGErrorH
+ andler.java
+SHA-256-Digest: 437dzMhtO9dXwDofrfp9j0Hwkf0xX/cKF3h/ZV4AqF8=
+
+Name: org/eclipse/lemminx/utils/XMLBuilder.java
+SHA-256-Digest: mc92nfPXPVivvSKnAOOJWATyi9hwRf+buBKya9QmpA8=
+
+Name: schemas/catalog/catalog-1.1.xsd
+SHA-256-Digest: +9IekanCgP0KdqtCjYke6/6MAYHG3blafV6X/hhKwQE=
+

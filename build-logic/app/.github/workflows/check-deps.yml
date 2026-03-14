@@ -1,0 +1,30 @@
+name: Check Dependencies
+permissions:
+  contents: read
+
+on:
+  #push:
+  #  branches: ['main', 'editor']
+  pull_request:
+  #  branches: ['main', 'editor']
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+      
+      - name: Inspect Guava dependency
+        run: ./gradlew app:dependencies 

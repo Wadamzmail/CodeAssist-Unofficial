@@ -1,0 +1,50 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '2.3.0'
+    repositories {
+        google()
+        maven { url =
+'https://jitpack.io' }
+    	maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url =
+'https://mvnrepository.com/' }
+        maven { url = 'https://central.sonatype.com/repository/maven-snapshots' } 
+        mavenCentral()
+        maven { url = 'https://www.jetbrains.com/intellij-repository/releases/'}
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:6.25.0"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        maven { url = 'https://jitpack.io' }
+    	maven { url = "https://plugins.gradle.org/m2/" }
+        maven { url = 'https://mvnrepository.com/' }
+        maven { url = 'https://central.sonatype.com/repository/maven-snapshots' } 
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    compileSdkVersion = 36
+    buildToolsVersion = '36.1.0'
+    targetSdkVersion = 36
+    minSdkVersion = 26   
+    applicationId = "dev.mutwakil.codeassist"
+    versionCode = 1
+    versionName = "0.1 Initial Version"
+}

@@ -1,0 +1,67 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "org.jetbrains.kotlin"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("org.jetbrains:annotations:26.0.2")
+    }
+}
+
+dependencies {
+    implementation ('com.github.marschall:zipfilesystem-standalone:1.0.1')
+    implementation 'androidx.annotation:annotation:1.9.1'
+    implementation project(path: ':jaxp:jaxp-internal')
+    implementation project(path: ':jaxp:xml')
+     
+    runtimeOnly ('org.jetbrains.kotlin:kotlin-reflect:2.3.0')
+    compileOnly files('libs/the-unsafe.jar')
+    compileOnly project(path: ':android-stubs')
+    implementation project(':javac')
+    api files('libs/kotlin-compiler-embeddable-2.3.0.jar')
+   
+    implementation 'org.jetbrains:annotations:26.0.2'
+    api("org.lsposed.hiddenapibypass:hiddenapibypass:6.1")
+    api("org.jetbrains.intellij.deps:trove4j:1.0.20200330") 
+    implementation files('libs/jps-model-impl-253.28294.357.jar') 
+    implementation project(':java-stubs')
+   
+}
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://www.jetbrains.com/intellij-repository/releases/'} 
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

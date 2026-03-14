@@ -1,0 +1,62 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.android.ide.common"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17 
+    }
+     
+    buildFeatures {
+        buildConfig = true	    
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.guava:guava:33.5.0-jre'
+    }
+}  
+
+dependencies {
+    api files('libs/manifest-merger.jar')
+    api files('libs/aaptcompiler-7.4.0-alpha09.jar')
+    api files('libs/converted-common-30.40.0-alpha09.jar')
+    api files('libs/converted-data-binding.jar')
+
+    implementation 'com.android.tools:annotations:30.4.0-alpha09'
+    api("com.android.tools:sdk-common:30.4.0-alpha09") {
+        transitive = false
+    }
+    api("com.android.tools.layoutlib:layoutlib-api:30.4.0-alpha09") {
+        exclude group: 'com.android.tools', module: 'common'
+    }
+    implementation 'javax.inject:javax.inject:1'
+    implementation project(':javac') 
+    implementation project(path: ':common')
+    implementation project(path: ':jaxp:jaxp-internal')
+    implementation project(path: ':jaxp:xml')
+    implementation project(path: ':java-stubs')
+    implementation files('libs\\compilerCommon.antlr.shaded_jar.jar')
+    implementation files('libs\\compilerCommon.antlr_runtime.shaded_jar.jar')
+}

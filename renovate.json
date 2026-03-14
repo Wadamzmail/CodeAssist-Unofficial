@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "automerge": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": false,
+    "automergeType": "pr",
+    "platformAutomerge": false
+  },
+  "includeForks": true
+}

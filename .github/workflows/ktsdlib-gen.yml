@@ -1,0 +1,33 @@
+name: Generate Kotlin Stdlib Index
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Generate stdlib index
+        run: ./gradlew :lsp:kotlin-stdlib-generator:generateStdlibIndex
+
+      - name: Upload stdlib-index.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: stdlib-index
+          path: |
+            **/stdlib-index.json

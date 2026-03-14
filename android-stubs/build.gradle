@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+}
+apply plugin: 'com.diffplug.spotless'
+
+dependencies {
+    compileOnlyApi files('libs/android.jar')
+
+    compileOnly 'androidx.annotation:annotation:1.8.2'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.builder.project"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+		
+dependencies {
+    implementation project(path: ':common')
+	implementation project(path: ':apksigner')
+	implementation project(path: ':event-manager') 
+	
+    // for manifest  parsing
+    implementation project(path: ':manifmerger')
+    // user data holder
+    implementation project(path: ':kotlinc')
+    compileOnly project(path: ':android-stubs')
+    compileOnly project(path: ':android-common-resources')
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

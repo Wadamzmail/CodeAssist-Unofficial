@@ -1,0 +1,43 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.google.googlejavaformat"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    
+}
+
+dependencies {
+	api files('libs/google-java-format.jar')
+	implementation project(path: ':common')
+    api ('com.google.auto.value:auto-value-annotations:1.11.0')
+	annotationProcessor 'com.google.auto.value:auto-value:1.11.0'
+	implementation project(path: ':javac')
+	implementation("org.checkerframework:checker-qual:3.50.0")
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

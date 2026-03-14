@@ -1,0 +1,178 @@
+package com.tyron.code.ui.editor;
+
+import android.util.Log;
+import android.widget.ListView;
+import androidx.annotation.NonNull;
+import com.tyron.completion.BuildConfig;
+import com.tyron.completion.progress.ProgressManager;
+import io.github.rosemoe.sora.lang.completion.CompletionItem;
+import io.github.rosemoe.sora.lang.completion.CompletionPublisher;
+import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.widget.CodeEditor;
+import io.github.rosemoe.sora.widget.component.CompletionLayout;
+import io.github.rosemoe.sora.widget.component.EditorAutoCompletion;
+import io.github.rosemoe.sora.widget.component.EditorCompletionAdapter;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import org.jetbrains.kotlin.com.intellij.util.ReflectionUtil;
+
+public class CodeAssistCompletionWindow extends EditorAutoCompletion {
+
+  private static final String TAG = CodeAssistCompletionWindow.class.getSimpleName();
+
+  private final CodeEditor mEditor;
+  private CompletionLayout mLayout;
+  private ListView mListView;
+  private EditorCompletionAdapter mAdapter;
+
+  private final List<CompletionItem> mItems = new ArrayList<>();
+
+  /**
+   * Create a panel instance for the given editor
+   *
+   * @param editor Target editor
+   */
+  public CodeAssistCompletionWindow(CodeEditor editor) {
+    super(editor);
+
+    mEditor = editor;
+    mAdapter =
+        ReflectionUtil.getField(
+            EditorAutoCompletion.class, this, EditorCompletionAdapter.class, "mAdapter");
+  }
+
+  @Override
+  public void setLayout(@NonNull CompletionLayout layout) {
+    super.setLayout(layout);
+
+    mLayout = layout;
+    mListView = (ListView) layout.getCompletionList();
+    mListView.setAdapter(mAdapter);
+  }
+
+  @Override
+  public void setAdapter(EditorCompletionAdapter adapter) {
+    super.setAdapter(adapter);
+
+    mAdapter = adapter;
+    mAdapter.attachValues(this, mItems);
+    mAdapter.notifyDataSetInvalidated();
+    mListView.setAdapter(adapter);
+  }
+
+  @Override
+  public boolean select(int pos) {
+    if (pos > mAdapter.getCount()) {
+      return false;
+    }
+
+    try {
+      return super.select(pos);
+    } catch (Throwable e) {
+      if (BuildConfig.DEBUG) {
+        Log.e(TAG, "Failed to select item", e);
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public boolean select() {
+    try {
+      return super.select();
+    } catch (Throwable e) {
+      if (BuildConfig.DEBUG) {
+        Log.e(TAG, "Failed to select item", e);
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public void cancelCompletion() {
+    if (completionThread != null) {
+      ProgressManager.getInstance().cancelThread(completionThread);
+    }
+    super.cancelCompletion();
+  }
+
+  /**
+   * Tries to select the position in the completion list.
+   *
+   * @return whether the select has succeeded
+   */
+  public boolean trySelect() {
+    if (adapter.getCount() <= 0) {
+      return false;
+    }
+
+    if (getCurrentPosition() == -1) {
+      // select the first position
+      select(0);
+    } else {
+      select();
+    }
+
+    return true;
+  }
+
+  @Override
+  public void requireCompletion() {
+    if (cancelShowUp || !isEnabled()) {
+      return;
+    }
+    Content text = mEditor.getText();
+    if (text.getCursor().isSelected() || checkNoCompletion()) {
+      hide();
+      return;
+    }
+    if (System.nanoTime() - requestTime < mEditor.getProps().cancelCompletionNs) {
+      hide();
+      requestTime = System.nanoTime();
+      return;
+    }
+    cancelCompletion();
+    requestTime = System.nanoTime();
+
+    setCurrent(-1);
+
+    AtomicReference<List<CompletionItem>> reference = new AtomicReference<>();
+
+    CompletionPublisher publisher =
+        new CompletionPublisher(
+            mEditor.getHandler(),
+            () -> {
+              List<CompletionItem> newItems = reference.get();
+              mItems.clear();
+              mItems.addAll(newItems);
+              mAdapter.notifyDataSetChanged();
+              float newHeight = mAdapter.getItemHeight() * mAdapter.getCount();
+              setSize(getWidth(), (int) Math.min(newHeight, maxHeight));
+              if (!isShowing()) {
+                show();
+              }
+              if (mAdapter.getCount() >= 1) {
+                setCurrent(0);
+              }
+            },
+            mEditor.getEditorLanguage().getInterruptionLevel());
+    reference.set(publisher.getItems());
+
+    completionThread = new CompletionThread(requestTime, publisher);
+    completionThread.setName("CompletionThread " + requestTime);
+    setLoading(true);
+    completionThread.start();
+  }
+
+  private void setCurrent(int pos) {
+    try {
+      Field field = EditorAutoCompletion.class.getDeclaredField("currentSelection");
+      field.setAccessible(true);
+      field.set(this, pos);
+    } catch (Throwable e) {
+      throw new RuntimeException(e);
+    }
+  }
+}

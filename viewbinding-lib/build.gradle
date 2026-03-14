@@ -1,0 +1,55 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.viewbinding.tool"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+
+configurations.implementation {
+    exclude group: "org.jetbrains", module: "annotations"
+}
+
+dependencies {
+    implementation project(path: ':common')
+    
+    api ('com.github.albfernandez:juniversalchardet:2.5.0') 
+    implementation 'com.android.tools:annotations:31.6.0'
+    api project(path: ':javapoet')
+    implementation project(path: ":javac")
+    // jaxb
+    api ('javax.xml.bind:jaxb-api:2.3.1')
+}
+repositories {
+    mavenCentral()
+} 
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

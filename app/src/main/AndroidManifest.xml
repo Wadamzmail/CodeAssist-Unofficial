@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="dev.mutwakil.codeassist">
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <!-- have full network access -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- view network connections -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- modify or delete the contents of your shared storage -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- read the contents of your shared storage -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- view Wi-Fi connections -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- run foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!-- change network connectivity -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!-- connect and disconnect from Wi-Fi -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- modify system settings -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <!-- run foreground service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SYSTEM_EXEMPTED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <!-- make the CPU awake so it doesn't stop while doing somethings -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- request battery optimization permission -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- notifications permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    
+    <application
+        android:name="com.tyron.code.ApplicationLoader"
+        android:allowBackup="true"
+        android:hasFragileUserData="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        android:resizeableActivity="true"
+        android:supportsRtl="true"
+        tools:targetApi="q">
+        <service
+            android:name="com.tyron.code.service.IndexService"
+            android:enabled="true"
+            android:foregroundServiceType="dataSync"
+
+            android:exported="false"/>
+        <activity
+            android:name="com.tyron.code.ui.settings.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppThemeNew"/>
+        <activity
+            android:name="com.tyron.code.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppThemeNew">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <service
+            android:name="com.tyron.code.service.CompilerService"
+            android:enabled="true"
+            android:foregroundServiceType="dataSync"
+            android:exported="false"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+    </application>
+</manifest>

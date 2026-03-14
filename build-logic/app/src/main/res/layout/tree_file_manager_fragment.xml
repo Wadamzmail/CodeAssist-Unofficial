@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:fillViewport="true"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollView"
+                android:fillViewport="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </HorizontalScrollView>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/buttonsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/addNewLibrary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_new_library"
+                android:layout_weight="1"
+				app:iconPadding="16dp"
+				app:iconGravity="start"
+				app:icon="@drawable/ic_add_library"
+				android:textAlignment="textStart"
+				android:textColor="?attr/colorOnSurface"
+				android:elevation="0dp"
+				style="@style/Widget.Material3.Button.TextButton"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/projectProperties"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/project_properties"
+                android:layout_weight="1"
+				app:iconPadding="16dp"
+				app:iconGravity="start"
+				android:textColor="?attr/colorOnSurface"
+				android:elevation="0dp"
+				app:icon="@drawable/ic_project_information"
+				android:textAlignment="textStart"
+				style="@style/Widget.Material3.Button.TextButton"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

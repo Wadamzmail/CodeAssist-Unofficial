@@ -1,0 +1,10 @@
+ version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"                # Root project
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "gradle"
+    directory: "/app"             # Sub-project 1
+    schedule:
+      interval: "weekly"

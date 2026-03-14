@@ -1,0 +1,55 @@
+package dev.mutwakil.completion.kotlin.diagnostic
+
+import com.tyron.builder.model.DiagnosticWrapper
+import com.tyron.kotlin_completion.position.Position
+import org.jetbrains.kotlin.diagnostics.Severity
+import org.jetbrains.kotlin.diagnostics.rendering.DefaultErrorMessages
+import javax.tools.Diagnostic
+import java.io.File
+import org.jetbrains.kotlin.diagnostics.Diagnostic as KotlinDiagnostic
+import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.resolve.diagnostics.Diagnostics
+
+fun convertDiagnostic(diagnostic: KotlinDiagnostic): List<DiagnosticWrapper> {
+    val content = diagnostic.psiFile.text
+    return diagnostic.textRanges.map {
+        val range = Position.range(content, it)
+        val wrapper = DiagnosticWrapper()
+        wrapper.setMessage(message(diagnostic))
+        wrapper.code = code(diagnostic)
+        wrapper.kind = severity(diagnostic.severity)
+        wrapper.source = File(diagnostic.psiFile.viewProvider.virtualFile
+            .path)
+        wrapper.startLine = -1
+        wrapper.startColumn = -1
+        wrapper.endLine = -1
+        wrapper.endColumn = -1
+        wrapper.position = it.startOffset.toLong()
+        wrapper.startPosition = it.startOffset.toLong()
+        wrapper.endPosition = it.endOffset.toLong()
+        wrapper
+    }
+}
+
+fun getDiagnostics(context : BindingContext): List<DiagnosticWrapper>{
+   val diagnosticWrappers = mutableListOf<DiagnosticWrapper>()
+   val diagnostics = context.diagnostics.toMutableList()
+      for (it in diagnostics) {
+        diagnosticWrappers.addAll(convertDiagnostic(it as KotlinDiagnostic))
+      }
+      return diagnosticWrappers
+}
+
+fun code(diagnostic: KotlinDiagnostic) =
+    diagnostic.factory.name
+
+fun message(diagnostic: KotlinDiagnostic) =
+    DefaultErrorMessages.render(diagnostic)
+
+fun severity(severity: Severity): Diagnostic.Kind =
+    when (severity) {
+        Severity.INFO -> Diagnostic.Kind.NOTE
+        Severity.ERROR -> Diagnostic.Kind.ERROR
+        Severity.WARNING -> Diagnostic.Kind.WARNING
+        Severity.FIXED_WARNING -> Diagnostic.Kind.WARNING
+    }   

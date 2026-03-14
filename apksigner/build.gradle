@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.library'
+}
+
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.android.apksig"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+     
+}
+dependencies {
+	implementation project(path: ':common')
+    api ("com.android.tools.build:apksig:8.13.2") 
+  //  api "org.bouncycastle:bcprov-jdk15on:1.70"
+    api ("org.bouncycastle:bcprov-jdk18on:1.83") 
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

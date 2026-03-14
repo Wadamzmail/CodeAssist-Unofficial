@@ -1,0 +1,68 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.build"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+     
+    api ('com.android.tools:sdklib:25.3.0')
+    implementation project(path: ':common')
+	implementation project(path: ':apksigner')
+    implementation ('androidx.test:core:1.7.0') 
+    
+    // required so internal classes would be included 
+    api project(path: ':jaxp:jaxp-internal')
+    api project(path: ':jaxp:xml')
+    api project(path: ':kotlinc')
+    
+    implementation project(path: ':google-java-format')
+    implementation project(path: ':ktfmt')
+    
+    implementation project(path: ':logging')
+    implementation project(path: ':manifmerger')
+    implementation project(path: ':project')
+    implementation project(path: ':viewbinding-lib')
+
+    // javac
+    implementation project(path: ':javac')
+    implementation project(path: ':xml-repository')
+    // bundletool
+    api ('com.android.tools.build:bundletool:1.18.3')
+
+    api ('com.android.tools:r8:8.13.19')
+
+    compileOnly project(path: ':android-stubs')
+    implementation project(path: ':android-common-resources')
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

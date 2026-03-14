@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+			style="@style/Widget.Material3.SearchView.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+			android:clipChildren="false"
+            app:navigationContentDescription="@string/searchview_navigation_content_description"
+            app:navigationIcon="@drawable/ic_arrow_back_black_24">
+		
+			<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/m3_searchview_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+       
+                <EditText
+                    android:id="@+id/search_view_edit_text"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"				
+                    android:background="@null"
+                    android:imeOptions="flagNoExtractUi|actionSearch"
+                    android:importantForAutofill="no"
+                    android:inputType="textNoSuggestions"
+                    android:singleLine="true" />
+
+                <ImageButton
+                    android:id="@+id/search_view_clear_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/actionBarItemBackground"
+                    android:contentDescription="@string/searchview_clear_text_content_description"
+                    android:padding="16dp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_clear_black_24" />
+            </LinearLayout>
+			
+			
+			</com.google.android.material.appbar.MaterialToolbar>
+    
+	</com.google.android.material.appbar.AppBarLayout>
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+		android:background="?android:attr/colorBackground">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/recyclerView"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="10dp"
+			android:layout_marginStart="10dp"
+			android:nestedScrollingEnabled="false"
+			android:scrollbars="none"
+			tools:itemCount="6000"
+			tools:listitem="@layout/icon_manager_item"/>
+
+		<include
+			android:id="@+id/empty_container"
+			layout="@layout/loading_layout"/>
+
+		<include
+			android:id="@+id/empty_icons"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_gravity="center"
+			layout="@layout/empty_icons_layout"/>
+
+	</FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

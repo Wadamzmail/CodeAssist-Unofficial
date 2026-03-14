@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/completion_settings_kotlin_title">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:iconSpaceReserved="false"
+            android:key="use_fast_jar_file_system"
+            app:iconSpaceReserved="false"
+            android:title="@string/use_fast_jar_file_system_title"
+            android:summary="@string/use_fast_jar_file_system_desc"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:iconSpaceReserved="false"
+            android:key="use_psi_class_files_reading"
+            app:iconSpaceReserved="false"
+            android:title="@string/use_psi_class_files_reading_title"
+            android:summary="@string/use_psi_class_files_reading_desc"/>
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:iconSpaceReserved="false"
+            android:key="use_fir"
+            app:iconSpaceReserved="false"
+            android:title="@string/use_fir_title"
+            android:summary="@string/use_fir_desc"/>
+    </PreferenceCategory>
+</PreferenceScreen>

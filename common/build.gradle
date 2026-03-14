@@ -1,0 +1,62 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+apply plugin: 'com.diffplug.spotless'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+	namespace = "com.tyron.common"
+	
+    defaultConfig {
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17 
+        targetCompatibility JavaVersion.VERSION_17 
+    }
+    
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+     
+    buildFeatures {
+        buildConfig = true	    
+    }
+}
+
+dependencies {
+ 
+    api 'androidx.annotation:annotation:1.9.1'
+	api ('com.google.guava:guava:33.5.0-jre')
+    api ('com.google.code.gson:gson:2.13.2')
+    api ('commons-io:commons-io:2.16.1')
+    api ('net.lingala.zip4j:zip4j:2.11.5')
+    api ('org.antlr:antlr4-runtime:4.13.2')
+    api ('org.apache.commons:commons-vfs2:2.9.0')
+    api ('org.slf4j:slf4j-api:2.0.16')
+    api ("com.blankj:utilcodex:1.31.1")
+    api ("org.checkerframework:checker-qual:3.50.0")
+    api ('org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2')
+    compileOnly project(path: ':android-stubs')
+	api ('org.jetbrains.kotlin:kotlin-stdlib:2.3.0')
+}
+
+spotless {
+		java {
+			target "**/*.java"
+			googleJavaFormat()
+			}
+}

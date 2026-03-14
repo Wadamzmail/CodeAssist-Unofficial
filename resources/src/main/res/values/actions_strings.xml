@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<string name="menu_build_aab">Build AAB</string>
+    <!-- Text Actions -->
+    <string name="text_actions">Text Actions</string>
+    <string name="expand_selection">Expand Selection</string>
+    <string name="copied_to_clipoard">Text has been copied to clipboard.</string>
+
+    <!-- File Actions -->
+    <string name="menu_action_new_java_class">Java class </string>
+    <string name="menu_action_new_kotlin_class">Kotlin class</string>
+    <string name="menu_action_new_directory">Directory</string>
+    <string name="menu_action_new_file">File</string>
+    <string name="directory_name">Directory name</string>
+    <string name="file_name">File name</string>
+    <string name="menu_new">New</string>
+    <string name="menu_import">Import</string>
+    <string name="menu_refactor">Refactor</string>
+    <string name="menu_new_layout">New layout</string>
+    <string name="error_file_creation">Unable to create file.</string>
+    <string name="menu_git">Git</string>
+    <string name="menu_commit">Commit</string>
+    <string name="menu_git_add_to_stage">Add to stage</string>
+    <string name="menu_git_reset_changes">Reset changes</string>
+    <string name="menu_git_remove_from_index">Remove from index</string>
+    <string name="menu_git_remove_from_index_force">Remove from index (Force)</string>
+    
+</resources>
