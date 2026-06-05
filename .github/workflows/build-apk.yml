@@ -1,42 +1,146 @@
-name: Android CI Buid Apk Debug
+name: Android CI Build Apk Debug
 
 permissions:
   contents: read
+  actions: write  # For better artifact management
 
 on:
   workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: false
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly build on Sundays
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    
+    # Timeout to prevent hung builds
+    timeout-minutes: 30
+    
+    strategy:
+      matrix:
+        api-level: [33]  # Android API level for emulator testing (optional)
+      fail-fast: false
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better versioning
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'gradle'  # Built-in Gradle caching
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run:  ./gradlew assembleDebug --warning-mode all
+      - name: Run lint check
+        run: ./gradlew lintDebug --warning-mode all
 
-      - name: Upload Gradle Problem Report
-        uses: actions/upload-artifact@v6
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --warning-mode all
+
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug --warning-mode all
+        env:
+          CI: true
+
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: gradle-problem-report-${{ matrix.build_type }}-${{ github.run_id }}
-          path: build/reports/problems/
+          name: lint-report-${{ github.run_id }}
+          path: app/build/reports/lint-results-*.html
+          retention-days: 14
           if-no-files-found: warn
 
-      - name: Upload debug apk
-        uses: actions/upload-artifact@v6
-        if: ${{ !github.head_ref }}
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: apk-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: test-report-${{ github.run_id }}
+          path: app/build/reports/tests/
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload Gradle Problem Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gradle-problem-report-${{ github.run_id }}
+          path: |
+            build/reports/problems/
+            **/build/reports/problems/
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        if: success() && (github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.ref == 'refs/heads/main')
+        with:
+          name: app-debug-${{ github.run_id }}-${{ github.sha }}
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            **/build/outputs/apk/debug/*.apk
+          retention-days: 30
+          compression-level: 6
+
+      - name: Get APK metadata
+        if: success()
+        run: |
+          echo "## Build Info" >> $GITHUB_STEP_SUMMARY
+          echo "- Run ID: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          
+          APK_PATH="app/build/outputs/apk/debug/app-debug.apk"
+          if [ -f "$APK_PATH" ]; then
+            APK_SIZE=$(du -h "$APK_PATH" | cut -f1)
+            echo "- APK Size: $APK_SIZE" >> $GITHUB_STEP_SUMMARY
+            echo "### Download APK" >> $GITHUB_STEP_SUMMARY
+            echo "APK is available in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Cleanup Gradle
+        if: always()
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
+
+  # Optional: Notify on completion
+  notify:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always() && github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Build Status
+        run: |
+          if [ "${{ needs.build.result }}" == "success" ]; then
+            echo "✅ Build completed successfully!"
+          else
+            echo "❌ Build failed. Check logs for details."
+            exit 1
+          fi
