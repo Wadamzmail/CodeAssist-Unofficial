@@ -21,9 +21,9 @@ Forked of Official CodeAssist Version Alpha-0.2.9
 [![stability-alpha](https://img.shields.io/badge/stability-alpha-f4d03f.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#alpha)
 ![Repository Size](https://img.shields.io/github/repo-size/Wadamzmail/CodeAssist-Unofficial)
 ![CI](https://github.com/Wadamzmail/CodeAssist-Unofficial/actions/workflows/debug.yml/badge.svg)
-[![Total downloads](https://img.shields.io/github/downloads/tyron12233/CodeAssist/total)](https://github.com/tyron12233/CodeAssist/releases)
+[![Total downloads](https://img.shields.io/github/downloads/Wadamzmail/CodeAssist-Unofficial/total)](https://github.com/Wadamzmail/CodeAssist-Unofficial/releases)
 ![Commit Activity](https://img.shields.io/github/commit-activity/m/Wadamzmail/CodeAssist-Unofficial)
-<img src="https://img.shields.io/github/v/release/tyron12233/CodeAssist?include_prereleases&amp;label=latest%20release" alt="Latest release">
+<img src="https://img.shields.io/github/v/release/Wadamzmail/CodeAssist-Unofficial?include_prereleases&amp;label=latest%20release" alt="Latest release">
 
   <h2>A javac APIs-based code editor that supports building Android apps.</h2>
 
