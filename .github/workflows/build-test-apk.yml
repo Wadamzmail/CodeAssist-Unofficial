@@ -1,0 +1,60 @@
+name: Build Test APK CI
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: gradle
+
+      - name: Cache Gradle Build Files
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v5
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Set Commit Hash
+        id: commit_hash
+        run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug -Penable-updater && cp app/build/outputs/apk/debug/*.apk app/CodeAssist-Unofficial-${{ env.COMMIT_HASH }}.apk
+        continue-on-error: false
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v5
+        with:
+          name: CodeAssist-Unofficial-${{ env.COMMIT_HASH }}
+          path: app/CodeAssist-Unofficial-${{ env.COMMIT_HASH }}.apk
+          if-no-files-found: ignore
